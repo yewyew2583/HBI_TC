@@ -1,11 +1,9 @@
-# <<<AEM_HBI_TC>>>
+# <<HBI_TC>>
 
-# Branch Handling
-## Master: Current stable branch for TC and DC
+## master branch = DC3 & TC branch
+## DC2 = DC2 branch
 
-## DebugCart3_NewImplementation: Debug cart 3 new implementations branch
+## To Checkout branch, 
+### Merge to DC2 branch & master(TC/DC3) branch, use Naming Convention: All_<implementation_name_OR_bug_number_and_title>
+### Merge to master(TC/DC3) branch only, use Naming Convention: master_<implementation_name_OR_bug_number_and_title>
 
-## DC2_branchStartFromOFADewpointImplementation: Debug cart 2 implementation branch
-
-
-### If need to make changes, checkout to 1 new branch, tested then merge into Master & DebugCart3_NewImplementation if new implementations. OR maintainance branch in  DC2_branchStartFromOFADewpointImplementation.
