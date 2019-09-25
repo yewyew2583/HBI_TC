@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <DUT Name="ST_DebugStationSeqParam" Id="{44065363-5a3b-4138-819d-d877fd4ab8fb}">
+    <Declaration><![CDATA[TYPE ST_DebugStationSeqParam :
+STRUCT
+	bAP240ACPowerOff				: BOOL;
+	bAP240ACPowerOn					: BOOL;
+	bAP240ACPowerAuto				: BOOL;
+	bInitialise						: BOOL;
+	bAlarmClear						: BOOL;
+	bAlarmOccur						: BOOL;
+	bCancel							: BOOL;
+	bBufClear						: BOOL;
+	bInternalCancel					: BOOL;
+	bResume							: BOOL;
+	
+	iProcessState					: E_ProcessState :=0;
+	sFailReason						: STRING;
+	iAlarmID						: UDINT;
+	
+	stTACommand						: ST_Command;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

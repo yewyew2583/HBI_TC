@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <DUT Name="E_TIIAlarm" Id="{afcb9789-7584-47eb-9807-8782e7fa62a5}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE E_TIIAlarm :
+(
+	ipAPPresentSensor		    := 1,
+	ipAPPowerOn	 		    	,//:=2
+	ipAPReady				    ,//:=3 
+	ipAPDeactuatedPLC		    ,//:=4
+	ipAPDeactuatedHwr		    ,//:=5
+	ipCellFluidLeakage1		    ,//:=6
+	ipCellFluidLeakage2		  	,//:=7
+	ipCellGroundFault 		    ,//:=8
+	ipTesterPresent			    ,//:=9
+	ipTesterPowerOn			    ,//:=10
+	ipTesterReady			    ,//:=11
+	ipTCCellDoorClosed		    ,//:=12
+	ipTesterLatchesClosed	    ,//:=13
+	ipTIUPresent				,//:=14
+	ipTCDrawerCylExtendRS	    ,//:=15
+	ipTCDrawerCylRetractRS	    ,//:=16
+	TBOT_TC_ACPower_Signal      			); 
+END_TYPE
+
+(*
+ipAP_PresentSensor					ipAPPresentSensor
+ipAP_PowerOn	 			        ipAPPowerOn
+ipAP_Ready					        ipAPReady
+ipAP_DeactuatedPLC			        ipAP_Deactuated
+ipAP_DeactuatedHwr			        ipAP_Deactuated_HWR
+ipCellFluidLeakage1			        ipCellFluidLeakage
+ipCellFluidLeakage2			        
+ipCellGroundFault 			        ipCellGroundFault
+ipTesterPresent				        ipTesterPresent
+ipTesterPowerOn				        ipTesterPowerOn
+ipTesterReady				        ipTOSReady
+ipTCDrawerCylExtendRS		        ipTCDrawerEjected
+ipTCDrawerCylRetractRS		        ipTCDrawerRetracted
+ipTCCellDoorClosed			        ipTC_CellDoorClosed
+ipTesterLatchesClosed		        ipTesterDocked
+ipTIUPresent				        ipTIUPresent	        
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    ipAP_ActuatedSpare
+                                    ipColumnFluid_PCW_Leakage
+                                    
+*)
+
+
+
+
+
+
+
+
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

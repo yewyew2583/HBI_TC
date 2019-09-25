@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.0.24">
+  <DUT Name="ST_EventQueue" Id="{e3cb293c-dd2b-4657-a0f5-69bdb5b84098}">
+    <Declaration><![CDATA[TYPE ST_EventQueue :
+STRUCT
+	Queue: ARRAY [1..255] OF ST_Event;	//255 queue buffers
+	Count: UINT := 0;
+END_STRUCT
+END_TYPE]]></Declaration>
+    <ObjectProperties />
+  </DUT>
+</TcPlcObject>

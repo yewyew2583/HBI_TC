@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <POU Name="SLTC_EXTRA" Id="{81772848-36a2-43b7-b61c-16cc38a214e2}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM SLTC_EXTRA
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <LineIds Name="SLTC_EXTRA">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

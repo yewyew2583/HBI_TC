@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <DUT Name="ST_TCShuttlePOC_VIO" Id="{ec4a40b8-70dd-4169-86e1-4d11275de27b}">
+    <Declaration><![CDATA[TYPE ST_TCShuttlePOC_VIO : //only write by internal sequence
+STRUCT
+	//input
+	ipStartPB : BOOL;
+	ipStopPB  : BOOL;
+	ipL1_TC_Drawer_Extended_Out_Cell :		BOOL;
+	ipL1_TC_Drawer_Retracted_In_Cell :		BOOL;
+	
+	ipMotor_Ready 						: BOOL;
+	ipMotor_Home_Position 				: BOOL;
+	ipMotor_Position_Reached 			: BOOL;
+	ipMotor_Ps_Table_Active 			: BOOL;
+	ipMotor_Error 						: BOOL;
+	
+	ipTCDrawerExtendedoutCell			: BOOL;
+	ipTCDrawerRetractedinCell			: BOOL;
+	ipTCDrawerExtendedupCell			: BOOL;
+	ipTCDrawerRetracteddownCell		: BOOL;
+	
+	ipPressure_Switch_Error				: BOOL;
+
+	//output
+	opL1_TC_Drawer_IN : BOOL;
+	opL1_TC_Drawer_OUT : BOOL;
+	
+	opMotor_Enable						: BOOL;
+	opMotor_Reset_Errors				: BOOL;
+	opMotor_Homing						: BOOL;
+	opMotor_Index0						: BOOL;
+	opMotor_Index1						: BOOL;
+	opMotor_Start_Position				: BOOL;
+	
+	//follow actual IO name
+	opCellDrawerExtendUp 			: BOOL;
+	opCellDrawerRetractDown 		: BOOL;
+	
+	opMain_Incoming_Air_Valve			: BOOL;
+
+	sAlarmMessage : STRING;
+	iAlarmCode : UDINT;
+	
+	bDPSPowerOnOff:BOOL;
+	bBypassSingleMove:BOOL:=TRUE;
+	bStep:BOOL;
+	bDiagnosticMode:BOOL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

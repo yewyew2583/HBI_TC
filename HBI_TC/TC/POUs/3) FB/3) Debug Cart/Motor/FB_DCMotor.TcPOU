@@ -1,0 +1,205 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <POU Name="FB_DCMotor" Id="{c17387f9-d74e-48e2-9e05-34b020aa612c}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_DCMotor
+VAR_INPUT
+END_VAR
+
+VAR_OUTPUT
+END_VAR
+
+VAR
+	_Alarm												: BOOL;
+	fb_DebugCart_AP240Power								: DFB_Cylinder;
+	fb_DebugCart_Col_PCWValve							: DFB_Cylinder;
+	
+	_AP240Power_Perm									: WORD;
+	_AP240Power_SD										: WORD;
+	_Col_PCWValve_Perm									: WORD;
+	_Col_PCWValve_SD									: WORD;
+	
+	_DUT_DebugCart_AP240Power							: DUT_Cylinder;
+	_DUT_DebugCart_Col_PCWValve							: DUT_Cylinder;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//	
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+PermSD();
+
+IF DewPoint_Abort OR OFA6Bar_Abort THEN
+	_Alarm		:= TRUE;
+ELSIF (NOT ALM_DCCOL.AlarmID[E_DCFACAlarm.eCriticalCondensationAlarm]) AND (NOT ALM_DCCOL.AlarmID[E_DCFACAlarm.e6BarLowOFAAirPressureAlarm]) THEN
+	_Alarm		:= FALSE;
+END_IF
+
+_DUT_DebugCart_AP240Power.AutInp		:= DebugCart_APPresentSignal AND (NOT FluidLeakageSignal) AND (NOT GroundFault) AND (NOT _Alarm);
+											//(NOT DewPoint_Abort) AND 
+											//(NOT OFA6Bar_Abort) AND (NOT ALM_DCCOL.AlarmID[E_DCFACAlarm.e6BarLowOFAAirPressureAlarm]) AND 
+											//(NOT ALM_DCCOL.AlarmID[E_DCFACAlarm.eCriticalCondensationAlarm]);
+
+fb_DebugCart_AP240Power(
+	Sec_P		:= Sec_P, 
+	ID		:= 'DebugCart AP240Power', 
+	Simulate		:= _DUT_DebugCart_AP240Power.Simulate, 
+	Permissive		:= _AP240Power_Perm, 
+	ShutDown		:= _AP240Power_SD, 
+	AutoInp		:= _DUT_DebugCart_AP240Power.AutInp, 
+	Command		:= _DUT_DebugCart_AP240Power.CMD, 
+	IExtend		:= DebugCart_APPowerOnSignal, 
+	IRetract		:= (NOT DebugCart_APPowerOnSignal), 
+	Travel_Time		:= _DUT_DebugCart_AP240Power.Travel_Time, 
+	SetOutput_Pulse		:= FALSE, 
+	FailedHoldLast		:= FALSE,
+	OExtend		=> DebugCart_APPowerOn, 
+	ORetract		=> , 
+	DUT		:= _DUT_DebugCart_AP240Power);
+
+
+
+
+	
+_DUT_DebugCart_Col_PCWValve.AutInp		:= (NOT ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWLeakageAlarm]) AND
+											(NOT ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWSupplyLeakageAlarm]) AND
+											(NOT ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWReturnLeakageAlarm]) AND
+											(NOT _Alarm);
+					
+fb_DebugCart_Col_PCWValve(
+	Sec_P:= Sec_P, 
+	ID:= 'DebugCart Column PCW Valve', 
+	Simulate:= _DUT_DebugCart_Col_PCWValve.Simulate, 
+	Permissive:= _Col_PCWValve_Perm,  //check before execute
+	ShutDown:= _Col_PCWValve_SD,  //keep checking this condition 
+	AutoInp:= _DUT_DebugCart_Col_PCWValve.AutInp, 
+	Command:= _DUT_DebugCart_Col_PCWValve.CMD, //1: Retract, 2: Extend, 4: Auto
+	IExtend:= DebugCart_ColumnPCWValve, 
+	IRetract:= (NOT DebugCart_ColumnPCWValve), 
+	Travel_Time:= _DUT_DebugCart_Col_PCWValve.Travel_Time, //detect input after output trigger
+	SetOutput_Pulse:= FALSE,  //output rising edge
+	FailedHoldLast:= FALSE,  //remain state after failed. 1: Remain, 0: FALSE
+	OExtend=> DebugCart_ColumnPCWValve,  //map to output variable
+	ORetract=> , 
+	DUT:= _DUT_DebugCart_Col_PCWValve);
+	]]></ST>
+    </Implementation>
+    <Action Name="PermSD" Id="{f9871df8-4830-4d77-a1c4-fe839ea41fec}">
+      <Implementation>
+        <ST><![CDATA[FC_BitToWord(
+	BOOL_00		:= TRUE, 
+	BOOL_01		:= TRUE, 
+	BOOL_02		:= TRUE, 
+	BOOL_03		:= TRUE, 
+	BOOL_04		:= TRUE, 
+	BOOL_05		:= TRUE, 
+	BOOL_06		:= TRUE, 
+	BOOL_07		:= TRUE, 
+	BOOL_08		:= TRUE, 
+	BOOL_09		:= TRUE, 
+	BOOL_10		:= TRUE, 
+	BOOL_11		:= TRUE, 
+	BOOL_12		:= TRUE, 
+	BOOL_13		:= TRUE, 
+	BOOL_14		:= TRUE, 
+	BOOL_15		:= TRUE, 
+	Output_Word		=> _AP240Power_Perm);
+	
+FC_BitToWord(
+	BOOL_00		:= FALSE, 
+	BOOL_01		:= FALSE, 
+	BOOL_02		:= FALSE, 
+	BOOL_03		:= FALSE, 
+	BOOL_04		:= FALSE, 
+	BOOL_05		:= FALSE, 
+	BOOL_06		:= FALSE, 
+	BOOL_07		:= FALSE, 
+	BOOL_08		:= FALSE, 
+	BOOL_09		:= FALSE, 
+	BOOL_10		:= FALSE, 
+	BOOL_11		:= FALSE, 
+	BOOL_12		:= FALSE, 
+	BOOL_13		:= FALSE, 
+	BOOL_14		:= FALSE, 
+	BOOL_15		:= FALSE, 
+	Output_Word		=> _AP240Power_SD);
+	
+FC_BitToWord(
+	BOOL_00		:= TRUE, 
+	BOOL_01		:= TRUE, 
+	BOOL_02		:= TRUE, 
+	BOOL_03		:= TRUE, 
+	BOOL_04		:= TRUE, 
+	BOOL_05		:= TRUE, 
+	BOOL_06		:= TRUE, 
+	BOOL_07		:= TRUE, 
+	BOOL_08		:= TRUE, 
+	BOOL_09		:= TRUE, 
+	BOOL_10		:= TRUE, 
+	BOOL_11		:= TRUE, 
+	BOOL_12		:= TRUE, 
+	BOOL_13		:= TRUE, 
+	BOOL_14		:= TRUE, 
+	BOOL_15		:= TRUE, 
+	Output_Word		=> _Col_PCWValve_Perm);
+	
+FC_BitToWord(
+	BOOL_00		:= FALSE, 
+	BOOL_01		:= FALSE, 
+	BOOL_02		:= FALSE, 
+	BOOL_03		:= FALSE, 
+	BOOL_04		:= FALSE, 
+	BOOL_05		:= FALSE, 
+	BOOL_06		:= FALSE, 
+	BOOL_07		:= FALSE, 
+	BOOL_08		:= FALSE, 
+	BOOL_09		:= FALSE, 
+	BOOL_10		:= FALSE, 
+	BOOL_11		:= FALSE, 
+	BOOL_12		:= FALSE, 
+	BOOL_13		:= FALSE, 
+	BOOL_14		:= FALSE, 
+	BOOL_15		:= FALSE, 
+	Output_Word		=> _Col_PCWValve_SD);]]></ST>
+      </Implementation>
+    </Action>
+    <LineIds Name="FB_DCMotor">
+      <LineId Id="9" Count="0" />
+      <LineId Id="22" Count="1" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="48" Count="0" />
+      <LineId Id="168" Count="4" />
+      <LineId Id="166" Count="0" />
+      <LineId Id="164" Count="0" />
+      <LineId Id="47" Count="0" />
+      <LineId Id="173" Count="0" />
+      <LineId Id="51" Count="1" />
+      <LineId Id="25" Count="11" />
+      <LineId Id="45" Count="0" />
+      <LineId Id="49" Count="0" />
+      <LineId Id="46" Count="0" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="104" Count="0" />
+      <LineId Id="133" Count="0" />
+      <LineId Id="143" Count="0" />
+      <LineId Id="132" Count="0" />
+      <LineId Id="130" Count="0" />
+      <LineId Id="105" Count="2" />
+      <LineId Id="122" Count="1" />
+      <LineId Id="89" Count="14" />
+      <LineId Id="65" Count="0" />
+      <LineId Id="53" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_DCMotor.PermSD">
+      <LineId Id="2" Count="16" />
+      <LineId Id="1" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="21" Count="16" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="40" Count="35" />
+      <LineId Id="39" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

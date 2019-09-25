@@ -1,0 +1,224 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <POU Name="FB_TCUSafeState" Id="{ed313893-a96d-40ff-9dea-49e79e7604b3}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_TCUSafeState
+VAR_INPUT
+	n									: INT; // array number of which 10 commands to be processed
+END_VAR
+
+VAR_OUTPUT
+END_VAR
+
+VAR
+	bErr								: BOOL; //temporary var for error flag
+	start								: BOOL;
+	
+	iStep								: INT	:= 1;
+	iLevel								: INT;
+
+	iSendEvent							: UINT;
+	
+	sStatus								: STRING; //temporary var for error message
+	sLogName							: STRING;
+	sFailReason							: STRING;
+	sModuleID							: STRING;
+	
+	tim									: TON;
+	
+	rtStart								: R_TRIG;
+	
+	EmptyEvents							: ST_Event;
+	CmdEmpty							: ST_Command;
+	requestedState						: E_State	:= E_State.eEnabled;
+	iEventName							: E_EventName;
+	stMultiLeveVIO						: ST_TCMultiLevel_VIO;
+	_arrRCMD							: ARRAY [1..NO_OF_CMD_BUFFER] OF ST_Command;
+	_arrEvent							: ARRAY [1..NO_OF_EVENT_BUFFER] OF ST_Event;
+	
+	//fbCmdAndEventUpdate: FB_CmdAndEventUpdate;
+END_VAR
+
+
+
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[		
+rtStart(CLK := start , Q=> );
+IF rtStart.Q THEN
+	iStep													:= 1;
+END_IF
+
+IF NOT start THEN
+	RETURN;
+END_IF
+
+CASE iStep OF
+	1://apPresent?
+		stMultiLeveVIO := arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO;
+			
+		IF stMultiLeveVIO.ipAPPresentSensor THEN
+			tim(IN:=FALSE);
+			iStep:=2;
+		ELSE
+			bErr:=TRUE;
+			sStatus:='AP Not Present During During TCUSafeStateCommandProcess';
+			iStep:=6;
+		END_IF
+				
+		//Logging.fbDebugLog.M_nLogger(iLogLevel:= 1, sSource:= sDebugSource, sMessage:= sMessage);
+	
+	2://off
+		stMultiLeveVIO := arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO;
+		stMultiLeveVIO.opAPTCCReset:=FALSE;
+		arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO := stMultiLeveVIO;
+		tim(IN:=TRUE,PT:=INT_TO_TIME(300));
+		IF(tim.Q=TRUE) THEN
+			iStep:=3;
+			tim(IN:=FALSE);
+		END_IF
+		
+	3://on 
+		stMultiLeveVIO := arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO;
+		stMultiLeveVIO.opAPTCCReset:=TRUE;
+		arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO := stMultiLeveVIO;
+		tim(IN:=TRUE,PT:=INT_TO_TIME(300));
+		IF(tim.Q=TRUE) THEN
+			iStep:=3;
+			tim(IN:=FALSE);
+		END_IF
+	4://off
+		stMultiLeveVIO := arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO;
+		stMultiLeveVIO.opAPTCCReset:=FALSE;
+		arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO := stMultiLeveVIO;
+		tim(IN:=TRUE,PT:=INT_TO_TIME(300));
+		IF(tim.Q=TRUE) THEN
+			iStep:=3;
+			tim(IN:=FALSE);
+		END_IF
+	5://deactuate?
+		stMultiLeveVIO := arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO;
+		IF stMultiLeveVIO.ipHandlerSafeToEnterHwr AND stMultiLeveVIO.ipHandlerSafeToEnterPLC  THEN
+			iStep:=6;
+		ELSE
+			bErr:=TRUE;
+			IF NOT stMultiLeveVIO.ipHandlerSafeToEnterHwr AND stMultiLeveVIO.ipHandlerSafeToEnterPLC THEN
+				sStatus:= 'APDeactuatedHwr Input Signal Not ON During TCUSafeStateProcess';
+			ELSIF stMultiLeveVIO.ipHandlerSafeToEnterHwr AND NOT stMultiLeveVIO.ipHandlerSafeToEnterPLC THEN
+				sStatus:= 'APDeactuatedPLC Input Signal Not ON During TCUSafeStateProcess';
+			ELSE	
+				sStatus:= 'Both APDeactuatedHwr and APDeactuatedPLC Input Signal Not ON During TCUSafeStateProcess';
+			END_IF
+		END_IF
+		iStep:=6;
+	6://set event
+	iSendEvent := SEL(bErr, 1, 2);
+	FUN_CmdToEvent(eCmd2Event_TaskName:=_arrRCMD[n].eTaskName , iCmd2Event_Result:=iSendEvent , eCmd2Event_EventName:=iEventName , sCmd2Event_EventName:=sLogName );
+	_arrEvent[n].sLogName:= sLogName;
+	_arrEvent[n].eEventName:= iEventName; 
+	_arrEvent[n].eModuleID:= _arrRCMD[n].eModuleID; 
+	_arrEvent[n].iParam:= _arrRCMD[n].iParam;
+	_arrEvent[n].sParam:= _arrRCMD[n].sParam; 
+	_arrEvent[n].bParam:= _arrRCMD[n].bParam; 
+	_arrEvent[n].dParam:= _arrRCMD[n].dParam; 
+	_arrEvent[n].sFailReason:= sStatus;
+	_arrRCMD[n]:= CmdEmpty;
+END_CASE]]></ST>
+    </Implementation>
+    <Method Name="Execute" Id="{262eec6e-3ef3-4a17-a2af-058d872d998b}">
+      <Declaration><![CDATA[METHOD Execute : BOOL
+VAR_INPUT
+	n								: INT;
+	iLevel							: INT;
+END_VAR
+
+VAR_IN_OUT
+	arrRCMD							: ARRAY [1..NO_OF_CMD_BUFFER] OF ST_Command;
+	arrEvent						: ARRAY [1..NO_OF_EVENT_BUFFER] OF ST_Event;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[start								:= TRUE;
+_arrRCMD							:= arrRCMD;
+_arrEvent							:= arrEvent;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Reset" Id="{6ad610fd-2339-4692-9a69-b0d4da0d3b47}">
+      <Declaration><![CDATA[METHOD Reset : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[start					:= FALSE;
+]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_TCUSafeState">
+      <LineId Id="26" Count="3" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="224" Count="0" />
+      <LineId Id="33" Count="1" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="100" Count="1" />
+      <LineId Id="103" Count="0" />
+      <LineId Id="157" Count="0" />
+      <LineId Id="114" Count="0" />
+      <LineId Id="111" Count="0" />
+      <LineId Id="115" Count="1" />
+      <LineId Id="113" Count="0" />
+      <LineId Id="112" Count="0" />
+      <LineId Id="104" Count="0" />
+      <LineId Id="98" Count="1" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="118" Count="0" />
+      <LineId Id="136" Count="0" />
+      <LineId Id="119" Count="0" />
+      <LineId Id="158" Count="2" />
+      <LineId Id="162" Count="0" />
+      <LineId Id="161" Count="0" />
+      <LineId Id="121" Count="0" />
+      <LineId Id="124" Count="0" />
+      <LineId Id="135" Count="0" />
+      <LineId Id="137" Count="0" />
+      <LineId Id="122" Count="0" />
+      <LineId Id="163" Count="0" />
+      <LineId Id="166" Count="0" />
+      <LineId Id="164" Count="1" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="134" Count="0" />
+      <LineId Id="130" Count="0" />
+      <LineId Id="138" Count="0" />
+      <LineId Id="133" Count="0" />
+      <LineId Id="167" Count="3" />
+      <LineId Id="129" Count="0" />
+      <LineId Id="43" Count="1" />
+      <LineId Id="141" Count="1" />
+      <LineId Id="144" Count="0" />
+      <LineId Id="151" Count="0" />
+      <LineId Id="147" Count="0" />
+      <LineId Id="155" Count="0" />
+      <LineId Id="148" Count="0" />
+      <LineId Id="154" Count="0" />
+      <LineId Id="152" Count="0" />
+      <LineId Id="150" Count="0" />
+      <LineId Id="153" Count="0" />
+      <LineId Id="143" Count="0" />
+      <LineId Id="140" Count="0" />
+      <LineId Id="46" Count="0" />
+      <LineId Id="55" Count="0" />
+      <LineId Id="57" Count="8" />
+      <LineId Id="54" Count="0" />
+      <LineId Id="38" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TCUSafeState.Execute">
+      <LineId Id="5" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="6" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TCUSafeState.Reset">
+      <LineId Id="5" Count="1" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

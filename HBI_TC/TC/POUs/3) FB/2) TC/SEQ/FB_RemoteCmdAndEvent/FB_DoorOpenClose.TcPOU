@@ -1,0 +1,634 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <POU Name="FB_DoorOpenClose" Id="{cc9007dd-01c7-4c39-b58e-94433c500190}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_DoorOpenClose
+VAR_INPUT
+	_n									: INT; // array number of which 10 commands to be processed
+	_bLock								: BOOL; // 0: Execute unlock command, 1: Execute lock command
+	_bFrontDoor							: BOOL;
+END_VAR
+
+VAR_OUTPUT
+END_VAR
+
+VAR_IN_OUT
+END_VAR
+
+VAR
+	bErr								: BOOL; // var for error flag
+	start								: BOOL;
+	_isFrontDoor						: BOOL;
+	_bDoorRecoveryStart					: BOOL;
+	_DoorOpen_Permissive				: BOOL;
+	
+	iStep								: INT	:= 1;
+	_iLevel								: INT;
+
+	iSendEvent							: UINT	:= 1;
+	
+	sStatus								: STRING; // var for error message
+	sLogName							: STRING;
+	sFailReason							: STRING;
+	sModuleID							: STRING;
+	_eFailLogName						: STRING;
+	_ePassLogName						: STRING;
+	
+	tim									: TON;
+	timDwrUp							: TON;
+	timDoorRecStartDel					: TON;
+	
+	rtStart								: R_TRIG;
+	
+	EmptyEvents							: ST_Event;
+	CmdEmpty							: ST_Command;
+	requestedState						: E_State	:= E_State.eEnabled;
+	eEventName							: E_EventName;
+	_eFailEvent							: E_EventName;
+	_ePassEvent							: E_EventName;
+	stMultiLevelVIO						: ST_TCMultiLevel_VIO;
+	_MLevelVIO_Monitor					: ST_TCMultiLevel_VIO; // Multi-level IO for monitor purpose
+	_arrRCMD							: ARRAY [1..NO_OF_CMD_BUFFER] OF ST_Command;
+	_arrEvent							: ARRAY [1..NO_OF_EVENT_BUFFER] OF ST_Event;
+	
+	//fbCmdAndEventUpdate: FB_CmdAndEventUpdate;
+END_VAR
+
+
+
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[rtStart(CLK := start , Q=> );
+IF rtStart.Q THEN
+	iStep																			:= 1;
+END_IF
+
+IF (NOT start) THEN
+	RETURN;
+END_IF
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//	Door Open Permissive
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+_MLevelVIO_Monitor 																	:= arrTCMultiLevel[_iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO;
+_DoorOpen_Permissive																:= (_MLevelVIO_Monitor.ipAPPresentSensor AND _MLevelVIO_Monitor.ipHandlerSafeToEnterHwr AND 
+																						_MLevelVIO_Monitor.ipHandlerSafeToEnterPLC) OR 
+																						(NOT _MLevelVIO_Monitor.ipAPPresentSensor);
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//	State machine
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+CASE iStep OF
+	0: (*Idle*)
+		;
+		
+	1: (*Reset*)
+	
+		(*Action*)
+		tim(IN := FALSE);
+		timDwrUp(IN := FALSE);
+		
+		(*IF _bFrontDoor THEN
+			iStep:=12;
+		ELSE
+			iStep:=2;
+		END_IF
+		iStep																		:= SEL(_bFrontDoor,  iStep:=2, iStep:=12);*)
+		
+		(*Action*)
+		iStep																		:= 2; // Sanity Check
+	
+	2:	(*Sanity Check*)
+	
+		(*Action*)
+		sStatus																		:= '';
+		bErr																		:= FALSE;
+		stMultiLevelVIO 															:= arrTCMultiLevel[_iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO;
+		
+		// *** OPEN *** //
+		//==============//
+		// Execute unlock command
+		IF (NOT _bLock) THEN
+			//FRONT DOOR
+			IF _bFrontDoor THEN
+				//Check cell door before front door open coz front door close has dwr movement!
+				// Make sure back door is closed
+				IF (NOT stMultiLevelVIO.ipTCCellDoorOpenCloseStatus) THEN
+					bErr															:= TRUE;
+					sStatus															:= 'Cell Door is not Closed (Back)';
+					iStep															:= 20; // Set event
+				END_IF
+				
+				// Make sure back door is lock
+				IF (NOT stMultiLevelVIO.ipTCCellDoorClosed) THEN
+					bErr															:= TRUE;
+					sStatus															:= 'Cell Door is not Locked (Back)';
+					iStep															:= 20; // Set event
+				END_IF
+				
+				(*// Testing new code - Make sure back door is closed and locked
+				IF (NOT stMultiLevelVIO.ipTCCellDoorOpenCloseStatus) AND (NOT stMultiLevelVIO.ipTCCellDoorClosed) THEN
+					bErr															:= TRUE;
+					IF (NOT stMultiLevelVIO.ipTCCellDoorOpenCloseStatus) THEN
+						sStatus														:= 'Cell Door is not Closed (Back)';
+					ELSIF (NOT stMultiLevelVIO.ipTCCellDoorClosed) THEN
+						sStatus														:= 'Cell Door is not Locked (Back)';
+					END_IF
+					iStep															:= 20; // Set event
+				END_IF*)
+				
+				IF (NOT bErr) THEN
+					//IF stMultiLevelVIO.ipTCDrawerCylExtendRS THEN
+					//	bErr := TRUE;
+					//	sStatus := 'Cannot open/unlock door, Drawer is in Out Position'; 
+					//	iStep:=3;
+					//ELSE
+					
+					arrTCMultiLevel[_iLevel].stGblParam.bDrawerUpBefFrtDoorOpen		:= TRUE;
+					arrTCMultiLevel[_iLevel].fbTCMultiLevelSeq.P_stParam 			:= arrTCMultiLevel[_iLevel].stGblParam;
+					iStep															:= 4; // Trigger door output
+					//END_IF
+				END_IF
+				
+			// BACK DOOR	
+			ELSE
+				//Check Fron door before cel  door open coz only one of the doors can be opened at a time.
+				// For debug cart, make sure front door is closed
+				IF bDebugCart AND (NOT stMultiLevelVIO.ipTCCellTbotSideDoorOpenCloseStatus01 OR NOT stMultiLevelVIO.ipTCCellTbotSideDoorOpenCloseStatus02) THEN
+					bErr															:= TRUE;
+					sStatus															:= 'Front Door is not Closed';
+					iStep															:= 20; // Set event
+				END_IF
+				
+				// For debug cart, make sure front door is locked
+				IF bDebugCart AND (NOT stMultiLevelVIO.ipTCCellTbotSideDoorLocked01 OR NOT stMultiLevelVIO.ipTCCellTbotSideDoorLocked02) THEN
+					bErr															:= TRUE;
+					sStatus															:= 'Front Door is not Locked';
+					iStep															:= 20; // Set event
+				END_IF
+				
+				IF (NOT bErr) THEN
+					//IF stMultiLevelVIO.ipTCDrawerCylExtendRS THEN
+					//	bErr := TRUE;
+					//	sStatus := 'Cannot open/unlock door, Drawer is in Out Position'; 
+					//	iStep:=3;
+					//ELSE
+					stMultiLevelVIO.opCellDoorClosed 								:= _bLock;
+					arrTCMultiLevel[_iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO 	:= stMultiLevelVIO;
+					iStep															:= 20; // Set event
+					//END_IF
+				END_IF
+			END_IF
+		
+		// ***CLOSE*** //
+		//=============//
+		// Execute lock command
+		ELSE
+			//FRONT DOOR
+			IF _bFrontDoor THEN
+				// Check cell door before front door close coz front door close has dwr movement!
+				// Make sure back door is closed
+				IF (NOT stMultiLevelVIO.ipTCCellDoorOpenCloseStatus) THEN
+					bErr															:= TRUE;
+					sStatus															:= 'Cell Door is not Closed (Back)';
+					iStep															:= 20; // Set event
+				END_IF
+				
+				// Make sure back door is locked
+				IF (NOT stMultiLevelVIO.ipTCCellDoorClosed) THEN
+					bErr															:= TRUE;
+					sStatus															:= 'Cell Door is not Locked (Back)';
+					iStep															:= 20; // Set event
+				END_IF
+				
+				// Make sure front door is closed
+				IF (NOT stMultiLevelVIO.ipTCCellTbotSideDoorOpenCloseStatus01) OR (NOT stMultiLevelVIO.ipTCCellTbotSideDoorOpenCloseStatus02) THEN
+					bErr															:= TRUE;
+					sStatus															:= 'Front Door is not Closed';
+					iStep															:= 20; // Set event
+				END_IF
+				
+				IF (NOT bErr) THEN
+					//Lock the Door (on the actual output)
+					stMultiLevelVIO 												:= arrTCMultiLevel[_iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO;
+					stMultiLevelVIO.opCellTBOtSideDoorClosed1 						:= _bLock;
+					stMultiLevelVIO.opCellTBOtSideDoorClosed2 						:= _bLock;
+					arrTCMultiLevel[_iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO 	:= stMultiLevelVIO;
+					tim(IN:=TRUE,PT:=T#1000MS);
+					
+					IF tim.Q THEN
+						stMultiLevelVIO 											:= arrTCMultiLevel[_iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO;
+						
+						IF NOT (stMultiLevelVIO.ipTCCellTbotSideDoorLocked01 AND stMultiLevelVIO.ipTCCellTbotSideDoorLocked02) THEN
+							bErr													:= TRUE;
+							sStatus													:= 'Door Lock Error, Front Door LockStatus not Detected After Door Lock Activated';
+							iStep													:= 20; // Set event
+						ELSE
+							arrTCMultiLevel[_iLevel].stGblParam.bDoorClose			:= SEL(_bLock,FALSE,TRUE);
+							arrTCMultiLevel[_iLevel].fbTCMultiLevelSeq.P_stParam 	:= arrTCMultiLevel[_iLevel].stGblParam;
+								//timDoorRecStartDel(IN:=FALSE);
+								_bDoorRecoveryStart 								:= TRUE;
+								iStep												:= 3; // Spare
+								bErr												:= FALSE;
+						END_IF	
+						
+						tim(IN:= FALSE);
+					END_IF
+				END_IF
+			
+			//BACK DOOR
+			ELSE 
+				// Door is opened
+				IF (NOT stMultiLevelVIO.ipTCCellDoorOpenCloseStatus) THEN
+					bErr															:= TRUE;
+					IF bDebugCart THEN 
+						sStatus														:= 'Cell Door is not Closed (Back)';
+					ELSE
+						sStatus														:= 'Cell Door is not Closed !!';
+					END_IF
+					iStep															:= 20; // Set event
+				END_IF
+				
+				IF (NOT bErr) THEN 
+					stMultiLevelVIO.opCellDoorClosed 								:= _bLock;
+					arrTCMultiLevel[_iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO 	:= stMultiLevelVIO;
+					tim(IN:= TRUE, PT:= T#1000MS);
+					
+					IF tim.Q THEN
+						stMultiLevelVIO 											:= arrTCMultiLevel[_iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO;
+						
+						IF (NOT stMultiLevelVIO.ipTCCellDoorClosed) THEN
+							bErr													:= TRUE;
+							sStatus													:= 'Door Lock Error, Door LockStatus not ON After Door Lock';
+							iStep													:= 20; // Set event
+						ELSE
+							
+							arrTCMultiLevel[_iLevel].stGblParam.bDoorClose			:= SEL(_bLock,FALSE,TRUE);
+							arrTCMultiLevel[_iLevel].fbTCMultiLevelSeq.P_stParam 	:= arrTCMultiLevel[_iLevel].stGblParam;
+							
+							IF _bLock THEN
+								//bLock:=false;
+								//Trigger startDoorRecoveryEvnt,(if door recovery failed, next?, door recovery retry command?)
+								//IF NOT bDebugCart THEN 
+								_bDoorRecoveryStart 								:= TRUE;
+								//END_IF
+								//arrTCMultiLevel[_iLevel].stGblParam.bDoorRecoveryStarted:=TRUE;
+								//arrTCMultiLevel[_iLevel].stGblParam.stDoorRecovEvnt.sLogName:= 'DoorRecoveryStarted';
+								//arrTCMultiLevel[_iLevel].stGblParam.stDoorRecovEvnt.eEventName:=E_EventName.DoorRecoveryStarted;
+								//arrTCMultiLevel[_iLevel].stGblParam.stDoorRecovEvnt.eModuleID:=_arrRCMD[_n].eModuleID;
+								//arrTCMultiLevel[_iLevel].fbTCMultiLevelSeq.P_stParam := arrTCMultiLevel[_iLevel].stGblParam;
+								//timDoorRecStartDel(IN:=FALSE);
+								iStep												:= 3; // Spare
+								bErr												:= FALSE;	
+							END_IF
+						END_IF	
+						tim(IN:= FALSE);
+					END_IF
+				END_IF
+			END_IF	
+		END_IF
+			
+(*
+			//===============================================
+			stMultiLevelVIO.opCellDoorClosed := _bLock;
+			arrTCMultiLevel[_iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO := stMultiLevelVIO;
+			//
+			
+			tim(IN:=TRUE,PT:=T#1000MS);
+			IF tim.Q THEN
+				stMultiLevelVIO := arrTCMultiLevel[_iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO;
+				IF _bFrontDoor THEN
+					IF NOT (stMultiLevelVIO.ipTCCellFrontDoorClosed1 AND stMultiLevelVIO.ipTCCellFrontDoorClosed2) THEN
+						bErr:=TRUE;
+						sStatus:='Door Lock Error, Front Door LockStatus not Detected After Door Lock Activated';
+						iStep:=20;
+					ELSE
+						arrTCMultiLevel[_iLevel].stGblParam.bDoorClose:= SEL(_bLock,FALSE,TRUE);
+						arrTCMultiLevel[_iLevel].fbTCMultiLevelSeq.P_stParam := arrTCMultiLevel[_iLevel].stGblParam;
+						
+						IF _bLock THEN
+							//bLock:=false;
+							//Trigger startDoorRecoveryEvnt,(if door recovery failed, what next?, have door recovery retry command?)
+							
+							arrTCMultiLevel[_iLevel].stGblParam.bDoorRecoveryStarted:=TRUE;
+							arrTCMultiLevel[_iLevel].stGblParam.stDoorRecovEvnt.sLogName:= 'DoorRecoveryStarted';
+							arrTCMultiLevel[_iLevel].stGblParam.stDoorRecovEvnt.eEventName:=E_EventName.DoorRecoveryStarted;
+							arrTCMultiLevel[_iLevel].stGblParam.stDoorRecovEvnt.eModuleID:=_arrRCMD[_n].eModuleID;
+							arrTCMultiLevel[_iLevel].fbTCMultiLevelSeq.P_stParam := arrTCMultiLevel[_iLevel].stGblParam;
+							timDoorRecStartDel(IN:=FALSE);
+							iStep:=3;	
+						END_IF
+					END_IF	
+					tim(IN:=FALSE);
+					
+				ELSE //Not bFrontDoor
+					IF NOT stMultiLevelVIO.ipTCCellDoorClosed THEN
+						bErr:=TRUE;
+						sStatus:='Door Lock Error, Door LockStatus not ON After Door Lock';
+						iStep:=20;
+					ELSE
+						arrTCMultiLevel[_iLevel].stGblParam.bDoorClose:= SEL(_bLock,FALSE,TRUE);
+						arrTCMultiLevel[_iLevel].fbTCMultiLevelSeq.P_stParam := arrTCMultiLevel[_iLevel].stGblParam;
+						
+						IF _bLock THEN
+							//bLock:=false;
+							//Trigger startDoorRecoveryEvnt,(if door recovery failed, what next?, have door recovery retry command?)
+							
+							arrTCMultiLevel[_iLevel].stGblParam.bDoorRecoveryStarted:=TRUE;
+							arrTCMultiLevel[_iLevel].stGblParam.stDoorRecovEvnt.sLogName:= 'DoorRecoveryStarted';
+							arrTCMultiLevel[_iLevel].stGblParam.stDoorRecovEvnt.eEventName:=E_EventName.DoorRecoveryStarted;
+							arrTCMultiLevel[_iLevel].stGblParam.stDoorRecovEvnt.eModuleID:=_arrRCMD[_n].eModuleID;
+							arrTCMultiLevel[_iLevel].fbTCMultiLevelSeq.P_stParam := arrTCMultiLevel[_iLevel].stGblParam;
+							timDoorRecStartDel(IN:=FALSE);
+							iStep:=3;	
+						END_IF
+					END_IF	
+					tim(IN:=FALSE);
+				END_IF
+
+			END_IF	
+		END_IF
+*)
+		
+	3: (*Spare*)
+		//timDoorRecStartDel(IN:=TRUE,PT:=T#1000MS);
+		//IF timDoorRecStartDel.Q THEN
+		//	arrTCMultiLevel[_iLevel].stGblParam.bDoorRecovery:=TRUE;
+		//	timDoorRecStartDel(IN:=FALSE);
+		//	iStep:=20;
+		//END_IF
+		
+		(*Transition*)
+		iStep																		:= 20;
+		
+		
+	4: (*Trigger door output*)
+	
+		(*Action*)
+		timDwrUp(IN:= TRUE, PT:= T#10S);
+		
+		(*Transition*)
+		IF timDwrUp.Q OR (NOT arrTCMultiLevel[_iLevel].stGblParam.bDrawerUpBefFrtDoorOpen) THEN
+			stMultiLevelVIO.opAPAirSupplySol 									:= FALSE;
+			stMultiLevelVIO.opTesterDrawerAirSupplySol 							:= FALSE;
+			
+			IF _DoorOpen_Permissive THEN
+				stMultiLevelVIO.opCellTBOtSideDoorClosed1							:= _bLock;
+				stMultiLevelVIO.opCellTBOtSideDoorClosed2							:= _bLock;
+				arrTCMultiLevel[_iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO 		:= stMultiLevelVIO;
+			ELSE
+				bErr																:= TRUE;
+				sStatus																:= 'AP is not Deactuated (UP)!';
+			END_IF
+			timDwrUp(IN:= FALSE);
+			iStep																	:= 20; // Set event
+		END_IF
+		
+	20: (*Set event*)
+
+		(*Action*)
+		IF bErr THEN
+			eEventName																:= _eFailEvent;
+			sLogName																:= _eFailLogName;
+		ELSE
+			eEventName																:= _ePassEvent;
+			sLogName																:= _ePassLogName;
+		END_IF
+		//FUN_CmdToEvent(eCmd2Event_TaskName:=_arrRCMD[_n].eTaskName , iCmd2Event_Result:=iSendEvent , eCmd2Event_EventName:=eEventName , sCmd2Event_EventName:=sLogName );
+		(*
+		_arrEvent[_n].sLogName:= sLogName;
+		_arrEvent[_n].eEventName:= eEventName; 
+		_arrEvent[_n].eModuleID:= _arrRCMD[_n].eModuleID; 
+		_arrEvent[_n].iParam:= _arrRCMD[_n].iParam;
+		_arrEvent[_n].sParam:= _arrRCMD[_n].sParam; 
+		_arrEvent[_n].bParam:= _arrRCMD[_n].bParam; 
+		_arrEvent[_n].dParam:= _arrRCMD[_n].dParam; 
+		_arrEvent[_n].sFailReason:= sStatus;
+		_arrRCMD[_n]:= CmdEmpty;
+		*)
+		sFailReason																	:= sStatus;
+		
+		CmdAndEventProcess.fbCmdAndEventUpdate.M_AddEvent(
+			sLogName																:= sLogName, 
+			eEventName																:= eEventName, 
+			eModuleID																:= _arrRCMD[_n].eModuleID, 
+			iParam																	:= _arrRCMD[_n].iParam,
+			sParam																	:= _arrRCMD[_n].sParam, 
+			bParam																	:= _arrRCMD[_n].bParam, 
+			dParam																	:= _arrRCMD[_n].dParam,
+			sFailReason																:= sFailReason);
+		
+		start																		:= FALSE;
+		IF _bDoorRecoveryStart THEN
+			arrTCMultiLevel[_iLevel].stGblParam.bDoorRecoveryStarted				:= TRUE;
+			arrTCMultiLevel[_iLevel].stGblParam.stDoorRecovEvnt.sLogName			:= 'DoorRecoveryStarted';
+			arrTCMultiLevel[_iLevel].stGblParam.stDoorRecovEvnt.eEventName			:= E_EventName.DoorRecoveryStarted;
+			arrTCMultiLevel[_iLevel].stGblParam.stDoorRecovEvnt.eModuleID			:= _arrRCMD[_n].eModuleID;
+			arrTCMultiLevel[_iLevel].fbTCMultiLevelSeq.P_stParam					:= arrTCMultiLevel[_iLevel].stGblParam;
+			timDoorRecStartDel(IN:= FALSE);
+			_bDoorRecoveryStart														:= FALSE;
+		END_IF
+		
+		(*Transition*)
+		iStep																		:= 0; // Idle
+END_CASE]]></ST>
+    </Implementation>
+    <Method Name="Execute" Id="{ca3b77b5-2a99-4c78-99c2-1d04539e022e}">
+      <Declaration><![CDATA[METHOD Execute : BOOL
+VAR_INPUT
+	n											: INT;
+	iLevel										: INT;
+	bLock										: BOOL;
+	bFrontDoor									: BOOL;
+	eFailEvent									: E_EventName;
+	ePassEvent									: E_EventName;
+	eFailLogName								: STRING;
+	ePassLogName								: STRING;
+END_VAR
+
+VAR_IN_OUT
+	arrRCMD										: ARRAY [1..NO_OF_CMD_BUFFER] OF ST_Command;
+	arrEvent									: ARRAY [1..NO_OF_EVENT_BUFFER] OF ST_Event;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[start												:= TRUE;
+_arrRCMD											:= arrRCMD;
+_arrEvent											:= arrEvent;
+_ilevel												:= SEL(ilevel>100, ilevel, ilevel-100);
+_bFrontDoor											:= SEL(ilevel>100, FALSE, TRUE);
+_bLock												:= bLock;
+_bFrontDoor											:= bFrontDoor;
+_n													:= n;
+_eFailEvent											:= eFailEvent ;
+_ePassEvent											:= ePassEvent;
+_eFailLogName										:= eFailLogName;
+_ePassLogName										:= ePassLogName;
+
+
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Reset" Id="{556c6df1-3e10-4114-8292-b48bc44863e3}">
+      <Declaration><![CDATA[METHOD Reset : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[start:=false;]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_DoorOpenClose">
+      <LineId Id="1220" Count="3" />
+      <LineId Id="1868" Count="0" />
+      <LineId Id="1224" Count="2" />
+      <LineId Id="1985" Count="0" />
+      <LineId Id="1984" Count="0" />
+      <LineId Id="1988" Count="1" />
+      <LineId Id="1995" Count="1" />
+      <LineId Id="1986" Count="0" />
+      <LineId Id="2000" Count="1" />
+      <LineId Id="1990" Count="3" />
+      <LineId Id="1227" Count="0" />
+      <LineId Id="1994" Count="0" />
+      <LineId Id="1228" Count="0" />
+      <LineId Id="1922" Count="2" />
+      <LineId Id="1229" Count="0" />
+      <LineId Id="1869" Count="1" />
+      <LineId Id="1230" Count="1" />
+      <LineId Id="1873" Count="0" />
+      <LineId Id="1232" Count="5" />
+      <LineId Id="1871" Count="1" />
+      <LineId Id="1238" Count="1" />
+      <LineId Id="1512" Count="0" />
+      <LineId Id="1874" Count="1" />
+      <LineId Id="1513" Count="0" />
+      <LineId Id="1240" Count="0" />
+      <LineId Id="1242" Count="0" />
+      <LineId Id="1876" Count="0" />
+      <LineId Id="1243" Count="1" />
+      <LineId Id="1877" Count="0" />
+      <LineId Id="1245" Count="2" />
+      <LineId Id="1890" Count="0" />
+      <LineId Id="1879" Count="0" />
+      <LineId Id="1516" Count="4" />
+      <LineId Id="1880" Count="0" />
+      <LineId Id="1886" Count="0" />
+      <LineId Id="1521" Count="4" />
+      <LineId Id="1891" Count="2" />
+      <LineId Id="1896" Count="0" />
+      <LineId Id="1898" Count="0" />
+      <LineId Id="1897" Count="0" />
+      <LineId Id="1899" Count="0" />
+      <LineId Id="1902" Count="0" />
+      <LineId Id="1901" Count="0" />
+      <LineId Id="1894" Count="1" />
+      <LineId Id="1885" Count="0" />
+      <LineId Id="1514" Count="0" />
+      <LineId Id="1248" Count="10" />
+      <LineId Id="1526" Count="0" />
+      <LineId Id="1259" Count="1" />
+      <LineId Id="1592" Count="0" />
+      <LineId Id="1903" Count="0" />
+      <LineId Id="1594" Count="4" />
+      <LineId Id="1887" Count="0" />
+      <LineId Id="1904" Count="0" />
+      <LineId Id="1599" Count="3" />
+      <LineId Id="1593" Count="0" />
+      <LineId Id="1888" Count="0" />
+      <LineId Id="1672" Count="0" />
+      <LineId Id="1261" Count="8" />
+      <LineId Id="1673" Count="0" />
+      <LineId Id="1270" Count="3" />
+      <LineId Id="1878" Count="0" />
+      <LineId Id="1274" Count="2" />
+      <LineId Id="1528" Count="0" />
+      <LineId Id="1905" Count="0" />
+      <LineId Id="1529" Count="4" />
+      <LineId Id="1907" Count="0" />
+      <LineId Id="1906" Count="0" />
+      <LineId Id="1534" Count="4" />
+      <LineId Id="1743" Count="1" />
+      <LineId Id="1734" Count="3" />
+      <LineId Id="1733" Count="0" />
+      <LineId Id="1539" Count="0" />
+      <LineId Id="1527" Count="0" />
+      <LineId Id="1541" Count="0" />
+      <LineId Id="1277" Count="7" />
+      <LineId Id="1908" Count="0" />
+      <LineId Id="1285" Count="9" />
+      <LineId Id="1542" Count="0" />
+      <LineId Id="1296" Count="0" />
+      <LineId Id="1909" Count="0" />
+      <LineId Id="1297" Count="1" />
+      <LineId Id="1540" Count="0" />
+      <LineId Id="1299" Count="2" />
+      <LineId Id="2111" Count="0" />
+      <LineId Id="1677" Count="1" />
+      <LineId Id="1794" Count="0" />
+      <LineId Id="1679" Count="0" />
+      <LineId Id="1795" Count="0" />
+      <LineId Id="1793" Count="0" />
+      <LineId Id="1796" Count="0" />
+      <LineId Id="1680" Count="0" />
+      <LineId Id="1676" Count="0" />
+      <LineId Id="1910" Count="0" />
+      <LineId Id="1681" Count="0" />
+      <LineId Id="1302" Count="2" />
+      <LineId Id="1911" Count="0" />
+      <LineId Id="1305" Count="0" />
+      <LineId Id="1651" Count="0" />
+      <LineId Id="1662" Count="0" />
+      <LineId Id="1307" Count="4" />
+      <LineId Id="1675" Count="0" />
+      <LineId Id="1312" Count="15" />
+      <LineId Id="1543" Count="0" />
+      <LineId Id="1328" Count="3" />
+      <LineId Id="1684" Count="0" />
+      <LineId Id="1332" Count="0" />
+      <LineId Id="1334" Count="70" />
+      <LineId Id="1912" Count="1" />
+      <LineId Id="1405" Count="3" />
+      <LineId Id="1915" Count="1" />
+      <LineId Id="1409" Count="0" />
+      <LineId Id="1883" Count="1" />
+      <LineId Id="2222" Count="1" />
+      <LineId Id="1410" Count="0" />
+      <LineId Id="2224" Count="0" />
+      <LineId Id="2167" Count="0" />
+      <LineId Id="1412" Count="2" />
+      <LineId Id="1981" Count="1" />
+      <LineId Id="2056" Count="0" />
+      <LineId Id="1980" Count="0" />
+      <LineId Id="1415" Count="4" />
+      <LineId Id="1914" Count="0" />
+      <LineId Id="1420" Count="19" />
+      <LineId Id="1674" Count="0" />
+      <LineId Id="1917" Count="0" />
+      <LineId Id="1440" Count="9" />
+      <LineId Id="1451" Count="7" />
+      <LineId Id="1460" Count="1" />
+      <LineId Id="1920" Count="1" />
+      <LineId Id="1463" Count="0" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_DoorOpenClose.Execute">
+      <LineId Id="15" Count="1" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="94" Count="0" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="71" Count="0" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="50" Count="3" />
+      <LineId Id="91" Count="2" />
+      <LineId Id="89" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_DoorOpenClose.Reset">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

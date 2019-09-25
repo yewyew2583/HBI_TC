@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <DUT Name="DUT_AIN" Id="{651c67cb-f076-4530-bf6f-4cd003d2c1c8}">
+    <Declaration><![CDATA[TYPE DUT_AIN :
+STRUCT
+	AIN_ID							: STRING; // AIN ID
+	Simulate						: BOOL; // Simulation
+	Healthy							: BOOL; // Healthy bit
+	AHH_Enable						: BOOL; // Enable high high alarm
+	AH_Enable						: BOOL; // Enable high alarm
+	AL_Enable						: BOOL; // Enable low alarm
+	ALL_Enable						: BOOL; // Enable low low alarm
+	AHH								: BOOL; // High high alarm
+	AH								: BOOL; // High alarm
+	AL								: BOOL; // Low alarm
+	ALL								: BOOL; // Low low alarm
+	
+	PV								: LREAL; // Process value
+	AHH_SP							: LREAL; // High high alarm set point
+	AH_SP							: LREAL; // High alarm set point
+	AL_SP							: LREAL; // Low alarm set point
+	ALL_SP							: LREAL; // Low low alarm set point
+	DB								: LREAL; // Deadband
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

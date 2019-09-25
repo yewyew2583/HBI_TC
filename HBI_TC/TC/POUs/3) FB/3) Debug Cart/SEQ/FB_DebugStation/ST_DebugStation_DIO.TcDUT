@@ -1,0 +1,97 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <DUT Name="ST_DebugStation_DIO" Id="{14be06fa-d52f-40ce-bc70-a59fd2861e8e}">
+    <Declaration><![CDATA[TYPE ST_DebugStation_DIO :
+STRUCT
+
+
+//<DIO>
+	ipDBStnAPPresentSensor					AT %I* :BOOL; // Actuate pan present signal, 0: Not present, 1: Present
+	ipDBStnAPPowerOn               			AT %I* :BOOL; // Actuate pan power on signal, 0: Power off, 1: Power on
+	ipDBStnAPReady                  		AT %I* :BOOL; // Actuate pan ready signal, 0: Not ready, 1: Ready
+	ipDBStnHandlerSafeToEnterPLC          	AT %I* :BOOL; // ??
+	ipDBStnHandlerSafeToEnterHwr          	AT %I* :BOOL; // ??
+	ipDBStnCellGroundFault          		AT %I* :BOOL;
+	ipDBStnCellFluidLeakage1				AT %I* :BOOL; //debugcart3 new io
+	ipDBStnCellFluidLeakage2				AT %I* :BOOL; //debugcart3 new io
+	ipDBStnPurgeButton						AT %I* :BOOL; //debugcart3 new io
+	
+	opDBStnAP240ACPwrEnable					AT %Q* :BOOL;
+	opAP_DIO_1								AT %Q* :BOOL;
+	opAP_DIO_2								AT %Q* :BOOL;
+	opAP_DIO_3								AT %Q* :BOOL;
+	opDBStnPCWValve                 		AT %Q* :BOOL;
+	opDBStnPCWFlowBypassValve       		AT %Q* :BOOL;
+	opDBStnBypassAPAirSupplySol           	AT %Q* :BOOL;
+	//opDBStnMainPCWSupply					AT %Q* :BOOL; //debugcart3 new io
+	opDBStnMainPCWReturn					AT %Q* :BOOL; //debugcart3 new io
+	opDBStnPCWSupplyPurge					AT %Q* :BOOL; //debugcart3 new io
+	
+	opDBStnAlarmLED 						AT %Q* :BOOL; //debugcart3 new io
+	opDBStnPurgeLED 						AT %Q* :BOOL; //debugcart3 new io
+	
+	opDBStn24VPowerEnable           		AT %Q* :BOOL;
+	opDBStnLeakFlowPCWValve        			AT %Q* :BOOL;
+	opDBStnLowFlowPCWValve          		AT %Q* :BOOL;
+	opDBStnAPSafeToEngage       			AT %Q* :BOOL;
+	opDBStnAPTCCReset               		AT %Q* :BOOL;
+
+//</DIO>
+
+//<AIO>
+	ipAnlgDBStnTstAirLeakFlowSensor 		AT %I* :INT;
+	ipAnlgDBStnAPAirLeakFlowSensor 			AT %I* :INT;
+	ipAnlgDBStnPCWLeakFlowSensor 			AT %I* :INT;
+	ipAnlgDBStnPCWLowFlowSensor				AT %I* :INT;
+//</AIO>
+
+//<SIO>
+	simDBStnTstAirLeakFlowSensor	: REAL;
+	simDBStnAPAirLeakFlowSensor 	: REAL;
+	simDBStnPCWLeakFlowSensor 		: REAL;
+	simDBStnPCWLowFlowSensor		: REAL;
+	
+	fbSimDBStnTstAirLeakFlowSensor	:FB_AnlgSIM;
+	fbSimDBStnAPAirLeakFlowSensor 	:FB_AnlgSIM;
+	fbSimDBStnPCWLeakFlowSensor 	:FB_AnlgSIM;
+	fbSimDBStnPCWLowFlowSensor		:FB_AnlgSIM;
+//</SIO>
+
+//<CIO>
+	ipDBStnTstAirLeakFlowSensor 	:REAL; 
+	ipDBStnAPAirLeakFlowSensor 		:REAL;
+	ipDBStnPCWLeakFlowSensor 		:REAL;
+	ipDBStnPCWLowFlowSensor 		:REAL;
+//</CIO>
+END_STRUCT
+END_TYPE
+
+
+(*
+GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.ipDBStnAPPresentSensor			
+GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.ipDBStnAPPowerOn                
+GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.ipDBStnAPReady                  
+GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.ipDBStnAPDeactuatedPLC          
+GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.ipDBStnAPDeactuatedHwr          
+GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.ipDBStnCellGroundFault      
+
+GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.ipDBStnTstAirLeakFlowSensor 	
+GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.ipDBStnAPAirLeakFlowSensor 		
+GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.ipDBStnPCWLeakFlowSensor 		
+GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.ipDBStnPCWLowFlowSensor 		
+
+GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.opDBStnAP240ACPwrEnable			
+GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.opAP_DIO_1						
+GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.opAP_DIO_2						
+GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.opAP_DIO_3						
+GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.opDBStnPCWValve                 
+GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.opDBStnAP_TBD                   
+GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.opDBStnAPAirSupplySol           
+GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.opDBStn24VPowerEnable           
+GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.opDBStnLeakFlowPCWValve         
+GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.opDBStnLowFlowPCWValve          
+GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.opDBStnAPSafeToMoveSignal       
+GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.opDBStnAPTCCReset               
+*)]]></Declaration>
+  </DUT>
+</TcPlcObject>

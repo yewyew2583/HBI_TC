@@ -1,0 +1,24 @@
+Id;Default
+313;%d
+311;%f
+312;Actual Position
+690;Alarm Reset
+301;Alarn Reset
+733;Commands:
+272;Cycle Running
+948;Enable
+314;Error Code
+225;Level
+307;MoveAbs
+308;MoveRel
+487;No Of Cycle
+310;Reset
+315;Set Absolute Pos
+316;Set Absolute Speed
+417;Set No Of Cycle
+317;Set Rel Pos
+318;Set Rel Speed
+74;Start
+309;Stop
+425;Test Command
+319;Up

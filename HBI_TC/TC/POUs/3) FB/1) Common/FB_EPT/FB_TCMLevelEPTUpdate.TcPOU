@@ -1,0 +1,96 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <POU Name="FB_TCMLevelEPTUpdate" Id="{a1de3507-2555-4608-93bd-333a14b1f7fe}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_TCMLevelEPTUpdate
+VAR_INPUT
+	iLevel:INT := 0;
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	bBlocked 			: BOOL := FALSE;
+	bLevelBlocked 		: BOOL := FALSE;
+	bEptBlocked 		: BOOL := FALSE;
+	bEptBusy 			: BOOL := FALSE;
+	bEptIdle 			: BOOL := FALSE;
+	stMLVIO				: ST_TCMultiLevel_VIO;
+	i					: INT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//IF iPOC_ML_Selection = 1 AND FALSE THEN
+//	bEptBlocked := 	arrTCShuttlePOC[iLevel].stGblParam.iProcessState = E_ProcessState.eALPAUSED OR
+//					(*arrTCLevelState[iLevel] = E_State.eDisabled; *) 
+//					(TC_ModuleState[iLevel].Tester = E_State.eDisabled OR
+//					TC_ModuleState[iLevel].TCSite[1].TCU = E_State.eDisabled OR
+//					TC_ModuleState[iLevel].TCSite[1].TIERII = E_State.eDisabled);
+//	
+//	bEptBusy 	:= 	arrTCShuttlePOC[iLevel].stGblParam.iProcessState = E_ProcessState.eLOADG;
+//	bEptIdle 	:= 	arrTCShuttlePOC[iLevel].stGblParam.iProcessState = E_ProcessState.ePAUSE OR
+//					arrTCShuttlePOC[iLevel].stGblParam.iProcessState = E_ProcessState.eAWAITGCMD;	
+//ELSE
+	stMLVIO:=arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO;
+	
+	bEptBlocked := 	(arrTCMultiLevel[iLevel].stGblParam.iProcessState = E_ProcessState.eALPAUSED)	OR	//All alarms besides TIIAlarm block the EPT, Door Recovery executing
+					(TC_ModuleState[iLevel].Tester = E_State.eDisabled 								OR	//Modules disabled
+					 TC_ModuleState[iLevel].TCSite[1].TCU = E_State.eDisabled 						OR	//Modules disabled
+					 TC_ModuleState[iLevel].TCSite[1].TIERII = E_State.eDisabled)					OR	//Modules disabled
+					(stMLVIO.isSysError) 															OR	//System Facilities OR Column Alarms
+					(stMLVIO.TIIAlarmEPT);																//Some TIIAlarms block the EPT
+				
+	bEptBusy 	:= 	(arrTCMultiLevel[iLevel].stGblParam.iProcessState = E_ProcessState.eLOADG)		OR	//executing tasks
+					((NOT stMLVIO.ipHandlerSafeToEnterHwr) OR NOT (stMLVIO.ipHandlerSafeToEnterPLC))			OR	//actuate pan actuated
+					(stMLVIO.ipTCDrawerCylUpRS OR stMLVIO.ipTCDrawerCylExtendRS);						//tc drawer up/ out position
+	
+	bEptIdle 	:= 	arrTCMultiLevel[iLevel].stGblParam.iProcessState = E_ProcessState.ePAUSE OR	
+					arrTCMultiLevel[iLevel].stGblParam.iProcessState = E_ProcessState.eAWAITGCMD;	
+//END_IF	
+	 
+IF bEptBlocked THEN 
+	//arrTCMLevelEpt[iLevel]:= E_EPT.eBlocked;
+	TC_EPT[iLevel].TCSite[1].TCU:=E_EPT.eBlocked;
+ELSIF bEptBusy THEN 
+	//arrTCMLevelEpt[iLevel]:= E_EPT.eBusy; 
+	TC_EPT[iLevel].TCSite[1].TCU:=E_EPT.eBusy;  
+ELSIF bEptIdle THEN 
+	//arrTCMLevelEpt[iLevel]:= E_EPT.eIdle;   
+	TC_EPT[iLevel].TCSite[1].TCU:=E_EPT.eIdle;
+END_IF
+]]></ST>
+    </Implementation>
+    <LineIds Name="FB_TCMLevelEPTUpdate">
+      <LineId Id="62" Count="0" />
+      <LineId Id="71" Count="0" />
+      <LineId Id="128" Count="2" />
+      <LineId Id="127" Count="0" />
+      <LineId Id="126" Count="0" />
+      <LineId Id="73" Count="1" />
+      <LineId Id="63" Count="0" />
+      <LineId Id="65" Count="0" />
+      <LineId Id="175" Count="0" />
+      <LineId Id="233" Count="0" />
+      <LineId Id="67" Count="0" />
+      <LineId Id="106" Count="1" />
+      <LineId Id="191" Count="0" />
+      <LineId Id="208" Count="0" />
+      <LineId Id="211" Count="0" />
+      <LineId Id="266" Count="0" />
+      <LineId Id="69" Count="0" />
+      <LineId Id="235" Count="1" />
+      <LineId Id="234" Count="0" />
+      <LineId Id="70" Count="0" />
+      <LineId Id="66" Count="0" />
+      <LineId Id="40" Count="2" />
+      <LineId Id="75" Count="0" />
+      <LineId Id="96" Count="0" />
+      <LineId Id="43" Count="0" />
+      <LineId Id="76" Count="0" />
+      <LineId Id="97" Count="0" />
+      <LineId Id="44" Count="0" />
+      <LineId Id="77" Count="0" />
+      <LineId Id="98" Count="0" />
+      <LineId Id="45" Count="0" />
+      <LineId Id="92" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

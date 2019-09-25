@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <DUT Name="E_DCFACAlarm" Id="{5e7ff251-5a0b-4639-8aa5-9c962d0c58e0}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+//TYPE E_DCFACAlarm :
+//(
+//	ePCWSupplyHighTempWarning 		:=1,
+//	e6BarLowOFAAirPressureWarning	,
+//	e9BarLowOFAAirPressureWarning	,
+//	eExcessiveHeatLoadIntoPCWWarning,
+//	eCondensationWarning			,
+//	eCriticalCondensationAlarm		,
+//	eSystemPCWLeakageAlarm			,
+//	eSystemPCWSupplyLeakageAlarm	,
+//	eSystemPCWReturnLeakageAlarm
+//);
+//END_TYPE
+
+TYPE E_DCFACAlarm :
+(
+	eSystemPCWLeakageAlarm				:= 1	,
+	eSystemPCWSupplyLeakageAlarm     	:= 2    ,
+	eSystemPCWReturnLeakageAlarm     	:= 3    ,
+	eCriticalCondensationAlarm       	:= 4    ,
+	e6BarLowOFAAirPressureAlarm			:= 5	,
+	ePCWSupplyHighTempWarning 			:= 11   ,
+	e6BarLowOFAAirPressureWarning    	:= 12   ,
+	e9BarLowOFAAirPressureWarning    	:= 13   ,
+	eExcessiveHeatLoadIntoPCWWarning 	:= 14   ,
+	eCondensationWarning             	:= 15   
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

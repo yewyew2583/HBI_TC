@@ -1,0 +1,16 @@
+﻿<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.0.23">
+  <DUT Name="ST_Command" Id="{ed8258fb-161e-4600-90d0-342452435a3e}">
+    <Declaration><![CDATA[TYPE ST_Command :
+STRUCT
+	// Priority not in use default always 0
+	nPriority:UINT;
+	// Command name 
+	sTaskName: STRING(80);
+	//Parameter 1..6
+	arrParameter: ARRAY [1..6] OF STRING(80);
+END_STRUCT
+END_TYPE
+]]></Declaration>
+    <ObjectProperties />
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <POU Name="F_GetColumnID" Id="{d90e3ca6-291a-4635-9cc6-c8dfc81428a2}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION F_GetColumnID : UINT
+VAR_INPUT
+	eColumnID:E_ModuleID:=E_ModuleID.COLUMN_LA;
+END_VAR
+VAR
+END_VAR
+VAR_OUTPUT
+	sColName:STRING;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[CASE eColumnID OF
+	//E_ModuleID.IOLP: F_GetColumnID:=1;RETURN;
+	//(*
+	E_ModuleID.COLUMN_LA: F_GetColumnID:=1;sColName:='COLUMN_LA';RETURN;
+	E_ModuleID.COLUMN_LB: F_GetColumnID:=2;sColName:='COLUMN_LB';RETURN;
+	E_ModuleID.COLUMN_LC: F_GetColumnID:=3;sColName:='COLUMN_LC';RETURN;
+	E_ModuleID.COLUMN_RA: F_GetColumnID:=4;sColName:='COLUMN_RA';RETURN;
+	E_ModuleID.COLUMN_RB: F_GetColumnID:=5;sColName:='COLUMN_RB';RETURN;
+	E_ModuleID.COLUMN_RC: F_GetColumnID:=6;sColName:='COLUMN_RC';RETURN;
+	//*)
+	
+ELSE
+	Logging.fbDebugLog.P_sModule:= CONCAT('TC L','DA DA!');
+	Logging.fbDebugLog.M_nLogger(iLogLevel:= 1, sSource:= 'F_GetColumnID', sMessage:= 'Invalid Column Module ID');
+	F_GetColumnID:=0;
+END_CASE]]></ST>
+    </Implementation>
+    <LineIds Name="F_GetColumnID">
+      <LineId Id="11" Count="0" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="14" Count="5" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="20" Count="1" />
+      <LineId Id="24" Count="1" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="13" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

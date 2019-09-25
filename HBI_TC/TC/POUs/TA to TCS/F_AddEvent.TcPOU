@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.10">
+  <POU Name="F_AddEvent" Id="{177a8dba-5154-42e4-9172-d8a1d9b0200c}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION F_AddEvent : BOOL //Return true if success, false otherwise
+VAR_INPUT
+	nModuleID: INT;  //indicate which module ID requested to be processed by this function	
+	sName   : STRING(80);
+	sParam1 : STRING(80);
+	sParam2 : STRING(80);
+	sParam3 : STRING(80);
+	sParam4 : STRING(80);
+	sParam5 : STRING(80);
+	sParam6 : STRING(80);
+END_VAR
+VAR
+	iQueueCount : UINT;
+	iRetry : INT := 0;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[iRetry := 0;
+WHILE arrEventUpdating[nModuleID] = TRUE DO
+	iRetry := iRetry + 1;		
+	IF iRetry > 100 THEN
+		//F_WriteLogError('Cannot add event, PLC is too busy.');
+		iRetry := 0;
+		F_AddEvent := FALSE;		
+		RETURN; //never process if the arrEventUpdating[nModuleID] is TRUE
+	END_IF
+END_WHILE
+
+arrEventUpdating[nModuleID] := TRUE; //lock it, ensure no one will read and write during this update 
+
+iQueueCount := arrPendingEventsQueue[nModuleID].Count;
+IF iQueueCount < 0 THEN
+	//F_WriteLogWarning(WarningMessage:='Event queue buffer count is less than 0');
+	iQueueCount := 0;
+END_IF
+
+iQueueCount := iQueueCount + 1;	
+IF iQueueCount > 255 THEN
+	//F_WriteLogError(ErrorMessage:='Event queue buffer exceed 255');
+	arrEventUpdating[nModuleID] := FALSE; //release
+	F_AddEvent := FALSE;
+	RETURN; //it means the event's buffer is full 
+ELSE
+	arrPendingEventsQueue[nModuleID].Queue[iQueueCount].sEventName := sName;
+	arrPendingEventsQueue[nModuleID].Queue[iQueueCount].arrParameter[1] := sParam1;
+	arrPendingEventsQueue[nModuleID].Queue[iQueueCount].arrParameter[2] := sParam2;
+	arrPendingEventsQueue[nModuleID].Queue[iQueueCount].arrParameter[3] := sParam3;
+	arrPendingEventsQueue[nModuleID].Queue[iQueueCount].arrParameter[4] := sParam4;
+	arrPendingEventsQueue[nModuleID].Queue[iQueueCount].arrParameter[5] := sParam5;
+	arrPendingEventsQueue[nModuleID].Queue[iQueueCount].arrParameter[6] := sParam6;
+	arrPendingEventsQueue[nModuleID].Count := iQueueCount;
+	//Logging.fbDebugLog(stEvent:=arrPendingEventsQueue[nModuleID].Queue[iQueueCount]);
+END_IF
+
+arrEventUpdating[nModuleID] := FALSE; //release
+F_AddEvent := TRUE;
+]]></ST>
+    </Implementation>
+    <LineIds Name="F_AddEvent">
+      <LineId Id="3" Count="38" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

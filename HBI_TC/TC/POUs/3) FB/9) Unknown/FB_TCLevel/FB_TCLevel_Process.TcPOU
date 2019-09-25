@@ -1,0 +1,191 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <POU Name="FB_TCLevel_Process" Id="{7d17b2bc-732a-400c-a6d9-06712f97a027}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_TCLevel_Process
+VAR_INPUT
+	iLevel : UINT;
+	
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	//For testing purpose only
+	//bShuttleMoveInOut: BOOL;
+	//bInitialize: BOOL;
+	//bAlarmClear : BOOL;
+	bLogEveryStep : BOOL:=TRUE;
+	
+	//*****************
+	rtTCShuttleStart: R_TRIG;
+	//stTCShuttleSeqParam : ST_FlyoverSeqParam;
+	iSeqCase: INT:=1;
+	iSeqStatus: INT; //To defind current status of subsequence 
+	bError: BOOL;
+	sMessage : STRING;
+	sAlarmID: STRING(40);
+	sModuleID: STRING(INT#40);
+	sDebugSource: STRING(INT#50);
+	bExecute: BOOL;
+	iErrorID: UDINT;
+	
+	sPrevMsg: STRING;
+	iEventName : E_EventName;
+	sLogName : STRING;
+	iSendEvent :INT;
+	sFailReason: STRING;
+END_VAR
+
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[arrTCLevel[iLevel].fbTCLevelSeq.M_nCyclic();
+
+bExecute :=arrTCLevel[iLevel].stGblParam.bShuttleMoveOut=TRUE OR arrTCLevel[iLevel].stGblParam.bShuttleMoveIn OR arrTCLevel[iLevel].stGblParam.bInitialise OR arrTCLevel[iLevel].stGblParam.bCancel 
+			OR arrTCLevel[iLevel].stGblParam.bAlarmClear=TRUE;
+rtTCShuttleStart(CLK:=bExecute , Q=> );
+IF rtTCShuttleStart.Q THEN
+	iSeqCase:=1;
+END_IF
+
+IF arrTCLevel[iLevel].fbTCLevelSeq.P_sMessage <> sPrevMsg THEN
+	sPrevMsg := arrTCLevel[iLevel].fbTCLevelSeq.P_sMessage;
+	Logging.fbDebugLog.P_sModule:= CONCAT('TC L',INT_TO_STRING(iLevel));
+	Logging.fbDebugLog.M_nLogger(iLogLevel:= 1, sSource:= sDebugSource, sMessage:= arrTCLevel[iLevel].fbTCLevelSeq.P_sMessage);
+END_IF
+
+IF NOT bExecute THEN
+	RETURN;
+END_IF
+
+IF arrTCLevel[iLevel].stGblParam.bShuttleMoveIn THEN
+	sDebugSource := 'ShuttleMoveIn';
+ELSIF arrTCLevel[iLevel].stGblParam.bShuttleMoveOut THEN
+	sDebugSource := 'ShuttleMoveOut';
+ELSIF arrTCLevel[iLevel].stGblParam.bInitialise THEN
+	sDebugSource := 'Initialise';
+ELSIF arrTCLevel[iLevel].stGblParam.bCancel THEN
+	sDebugSource := 'Cancel';
+
+END_IF
+
+sMessage := CONCAT(sDebugSource,arrTCLevel[iLevel].fbTCLevelSeq.P_sMessage);
+
+CASE iSeqCase OF
+1: //Sequence Reset
+	arrTCLevel[iLevel].fbTCLevelSeq.M_nReset(bExecute:=TRUE );
+	iSeqCase:=iSeqCase+1;
+
+2: //Data input
+	arrTCLevel[iLevel].fbTCLevelSeq.M_nReset(bExecute:=FALSE );
+	//arrTCLevel[iLevel].fbTCLevelSeq.P_ErrClear:=FALSE;
+	IF iLevel=1 THEN //only for POC use
+		arrTCLevel[iLevel].stGblParam.bLevel1 := TRUE;
+	ELSE
+		arrTCLevel[iLevel].stGblParam.bLevel1 := FALSE;
+	END_IF
+	
+	arrTCLevel[iLevel].fbTCLevelSeq.P_stParam := arrTCLevel[iLevel].stGblParam;
+	IF NOT arrTCLevel[iLevel].fbTCLevelSeq.P_bReset THEN
+		iSeqCase:=3;
+	END_IF
+	
+3: //Start execute
+	IF arrTCLevel[iLevel].stGblParam.bInitialise THEN
+		iSeqStatus := arrTCLevel[iLevel].fbTCLevelSeq.M_nSystemReset();
+	ELSE
+		iSeqStatus := arrTCLevel[iLevel].fbTCLevelSeq.M_nShuttleMoveInOut();	
+	END_IF
+	
+	IF iSeqStatus=10 THEN
+		iSeqCase:=4;
+	
+	ELSIF iSeqStatus=99 THEN 
+		sAlarmID := CONCAT(sModuleID, '.xxx'); //pending alarmID
+		//iErrorID := (iLevel*1000) + arrTCLevel[iLevel].fbTCLevelSeq.P_nErrorID;
+		iErrorID := (iLevel*1000) + arrTCVIO[iLevel].iAlarmCode;
+		
+		iSeqCase:=5;
+		arrTCLevel[iLevel].stGblParam.bAlarmOccur :=TRUE;
+		iSendEvent :=2;
+		//JMP iSendEvent;	
+	END_IF
+	
+4: //Done
+	arrTCLevel[iLevel].stGblParam.bShuttleMoveIn:= arrTCLevel[iLevel].stGblParam.bShuttleMoveOut:= arrTCLevel[iLevel].stGblParam.bInitialise:= arrTCLevel[iLevel].stGblParam.bCancel:= FALSE;
+	arrTCLevel[iLevel].fbTCLevelSeq.P_stParam := arrTCLevel[iLevel].stGblParam;
+    iSendEvent :=1;
+	//JMP iSendEvent;
+
+	
+5: //Error
+	IF arrTCLevel[iLevel].stGblParam.bAlarmClear THEN
+		arrTCLevel[iLevel].fbTCLevelSeq.P_ErrClear:=TRUE;
+		Logging.fbDebugLog.M_nLogger(iLogLevel:= 1, sSource:= sDebugSource, sMessage:= 'Clear Alarm');
+		arrTCLevel[iLevel].stGblParam.bAlarmOccur :=FALSE;
+		arrTCLevel[iLevel].stGblParam.bAlarmClear:=FALSE;
+		
+		
+	ELSIF arrTCLevel[iLevel].stGblParam.bResume THEN          
+		iSeqCase:=3;
+		arrTCLevel[iLevel].stGblParam.bResume:=FALSE;
+	ELSIF arrTCLevel[iLevel].stGblParam.bCancel OR arrTCLevel[iLevel].stGblParam.bInitialise THEN
+		arrTCLevel[iLevel].stGblParam.bShuttleMoveIn:= arrTCLevel[iLevel].stGblParam.bShuttleMoveOut:= arrTCLevel[iLevel].stGblParam.bInitialise:= FALSE;
+		arrTCLevel[iLevel].fbTCLevelSeq.P_stParam := arrTCLevel[iLevel].stGblParam;
+		arrTCLevel[iLevel].stGblParam.bCancel :=FALSE;
+		iSeqCase:=3;
+	END_IF
+END_CASE
+
+//send event to TA
+(*iSendEvent :
+	IF iSendEvent<>0 THEN
+		CmdAndEventProcess.fbCmdAndEventUpdate.M_nCmdtoEvent(eCmd2Event_TaskName:=arrTCLevel[iLevel].stGblParam.stTACommand.eTaskName , iCmd2Event_Result:=iSendEvent , eCmd2Event_EventName:=iEventName , sCmd2Event_EventName:=sLogName );
+		sFailReason := '';
+		
+		(*IF iSendEvent=2 THEN
+			sFailReason := arrTCVIO[iLevel].sAlarmMessage;
+			CmdAndEventProcess.fbCmdAndEventUpdate.M_AddEvent(
+			sLogName:= concat('AlarmTriggered, ALID:', UDINT_TO_STRING(iErrorID)) , 
+			eEventName:= E_Eventname.AlarmTriggered, 
+			eModuleID:= arrTCLevel[iLevel].stGblParam.stTACommand.eModuleID, 
+			iParam:= F_ArrayInt(iParam:=arrTCLevel[iLevel].stGblParam.stTACommand.iParam , iParam1:=UDINT_TO_INT(iErrorID) ), 
+			sParam:= arrTCLevel[iLevel].stGblParam.stTACommand.sParam,
+			bParam:= arrTCLevel[iLevel].stGblParam.stTACommand.bParam, 
+			dParam:= arrTCLevel[iLevel].stGblParam.stTACommand.dParam,
+			sFailReason:= sFailReason);
+		END_IF*)
+		
+		CmdAndEventProcess.fbCmdAndEventUpdate.M_AddEvent(
+			sLogName:= sLogName, 
+			eEventName:= iEventName, 
+			eModuleID:= arrTCLevel[iLevel].stGblParam.stTACommand.eModuleID, 
+			iParam:= arrTCLevel[iLevel].stGblParam.stTACommand.iParam,
+			sParam:= arrTCLevel[iLevel].stGblParam.stTACommand.sParam, 
+			bParam:= arrTCLevel[iLevel].stGblParam.stTACommand.bParam, 
+			dParam:= arrTCLevel[iLevel].stGblParam.stTACommand.dParam,
+			sFailReason:= sFailReason);
+		iSendEvent :=0;
+	END_IF
+		*)
+//arrTCLevel[iLevel].stShuttleMoveOut.iStatus :=iSeqStatus;
+
+(*IF iSeqCase=3 THEN
+	IF arrTCLevel[iLevel].stGblParam.bShuttleMoveIn OR arrTCLevel[iLevel].stGblParam.bShuttleMoveOut OR
+	arrTCLevel[iLevel].stGblParam.bInitialise THEN
+		iSeqStatus := arrTCLevel[iLevel].fbTCLevelSeq.M_nShuttleMoveInOut();
+	(*ELSIF bInitialize THEN
+		iSeqStatus := arrTCLevel[iLevel].fbTCLevelSeq.M_nMoveShuttle();*)
+	END_IF
+ELSE
+	//arrTCLevel[iLevel].fbTCLevelSeq.M_nCyclic();
+	arrTCLevel[iLevel].stGblParam.bAlarmClear:=FALSE;
+END_IF*)
+]]></ST>
+    </Implementation>
+    <LineIds Name="FB_TCLevel_Process">
+      <LineId Id="390" Count="84" />
+      <LineId Id="565" Count="0" />
+      <LineId Id="475" Count="55" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

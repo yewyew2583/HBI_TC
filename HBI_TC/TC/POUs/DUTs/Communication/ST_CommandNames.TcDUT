@@ -1,0 +1,50 @@
+﻿<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.0.23">
+  <DUT Name="ST_CommandNames" Id="{31e756e5-8c9d-4fd4-9c89-596a0ae27d3b}">
+    <Declaration><![CDATA[TYPE ST_CommandNames :
+STRUCT
+	bConnect	:BOOL;
+	bDisconnect	:BOOL;
+	bGetSystemConfig	:BOOL;
+	bActivateRecipe	:BOOL;
+	bValidateRecipe	:BOOL;
+	bUpdateRecipeValue	:BOOL;
+	bGetRecipeValue	:BOOL;
+	//bTrayDispatch	:BOOL;
+	bAlarmCleared	: ARRAY [1..4]OF BOOL;
+	bSetLogFileVerbosity	:BOOL;
+	bRescan	: ARRAY [1..2]OF BOOL;
+	bUpdateLCD	: ARRAY [1..4]OF BOOL;
+	bEnableModule	:BOOL;
+	bDisableModule	:BOOL;
+	bDeleteLeastUsedRecipe	:BOOL;
+	bVisionReady	: ARRAY [1..2]OF BOOL;
+	bPause	: ARRAY [1..4]OF BOOL;
+	bResume	: ARRAY [1..4]OF BOOL;
+	bStartFactoryCalibration	:BOOL;
+	//bCalJigResult	:BOOL;
+	//bCalCamZResult	:BOOL;
+	bJog	: ARRAY [1..4]OF BOOL;
+	bGetCurrentPosition	:BOOL;
+	bSetPosition	:BOOL;
+	bGetDistanceMoved	:BOOL;
+	bGetTeachData	:BOOL;
+	bApplyTeachData	:BOOL;
+	bAbortTeach	:BOOL;
+	bStartProductCalibration	:BOOL;
+	bTeachOffsetData	:BOOL;
+	bCaptureCalibrationPosition	:BOOL;
+	//bTriggerVision	: ARRAY [1..2]OF BOOL;
+	//bEnableDryRun	:BOOL;
+	//bDisableDryRun	:BOOL;
+	bDoorOpen		: ARRAY [1..2]OF BOOL;
+	bDoorClose		: ARRAY [1..2]OF BOOL;
+	bRetry			: ARRAY [1..4]OF BOOL;
+	bCancel			: ARRAY [1..4]OF BOOL;
+	bMainAirValve	:BOOL;
+	bHardStop		: ARRAY [1..4]OF BOOL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+    <ObjectProperties />
+  </DUT>
+</TcPlcObject>

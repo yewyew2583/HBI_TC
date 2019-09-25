@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
+  <DUT Name="ST_TCMultilevel" Id="{7f89e4e5-2678-41e0-b71e-04b4ae097e11}">
+    <Declaration><![CDATA[TYPE ST_TCMultilevel :
+STRUCT
+	
+		stGblParam							: ST_TCMultiLevelSeqParam;
+		fbTCMultiLevelSeq					: FB_TCMultiLevelSeq;
+		
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

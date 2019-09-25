@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <DUT Name="ST_TCMultiLevel_BIO" Id="{2c19fcba-0b90-48d4-a8ea-aaf96734b828}">
+    <Declaration><![CDATA[TYPE ST_TCMultiLevel_BIO :
+STRUCT
+	//input----------------------------------------	//
+	ipAPPresentSensor			: E_BackdoorState;
+	ipAPPowerOn	 			: E_BackdoorState;
+	ipAPReady					: E_BackdoorState;
+	ipHandlerSafeToEnterPLC			: E_BackdoorState;
+	ipHandlerSafeToEnterHwr			: E_BackdoorState;
+	//Spare
+	//Spare
+	//Spare
+	//Spare
+	ipCellFluidLeakage1			: E_BackdoorState;
+	ipCellFluidLeakage2			: E_BackdoorState;
+	ipCellGroundFault			: E_BackdoorState;
+	//Spare
+	//Spare
+	//Spare
+	//Spare
+	ipTesterPresent				: E_BackdoorState;
+	ipTesterPowerOn				: E_BackdoorState;
+	ipTesterReady				: E_BackdoorState;
+	//Spare
+	//Spare
+	ipTCDrawerCylExtendRS		: E_BackdoorState;
+	ipTCDrawerCylRetractRS		: E_BackdoorState;//:=E_BackdoorState.eForce_On;
+	ipTCDrawerCylUpRS			: E_BackdoorState;
+	ipTCDrawerCylDownRS			: E_BackdoorState;//:=E_BackdoorState.eForce_On;
+	ipTCCellDoorClosed			: E_BackdoorState;
+	ipTCCellTbotSideDoorLocked01	: E_BackdoorState;
+	ipTCCellTbotSideDoorLocked02	: E_BackdoorState;
+	ipTCCellDoorOpenCloseStatus	: E_BackdoorState;
+	ipTCCellTbotSideDoorOpenCloseStatus01 : E_BackdoorState;
+	ipTCCellTbotSideDoorOpenCloseStatus02 : E_BackdoorState;
+	ipTesterLatchesClosed		: E_BackdoorState;
+	ipTCCellAbortFlowBtn		: E_BackdoorState;//:=E_BackdoorState.eForce_Off;
+	ipTCCellDoorOpenReqBtn		: E_BackdoorState;//:=E_BackdoorState.eForce_Off;
+	ipTIUPresent                : E_BackdoorState;
+	ipDrawerMaintenanceModeBtn	: E_BackdoorState;//:=E_BackdoorState.eForce_Off;
+
+	//ipTesterAPDetachReqBtn			AT %I*: BOOL;	//Btn, To put the slot into a safe state for removing the AP and Tester
+	//ipTCCellDoorOpenReqBtn			AT %I*: BOOL;	//Btn, Door Open Request
+	//ipTesterDrawerAirOffReqBtn		AT %I*: BOOL;	//Btn, switch off 6-bar solenoid valve in cell for Tester and Drawer	
+END_STRUCT
+END_TYPE
+
+
+
+
+
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

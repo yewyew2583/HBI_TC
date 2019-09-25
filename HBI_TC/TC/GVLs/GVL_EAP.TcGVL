@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <GVL Name="GVL_EAP" Id="{d5dd633a-bd89-4018-8d5e-080b155e2408}">
+    <Declaration><![CDATA[//{attribute 'qualified_only'}
+VAR_GLOBAL
+	stEAP:ST_EAP;
+	stDCEAP:ST_DCEAP;
+	eapShutOffAllACPower					AT %I* :BOOL; // shut off Tester and AP AC Power, 0: On, 1: Off //only for debug cart and station
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

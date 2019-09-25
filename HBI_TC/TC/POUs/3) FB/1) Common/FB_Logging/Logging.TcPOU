@@ -1,0 +1,152 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <POU Name="Logging" Id="{cdb76e7e-d4b1-49bd-bbd2-b82ea7f66603}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM Logging
+VAR_INPUT
+	fbDebugLog: Tc3_HBI_DataLogger.FB_DataLogger;
+	fbMtrLog: ARRAY [1..NO_OF_LEVEL] OF Tc3_HBI_DataLogger.FB_MotorLogger;
+	
+	fbSensorLog: Tc3_HBI_DataLogger.FB_DataLogger; //Tc3_HBI_DataLogger.FB_SensorLogger;
+	fbAlarmLog: Tc3_HBI_DataLogger.FB_DataLogger;
+	
+	fbSensorMonitor : FB_SensorMonitor;
+	fbAlarmMonitor : FB_AlarmMonitor;
+	//iLevel : UINT;
+	bRunOnce : BOOL :=TRUE;
+END_VAR
+
+VAR
+	iLevel : UINT;
+	bTest: BOOL;
+	fbLogDir : FB_FileAccess;
+	
+	nI: INT;
+	str:STRING;
+	isError : BOOL;
+	errorID: UDINT;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//set logging information
+IF bRunOnce THEN
+	//fbLogDir.P_sDirectoryPath :=  'C:\';
+	//fbLogDir.P_sSubDirPath := 'AEM\Data\ControllerLog';
+	fbDebugLog.P_sDirectoryPath:='C:\';
+	fbDebugLog.P_sSubDirPath:='AEM\Data\ControllerLog';
+	fbDebugLog.sFileName :='DebugLog';
+	fbDebugLog.P_iLogVerbosity :=  iLogVerbosity;
+	//fbMtrLog[iLevel].P_sFileName:='Motor';
+	
+	fbAlarmLog.P_sDirectoryPath:='C:\';
+	fbAlarmLog.P_sSubDirPath:='AEM\Data\ControllerLog';
+	fbAlarmLog.sFileName :='AlarmLog';
+	fbAlarmLog.P_iLogVerbosity :=  iLogVerbosity;
+		
+	FOR nI:=0 TO NO_OF_LEVEL DO
+		fbSensorLog.P_sDirectoryPath:='C:\';
+		fbSensorLog.P_sSubDirPath:='AEM\Data\ControllerLog';
+
+		fbSensorLog.sFileName :='SensorLog';
+		fbSensorLog.P_iLogVerbosity :=  iLogVerbosity;
+		fbSensorLog.M_nDirectory(bExecute:=TRUE);
+		IF fbSensorLog.P_bError THEN
+			errorID:=fbSensorLog.P_nErrorID;
+		END_IF
+	END_FOR
+	(*
+	FOR nI:=0 TO NO_OF_LEVEL DO
+		fbSensorLog[nI].P_sDirectoryPath:='C:\';
+		fbSensorLog[nI].P_sSubDirPath:='AEM\Data\SensorLog';
+		IF nI=0 THEN
+			str:='SensorLogColumn';
+		ELSE
+			str:=CONCAT(CONCAT(CONCAT('Level[',INT_TO_STRING(nI)),']'),'SensorLog'); 
+		END_IF
+		fbSensorLog[nI].sFileName :=str;
+		fbSensorLog[nI].P_iLogVerbosity :=  iLogVerbosity;
+		fbSensorLog[nI].M_nDirectory(bExecute:=TRUE);
+		IF fbSensorLog[nI].P_bError THEN
+			errorID:=fbSensorLog[nI].P_nErrorID;
+		END_IF
+	END_FOR
+	*)
+	bRunOnce := FALSE;
+END_IF
+
+
+fbLogDir.M_nDirectory(bExecute:=TRUE); //create directory
+fbDebugLog.M_nCyclic();
+
+fbSensorLog.M_nCyclic();  //fbSensorLog[1].M_nLogger('test', bTest);
+FOR iLevel:=0 TO NO_OF_LEVEL DO
+	IF iLevel=0 THEN
+		fbSensorMonitor(iLevel:=iLevel,newVIO:=arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLVIO,oldVIO:=arrTCMultiLevel[1].fbTCMultiLevelSeq.stOldMLVIO);
+	END_IF
+	fbSensorMonitor(iLevel:=iLevel,newVIO:=arrTCMultiLevel[ilevel].fbTCMultiLevelSeq.stMLVIO,oldVIO:=arrTCMultiLevel[ilevel].fbTCMultiLevelSeq.stOldMLVIO);
+END_FOR             
+
+//FOR nI:=1 TO 1000 DO
+//	fbSensorLog.M_nLogger(iLogLevel:= 1, sSource:= '1', INT_TO_STRING(nI));
+//	//fbDebugLog[1].M_nLogger(iLogLevel:= 1, sSource:= '1', INT_TO_STRING(nI));
+//END_FOR
+//FOR iLevel:=0 TO NO_OF_LEVEL DO
+//	//fbMtrLog[iLevel].M_nCyclic();
+//	fbSensorMonitor(iLevel:=iLevel);
+//END_FOR
+
+
+
+
+
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="Logging">
+      <LineId Id="26" Count="0" />
+      <LineId Id="45" Count="0" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="80" Count="0" />
+      <LineId Id="79" Count="0" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="57" Count="0" />
+      <LineId Id="305" Count="3" />
+      <LineId Id="304" Count="0" />
+      <LineId Id="58" Count="0" />
+      <LineId Id="91" Count="0" />
+      <LineId Id="152" Count="0" />
+      <LineId Id="236" Count="0" />
+      <LineId Id="219" Count="0" />
+      <LineId Id="165" Count="0" />
+      <LineId Id="162" Count="0" />
+      <LineId Id="230" Count="1" />
+      <LineId Id="233" Count="1" />
+      <LineId Id="154" Count="0" />
+      <LineId Id="252" Count="0" />
+      <LineId Id="238" Count="13" />
+      <LineId Id="237" Count="0" />
+      <LineId Id="253" Count="0" />
+      <LineId Id="157" Count="0" />
+      <LineId Id="53" Count="0" />
+      <LineId Id="90" Count="0" />
+      <LineId Id="186" Count="2" />
+      <LineId Id="213" Count="1" />
+      <LineId Id="274" Count="0" />
+      <LineId Id="278" Count="2" />
+      <LineId Id="275" Count="1" />
+      <LineId Id="226" Count="3" />
+      <LineId Id="86" Count="0" />
+      <LineId Id="47" Count="0" />
+      <LineId Id="109" Count="0" />
+      <LineId Id="112" Count="0" />
+      <LineId Id="108" Count="0" />
+      <LineId Id="132" Count="0" />
+      <LineId Id="110" Count="0" />
+      <LineId Id="64" Count="0" />
+      <LineId Id="63" Count="0" />
+      <LineId Id="66" Count="0" />
+      <LineId Id="46" Count="0" />
+      <LineId Id="76" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

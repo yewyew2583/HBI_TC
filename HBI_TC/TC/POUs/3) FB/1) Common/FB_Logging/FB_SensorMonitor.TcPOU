@@ -1,0 +1,107 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <POU Name="FB_SensorMonitor" Id="{8af1dad6-2db3-4fd3-9596-0a71d6cffcd9}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_SensorMonitor
+VAR_INPUT
+	iLevel : INT;
+END_VAR
+VAR_IN_OUT
+	newVIO : ST_TCMultiLevel_VIO;
+	oldVIO : ST_TCMultiLevel_VIO;
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	sSensorName: STRING;
+	stMIO : ST_TCMultiLevel_VIO;
+	stIO : ST_TCLevel_VIO;
+	bTest : BOOL;
+	i:STRING;
+	lStr1:STRING :='arrTCMultiLevel';
+	lStr2:STRING :='stTCMultiLevelDIO';
+	lStr:STRING;
+	cStr1:STRING :='fbTCColumn';
+	_lStr1:STRING;
+	cStr2:STRING :='stTCColumnDIO';
+	cStr:STRING;
+	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//iLevel:=1;
+cStr:='';
+cStr:=F_Concat3(cStr1,'.',cStr2);
+
+IF iLevel>0 THEN
+lStr:='';
+_lStr1:=Concat(Concat(lStr1,'['),ConCat(INT_TO_STRING(iLevel), ']'));
+lStr:=F_Concat3(_lStr1,'.',lStr2);
+_lStr1:='';
+//stIO := arrTCLevel[iLevel].fbTCLevelSeq.P_stTCLevelVIO;
+//newVIO:= arrTCMultiLevel[ilevel].fbTCMultiLevelSeq.stOldMLVIO;
+//oldVIO:= arrTCMultiLevel[ilevel].fbTCMultiLevelSeq.stMLVIO;
+//Level
+F_SensorLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','ipAPPresentSensor'), 		bNew:=newVIO.ipAPPresentSensor, bOld:=oldVIO.ipAPPresentSensor);
+F_SensorLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','ipAPPowerOn'), 			bNew:=newVIO.ipAPPowerOn, bOld:=oldVIO.ipAPPowerOn);
+F_SensorLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','ipAPReady'), 				bNew:=newVIO.ipAPReady, bOld:=oldVIO.ipAPReady);
+F_SensorLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','ipAPDeactuatedPLC'), 		bNew:=newVIO.ipHandlerSafeToEnterPLC, bOld:=oldVIO.ipHandlerSafeToEnterPLC);
+F_SensorLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','ipAPDeactuatedHwr'), 		bNew:=newVIO.ipHandlerSafeToEnterHwr, bOld:=oldVIO.ipHandlerSafeToEnterHwr);
+//F_SensorLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','ipSpare_1'), 			bNew:=newVIO.ipSpare_1, bOld:=oldVIO.ipSpare_1);
+//F_SensorLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','ipSpare_2'), 			bNew:=newVIO.ipSpare_2, bOld:=oldVIO.ipSpare_2);
+//F_SensorLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','ipSpare_3'), 			bNew:=newVIO.ipSpare_3, bOld:=oldVIO.ipSpare_3);
+//F_SensorLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','ipSpare_4'), 			bNew:=newVIO.ipSpare_4, bOld:=oldVIO.ipSpare_4);
+F_SensorLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','ipCellFluidLeakage1'), 	bNew:=newVIO.ipCellFluidLeakage1, bOld:=oldVIO.ipCellFluidLeakage1);
+F_SensorLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','ipCellFluidLeakage2'), 	bNew:=newVIO.ipCellFluidLeakage2, bOld:=oldVIO.ipCellFluidLeakage2);
+F_SensorLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','ipCellGroundFault'), 		bNew:=newVIO.ipCellGroundFault, bOld:=oldVIO.ipCellGroundFault);
+//F_SensorLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','ipSpare_5'), 			bNew:=newVIO.ipSpare_5, bOld:=oldVIO.ipSpare_5);
+//F_SensorLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','ipSpare_6'), 			bNew:=newVIO.ipSpare_6, bOld:=oldVIO.ipSpare_6);
+//F_SensorLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','ipSpare_7'), 			bNew:=newVIO.ipSpare_7, bOld:=oldVIO.ipSpare_7);
+//F_SensorLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','ipSpare_8'), 			bNew:=newVIO.ipSpare_8, bOld:=oldVIO.ipSpare_8);
+F_SensorLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','ipTesterPresent'), 		bNew:=newVIO.ipTesterPresent, bOld:=oldVIO.ipTesterPresent);
+F_SensorLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','ipTesterPowerOn'), 		bNew:=newVIO.ipTesterPowerOn, bOld:=oldVIO.ipTesterPowerOn);
+F_SensorLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','ipTesterReady'), 			bNew:=newVIO.ipTesterReady, bOld:=oldVIO.ipTesterReady);
+//F_SensorLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','ipSpare_9'), 			bNew:=newVIO.ipSpare_9, bOld:=oldVIO.ipSpare_9);
+//F_SensorLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','ipSpare_10'), 			bNew:=newVIO.ipSpare_10, bOld:=oldVIO.ipSpare_10);
+F_SensorLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','ipTCDrawerCylExtendRS'), 	bNew:=newVIO.ipTCDrawerCylExtendRS, bOld:=oldVIO.ipTCDrawerCylExtendRS);
+F_SensorLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','ipTCDrawerCylRetractRS'), bNew:=newVIO.ipTCDrawerCylRetractRS, bOld:=oldVIO.ipTCDrawerCylRetractRS);
+F_SensorLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','ipTCDrawerCylUpRS'), 		bNew:=newVIO.ipTCDrawerCylUpRS, bOld:=oldVIO.ipTCDrawerCylUpRS);
+F_SensorLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','ipTCDrawerCylDownRS'), 	bNew:=newVIO.ipTCDrawerCylDownRS, bOld:=oldVIO.ipTCDrawerCylDownRS);
+F_SensorLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','ipTCCellDoorClosed'), 	bNew:=newVIO.ipTCCellDoorClosed, bOld:=oldVIO.ipTCCellDoorClosed);
+F_SensorLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','ipTCCellDoorClosed'), 	bNew:=newVIO.ipTCCellDoorOpenCloseStatus, bOld:=oldVIO.ipTCCellDoorOpenCloseStatus);
+F_SensorLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','ipTesterLatchesClosed'), 	bNew:=newVIO.ipTesterLatchesClosed, bOld:=oldVIO.ipTesterLatchesClosed);
+F_SensorLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','ipTCCellAbortFlowBtn'), 	bNew:=newVIO.ipTCCellAbortFlowBtn, bOld:=oldVIO.ipTCCellAbortFlowBtn);
+F_SensorLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','ipTCCellDoorOpenReqBtn'), bNew:=newVIO.ipTCCellDoorOpenReqBtn, bOld:=oldVIO.ipTCCellDoorOpenReqBtn);
+F_SensorLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','ipAPActuatedPLC'), 		bNew:=newVIO.ipTIUPresent, bOld:=oldVIO.ipTIUPresent);
+F_SensorLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','ipDrawerMaintenanceModeBtn'), bNew:=newVIO.ipDrawerMaintenanceModeBtn, bOld:=oldVIO.ipDrawerMaintenanceModeBtn);
+ELSIF iLevel=0 THEN
+//Column
+F_SensorLog(iLevel:=iLevel,sName:=F_Concat3(cStr,'.','ipAllTCDrawerRetractedinCell'		), bNew:=fbTCColumn.stTCColumnVIO.ipAllTCDrawerRetractedinCell, bOld:=fbTCColumn.stOldTCColumnVIO.ipAllTCDrawerRetractedinCell);
+F_SensorLog(iLevel:=iLevel,sName:=F_Concat3(cStr,'.','ipColumnFluid_PCW_Leakage'		), bNew:=fbTCColumn.stTCColumnVIO.ipColumnFluid_PCW_Leakage, 	bOld:=fbTCColumn.stOldTCColumnVIO.ipColumnFluid_PCW_Leakage);
+F_SensorLog(iLevel:=iLevel,sName:=F_Concat3(cStr,'.','ipTbotDoorClosedSignal'			), bNew:=fbTCColumn.stTCColumnVIO.ipTbotDoorClosedSignal, 		bOld:=fbTCColumn.stOldTCColumnVIO.ipTbotDoorClosedSignal);
+F_SensorLog(iLevel:=iLevel,sName:=F_Concat3(cStr,'.','opHotAirExhaustFan'				), bNew:=fbTCColumn.stTCColumnVIO.opHotAirExhaustFan, 			bOld:=fbTCColumn.stOldTCColumnVIO.opHotAirExhaustFan);
+
+END_IF
+]]></ST>
+    </Implementation>
+    <LineIds Name="FB_SensorMonitor">
+      <LineId Id="221" Count="0" />
+      <LineId Id="399" Count="0" />
+      <LineId Id="391" Count="1" />
+      <LineId Id="341" Count="0" />
+      <LineId Id="402" Count="1" />
+      <LineId Id="401" Count="0" />
+      <LineId Id="410" Count="0" />
+      <LineId Id="223" Count="0" />
+      <LineId Id="333" Count="0" />
+      <LineId Id="332" Count="0" />
+      <LineId Id="382" Count="0" />
+      <LineId Id="331" Count="0" />
+      <LineId Id="350" Count="21" />
+      <LineId Id="373" Count="7" />
+      <LineId Id="388" Count="0" />
+      <LineId Id="446" Count="6" />
+      <LineId Id="393" Count="0" />
+      <LineId Id="191" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

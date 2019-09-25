@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <DUT Name="ST_DebugStation_BIO" Id="{361efd1d-cfa9-4dbd-bc40-c28757b3894f}">
+    <Declaration><![CDATA[TYPE ST_DebugStation_BIO :
+STRUCT
+		
+	ipDBStnAPPresentSensor			:E_BackdoorState;
+	ipDBStnAPPowerOn                :E_BackdoorState;
+	ipDBStnAPReady                  :E_BackdoorState;
+	ipDBStnHandlerSafeToEnterPLC          :E_BackdoorState;
+	ipDBStnHandlerSafeToEnterHwr          :E_BackdoorState;
+	ipDBStnCellGroundFault          :E_BackdoorState;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

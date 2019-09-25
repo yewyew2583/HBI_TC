@@ -1,0 +1,635 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <POU Name="FB_TIIAlarm" Id="{0b288081-bd94-440a-8fe6-c5b6955eac6e}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_TIIAlarm
+VAR_INPUT
+	vIO							: ST_TCMultiLevel_VIO;
+	NoOfTIIAlm					: INT	:= NO_OF_TII_SENSOR;
+	iLevel						: INT	:= 1;
+END_VAR
+
+VAR_OUTPUT
+	isTIIError					: BOOL;
+	TIIAlarmLED					: BOOL;
+	TIIAlarmEPT					: BOOL;
+	iUnBlock					: DINT;
+	bAlarmBlock					: BOOL;
+END_VAR
+
+VAR
+	DIFU						: R_TRIG;
+	tim							: TON;
+	delay						: FB_Delay;
+	tPOn						: BOOL;	//testerPowerOutoutOn after Delay
+	dPOn						: BOOL; //dpsPwrbit after Delay
+	bitNo						: INT;
+	almRset						: BOOL;
+	
+	ArrAlmBitBefDelay			: ARRAY[1..NO_OF_TII_SENSOR] OF BOOL;
+	ArrAlmBitAftDelay			: ARRAY[1..NO_OF_TII_SENSOR] OF BOOL;
+	ArrAlarmKeepBit				: ARRAY[1..NO_OF_TII_SENSOR] OF BOOL;
+	ArrDelayAlarm				: ARRAY[1..NO_OF_TII_SENSOR] OF FB_Delay;
+	Arr_ms						: ARRAY[1..NO_OF_TII_SENSOR] OF INT;
+	bTIIByPassArray				: ARRAY[1..NO_OF_TII_SENSOR] OF BOOL;
+	i							: INT;
+	bTest						: BOOL;
+	delayExtTimeOut				: FB_Delay;
+	delayRetTimeOut				: FB_Delay;
+	//iUnBlock:INT;
+END_VAR
+
+VAR_IN_OUT
+	
+	//bLibError : BOOL;
+	//stAlmSubMod:ST_AlarmSubmodules;
+	//stAlmMod:ST_AlarmModules;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//<HMI_TII_Test>
+
+IF bHMITIIBypass THEN
+	bTIIByPassArray							:= stHMITIIByPassArray[iLevel].bHMITIIByPassArray;
+	//FOR i:=1 TO NoOfTIIAlm DO
+	//	bTIIByPassArray[i]:= NOT stHMITIIByPassArray[iLevel].bHMITIIByPassArray[i];
+	//END_FOR
+ELSE
+	FOR i := 1 TO NoOfTIIAlm DO
+		//bTIIByPassArray[i]:=bEnableTIIAlarm;
+		 bTIIByPassArray[i]					:= TC_ModuleState[iLevel].TCSite[1].TIERII = E_State.eEnabled;
+	END_FOR
+END_IF
+//</HMI_TII_Test>
+//IF bTest THEN
+AlarmUpdate(bENs:= bTIIByPassArray);
+//END_IF
+ 
+ ]]></ST>
+    </Implementation>
+    <Method Name="AlarmUpdate" Id="{397002b7-185c-4e8e-b452-1b3a6b84eaa4}">
+      <Declaration><![CDATA[METHOD AlarmUpdate : BOOL
+VAR_INPUT
+	bENs 					: ARRAY [1..NO_OF_TII_SENSOR] OF BOOL;
+END_VAR
+
+VAR_OUTPUT
+END_VAR
+
+VAR_IN_OUT
+	//ArrAlarmKeepBit:ST_AlarmTags;
+END_VAR
+
+VAR
+	_bError					: BOOL;
+	bTstOnCmd 				: BOOL;
+	bChkTstOn 				: BOOL;
+	bAPOnCmd				: BOOL;
+	bChkAPOn 				: BOOL;
+	lRt						: BOOL; // Condition
+	lEt						: BOOL; // Condition
+	
+	i						: INT;
+	j						: INT;
+	iSysAlarmID 			: INT;
+	
+	e						: E_TIIAlarm;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF iLevel = 0 THEN
+	RETURN;
+END_IF
+
+//FB_M_nCyclic_tSensorTimeOut
+DIFU(
+	CLK 																:= vIO.ipTesterPowerOn);
+	                                                					
+tim(                                                					
+	IN 																	:= TRUE,
+	PT																	:= INT_TO_TIME(1000));
+	                                                					
+tPOn 																	:=	VIO.bTstDelInt; //Delay and TesterPwrOnOutput
+                                                    					
+delay(                                              					
+	msec 																:= 100,
+	in 																	:= tPOn, 
+	out 																:= dPOn);
+	                                                					
+delayExtTimeOut(                                    	
+	msec																:= TIME_TO_INT(tDwrCylExtRetTimeOut),
+	in																	:= vIO.opCellDrawerCylExtend,
+	out																	:= lEt);
+	                                                					
+delayRetTimeOut(                                    					
+	msec																:= TIME_TO_INT(tDwrCylExtRetTimeOut),
+	in																	:= vIO.opCellDrawerCylRetract,
+	out																	:= lRt);
+
+//lRt:= FALSE; //:=AP_Deactuated(if AP Down Can Retract)
+//lEt:= FALSE;
+bTstOnCmd																:= vIO.bDPSPowerOnOff;
+bChkTstOn																:= vIO.bChkTesterOn;
+bAPOnCmd																:= vIO.bAP240ACPowerOnOff;
+bChkAPOn																:= vIO.bChkAP240On;
+
+
+//<A_Alm_Rst For Door Open TII Alarm>
+IF ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCCellDoorClosed] AND vIO.ipTCCellDoorOpenCloseStatus THEN
+	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCCellDoorClosed]			:= FALSE;
+END_IF
+//</A_Alm_Rst For Door Open TII Alarm>
+
+IF bDebugCart THEN
+	IF (NOT VIO.ipTCCellTbotSideDoorOpenCloseStatus01) OR (NOT VIO.ipTCCellTbotSideDoorOpenCloseStatus02) THEN
+		ALMTC.Level[iLevel].AlarmID[E_AlarmID.TBotSideDoorCloseSignalNotDetected]			:= TRUE;
+	END_IF
+	IF (NOT VIO.ipTCCellTbotSideDoorLocked01) OR (NOT VIO.ipTCCellTbotSideDoorLocked02) THEN
+		ALMTC.Level[iLevel].AlarmID[E_AlarmID.TBotSideDoorLockSignalNotDetected]			:= TRUE;
+	END_IF
+	
+	//auto clear alarm if door is closed 
+	IF ALMTC.Level[iLevel].AlarmID[E_AlarmID.TBotSideDoorCloseSignalNotDetected] THEN
+		VIO:=arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO;
+		IF VIO.ipTCCellTbotSideDoorOpenCloseStatus01 AND VIO.ipTCCellTbotSideDoorOpenCloseStatus02 THEN
+			ALMTC.Level[iLevel].AlarmID[E_AlarmID.TBotSideDoorCloseSignalNotDetected]		:= FALSE;
+		END_IF
+	END_IF
+	
+	//auto clear alarm if door is locked
+	IF ALMTC.Level[iLevel].AlarmID[E_AlarmID.TBotSideDoorLockSignalNotDetected] THEN
+		VIO:=arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO;
+		IF VIO.ipTCCellTbotSideDoorLocked01 AND VIO.ipTCCellTbotSideDoorLocked02 THEN
+			ALMTC.Level[iLevel].AlarmID[E_AlarmID.TBotSideDoorLockSignalNotDetected]		:= FALSE;
+		END_IF
+	END_IF
+END_IF
+
+
+FOR i := 1 TO NoOfTIIAlm DO	
+	CASE i OF
+		E_TIIAlarm.ipAPPresentSensor: 
+			e															:= E_TIIAlarm.ipAPPresentSensor; 
+			ArrAlmBitBefDelay[E_TIIAlarm.ipAPPresentSensor]				:= (NOT	vIO.ipAPPresentSensor) AND bENs[1];  		
+			Arr_ms[e] 													:= 500;  (*TIIAlmText[e]:='AP_PresentSensor'*); //****stTCVIO.iAlarmCode=  E_Alarm.ipAP_PresentSensor 	 ;
+			
+        E_TIIAlarm.ipAPPowerOn: 
+			e															:= E_TIIAlarm.ipAPPowerOn; 
+			ArrAlmBitBefDelay[E_TIIAlarm.ipAPPowerOn]					:= (*((NOT vIO.ipAPPowerOn) AND bENs[2]) OR*) GVL_DUT_TC_AP240ACPower.Failed;
+			Arr_ms[e] 													:= 500;  (*TIIAlmText[e]:='AP_PowerOn'*); 
+			
+	    E_TIIAlarm.ipAPReady: 
+			e															:= E_TIIAlarm.ipAPReady; 
+			ArrAlmBitBefDelay[E_TIIAlarm.ipAPReady]						:= (NOT vIO.ipAPReady) AND vIO.ipAPPresentSensor AND bENs[3]; 	
+			Arr_ms[e] 													:= 500;  (*TIIAlmText[e]:='AP_Ready' 		    	*);      
+			
+	    (*E_TIIAlarm.ipAPDeactuatedPLC: 
+			e															:= E_TIIAlarm.ipAPDeactuatedPLC; 
+			ArrAlmBitBefDelay[E_TIIAlarm.ipAPDeactuatedPLC]				:= (NOT vIO.ipHandlerSafeToEnterPLC) AND vIO.ipAPPresentSensor AND bENs[4]; 			
+			Arr_ms[e] 													:= 500;  (*TIIAlmText[e]:='AP_DeactuatedPLC'*); *)
+  
+	    (*E_TIIAlarm.ipAPDeactuatedHwr: 
+			e															:= E_TIIAlarm.ipAPDeactuatedHwr; 
+			ArrAlmBitBefDelay[E_TIIAlarm.ipAPDeactuatedHwr]				:= (NOT	vIO.ipHandlerSafeToEnterHwr) AND vIO.ipAPPresentSensor AND bENs[5]; 			
+			Arr_ms[e] 													:= 500;  (*TIIAlmText[e]:='AP_DeactuatedHwr'*); *)
+			
+	    E_TIIAlarm.ipCellFluidLeakage1: 
+			e															:= E_TIIAlarm.ipCellFluidLeakage1; 
+			ArrAlmBitBefDelay[E_TIIAlarm.ipCellFluidLeakage1]			:= vIO.ipCellFluidLeakage1 AND bENs[6]; 			
+			Arr_ms[e] 													:= 500;  (*TIIAlmText[e]:='CellFluidLeakage1' 	*);   
+			
+	    E_TIIAlarm.ipCellFluidLeakage2: 
+			e															:= E_TIIAlarm.ipCellFluidLeakage2; 
+			ArrAlmBitBefDelay[E_TIIAlarm.ipCellFluidLeakage2]			:= vIO.ipCellFluidLeakage2 AND bENs[7] ; 			
+			Arr_ms[e] 													:= 500;  (*TIIAlmText[e]:='CellFluidLeakage2'*);   
+			
+	    E_TIIAlarm.ipCellGroundFault: 
+			e															:= E_TIIAlarm.ipCellGroundFault; 
+			ArrAlmBitBefDelay[E_TIIAlarm.ipCellGroundFault]				:= vIO.ipCellGroundFault AND bENs[8]; 			
+			Arr_ms[e] 													:= 500;  (*TIIAlmText[e]:='CellGroundFault'*);
+			
+        E_TIIAlarm.ipTesterPresent: 
+			e															:= E_TIIAlarm.ipTesterPresent; 
+			ArrAlmBitBefDelay[E_TIIAlarm.ipTesterPresent]				:= (NOT	vIO.ipTesterPresent) AND bTstOnCmd AND bENs[9]; 			
+			Arr_ms[e] 													:= 500;  (*TIIAlmText[e]:='TesterPresent'*);
+			
+        E_TIIAlarm.ipTesterPowerOn: 
+			e															:= E_TIIAlarm.ipTesterPowerOn; 
+			ArrAlmBitBefDelay[E_TIIAlarm.ipTesterPowerOn]				:= (NOT	vIO.ipTesterPowerOn) AND bChkTstOn AND bENs[10]; 			
+			Arr_ms[e] 													:= 500;  (*TIIAlmText[e]:='TesterPowerOn'*);
+    
+        E_TIIAlarm.ipTesterReady: 
+			e															:= E_TIIAlarm.ipTesterReady; 
+			ArrAlmBitBefDelay[E_TIIAlarm.ipTesterReady]					:= (NOT	vIO.ipTesterReady) AND vIO.ipTesterPresent AND bENs[11]; 	
+			Arr_ms[e] 													:= 500;  (*TIIAlmText[e]:='TesterReady'*);
+			   
+       	E_TIIAlarm.ipTCCellDoorClosed: 
+			e															:= E_TIIAlarm.ipTCCellDoorClosed; 
+			ArrAlmBitBefDelay[E_TIIAlarm.ipTCCellDoorClosed]			:= (NOT	vIO.ipTCCellDoorOpenCloseStatus) AND bENs[12]; 							
+			Arr_ms[e] 													:= 500;  (*TIIAlmText[e]:='TCCellDoorClosed' *);
+			
+        E_TIIAlarm.ipTesterLatchesClosed: 
+			e															:= E_TIIAlarm.ipTesterLatchesClosed ; 
+			ArrAlmBitBefDelay[E_TIIAlarm.ipTesterLatchesClosed]			:= (NOT	vIO.ipTesterLatchesClosed) AND (bTstOnCmd OR vIO.ipTesterPresent) AND bENs[13] ; 
+			Arr_ms[e] 													:= 500;  (*TIIAlmText[e]:='TesterLatchesClosed'*);
+			
+        (*E_TIIAlarm.ipTIUPresent: 
+			e															:= E_TIIAlarm.ipTIUPresent; 
+			ArrAlmBitBefDelay[E_TIIAlarm.ipTIUPresent]					:= (NOT	vIO.ipTIUPresent) AND bENs[14]; 						
+			Arr_ms[e] 													:= 500;  (*TIIAlmText[e]:='TIUPresent'*);*)
+			
+        E_TIIAlarm.ipTCDrawerCylExtendRS: 
+			e															:= E_TIIAlarm.ipTCDrawerCylExtendRS; 
+			ArrAlmBitBefDelay[E_TIIAlarm.ipTCDrawerCylExtendRS]			:= (NOT	vIO.ipTCDrawerCylExtendRS) AND vIO.opTesterDrawerAirSupplySol (*AND	vIO.opCellDrawerCylExtend*) AND (NOT bDebugCart) AND lEt AND bENs[15]; 
+			Arr_ms[e] 													:= 500;  (*TIIAlmText[e]:='TCDrawerCylExtendRS'*);
+			
+        E_TIIAlarm.ipTCDrawerCylRetractRS: 
+			e															:= E_TIIAlarm.ipTCDrawerCylRetractRS; 
+			ArrAlmBitBefDelay[E_TIIAlarm.ipTCDrawerCylRetractRS]		:= (NOT	vIO.ipTCDrawerCylRetractRS) AND vIO.opTesterDrawerAirSupplySol (*AND vIO.opCellDrawerCylRetract*) AND lRt AND bENs[16]; 
+			Arr_ms[e] 													:= 500;  (*TIIAlmText[e]:='TCDrawerCylRetractRS'*);
+			
+        E_TIIAlarm.TBOT_TC_ACPower_Signal: 
+			e															:= E_TIIAlarm.TBOT_TC_ACPower_Signal; 
+			ArrAlmBitBefDelay[E_TIIAlarm.TBOT_TC_ACPower_Signal]		:= (vIO.TBOT_TC_ACPower_Signal) AND (vIO.ipAPPresentSensor OR vIO.ipTesterPresent) AND (NOT bDebugCart) AND (NOT bDebugStation) AND bENs[17]; 
+			Arr_ms[e] 													:= 500;  (*TIIAlmText[e]:='TCDrawerCylRetractRS'*);
+      									
+		//E_Alarm.LibraryCylErr			:	ArrAlmBitBefDelay[E_Alarm.LibraryCylErr				]:=bError(*From Lib*) AND E_Alarm.LibraryCylErr == LibErrorID  ; ArrMiliSecond[E_Alarm.LibraryCylErr   ] := 0;		
+	END_CASE
+
+	//Delay Library Alm Bit
+	ArrDelayAlarm[i](
+		in																:= ArrAlmBitBefDelay[i],
+		out																:= ArrAlmBitAftDelay[i],
+		msec															:= Arr_ms[i]);	//DelayAlmBit
+	
+
+	IF ArrAlmBitAftDelay[i] THEN //realtime IO update array
+		//stAlmMod.Level[iLevel].AlarmID[i]:=TRUE;
+		ALMTC.Level[iLevel].AlarmID[i]									:= TRUE;
+		
+		CASE i OF
+			1 : 
+				iUnBlock.1 												:= ALMTC.Level[iLevel].AlarmID[i];
+		    2 : 
+				iUnBlock.2 												:= ALMTC.Level[iLevel].AlarmID[i]; 
+		    3 : 
+				iUnBlock.3 												:= ALMTC.Level[iLevel].AlarmID[i];
+			4 : 
+				iUnBlock.4 												:= ALMTC.Level[iLevel].AlarmID[i];
+			5 : 
+				iUnBlock.5  											:= ALMTC.Level[iLevel].AlarmID[i];
+			6 : 
+				iUnBlock.6 												:= ALMTC.Level[iLevel].AlarmID[i];
+			7 : 
+				iUnBlock.7 												:= ALMTC.Level[iLevel].AlarmID[i];
+			8 : 
+				iUnBlock.8												:= ALMTC.Level[iLevel].AlarmID[i];
+			9 : 
+				iUnBlock.9												:= ALMTC.Level[iLevel].AlarmID[i];
+			10: 
+				iUnBlock.10												:= ALMTC.Level[iLevel].AlarmID[i];
+			11: 
+				iUnBlock.11												:= ALMTC.Level[iLevel].AlarmID[i];
+			12: 
+				iUnBlock.12												:= ALMTC.Level[iLevel].AlarmID[i];
+			13: 
+				iUnBlock.13												:= ALMTC.Level[iLevel].AlarmID[i];
+			14: 
+				iUnBlock.14												:= ALMTC.Level[iLevel].AlarmID[i];
+			15: 
+				iUnBlock.15												:= ALMTC.Level[iLevel].AlarmID[i];
+			16: 
+				iUnBlock.16												:= ALMTC.Level[iLevel].AlarmID[i];
+			17: 
+				iUnBlock.17												:= ALMTC.Level[iLevel].AlarmID[i];
+		END_CASE
+	ELSE
+		CASE i OF
+			1 : 
+				iUnBlock.1 												:= ALMTC.Level[iLevel].AlarmID[i];
+		    2 : 
+				iUnBlock.2 												:= ALMTC.Level[iLevel].AlarmID[i]; 
+		    3 :
+				iUnBlock.3  											:= ALMTC.Level[iLevel].AlarmID[i];
+			4 : 
+				iUnBlock.4 												:= ALMTC.Level[iLevel].AlarmID[i];
+			5 : 
+				iUnBlock.5 												:= ALMTC.Level[iLevel].AlarmID[i];
+			6 : 
+				iUnBlock.6 												:= ALMTC.Level[iLevel].AlarmID[i];
+			7 : 
+				iUnBlock.7 												:= ALMTC.Level[iLevel].AlarmID[i];
+			8 : 
+				iUnBlock.8 												:= ALMTC.Level[iLevel].AlarmID[i];
+			9 : 
+				iUnBlock.9 												:= ALMTC.Level[iLevel].AlarmID[i];
+			10: 
+				iUnBlock.10 											:= ALMTC.Level[iLevel].AlarmID[i];
+			11: 
+				iUnBlock.11 											:= ALMTC.Level[iLevel].AlarmID[i];
+			12: 
+				iUnBlock.12 											:= ALMTC.Level[iLevel].AlarmID[i];
+			13: 
+				iUnBlock.13 											:= ALMTC.Level[iLevel].AlarmID[i];
+			14: 
+				iUnBlock.14 											:= ALMTC.Level[iLevel].AlarmID[i];
+			15: 
+				iUnBlock.15 											:= ALMTC.Level[iLevel].AlarmID[i];
+			16: 
+				iUnBlock.16 											:= ALMTC.Level[iLevel].AlarmID[i];
+			17: 
+				iUnBlock.17 											:= ALMTC.Level[iLevel].AlarmID[i];
+		END_CASE
+		//TIIAlmText[i]:='';  
+	END_IF
+		
+	//_bError := _bError OR stAlmMod.Level[iLevel].AlarmID[i];
+	isTIIError															:= ALMTC.Level[iLevel].AlarmID[i];
+	
+	(*
+	IF NOT (ALMTC.Level[iLevel].AlarmID[i] = ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellFluidLeakage1] OR 
+	   ALMTC.Level[iLevel].AlarmID[i] = ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellFluidLeakage2])
+	THEN
+	   IS_CELL_TII_LEAK := _bError OR (ALMTC.Level[iLevel].AlarmID[i] ;
+	END_IF
+	*) 
+END_FOR
+
+bAlarmBlock 																:=	//ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipAPPresentSensor	   	   	]	OR
+		    																//ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipAPPowerOn 		   	   		]   OR 
+		    																ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipAPReady		       	   	]   OR
+																			//ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipAPDeactuatedPLC	   	   	]   OR
+																			//ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipAPDeactuatedHwr	   	   	]   OR
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellFluidLeakage1	   		]   OR
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellFluidLeakage2	   		]   OR
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellGroundFault 	   		]   OR
+																			//ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTesterPresent	       		]   OR
+																			//ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTesterPowerOn	       		]   OR
+																			//ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTesterReady	           	]   OR
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCCellDoorClosed	   		]   OR
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTesterLatchesClosed    	];   //OR
+																			//ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTIUPresent	         		]   OR
+																			//ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCDrawerCylExtendRS    	]   OR
+																			//ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCDrawerCylRetractRS   	]   OR
+																			//ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.TBOT_TC_ACPower_Signal   			]  ; 
+
+TIIAlarmLED															:=		ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipAPPowerOn 		   	   		]   OR 
+		    																ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipAPReady		       	   	]   OR
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTesterLatchesClosed    	]	OR
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTesterPowerOn	       		]   OR
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTesterReady	           	]   OR
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCDrawerCylRetractRS   	]   OR
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCDrawerCylExtendRS	   	]   OR
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCCellDoorClosed	   		]   OR
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellFluidLeakage1	   		]   OR
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellFluidLeakage2	   		]   OR
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellGroundFault 	   		]   OR
+																			ALMTC.Common.AlarmID[E_ColAlarm.ipColumnFluid_PCW_Leakage			]	OR
+																			(
+																				bDebugCart AND 
+																				(ALMTC.Level[iLevel].AlarmID[E_AlarmID.TBotSideDoorCloseSignalNotDetected	]	OR
+																				 ALMTC.Level[iLevel].AlarmID[E_AlarmID.TBotSideDoorLockSignalNotDetected	])
+																			) OR
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.TBOT_TC_ACPower_Signal   	]  ; 
+																			
+TIIAlarmEPT															:= 		ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipAPPowerOn					]	OR
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipAPReady					]	OR
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTesterLatchesClosed		]	OR
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCDrawerCylRetractRS		]	OR
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCDrawerCylExtendRS		]	OR
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCCellDoorClosed			]	OR
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellGroundFault			]	OR
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellFluidLeakage1			]	OR
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellFluidLeakage2			]	OR
+																			ALMTC.Common.AlarmID[E_ColAlarm.ipColumnFluid_PCW_Leakage			]	OR
+																			(
+																				bDebugCart AND 
+																				(ALMTC.Level[iLevel].AlarmID[E_AlarmID.TBotSideDoorCloseSignalNotDetected	]	OR
+																				 ALMTC.Level[iLevel].AlarmID[E_AlarmID.TBotSideDoorLockSignalNotDetected	])
+																			) OR
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.TBOT_TC_ACPower_Signal   	]  ;
+																			
+
+		
+(*
+//Alarm Reset ===========================================================================
+IF almRset THEN
+	IF ArrAlmSubModule.AlarmSubmodule[iSubMod].ArrAlarmKeepBit[bitNo] THEN
+		ArrAlmSubModule.AlarmSubmodule[iSubMod].ArrAlarmKeepBit[bitNo] := FALSE;
+	END_IF
+END_IF
+//=======================================================================================
+*)]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_TIIAlarm">
+      <LineId Id="124" Count="0" />
+      <LineId Id="134" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="169" Count="0" />
+      <LineId Id="202" Count="0" />
+      <LineId Id="170" Count="0" />
+      <LineId Id="168" Count="0" />
+      <LineId Id="127" Count="0" />
+      <LineId Id="130" Count="0" />
+      <LineId Id="238" Count="0" />
+      <LineId Id="237" Count="0" />
+      <LineId Id="128" Count="0" />
+      <LineId Id="120" Count="0" />
+      <LineId Id="132" Count="1" />
+      <LineId Id="118" Count="0" />
+      <LineId Id="88" Count="0" />
+      <LineId Id="57" Count="0" />
+      <LineId Id="27" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TIIAlarm.AlarmUpdate">
+      <LineId Id="140" Count="1" />
+      <LineId Id="504" Count="0" />
+      <LineId Id="570" Count="0" />
+      <LineId Id="535" Count="0" />
+      <LineId Id="338" Count="0" />
+      <LineId Id="785" Count="1" />
+      <LineId Id="364" Count="0" />
+      <LineId Id="783" Count="1" />
+      <LineId Id="787" Count="0" />
+      <LineId Id="363" Count="0" />
+      <LineId Id="788" Count="0" />
+      <LineId Id="339" Count="0" />
+      <LineId Id="782" Count="0" />
+      <LineId Id="789" Count="2" />
+      <LineId Id="569" Count="0" />
+      <LineId Id="792" Count="3" />
+      <LineId Id="337" Count="0" />
+      <LineId Id="797" Count="2" />
+      <LineId Id="796" Count="0" />
+      <LineId Id="143" Count="0" />
+      <LineId Id="335" Count="0" />
+      <LineId Id="440" Count="0" />
+      <LineId Id="449" Count="0" />
+      <LineId Id="781" Count="0" />
+      <LineId Id="475" Count="0" />
+      <LineId Id="676" Count="1" />
+      <LineId Id="675" Count="0" />
+      <LineId Id="679" Count="2" />
+      <LineId Id="678" Count="0" />
+      <LineId Id="1100" Count="0" />
+      <LineId Id="1103" Count="22" />
+      <LineId Id="1101" Count="1" />
+      <LineId Id="365" Count="0" />
+      <LineId Id="145" Count="0" />
+      <LineId Id="148" Count="0" />
+      <LineId Id="279" Count="0" />
+      <LineId Id="803" Count="3" />
+      <LineId Id="280" Count="0" />
+      <LineId Id="807" Count="3" />
+      <LineId Id="281" Count="0" />
+      <LineId Id="811" Count="3" />
+      <LineId Id="152" Count="0" />
+      <LineId Id="815" Count="3" />
+      <LineId Id="153" Count="0" />
+      <LineId Id="819" Count="3" />
+      <LineId Id="154" Count="0" />
+      <LineId Id="823" Count="3" />
+      <LineId Id="155" Count="0" />
+      <LineId Id="827" Count="2" />
+      <LineId Id="859" Count="0" />
+      <LineId Id="156" Count="0" />
+      <LineId Id="860" Count="3" />
+      <LineId Id="304" Count="0" />
+      <LineId Id="864" Count="3" />
+      <LineId Id="305" Count="0" />
+      <LineId Id="868" Count="3" />
+      <LineId Id="306" Count="0" />
+      <LineId Id="872" Count="3" />
+      <LineId Id="309" Count="0" />
+      <LineId Id="876" Count="3" />
+      <LineId Id="310" Count="0" />
+      <LineId Id="880" Count="3" />
+      <LineId Id="311" Count="0" />
+      <LineId Id="884" Count="3" />
+      <LineId Id="415" Count="0" />
+      <LineId Id="888" Count="0" />
+      <LineId Id="891" Count="0" />
+      <LineId Id="897" Count="1" />
+      <LineId Id="416" Count="0" />
+      <LineId Id="889" Count="0" />
+      <LineId Id="892" Count="0" />
+      <LineId Id="895" Count="1" />
+      <LineId Id="708" Count="0" />
+      <LineId Id="890" Count="0" />
+      <LineId Id="893" Count="1" />
+      <LineId Id="992" Count="0" />
+      <LineId Id="158" Count="0" />
+      <LineId Id="162" Count="0" />
+      <LineId Id="177" Count="2" />
+      <LineId Id="800" Count="2" />
+      <LineId Id="180" Count="0" />
+      <LineId Id="182" Count="1" />
+      <LineId Id="232" Count="0" />
+      <LineId Id="390" Count="0" />
+      <LineId Id="571" Count="2" />
+      <LineId Id="899" Count="0" />
+      <LineId Id="575" Count="0" />
+      <LineId Id="900" Count="0" />
+      <LineId Id="589" Count="0" />
+      <LineId Id="901" Count="0" />
+      <LineId Id="590" Count="0" />
+      <LineId Id="902" Count="0" />
+      <LineId Id="591" Count="0" />
+      <LineId Id="903" Count="0" />
+      <LineId Id="592" Count="0" />
+      <LineId Id="915" Count="0" />
+      <LineId Id="593" Count="0" />
+      <LineId Id="914" Count="0" />
+      <LineId Id="594" Count="0" />
+      <LineId Id="913" Count="0" />
+      <LineId Id="595" Count="0" />
+      <LineId Id="912" Count="0" />
+      <LineId Id="596" Count="0" />
+      <LineId Id="911" Count="0" />
+      <LineId Id="597" Count="0" />
+      <LineId Id="910" Count="0" />
+      <LineId Id="598" Count="0" />
+      <LineId Id="909" Count="0" />
+      <LineId Id="599" Count="0" />
+      <LineId Id="908" Count="0" />
+      <LineId Id="600" Count="0" />
+      <LineId Id="907" Count="0" />
+      <LineId Id="601" Count="0" />
+      <LineId Id="906" Count="0" />
+      <LineId Id="602" Count="0" />
+      <LineId Id="905" Count="0" />
+      <LineId Id="603" Count="0" />
+      <LineId Id="904" Count="0" />
+      <LineId Id="574" Count="0" />
+      <LineId Id="282" Count="0" />
+      <LineId Id="631" Count="1" />
+      <LineId Id="959" Count="0" />
+      <LineId Id="633" Count="0" />
+      <LineId Id="958" Count="0" />
+      <LineId Id="634" Count="0" />
+      <LineId Id="957" Count="0" />
+      <LineId Id="635" Count="0" />
+      <LineId Id="956" Count="0" />
+      <LineId Id="636" Count="0" />
+      <LineId Id="955" Count="0" />
+      <LineId Id="637" Count="0" />
+      <LineId Id="954" Count="0" />
+      <LineId Id="638" Count="0" />
+      <LineId Id="953" Count="0" />
+      <LineId Id="639" Count="0" />
+      <LineId Id="952" Count="0" />
+      <LineId Id="640" Count="0" />
+      <LineId Id="951" Count="0" />
+      <LineId Id="641" Count="0" />
+      <LineId Id="950" Count="0" />
+      <LineId Id="642" Count="0" />
+      <LineId Id="949" Count="0" />
+      <LineId Id="643" Count="0" />
+      <LineId Id="948" Count="0" />
+      <LineId Id="644" Count="0" />
+      <LineId Id="947" Count="0" />
+      <LineId Id="645" Count="0" />
+      <LineId Id="946" Count="0" />
+      <LineId Id="646" Count="0" />
+      <LineId Id="945" Count="0" />
+      <LineId Id="647" Count="0" />
+      <LineId Id="944" Count="0" />
+      <LineId Id="648" Count="0" />
+      <LineId Id="943" Count="0" />
+      <LineId Id="630" Count="0" />
+      <LineId Id="283" Count="0" />
+      <LineId Id="187" Count="0" />
+      <LineId Id="960" Count="0" />
+      <LineId Id="241" Count="0" />
+      <LineId Id="1020" Count="1" />
+      <LineId Id="568" Count="0" />
+      <LineId Id="563" Count="0" />
+      <LineId Id="567" Count="0" />
+      <LineId Id="566" Count="0" />
+      <LineId Id="564" Count="1" />
+      <LineId Id="562" Count="0" />
+      <LineId Id="202" Count="0" />
+      <LineId Id="738" Count="16" />
+      <LineId Id="737" Count="0" />
+      <LineId Id="203" Count="0" />
+      <LineId Id="1023" Count="0" />
+      <LineId Id="1027" Count="0" />
+      <LineId Id="1039" Count="2" />
+      <LineId Id="1044" Count="2" />
+      <LineId Id="1028" Count="2" />
+      <LineId Id="1048" Count="4" />
+      <LineId Id="1038" Count="0" />
+      <LineId Id="1022" Count="0" />
+      <LineId Id="1053" Count="1" />
+      <LineId Id="1057" Count="8" />
+      <LineId Id="1068" Count="4" />
+      <LineId Id="1067" Count="0" />
+      <LineId Id="1066" Count="0" />
+      <LineId Id="1056" Count="0" />
+      <LineId Id="1055" Count="0" />
+      <LineId Id="205" Count="1" />
+      <LineId Id="209" Count="5" />
+      <LineId Id="120" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

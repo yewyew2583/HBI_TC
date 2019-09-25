@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
+  <DUT Name="E_TstPwrStep" Id="{a034b76b-16c9-4b00-bff1-7bb9f196f2ef}">
+    <Declaration><![CDATA[//{attribute 'qualified_only'}
+//{attribute 'strict'}
+TYPE E_TstPwrStep :
+(
+	INIT				,
+	CheckCmd 			,
+	SanityCheck		  	,	
+	CheckCycPwr         ,
+	ChkPwrOutputOn      ,
+	OFF_PWR_FOR_CYC     ,
+	WAIT_5              ,
+	ON_PWR              ,
+	WAIT_20             ,
+	SetPwrOnTimeOutErr  ,
+	ChkPwrOnFeedBack    ,
+	ON_PCW              ,
+	OFF_PWR_FOR_ERR     ,
+	SEND_EVENT			,
+	
+	OFF_PWR				,
+	OFF_PCW
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

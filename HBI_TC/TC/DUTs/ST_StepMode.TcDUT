@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
+  <DUT Name="ST_StepMode" Id="{83b103ab-746d-4908-b955-fe8df74bed43}">
+    <Declaration><![CDATA[TYPE ST_StepMode :
+STRUCT
+	bStepMode: BOOL;  //module in step mode
+	bStep	 : BOOL;  //Step by step
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
+  <DUT Name="E_DSAlarm" Id="{0fbf4453-d5d8-4f4b-96bc-21c1b120acf1}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE E_DSAlarm :
+(
+	eDBStnCellGroundFault := 1
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

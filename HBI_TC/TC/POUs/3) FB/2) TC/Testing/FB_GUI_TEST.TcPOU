@@ -1,0 +1,323 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <POU Name="FB_GUI_TEST" Id="{2d2d503a-f036-4331-9480-856b87027775}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_GUI_TEST
+VAR_INPUT
+	iLevel :INT;
+	nCount: INT:=0;
+END_VAR
+VAR
+	bInitialise : BOOL := FALSE;
+	bStartCycle : BOOL := FALSE;
+	tCaptureDelay: TIME:= T#1000MS;
+	tDelayNextStep: TIME:= T#200MS;
+	tInterval: TIME:= T#250MS;
+	
+	bCylinderUp : BOOL;
+	//iLevel : UINT :=2; 
+	
+	nState : UINT :=0;
+	//nCount: INT:=0;
+	nNoOfCycle:INT:=1;
+	TDelay : TON;
+	TDelay1 : TON;
+	bUp: BOOL;
+	sErr: STRING;
+	tempstr : ARRAY[1..4] OF STRING;
+	tempstrRet : ARRAY[1..4] OF STRING;
+	str: STRING;
+	TDelay2 : TON;
+	i: INT :=1;
+	
+	bCylinderOutL1: BOOL;
+	bOutL1 : BOOL;
+	
+	bPBStart : BOOL;
+	
+	StartPbDly: TON;
+	rtStartTrig :R_Trig;
+	
+	
+	iClearCount: INT;
+	iTotalClear: INT:=20;
+	ClearTCSEvent: TON;
+	mlVIO:ST_TCMultiLevel_VIO; 
+END_VAR
+VAR_IN_OUT
+	bStart:BOOL;
+END_VAR
+
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF bInitialise THEN
+	arrTCMultiLevel[iLevel].stGblParam.bInitialise:=TRUE;
+	bInitialise:=FALSE;
+END_IF
+
+IF bCylinderUp THEN
+	IF (arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.M_nCmptUpDown(bUp, sErr)=10) THEN
+		bCylinderUp :=FALSE;
+	END_IF
+END_IF
+
+IF bCylinderOutL1 THEN
+	IF (arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.M_nCmptInOut(bOutL1, sErr)=10) THEN
+		bCylinderOutL1 :=FALSE;
+	END_IF
+END_IF
+
+(*StartPbDly(in:=(stIO[iLevel].ipStartPB),pt:=T#100MS);
+rtStartTrig(Clk:=StartPbDly.Q);
+IF rtStartTrig.Q THEN
+	bPBStart:=TRUE;
+END_IF *)
+
+bPBStart := arrTCVIO[iLevel].ipStartPB;
+
+IF bStartCycle XOR bStart THEN //cycle Up down, in out
+	CASE nState OF
+		0: //Out
+	 		TDelay(IN:=FALSE);
+	 		TDelay1(IN:=FALSE);
+			TDelay2(IN:=FALSE);
+			i:=1;
+			nState := 1;
+		1: //Out
+	 		//TDelay(IN:=FALSE);
+	 		//TDelay1(IN:=FALSE);
+			//TDelay2(IN:=FALSE);
+			//i:=1;
+			//arrTCMultiLevel[iLevel].stGblParam.bShuttleMoveOut := TRUE;
+			//<MoveOut>
+				arrTACommands.arrTACommands[1].sLogName := CONCAT('TIUSlideOut_TESTER_LA',CONCAT('0',INT_TO_STRING(iLevel)));
+				arrTACommands.arrTACommands[1].eTaskName := E_TaskName.TIUSlideOut;
+				arrTACommands.arrTACommands[1].eModuleID := LevelModuleID[iLevel];
+				arrTACommands.arrTACommands[1].bParam[1] := TRUE;
+				arrTCSCommandReady:= FALSE;
+				iClearCount := iTotalClear;
+				
+				ClearTCSEvent(IN:=(iClearCount > 0), PT:=T#100MS);
+				IF ClearTCSEvent.Q THEN
+					ClearTCSEvent(IN:=FALSE);
+					iClearCount := iClearCount - 1;
+					arrTCSEventTriggered:= FALSE;
+				END_IF
+			//</region>
+			
+	 		nState := 2;
+	 2:		mlVIO:= arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO;
+			IF mlVIO.ipTCDrawerCylExtendRS= TRUE THEN
+	 			nState := 3;
+			END_IF
+	 //Delay					
+	 3: 	IF arrTCMultiLevel[iLevel].stGblParam.bShuttleMoveOut =FALSE THEN
+		    	IF iLevel = 3 THEN   // Level No for Distance Laser Sensor Reading
+		 			TDelay1(IN:=TRUE,PT:=tCaptureDelay);
+					IF TDelay1.Q THEN
+						TDelay2(IN:=TRUE,PT:=tInterval);
+						IF TDelay2.Q THEN			
+							TDelay2(IN:=FALSE);
+							tempstr[1] := F_concat3('XE,', REAL_TO_STRING(aiXConverted[iLevel]), ', ');
+							tempstr[2] := F_concat3('YE,', REAL_TO_STRING(aiYConverted[iLevel]), ', ');
+							tempstr[3] := F_concat3('ZE,', REAL_TO_STRING(aiZConverted[iLevel]), ', ');
+							tempstr[4] := F_concat3(tempstr[1], tempstr[2], tempstr[3]);
+							
+							tempstrRet[1] := F_concat3('XR,', REAL_TO_STRING(aiXConvertedRet[iLevel]), ', ');
+							tempstrRet[2] := F_concat3('YR,', REAL_TO_STRING(aiYConvertedRet[iLevel]), ', ');
+							tempstrRet[3] := F_concat3('ZR,', REAL_TO_STRING(aiZConvertedRet[iLevel]), ', ');
+							tempstrRet[4] := F_concat3(tempstrRet[1], tempstrRet[2], tempstrRet[3]);
+							
+							str:= '';
+							str:= CONCAT(tempstr[4] , tempstrRet[4]);
+							Logging.fbDebugLog.M_nLogger(1, sSource:='aisensor', F_concat3(INT_TO_STRING(i), ', ', str));
+							
+							//Logging.fbDebugLog.M_nLogger(1, sSource:='aisensor', F_concat3(INT_TO_STRING(i), ', ', tempstr[4]));
+							i := i+1;
+							IF i>4 THEN
+								nState := 4;
+							END_IF
+						END_IF
+						//END_FOR
+					END_IF
+					(*
+					TDelay(IN:=TRUE,PT:=tDelayNextStep);//after move out, delay before move in
+					IF TDelay.Q THEN
+						TDelay(IN:=FALSE);
+						nState := 3;
+					END_IF
+					*)
+					
+				ELSE
+					nState := 4;
+				END_IF
+				
+			END_IF
+
+	 4:		//In
+			//arrTCMultiLevel[iLevel].stGblParam.bShuttleMoveIn := TRUE;
+	 		//<MoveIn>
+				arrTACommands.arrTACommands[1].sLogName := CONCAT('TIUSlideOut_TESTER_LA',CONCAT('0',INT_TO_STRING(iLevel)));
+				arrTACommands.arrTACommands[1].eTaskName := E_TaskName.TIUSlideOut;
+				arrTACommands.arrTACommands[1].eModuleID := LevelModuleID[iLevel];
+				arrTACommands.arrTACommands[1].bParam[1] := FALSE;
+				arrTCSCommandReady:= FALSE;
+				iClearCount := iTotalClear;
+				
+				ClearTCSEvent(IN:=(iClearCount > 0), PT:=T#100MS);
+				IF ClearTCSEvent.Q THEN
+					ClearTCSEvent(IN:=FALSE);
+					iClearCount := iClearCount - 1;
+					arrTCSEventTriggered:= FALSE;
+				END_IF
+			//</MoveIn>
+			
+	 		nState := 5;
+			
+	5:
+	 		mlVIO:= arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO;
+			IF mlVIO.ipTCDrawerCylRetractRS= TRUE THEN
+	 			nState := 6;
+			END_IF
+			//Done
+	 6: 	IF arrTCMultiLevel[iLevel].stGblParam.bShuttleMoveIn=FALSE THEN
+			TDelay(IN:=TRUE,PT:=tDelayNextStep);//after move out, delay before move in
+			IF TDelay.Q THEN
+				TDelay(IN:=FALSE);
+				nState := 0;
+				nCount := nCount +1;
+			END_IF	 
+	 
+			END_IF
+	END_CASE
+	
+	IF nCount> nNoOfCycle(*AND nState =3*) THEN
+		bStartCycle := FALSE;
+		bStart:=FALSE;
+		nCount:=1;
+		//bPBStart := FALSE;
+		
+	END_IF
+		
+END_IF
+
+
+
+
+
+
+	
+
+
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="FB_GUI_TEST">
+      <LineId Id="196" Count="0" />
+      <LineId Id="194" Count="0" />
+      <LineId Id="198" Count="0" />
+      <LineId Id="197" Count="0" />
+      <LineId Id="295" Count="1" />
+      <LineId Id="298" Count="0" />
+      <LineId Id="306" Count="1" />
+      <LineId Id="299" Count="0" />
+      <LineId Id="491" Count="5" />
+      <LineId Id="627" Count="1" />
+      <LineId Id="195" Count="0" />
+      <LineId Id="632" Count="0" />
+      <LineId Id="297" Count="0" />
+      <LineId Id="633" Count="0" />
+      <LineId Id="636" Count="0" />
+      <LineId Id="593" Count="0" />
+      <LineId Id="637" Count="0" />
+      <LineId Id="151" Count="1" />
+      <LineId Id="772" Count="2" />
+      <LineId Id="771" Count="0" />
+      <LineId Id="776" Count="0" />
+      <LineId Id="775" Count="0" />
+      <LineId Id="672" Count="0" />
+      <LineId Id="154" Count="0" />
+      <LineId Id="452" Count="1" />
+      <LineId Id="456" Count="0" />
+      <LineId Id="266" Count="0" />
+      <LineId Id="718" Count="0" />
+      <LineId Id="721" Count="11" />
+      <LineId Id="719" Count="1" />
+      <LineId Id="717" Count="0" />
+      <LineId Id="222" Count="0" />
+      <LineId Id="826" Count="0" />
+      <LineId Id="836" Count="0" />
+      <LineId Id="827" Count="0" />
+      <LineId Id="830" Count="0" />
+      <LineId Id="171" Count="0" />
+      <LineId Id="915" Count="0" />
+      <LineId Id="891" Count="0" />
+      <LineId Id="440" Count="0" />
+      <LineId Id="442" Count="0" />
+      <LineId Id="434" Count="0" />
+      <LineId Id="432" Count="0" />
+      <LineId Id="431" Count="0" />
+      <LineId Id="427" Count="2" />
+      <LineId Id="465" Count="0" />
+      <LineId Id="905" Count="0" />
+      <LineId Id="901" Count="2" />
+      <LineId Id="900" Count="0" />
+      <LineId Id="906" Count="0" />
+      <LineId Id="913" Count="0" />
+      <LineId Id="907" Count="0" />
+      <LineId Id="904" Count="0" />
+      <LineId Id="466" Count="1" />
+      <LineId Id="457" Count="0" />
+      <LineId Id="778" Count="0" />
+      <LineId Id="777" Count="0" />
+      <LineId Id="779" Count="0" />
+      <LineId Id="445" Count="0" />
+      <LineId Id="435" Count="0" />
+      <LineId Id="226" Count="0" />
+      <LineId Id="781" Count="0" />
+      <LineId Id="780" Count="0" />
+      <LineId Id="264" Count="0" />
+      <LineId Id="400" Count="0" />
+      <LineId Id="267" Count="1" />
+      <LineId Id="782" Count="0" />
+      <LineId Id="909" Count="2" />
+      <LineId Id="893" Count="0" />
+      <LineId Id="908" Count="0" />
+      <LineId Id="244" Count="0" />
+      <LineId Id="828" Count="0" />
+      <LineId Id="754" Count="0" />
+      <LineId Id="770" Count="0" />
+      <LineId Id="755" Count="13" />
+      <LineId Id="739" Count="0" />
+      <LineId Id="769" Count="0" />
+      <LineId Id="286" Count="0" />
+      <LineId Id="841" Count="0" />
+      <LineId Id="843" Count="3" />
+      <LineId Id="842" Count="0" />
+      <LineId Id="218" Count="0" />
+      <LineId Id="156" Count="0" />
+      <LineId Id="330" Count="4" />
+      <LineId Id="328" Count="0" />
+      <LineId Id="170" Count="0" />
+      <LineId Id="167" Count="0" />
+      <LineId Id="159" Count="1" />
+      <LineId Id="172" Count="1" />
+      <LineId Id="677" Count="0" />
+      <LineId Id="175" Count="0" />
+      <LineId Id="626" Count="0" />
+      <LineId Id="635" Count="0" />
+      <LineId Id="174" Count="0" />
+      <LineId Id="161" Count="0" />
+      <LineId Id="149" Count="0" />
+      <LineId Id="501" Count="0" />
+      <LineId Id="563" Count="1" />
+      <LineId Id="504" Count="0" />
+      <LineId Id="150" Count="0" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="48" Count="0" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="24" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

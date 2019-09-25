@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <DUT Name="ST_SenSpec" Id="{5d808921-bb1d-4e81-9d96-c6bf660bb535}">
+    <Declaration><![CDATA[TYPE ST_SenSpec :
+STRUCT
+	iMn : REAL;
+	iMx : REAL;
+	oMn : REAL;
+	oMx : REAL;
+	ofs : REAL;
+	//val : DINT;
+	b: REAL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

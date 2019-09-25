@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <DUT Name="Enum_ModuleEnableState" Id="{167df5f0-b717-44d2-9288-843d0eb0c45e}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE Enum_ModuleEnableState :
+(
+	eDisabled				 := 0,
+	eEnabled
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
+  <DUT Name="ST_AlarmSubmodules" Id="{cee55911-3428-49ed-a6c0-f896086b313b}">
+    <Declaration><![CDATA[TYPE ST_AlarmSubmodules :
+STRUCT
+	AlarmSubmodule: ARRAY [1..30] OF ST_AlarmTags;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

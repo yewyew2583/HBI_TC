@@ -1,0 +1,205 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <POU Name="FB_Alarm" Id="{50ddbe89-bd03-46a5-9360-2ddc3cbceda6}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Alarm
+VAR_INPUT
+	vIO : ST_TCMultiLevel_VIO;
+	vIOMain: ST_TCColumn_VIO;
+	NoOfAlmID : INT:=100;
+	iSubMod : INT:=-1;
+	bLibError : BOOL;
+	//iLibErrorCode : UDINT;
+	//iAlmIDToRset:INT:=0;
+	
+END_VAR
+VAR_OUTPUT
+	bError:BOOL;
+	//arrSysAlmID : ARRAY[1..100] OF INT;  //Alm ID, Array Index
+END_VAR
+VAR
+	iLibErrorCode : UDINT;
+	//bError:BOOL;
+	bitNo:INT;
+	almRset:BOOL;
+	
+	ArrAlmBitBefDelay : ARRAY[1..200] OF BOOL;
+	ArrAlmBitAftDelay : ARRAY[1..200] OF BOOL;
+	ArrAlarmKeepBit	:	ARRAY[1..200] OF BOOL;
+	ArrDelayAlarm : 	ARRAY[1..200] OF FB_Delay;
+	Arr_ms :			ARRAY[1..200] OF INT;
+END_VAR
+VAR_IN_OUT
+	//bLibError : BOOL;
+	stAlmSubMod:ST_AlarmSubmodules;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//arrTCMultiLevel[iLevel].fbTierIIAlarm((* indexOffset, noOfAlm, tierIIvIO, InOut:arrT2AlmKeepBit, InOut:arrTAAlm*));
+//AlarmRest(SubmoduleID,AlarmID,IsSystemReset,IsAlarmReset)
+M_AlarmUpdate();]]></ST>
+    </Implementation>
+    <Method Name="M_AlarmReset" Id="{66109e5c-ea09-4d1f-9bb9-6c91147ab72e}">
+      <Declaration><![CDATA[METHOD M_AlarmReset : BOOL
+VAR_INPUT
+	isAlmRst:BOOL;
+	iSubModToRset:INT;
+	iAlmIDToRset:INT;
+END_VAR
+VAR
+	bitNo:INT;
+	i: INT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF isAlmRst (* *)THEN
+	//get BitNo(AlarmID) from TA Alarm Reset Command Parrameter;
+	//bitNo := iAlmIDToReset - Offset ;
+	//bitNo := almIDToRset - 1000*(n-1)*indexOffset;  //Get From TA Command In Future.
+	bitNo:=iAlmIDToRset;
+	IF bitNo<0 OR bitNo >100 THEN
+		M_AlarmReset :=FALSE;
+		RETURN;
+	END_IF
+	
+	
+	IF stAlmSubMod.AlarmSubmodule[iSubModToRset].AlarmID[iAlmIDToRset] THEN
+//		stAlmSubMod.AlarmSubmodule[iSubModToRset].AlarmID[iAlmIDToRset]  := FALSE;
+		M_AlarmReset :=TRUE;
+		//ArrAlmSubModule.AlarmSubmodule[SubModNo].AlarmID[TagNo];
+	END_IF
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_AlarmUpdate" Id="{677b26ff-b7ca-4b8d-a0e5-814db6496ec3}">
+      <Declaration><![CDATA[METHOD M_AlarmUpdate : BOOL
+VAR
+	i:INT;
+	j:INT;
+	_bError: BOOL;
+	iSysAlarmID : INT;
+END_VAR
+
+VAR_INPUT
+END_VAR
+
+VAR_IN_OUT
+	//ArrAlarmKeepBit:ST_AlarmTags;
+END_VAR
+VAR_OUTPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF iSubMod=0 THEN
+	RETURN;
+END_IF
+
+
+FOR i:=1 TO NoOfAlmID DO
+	iLibErrorCode:=vIO.iAlarmCode;
+	//vIO to bitArray reflector (Almost real Time and No Latching)======================================
+	CASE i OF
+		E_TIIAlarm.ipAPPresentSensor		: ArrAlmBitBefDelay[E_TIIAlarm.ipAPPresentSensor	  ]:=vIO.ipAPPresentSensor    ; Arr_ms[E_TIIAlarm.ipAPPresentSensor 	   ] := 500;         //****stTCVIO.iAlarmCode=  E_Alarm.ipAP_PresentSensor 	 ;
+        E_TIIAlarm.ipTesterPresent		    : ArrAlmBitBefDelay[E_TIIAlarm.ipTesterPresent		  ]:=vIO.ipTesterPresent	   ; Arr_ms[E_TIIAlarm.ipTesterPresent        ] := 700;            
+	    E_TIIAlarm.ipTIUPresent				: ArrAlmBitBefDelay[E_TIIAlarm.ipTIUPresent		  	  ]:=vIO.ipTIUPresent          ; Arr_ms[E_TIIAlarm.ipTIUPresent           ] := 900;      
+	    E_TIIAlarm.ipTCCellDoorClosed		: ArrAlmBitBefDelay[E_TIIAlarm.ipTCCellDoorClosed	  ]:=vIO.ipTCCellDoorClosed    ; Arr_ms[E_TIIAlarm.ipTCCellDoorClosed     ] := 300;  
+	    E_TIIAlarm.ipTCDrawerCylRetractRS	: ArrAlmBitBefDelay[E_TIIAlarm.ipTCDrawerCylRetractRS ]:=vIO.ipTCDrawerCylRetractRS; Arr_ms[E_TIIAlarm.ipTCDrawerCylRetractRS ] := 400;  
+	    E_TIIAlarm.ipAPDeactuatedPLC		: ArrAlmBitBefDelay[E_TIIAlarm.ipAPDeactuatedPLC	  ]:=vIO.ipHandlerSafeToEnterPLC    ; Arr_ms[E_TIIAlarm.ipAPDeactuatedPLC     ] := 500;  
+	    E_TIIAlarm.ipAPDeactuatedHwr		: ArrAlmBitBefDelay[E_TIIAlarm.ipAPDeactuatedHwr	  ]:=vIO.ipHandlerSafeToEnterHwr    ; Arr_ms[E_TIIAlarm.ipAPDeactuatedHwr     ] := 700;   
+	    E_TIIAlarm.ipTesterLatchesClosed	: ArrAlmBitBefDelay[E_TIIAlarm.ipTesterLatchesClosed  ]:=vIO.ipTesterLatchesClosed ; Arr_ms[E_TIIAlarm.ipTesterLatchesClosed  ] := 900;  
+	
+		//E_Alarm.LibraryCylErr			:	ArrAlmBitBefDelay[E_Alarm.LibraryCylErr				]:=bError(*From Lib*) AND E_Alarm.LibraryCylErr == LibErrorID  ; ArrMiliSecond[E_Alarm.LibraryCylErr   ] := 0;		
+		//iAlarmCode Of Library Error can be only one.
+		//But iAlarmCode Of System Error can't use only one common variable.
+	
+	END_CASE
+	//=======================================================================================
+	
+	//Set Library Alm Bit & Lib Alm BitDelay Val=============================================
+	IF i > E_TIIAlarm.ipTesterLatchesClosed THEN
+		//--bLibError => Declare In vIO and Set By Seq and Reset By Reset Alarm Function
+		ArrAlmBitBefDelay[i]:= bLibError AND (i = iLibErrorCode)  ; //Set Library Alm Bit
+		IF ArrAlmBitBefDelay[i] THEN
+			//stTCMLVIOTemp:=arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO;
+			//stTCMLVIOTemp.isLibError:=TRUE;
+			//arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO := stTCMLVIOTemp;
+		END_IF
+		Arr_ms[i] := 0;										 		//
+	END_IF	
+	//=======================================================================================
+
+	//Delay Library Alm Bit
+	ArrDelayAlarm[i](in:=ArrAlmBitBefDelay[i],out:=ArrAlmBitAftDelay[i],msec:=Arr_ms[i]);	//DelayAlmBit
+	//=======================================================================================
+	
+	//Keep Alarm Bit Till Err Rset and If SysAlm Create ID==================================
+	IF ArrAlmBitAftDelay[i] THEN					//tempArrErrorBit is realtime IO update array
+
+		stAlmSubMod.AlarmSubmodule[iSubMod].AlarmID[i]:=TRUE;
+		//bLibError:=FALSE;//
+	END_IF
+	_bError := _bError OR stAlmSubMod.AlarmSubmodule[iSubMod].AlarmID[i];
+	//=======================================================================================
+	
+	//If SysAlm Create ID====================================================================
+	IF NOT(i=iLibErrorCode) THEN
+		IF stAlmSubMod.AlarmSubmodule[iSubMod].AlarmID[i]	THEN
+		//IF ArrAlarmKeepBit[i]	THEN
+			iSysAlarmID	:=1000*iSubMod + i; 	//Creat AlarmCode/ID For SystemError.
+			//**arrSysAlmID[i] :=iSysAlarmID;
+		ELSE
+			//**arrSysAlmID[i] :=0;
+		END_IF
+	END_IF
+	//=======================================================================================
+END_FOR
+bError := _bError ;  //bError refers to system Error;
+
+(*
+//Alarm Reset ===========================================================================
+IF almRset THEN
+	//get BitNo(AlarmID) from TA Alarm Reset Command Parrameter;
+	bitNo := iAlmID - 1000*iLevel;  //Get From TA Command In Future.
+	IF ArrAlmSubModule.AlarmSubmodule[iSubMod].ArrAlarmKeepBit[bitNo] THEN
+		ArrAlmSubModule.AlarmSubmodule[iSubMod].ArrAlarmKeepBit[bitNo] := FALSE;
+	END_IF
+END_IF
+//=======================================================================================
+*)]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Update" Id="{4bd31271-1016-4bde-9e3d-20f213b47406}">
+      <Declaration><![CDATA[METHOD PRIVATE M_Update : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_Alarm">
+      <LineId Id="9" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="40" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Alarm.M_AlarmReset">
+      <LineId Id="6" Count="3" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="36" Count="1" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="42" Count="1" />
+      <LineId Id="10" Count="1" />
+      <LineId Id="45" Count="0" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Alarm.M_AlarmUpdate">
+      <LineId Id="565" Count="74" />
+      <LineId Id="119" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Alarm.M_Update">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

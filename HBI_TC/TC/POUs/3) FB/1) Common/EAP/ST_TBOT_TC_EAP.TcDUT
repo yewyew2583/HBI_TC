@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <DUT Name="ST_TBOT_TC_EAP" Id="{c2dc4609-a66a-4f77-b79d-7c4fd0290415}">
+    <Declaration><![CDATA[TYPE ST_TBOT_TC_EAP :
+STRUCT
+
+	
+	lrTBOT_XPos				AT %I*: LREAL;
+	lrTBOT_YPos				AT %I*: LREAL;
+	lrTBOT_ZPos				AT %I*: LREAL;
+	iTBOT_HeartBeat			AT %I*: INT;
+	bAntiCollisionTriggered	AT %I*: BOOL :=TRUE;
+	iTCDwrSafeToMoveEAP AT %I*: INT:=65535;
+	bTCCellACPwrOff	AT %I*:  BOOL :=FALSE ;
+	
+	bTC_HeartBeat 			AT %Q*:INT;
+	iTCDrawerCylExtendRS_EAP	AT %Q*: INT;
+    iTCDrawerCylRetractRS_EAP	AT %Q*: INT;
+	
+	
+	
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

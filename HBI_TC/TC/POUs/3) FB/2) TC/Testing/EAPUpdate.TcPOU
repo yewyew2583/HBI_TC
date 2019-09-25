@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <POU Name="EAPUpdate" Id="{e1e35c58-dc3e-47d8-badf-65da79780d52}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM EAPUpdate
+VAR
+	stTCMLevelVIO: ST_TCMultiLevel_VIO;
+	iLevel: INT;
+	varBool: BOOL;
+END_VAR
+VAR_INPUT
+	noOfLevel:UINT:=1;
+END_VAR
+//***************************************************
+//*** PlaceHolder To Seperate EAP IO Update from main
+//***************************************************]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[FOR iLevel:=1 TO noOfLevel DO
+	//<EAP>
+			//<Convert Int to Bool>
+				//TC => TBOT
+				stTCMLevelVIO := arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO;
+				CASE iLevel OF
+								1 :	stEAP.stTBOT_TC_EAP[iTCColumnID].iTCDrawerCylExtendRS_EAP.0:=stTCMLevelVIO.ipTCDrawerCylExtendRS;
+								2 :	stEAP.stTBOT_TC_EAP[iTCColumnID].iTCDrawerCylExtendRS_EAP.1:=stTCMLevelVIO.ipTCDrawerCylExtendRS;
+								3 :	stEAP.stTBOT_TC_EAP[iTCColumnID].iTCDrawerCylExtendRS_EAP.2:=stTCMLevelVIO.ipTCDrawerCylExtendRS;
+								4 :	stEAP.stTBOT_TC_EAP[iTCColumnID].iTCDrawerCylExtendRS_EAP.3:=stTCMLevelVIO.ipTCDrawerCylExtendRS;
+								5 :	stEAP.stTBOT_TC_EAP[iTCColumnID].iTCDrawerCylExtendRS_EAP.4:=stTCMLevelVIO.ipTCDrawerCylExtendRS;
+								6 :	stEAP.stTBOT_TC_EAP[iTCColumnID].iTCDrawerCylExtendRS_EAP.5:=stTCMLevelVIO.ipTCDrawerCylExtendRS;
+				END_CASE
+				CASE iLevel OF
+								1 :	stEAP.stTBOT_TC_EAP[iTCColumnID].iTCDrawerCylRetractRS_EAP.0:=stTCMLevelVIO.ipTCDrawerCylRetractRS;
+								2 :	stEAP.stTBOT_TC_EAP[iTCColumnID].iTCDrawerCylRetractRS_EAP.1:=stTCMLevelVIO.ipTCDrawerCylRetractRS;
+								3 :	stEAP.stTBOT_TC_EAP[iTCColumnID].iTCDrawerCylRetractRS_EAP.2:=stTCMLevelVIO.ipTCDrawerCylRetractRS;
+								4 :	stEAP.stTBOT_TC_EAP[iTCColumnID].iTCDrawerCylRetractRS_EAP.3:=stTCMLevelVIO.ipTCDrawerCylRetractRS;
+								5 :	stEAP.stTBOT_TC_EAP[iTCColumnID].iTCDrawerCylRetractRS_EAP.4:=stTCMLevelVIO.ipTCDrawerCylRetractRS;
+								6 :	stEAP.stTBOT_TC_EAP[iTCColumnID].iTCDrawerCylRetractRS_EAP.5:=stTCMLevelVIO.ipTCDrawerCylRetractRS;
+				END_CASE	
+				
+				//TBOT => TC
+				CASE iLevel OF
+								
+								1 :	varBool:=stEAP.stTBOT_TC_EAP[iTCColumnID].iTCDwrSafeToMoveEAP.0;
+								2 :	varBool:=stEAP.stTBOT_TC_EAP[iTCColumnID].iTCDwrSafeToMoveEAP.1;
+								3 :	varBool:=stEAP.stTBOT_TC_EAP[iTCColumnID].iTCDwrSafeToMoveEAP.2;
+								4 :	varBool:=stEAP.stTBOT_TC_EAP[iTCColumnID].iTCDwrSafeToMoveEAP.3;
+								5 :	varBool:=stEAP.stTBOT_TC_EAP[iTCColumnID].iTCDwrSafeToMoveEAP.4;
+								6 :	varBool:=stEAP.stTBOT_TC_EAP[iTCColumnID].iTCDwrSafeToMoveEAP.5;
+				END_CASE	
+				stEAP.arrTBOT_TC_SubLevelEAP[iTCColumnID,iLevel].bTCDwrSafeToMoveEAP:=varBool;
+			//<Convert Int to Bool>
+			
+			//TBOT => TC
+			//arrTCMultiLevel[i].stGblParam.iTCDwrSafeToMoveEAP := stEAP.arrTBOT_TC_SubLevelEAP[iTCColumnID,iLevel].iTCDwrSafeToMoveEAP;//.arrTCDwrSafeToMoveEAP[iLevel];
+			arrTCMultiLevel[iLevel].stGblParam.bTCDwrSafeToMoveEAP := stEAP.arrTBOT_TC_SubLevelEAP[iTCColumnID,iLevel].bTCDwrSafeToMoveEAP;//stEAP.stTBOT_TC_EAP[iTCColumnID].iTCDwrSafeToMoveEAP;//.arrTCDwrSafeToMoveEAP[iLevel];	
+			arrTCMultiLevel[iLevel].stGblParam.bTBotAntiCollisionTriggered:=stEAP.stTBOT_TC_EAP[iTCColumnID].bAntiCollisionTriggered;//stEAP_TC_TBOT.bAntiCollisionTriggered;
+			arrTCMultiLevel[iLevel].stGblParam.bTCCellACPwrOff:=stEAP.stTBOT_TC_EAP[iTCColumnID].bTCCellACPwrOff;//stEAP_TC_TBOT.bAntiCollisionTriggered;
+			arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_stParam := arrTCMultiLevel[iLevel].stGblParam;
+			//X,Y,Z,TBotHeartBeat;
+	//</EAP>
+END_FOR
+		]]></ST>
+    </Implementation>
+    <LineIds Name="EAPUpdate">
+      <LineId Id="6" Count="0" />
+      <LineId Id="54" Count="0" />
+      <LineId Id="7" Count="36" />
+      <LineId Id="74" Count="0" />
+      <LineId Id="44" Count="2" />
+      <LineId Id="62" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

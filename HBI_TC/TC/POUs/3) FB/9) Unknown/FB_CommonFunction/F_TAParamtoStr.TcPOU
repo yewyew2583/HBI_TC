@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <POU Name="F_TAParamtoStr" Id="{f3becd5b-4b1f-4f23-835a-3d5da113ee81}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION F_TAParamtoStr : STRING
+VAR_INPUT
+	iParam	 			: ARRAY [1..NO_OF_INT_PARAM] OF DINT;
+	sParam				: ARRAY [1..NO_OF_STRING_PARAM] OF STRING;
+	bParam				: ARRAY [1..NO_OF_BOOL_PARAM] OF BOOL;
+END_VAR
+VAR
+	i : UINT;
+	tempstr : STRING;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[FOR i:=1 TO NO_OF_INT_PARAM DO 
+	IF iParam[i] <> 0  THEN
+		F_TAParamtoStr := CONCAT (F_TAParamtoStr, DINT_TO_STRING(iParam[i])); 
+		F_TAParamtoStr := CONCAT (F_TAParamtoStr, '_');
+	END_IF
+END_FOR
+
+FOR i:=1 TO NO_OF_STRING_PARAM DO 
+	IF sParam[i] <> ''  THEN
+		F_TAParamtoStr := CONCAT (F_TAParamtoStr, sParam[i]); 
+		F_TAParamtoStr := CONCAT (F_TAParamtoStr, '_');
+	END_IF
+END_FOR
+
+FOR i:=1 TO 2 DO //NO_OF_BOOL_PARAM DO 
+	//IF bParam[i] <> ''  THEN
+		F_TAParamtoStr := CONCAT (F_TAParamtoStr, BOOL_TO_STRING(bParam[i])); 
+		F_TAParamtoStr := CONCAT (F_TAParamtoStr, '_');
+	//END_IF
+END_FOR]]></ST>
+    </Implementation>
+    <LineIds Name="F_TAParamtoStr">
+      <LineId Id="20" Count="0" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="42" Count="4" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="48" Count="5" />
+      <LineId Id="47" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

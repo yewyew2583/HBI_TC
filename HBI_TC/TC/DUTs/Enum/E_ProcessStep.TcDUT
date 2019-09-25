@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
+  <DUT Name="E_ProcessStep" Id="{a1c37f0b-796d-4eb8-8a04-925d2638979b}">
+    <Declaration><![CDATA[TYPE E_ProcessStep :
+(
+	eSeqReset:=1,
+	eDataInput,
+	eExecuting,
+	eSeqCompleted,
+	eSeqError,
+	eSeqCancel	
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

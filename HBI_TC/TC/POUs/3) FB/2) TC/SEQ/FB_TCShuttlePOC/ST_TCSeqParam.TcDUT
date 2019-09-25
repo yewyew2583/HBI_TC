@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <DUT Name="ST_TCSeqParam" Id="{ca2f605f-7507-478f-ae01-4ae12140e3b6}">
+    <Declaration><![CDATA[TYPE ST_TCSeqParam : //only read by internal sequence
+STRUCT
+	stTACommand : ST_Command;
+	bShuttleMoveOut:BOOL;
+	bShuttleMoveIn:BOOL;
+	bTIUSlideOutCancel: BOOL;
+	//bDPSPower:BOOL;
+	bAlarmClear : BOOL;
+	bAlarmOccur : BOOL;
+	bInitialise: BOOL;
+	bCancel: BOOL;
+	bStartCancelAction:BOOL;
+	bCancelActionDone:BOOL;
+	bInternalCancel : BOOL;
+	bResume : BOOL;
+	
+	bDoorClose :BOOL;	//
+	bDoorOpen :BOOL;	//
+	bDoorRecovery:BOOL;
+	bDoorRecoveryStarted:BOOL;
+	bDoorRecoveryCompleted:BOOL;
+	bDoorRecoveryFailed:BOOL;
+	bLevel1 : BOOL;
+	
+	
+	bDSPPowerOff:BOOL;
+	bDSPPowerOn:BOOL;
+	bDSPPowerAuto:BOOL;
+	
+	iProcessState : E_ProcessState :=0;
+	iProcessStep:E_ProcessStep :=0;
+	
+	sFailReason:STRING;
+	iAlarmID:UDINT;
+	iAlmIDToRset:DINT;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

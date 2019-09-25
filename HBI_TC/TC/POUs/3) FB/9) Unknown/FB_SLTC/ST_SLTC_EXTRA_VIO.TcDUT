@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <DUT Name="ST_SLTC_EXTRA_VIO" Id="{56d9295f-2215-4bda-b175-698efbea7581}">
+    <Declaration><![CDATA[TYPE ST_SLTC_EXTRA_VIO :
+STRUCT
+	opASCOValve_1  	 		: BOOL;
+	opASCOValve_2 	 		: BOOL;
+	opMainIncomingAirValve 	: BOOL;
+	opPowerEnable 			: BOOL;
+	opAC_SSR1				: BOOL;
+	opAC_SSR2				: BOOL;
+	opAC_SSR3				: BOOL;
+	opAC_SSR4				: BOOL;
+	opAPHeater				: BOOL;
+	
+	ipRTD1					: INT;
+	ipRTD2					: INT;
+	ipHeaterCurrent1		: DINT;
+	ipHeaterCurrent2        : DINT;
+	ipHeaterCurrent3        : DINT;
+	ipHeaterCurrent4        : DINT;
+	ipAPHeaterCurrent		: DINT;
+	
+	opWaterValve:BOOL;
+	opTESolValve:BOOL;
+	opDESolValve:BOOL;
+	opTEPressRegAOut:REAL;
+	opDEPressRegAOut:REAL;
+
+	ipTEUpRS:BOOL;
+	ipTEPressRegFeedBack:REAL;
+	ipDEPressRegFeedBack:REAL;
+	ipDEPressureSensor:REAL;
+	
+	
+
+	
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <DUT Name="ST_SLTC_EXTRA_DIO" Id="{213df1e4-8a07-4747-a80b-72276f524aa2}">
+    <Declaration><![CDATA[TYPE ST_SLTC_EXTRA_DIO :
+STRUCT
+	opASCOValve_1  	 		AT %Q* : BOOL;
+	opASCOValve_2 	 		AT %Q* : BOOL;
+	opMainIncomingAirValve 	AT %Q* : BOOL;
+	opPowerEnable 			AT %Q* : BOOL;
+	opAC_SSR1				AT %Q* : BOOL;
+	opAC_SSR2				AT %Q* : BOOL;
+	opAC_SSR3				AT %Q* : BOOL;
+	opAC_SSR4				AT %Q* : BOOL;
+	opAPHeater				AT %Q* : BOOL;
+	
+	ipRTD1					AT %I* : INT;
+	ipRTD2					AT %I* : INT;
+	ipHeaterCurrent1		AT %I* : DINT;
+	ipHeaterCurrent2        AT %I* : DINT;
+	ipHeaterCurrent3        AT %I* : DINT;
+	ipHeaterCurrent4        AT %I* : DINT;
+	
+	ipAPHeaterCurrent     	AT %I* : DINT;
+	
+	opWaterValve 			AT %Q*:BOOL;
+	opTESolValve 			AT %Q*:BOOL;
+	opDESolValve 			AT %Q*:BOOL;
+	opTEPressRegAOut 		AT %Q*:INT;
+	opDEPressRegAOut 		AT %Q*:INT;
+
+	ipTEUpRS 				AT %I*:BOOL;
+	ipTEPressRegFeedBack 	AT %I*:INT;
+	ipDEPressRegFeedBack 	AT %I*:INT;
+	ipDEPressureSensor 		AT %I*:INT;
+
+//<AfterConversion>
+
+//</AfterConversion>
+	
+//<ControlBit>
+	ipHeaterCurCtrl1		AT %Q* : INT :=49;  //1Amp
+	ipHeaterCurCtrl2        AT %Q* : INT :=49;
+	ipHeaterCurCtrl3        AT %Q* : INT :=49;
+	ipHeaterCurCtrl4        AT %Q* : INT :=49;
+	
+	ipAPHeaterCurCtrl       AT %Q* : INT :=304;  //10Amp
+//</ControlBit>	
+	
+END_STRUCT
+
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

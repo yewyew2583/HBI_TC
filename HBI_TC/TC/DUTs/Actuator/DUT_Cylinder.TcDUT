@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
+  <DUT Name="DUT_Cylinder" Id="{918b55e3-45b6-48bd-aabe-c56089e00601}">
+    <Declaration><![CDATA[TYPE DUT_Cylinder :
+STRUCT
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// Settings
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	Simulate							: BOOL; // 0: Production mode, 1: Simulate mode
+	Enable								: BOOL; // 0: Disable, 1: Enable
+	Sim_Fail							: BOOL; // 0: Off, 1: Simulate Cylinder error
+	SetOutput_Pulse						: BOOL; // 0: Command output will be keep updating, 1: Command output will be update once when there is state change
+	Callibration_Mode					: BOOL; // 0: Ready for production, 1: Not ready for production
+	
+	
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// Status
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	AutInp								: BOOL; // 0: Retract (Auto state), 1: Extend (Auto state)
+	Failed								: BOOL; // 0: Cylinder OK, 1: Cylinder is failed to retract/extend*)
+	Failed_To_Retract					: BOOL; // Failed to receive retract signal after travel time
+	Failed_To_Extend					: BOOL; // Failed to receive extend signal after travel time
+	
+	Last_SD								: WORD; // Last Shut Down Error Code
+	
+	Status								: INT; // 1: Retracted, 2: Extended, 99: Failed
+	
+	Travel_Time							: UDINT	:= 5; // Time duration for DFB_Cylinder checking feedback input signal based on command output
+	
+	Message								: STRING; // Error Message
+	
+	EPT									: Enum_EPT; // 0: Blocked, 1: Idle, 2: Busy
+	EnbState							: Enum_ModuleEnableState; // 0: Disabled, 1: Enabled
+	Presence							: Enum_Presence; // 0: Non-Presence, 1: Presence
+	
+	
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// Cylinder control & return
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	Reset								: BOOL; // 0: Idle, 1: Reset Motor
+	
+	CMD									: WORD	:= 4; // Command: 1: Retract, 2: Extend, 4: Auto
+	
+	
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// Mapping
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	Extended							: BOOL;
+	Retracted							: BOOL;
+	Perm_BOOL							: ARRAY [1..16] OF BOOL;
+	SD_BOOL								: ARRAY [1..16] OF BOOL;
+	
+	CylinderID							: STRING;
+	Perm_STRING							: ARRAY [1..16] OF STRING;
+	SD_STRING							: ARRAY [1..16] OF STRING;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,663 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <POU Name="FB_UpdateStatus" Id="{83131197-5d33-42fb-8f89-8ed06a50bc74}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_UpdateStatus 
+VAR_INPUT
+	iLevel:UINT;
+END_VAR
+VAR
+	EmptyEvents: ST_Event; // to Clear the event array[n]
+	stManualBtnEvent:ST_Event;
+	CmdEmpty: ST_Command;
+	//i: UINT;            //temporary variable to loop all 6 parameters
+	bErr: BOOL;         //temporary var for error flag
+	sStatus:STRING;     //temporary var for error message
+
+	sLogName: STRING(255);
+	iEventName: E_EventName;
+	sEventName: STRING(81);
+	iSendEvent: UINT;
+	eModuleID : E_ModuleID;
+	
+	//user pause button press event
+	//RS_LanePause: RS;
+	rtRiseBtn1Trig : R_Trig;
+	ftFallBtn1Trig : F_Trig;	
+	Btn1Tim: Ton;
+	
+	rtRiseBtn2Trig : R_Trig;
+	ftFallBtn2Trig : F_Trig;	
+	Btn2Tim: Ton;
+	
+	rtRiseBtn3Trig : R_Trig;
+	ftFallBtn3Trig : F_Trig;	
+	Btn3Tim: Ton;
+	
+	sentManualBtnEvent:bool;
+
+	// DoorRecStarted
+	//rtDoorRecStarted:R_Trig;
+	
+	
+	//user load button press event	
+	rtRiseTrig : R_Trig;
+	ftFallTrig : F_Trig;
+	LoadPbDly: Ton;
+	tim:TON;
+	
+	sMessage : STRING;
+	
+	
+//	[Step Mode]
+	bPrevStepMode : ARRAY [1..NO_OF_LEVEL] OF BOOL;
+	rtStep     : ARRAY[1..NO_OF_LEVEL] OF R_TRIG ;
+	stPOCVIO   : ST_TCShuttlePOC_VIO;
+	stMLVIO   : ST_TCMultiLevel_VIO;
+	sStepMode : ARRAY[0..1] OF STRING := ['Off', 'On'];	
+//	[Diagnostic Mode]
+	bPrevDiagnosticMode:BOOL;
+	
+	stColVIO : ST_TCColumn_VIO;
+	EmptyAlmStructure : ST_AlarmModules;
+	
+	i:INT;
+	fbButtonBlinkTest:  FB_Blink;
+	iButtonBlinkTest:INT;
+	bButtonBlinkTest:BOOL;
+	fbButtonBlinks:ARRAY [1..NO_OF_LEVEL,0..NO_OF_BTNLED-1] OF  FB_Blink;
+	//fbButtonBlinks: ARRAY [1..NO_OF_LEVEL,0..NO_OF_BTNLED] OF FB_Blink;
+	bTriggerBlinks: ARRAY [1..NO_OF_LEVEL,0..NO_OF_BTNLED-1] OF BOOL;
+	bLastTriggerBlinks: ARRAY [1..NO_OF_LEVEL,0..NO_OF_BTNLED-1] OF BOOL;
+	iBtnMode:ARRAY [1..NO_OF_LEVEL,0..NO_OF_BTNLED-1] OF INT;
+	eLED:E_LED;
+	iBtnLEDModes:ARRAY[1..NO_OF_LEVEL,0..NO_OF_BTNLED-1] OF INT;	// Created 2 dim array to check busy mode for indvidual mode
+	iBtnLEDModeStatus:ARRAY[1..NO_OF_LEVEL,0..NO_OF_BTNLED-1] OF INT;
+	tBlinkDuration:TIME:=T#1000MS;
+	iFreq:DINT;
+	bState:BOOL;
+	
+	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//[Set Pwr On Checkdelay from HMI]
+	IF BtnSetTstPwrOnChkDelay AND iTstPwrOnChkDelay>=0 THEN 
+		TstPwrOnChkDelay:=INT_TO_TIME(iTstPwrOnChkDelay);
+		BtnSetTstPwrOnChkDelay:=FALSE;
+	END_IF
+	IF BtnSetAPPwrOnChkDelay AND iAPPwrOnChkDelay>=0 THEN 
+		APPwrOnChkDelay:=INT_TO_TIME(iAPPwrOnChkDelay);
+		BtnSetAPPwrOnChkDelay:=FALSE;
+	END_IF	
+	
+	IF BtnSetTstReadyCheckDelay AND iTstReadyCheckDelay>=0 THEN 
+		TstReadyCheckDelay:=INT_TO_TIME(iTstReadyCheckDelay);
+		BtnSetTstReadyCheckDelay:=FALSE;
+	END_IF
+	IF BtnSetAPReadyCheckDelay AND iAPReadyCheckDelay>=0 THEN 
+		APReadyCheckDelay:=INT_TO_TIME(iAPReadyCheckDelay);
+		BtnSetAPReadyCheckDelay:=FALSE;
+	END_IF
+	//IF INT_TO_TIME(DispTstPwrOnChkDelay) <> TstPwrOnChkDelay THEN 
+	//	DispTstPwrOnChkDelay:=TIME_TO_INT(TstPwrOnChkDelay);
+	//END_IF
+	
+
+  
+	bColIODiagnosticsMode:=bDiagnosticMode;
+	arrIODiagnosticsMode[iLevel]:=bDiagnosticMode;
+
+
+(*//[DoorAlarmAutoReset]
+	//ResetDoorAlarmID ftom ALMTC Array
+	IF ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCCellDoorClosed] (* Door Lock Completed*)THEN
+		stMLVIO:=arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO;
+		IF stMLVIO.ipTCCellDoorClosed THEN
+			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCCellDoorClosed]:=FALSE;
+		END_IF
+		//SendEvent
+	END_IF*)
+	
+	IF bDebugCart THEN
+		IF (NOT stMLVIO.ipTCCellTbotSideDoorOpenCloseStatus01) OR (NOT stMLVIO.ipTCCellTbotSideDoorOpenCloseStatus02) THEN
+			ALMTC.Level[iLevel].AlarmID[E_AlarmID.TBotSideDoorCloseSignalNotDetected]			:= TRUE;
+		END_IF
+		IF (NOT stMLVIO.ipTCCellTbotSideDoorLocked01) OR (NOT stMLVIO.ipTCCellTbotSideDoorLocked02) THEN
+			ALMTC.Level[iLevel].AlarmID[E_AlarmID.TBotSideDoorLockSignalNotDetected]			:= TRUE;
+		END_IF
+		
+		//auto clear alarm if door is closed 
+		IF ALMTC.Level[iLevel].AlarmID[E_AlarmID.TBotSideDoorCloseSignalNotDetected] THEN
+			stMLVIO:=arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO;
+			IF stMLVIO.ipTCCellTbotSideDoorOpenCloseStatus01 AND stMLVIO.ipTCCellTbotSideDoorOpenCloseStatus02 THEN
+				ALMTC.Level[iLevel].AlarmID[E_AlarmID.TBotSideDoorCloseSignalNotDetected]		:= FALSE;
+			END_IF
+		END_IF
+		
+		//auto clear alarm if door is locked
+		IF ALMTC.Level[iLevel].AlarmID[E_AlarmID.TBotSideDoorLockSignalNotDetected] THEN
+			stMLVIO:=arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO;
+			IF stMLVIO.ipTCCellTbotSideDoorLocked01 AND stMLVIO.ipTCCellTbotSideDoorLocked02 THEN
+				ALMTC.Level[iLevel].AlarmID[E_AlarmID.TBotSideDoorLockSignalNotDetected]		:= FALSE;
+			END_IF
+		END_IF
+	END_IF
+	         
+
+//	[ResetDuringSystemReset]
+	IF FALSE THEN
+		IF arrTCMultiLevel[iLevel].stGblParam.bInitialise THEN    // Need to use different variable 
+			arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_ErrClear:=TRUE;
+			ALMTC:=EmptyAlmStructure;
+		END_IF
+		IF arrTCShuttlePOC[iLevel].stGblParam.bInitialise THEN
+			arrTCShuttlePOC[iLevel].fbTCShuttlePOCSeq.P_ErrClear:=TRUE;
+			ALMTC:=EmptyAlmStructure;
+		END_IF	
+	END_IF
+//--
+
+//<ManualButtonPressedEvnt>    1=MaintenanceBtn,2=AbortFlowBtn,3=DoorUnlockBtn)
+	stMLVIO := arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO;
+	Btn1Tim(in:=stMLVIO.ipDrawerMaintenanceModeBtn, pt:=T#5MS);
+	rtRiseBtn1Trig(Clk:=Btn1Tim.Q);
+	ftFallBtn1Trig(Clk:=Btn1Tim.Q);
+	
+	Btn2Tim(in:=stMLVIO.ipTCCellAbortFlowBtn, pt:=T#5MS);
+	rtRiseBtn2Trig(Clk:=Btn2Tim.Q);
+	ftFallBtn2Trig(Clk:=Btn2Tim.Q);
+	
+	Btn3Tim(in:=stMLVIO.ipTCCellDoorOpenReqBtn, pt:=T#5MS);
+	rtRiseBtn3Trig(Clk:=Btn3Tim.Q);
+	ftFallBtn3Trig(Clk:=Btn3Tim.Q);
+	
+	sentManualBtnEvent:=FALSE;
+	IF rtRiseBtn1Trig.Q THEN
+		stManualBtnEvent.eEventName:= E_EventName.ManualButtonPressCompleted;
+		stManualBtnEvent.sLogName:= 'MaintenanceButtonPressed';
+		stManualBtnEvent.eModuleID:=LevelModuleID[iLevel]; //COLUMN_NAME;//E_ModuleID.COLUMN_LA;
+		stManualBtnEvent.iParam[1]:= 1;
+		sentManualBtnEvent:=TRUE;
+		
+	ELSIF rtRiseBtn2Trig.Q THEN
+		stManualBtnEvent.eEventName:= E_EventName.ManualButtonPressCompleted;
+		stManualBtnEvent.sLogName:= 'AbortFlowButtonPressed';
+		stManualBtnEvent.eModuleID:=LevelModuleID[iLevel];//COLUMN_NAME;//E_ModuleID.COLUMN_LA;
+		stManualBtnEvent.iParam[1]:= 2;
+		sentManualBtnEvent:=TRUE;
+		
+	ELSIF rtRiseBtn3Trig.Q THEN
+		stManualBtnEvent.eEventName:= E_EventName.ManualButtonPressCompleted;
+		stManualBtnEvent.sLogName:= 'DoorUnlockButtonPressed';
+		stManualBtnEvent.eModuleID:=LevelModuleID[iLevel];//COLUMN_NAME;//E_ModuleID.COLUMN_LA;
+		stManualBtnEvent.iParam[1]:= 3;
+		sentManualBtnEvent:=TRUE;
+		
+	END_IF
+	
+	IF sentManualBtnEvent THEN
+		// If Btn mode operation not busy (!=3) then sent button pressed event!
+		//IF iBtnLEDModes[iLevel,stManualBtnEvent.iParam[1]]<>3 THEN
+		iBtnLEDModes[iLevel,stManualBtnEvent.iParam[1]]:=3;	//Blink (set Local Btn Mode flag to busy)
+		CmdAndEventProcess.fbCmdAndEventUpdate.M_AddEvent(
+		sLogName:= stManualBtnEvent.sLogName, 
+		eEventName:= stManualBtnEvent.eEventName, 
+		eModuleID:= stManualBtnEvent.eModuleID, 
+		iParam:= stManualBtnEvent.iParam,
+		sParam:= EmptyEvents.sParam, 
+		bParam:= EmptyEvents.bParam, 
+		dParam:= EmptyEvents.dParam,
+		sFailReason:=EmptyEvents.sFailReason );
+		//END_IF
+		sentManualBtnEvent:=FALSE;
+		
+	END_IF
+	//Need to reset Manually in Non Production mode.
+	IF bHMIRsetEvntTriggerOnProductionMode THEN
+		//arrTCSEventTriggered :=FALSE;
+	END_IF
+	IF ftFallBtn1Trig.Q THEN
+		Btn1Tim(in:=FALSE);
+	ELSIF ftFallBtn2Trig.Q THEN
+		Btn2Tim(in:=FALSE);
+	ELSIF ftFallBtn3Trig.Q THEN	
+		Btn3Tim(in:=FALSE);
+	END_IF
+	//IF iPOC_ML_Selection=2 THEN
+	//	stMLVIO := arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO;
+	//ELSIF iPOC_ML_Selection=1 THEN 
+	//	stPOCVIO := arrTCShuttlePOC[iLevel].fbTCShuttlePOCSeq.P_stTCPocVIO;
+	//END_IF
+//</ManualButtonPressedEvnt> 
+
+
+//<ButtonLEDBlink>
+	(*===========================================
+	SOLID OFF 	::State=0, 	Frequency = Don’tCare
+	SOLID ON 	::State=1,	Frequency = 0
+	BLINKING  	::State=1, 	Frequency = BlinkFreq
+	===========================================*)
+
+	//internal btn Status Adaptor between TA btn Blink Mode and FB_Blink Function Call
+	FOR i:=0 TO NO_OF_BTNLED-1 DO   
+		
+	
+		stMLVIO := arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO;
+		CASE i OF     
+					0 :	bState:=stMLVIO.bMtnBtnLEDState;iFreq:=stMLVIO.iMtnBtnLEDBlinkFreq;
+					1 :	bState:=stMLVIO.bAbtBtnLEDState;iFreq:=stMLVIO.iAbtBtnLEDBlinkFreq;
+					2 :	bState:=stMLVIO.bDoorUnlockBtnLEDState;iFreq:=stMLVIO.iDoorUnlockBtnLEDBlinkFreq;
+		END_CASE
+		IF bState=FALSE THEN
+			//OFFLED
+			iBtnLEDModes[iLevel,i]:=1;	//OFF,ON,BLINK
+		ELSE
+			IF iFreq=0 THEN
+				//ONLED
+				iBtnLEDModes[iLevel,i]:=2;
+			ELSE
+				//BLINK WITH BLINK RATE
+				iBtnLEDModes[iLevel,i]:=3;
+				tBlinkDuration:=DINT_TO_TIME(iFreq);
+			END_IF
+		END_IF
+	END_FOR
+
+	//arrHMIBtnSolidOn_Condition[iLevel,i] (set this bit to true if Solid On Condition is met)
+	FOR i:=0 TO NO_OF_BTNLED-1 DO
+		(*
+		IF iBtnLEDModes[iLevel,i]=3 AND arrHMIBtnSolidOn_Condition[iLevel,i] THEN
+			iBtnLEDModes[iLevel,i]:=2;  //ON
+		ELSIF iBtnLEDModes[iLevel,i]=2 AND NOT arrHMIBtnSolidOn_Condition[iLevel,i] THEN
+			iBtnLEDModes[iLevel,i]:=1;  //OFF
+		END_IF 
+		*)
+		
+		//Converter for Button Blink Mode Status to TA 
+		CASE iBtnLEDModes[iLevel,i] OF
+					1 :	iBtnLEDModeStatus[iLevel,i]	:= 0 ; 
+					2 :	iBtnLEDModeStatus[iLevel,i]	:= 2 ; 
+					3 :	iBtnLEDModeStatus[iLevel,i]	:= 1 ;
+		END_CASE
+		
+		stMLVIO := arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO;
+				fbButtonBlinks[iLevel,i](MODE:=iBtnLEDModes[iLevel,i], Duration:=tBlinkDuration, LED=> bTriggerBlinks[iLevel,i]);
+				CASE i OF
+					0 :	stMLVIO.opDrawerMaintenanceModeBtnLED	:=bTriggerBlinks[iLevel,i];stMLVIO.iAbortButtonLEDStatusFlag := iBtnLEDModeStatus[iLevel,i];
+					1 :	stMLVIO.opTCCellAbortFlowBtnLED			:=bTriggerBlinks[iLevel,i];stMLVIO.iMaintenanceButtonLEDStatusFlag:=iBtnLEDModeStatus[iLevel,i];
+					2 :	stMLVIO.opDoorOpenReqLED				:=bTriggerBlinks[iLevel,i];stMLVIO.iDoorLockButtonLEDStatusFlag:=iBtnLEDModeStatus[iLevel,i];
+				END_CASE
+		IF bTriggerBlinks[iLevel,i] <> bLastTriggerBlinks[iLevel,i] THEN
+			arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO := stMLVIO;
+			bLastTriggerBlinks[iLevel,i] := bTriggerBlinks[iLevel,i] ;
+		END_IF
+		IF stMLVIO.bOffBtnLeds[i] THEN
+			iBtnLEDModes[iLevel,stManualBtnEvent.iParam[1]]:=1;
+			arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO := stMLVIO;
+			stMLVIO.bOffBtnLeds[i]:=FALSE;
+			arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO := stMLVIO;
+		END_IF
+	END_FOR
+	fbButtonBlinkTest(MODE:=iButtonBlinkTest, Duration:=INT_TO_TIME(1000) , LED=> bButtonBlinkTest);
+				
+//</ButtonLEDBlink>
+
+
+//	[DoorRecStartedEvnt]
+	//rtDoorRecStarted(clk:=arrTCMultiLevel[iLevel].stGblParam.bDoorRecovery);
+	IF arrTCMultiLevel[iLevel].stGblParam.bDoorRecoveryStarted OR arrTCShuttlePOC[iLevel].stGblParam.bDoorRecoveryStarted THEN
+		tim(in:=TRUE,pt:=INT_TO_TIME(500));
+		IF tim.Q THEN
+			tim(in:=FALSE);
+			CmdAndEventProcess.fbCmdAndEventUpdate.M_AddEvent( sLogName		:='DoorRecoveryStarted', 
+															   eEventName	:= E_EventName.DoorRecoveryStarted, 
+															   eModuleID	:= arrTCMultiLevel[iLevel].stGblParam.stDoorRecovEvnt.eModuleID, 
+															   iParam		:= EmptyEvents.iParam, 
+															   sParam		:= EmptyEvents.sParam, 
+															   bParam		:= EmptyEvents.bParam, 
+															   dParam		:= EmptyEvents.dParam, 
+															   sFailReason:= ''
+															   );
+		arrTCMultiLevel[iLevel].stGblParam.bDoorRecoveryStarted:=FALSE;
+		arrTCMultiLevel[iLevel].stGblParam.bDoorRecovery:=TRUE;
+		arrTCShuttlePOC[iLevel].stGblParam.bDoorRecoveryStarted:=FALSE;
+		arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_stParam := arrTCMultiLevel[iLevel].stGblParam;
+		arrTCShuttlePOC[iLevel].fbTCShuttlePOCSeq.P_stParam := arrTCShuttlePOC[iLevel].stGblParam;
+		END_IF
+	END_IF
+//--
+//	[DoorRecoveryCompleted]
+	IF arrTCMultiLevel[iLevel].stGblParam.bDoorRecoveryCompleted OR arrTCShuttlePOC[iLevel].stGblParam.bDoorRecoveryCompleted THEN 
+		CmdAndEventProcess.fbCmdAndEventUpdate.M_AddEvent( sLogName		:='DoorRecoveryCompleted', 
+														   eEventName	:= E_EventName.DoorRecoveryCompleted, 
+														   eModuleID	:= arrTCMultiLevel[iLevel].stGblParam.stDoorRecovEvnt.eModuleID, 
+														   iParam		:= EmptyEvents.iParam, 
+														   sParam		:= EmptyEvents.sParam, 
+														   bParam		:= EmptyEvents.bParam, 
+														   dParam		:= EmptyEvents.dParam, 
+														   sFailReason:= ''
+														   );
+		arrTCMultiLevel[iLevel].stGblParam.bDoorRecoveryCompleted:=FALSE;
+		arrTCShuttlePOC[iLevel].stGblParam.bDoorRecoveryCompleted:=FALSE;
+		arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_stParam := arrTCMultiLevel[iLevel].stGblParam;
+		arrTCShuttlePOC[iLevel].fbTCShuttlePOCSeq.P_stParam := arrTCShuttlePOC[iLevel].stGblParam;
+	END_IF
+//--
+//	[DoorRecoveryFailed] //If DoorRecoveryFailed, Send Initialize Cmd.
+	IF arrTCMultiLevel[iLevel].stGblParam.bDoorRecoveryFailed OR arrTCShuttlePOC[iLevel].stGblParam.bDoorRecoveryFailed THEN 
+		CmdAndEventProcess.fbCmdAndEventUpdate.M_AddEvent( sLogName		:='DoorRecoveryFailed', 
+														   eEventName	:= E_EventName.DoorRecoveryFailed, 
+														   eModuleID	:= arrTCMultiLevel[iLevel].stGblParam.stDoorRecovEvnt.eModuleID, 
+														   iParam		:= EmptyEvents.iParam, 
+														   sParam		:= EmptyEvents.sParam, 
+														   bParam		:= EmptyEvents.bParam, 
+														   dParam		:= EmptyEvents.dParam, 
+														   sFailReason:= arrTCMultiLevel[iLevel].stGblParam.sFailReason
+														   );
+		arrTCMultiLevel[iLevel].stGblParam.bDoorRecoveryFailed:=FALSE;
+		arrTCShuttlePOC[iLevel].stGblParam.bDoorRecoveryFailed:=FALSE;
+		arrTCMultiLevel[iLevel].stGblParam.bDoorRecovery:=FALSE;
+		arrTCShuttlePOC[iLevel].stGblParam.bDoorRecovery:=FALSE;
+		arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_stParam := arrTCMultiLevel[iLevel].stGblParam;
+		arrTCShuttlePOC[iLevel].fbTCShuttlePOCSeq.P_stParam := arrTCShuttlePOC[iLevel].stGblParam;
+	END_IF
+//--	
+//<StepMode>
+	IF arrStepMode[iLevel].bStepMode <> bPrevStepMode[iLevel] THEN //write when there is a chg for true or false
+		//IF iPOC_ML_Selection=2 OR TRUE THEN
+			stMLVIO := arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO;
+			stMLVIO.bBypassSingleMove := NOT arrStepMode[iLevel].bStepMode;
+			arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO:= stMLVIO;
+		//ELSIF iPOC_ML_Selection=1 AND FALSE THEN 
+		//	stPOCVIO := arrTCShuttlePOC[iLevel].fbTCShuttlePOCSeq.P_stTCPocVIO;
+		//	stPOCVIO.bBypassSingleMove := NOT arrStepMode[iLevel].bStepMode;
+		//	arrTCShuttlePOC[iLevel].fbTCShuttlePOCSeq.P_stTCPocVIO:= stPOCVIO;
+		//END_IF
+		
+		fbFormat(sFormat:= 'bStepMode=%s, ModuleID=Level%d', arg1:= F_String(sStepMode[BOOL_TO_INT(arrStepMode[iLevel].bStepMode)]), arg2:= F_UInt(iLevel),sOut=> sMessage );
+		Logging.fbDebugLog.M_nLogger(iLogLevel:= Logging.fbDebugLog.P_iLogVerbosity, sSource:= 'UserTrigger' , sMessage:= sMessage);
+		bPrevStepMode[iLevel] := arrStepMode[iLevel].bStepMode;
+	END_IF
+	
+	rtStep[iLevel](CLK:=arrStepMode[iLevel].bStep);;
+	
+	IF(rtStep[iLevel].Q) THEN //write only when true  
+		//IF iPOC_ML_Selection=2 OR TRUE THEN
+			stMLVIO := arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO;
+			stMLVIO.bStep := arrStepMode[iLevel].bStep;
+			arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO := stMLVIO;
+		//ELSIF iPOC_ML_Selection=1 AND FALSE THEN 
+		//	stPOCVIO := arrTCShuttlePOC[iLevel].fbTCShuttlePOCSeq.P_stTCPocVIO;
+		//	stPOCVIO.bStep := arrStepMode[iLevel].bStep;
+		//	arrTCShuttlePOC[iLevel].fbTCShuttlePOCSeq.P_stTCPocVIO := stPOCVIO;
+		//END_IF
+		
+		fbFormat(sFormat:= 'bStep=%s, ModuleID=Level%d', arg1:= F_String(sStepMode[BOOL_TO_INT(arrStepMode[iLevel].bStep)]), arg2:= F_UInt(iLevel),sOut=> sMessage );
+		Logging.fbDebugLog.M_nLogger(iLogLevel:= Logging.fbDebugLog.P_iLogVerbosity, sSource:= 'UserTrigger' , sMessage:= sMessage);
+		
+		arrStepMode[iLevel].bStep:=FALSE; //reset gblbStep after receive from TA 
+	END_IF
+//</StepMode>
+
+//<IODiagnostic>
+	IF bPrevDiagnosticMode <> arrIODiagnosticsMode[iLevel] THEN
+		//common
+		//stCommonVIO := arrTCMultiLevel[iLevel].stCommon.fbCommonSeq.P_stTCColumnVIO;
+		//stCommonVIO.bIODiagnosticMode := arrIODiagnosticsMode[iLP];
+		//arrLP[iLP].stLPCommon.fbCommonSeq.P_stVIO := stCommonVIO;
+		
+		//Mlevel
+		stMLVIO := arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO ;
+		stMLVIO.bDiagnosticMode := arrIODiagnosticsMode[iLevel];
+		arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO  := stMLVIO;
+		
+		//POC
+		stPOCVIO := arrTCShuttlePOC[iLevel].fbTCShuttlePOCSeq.P_stTCPocVIO ;
+		stPOCVIO.bDiagnosticMode := arrIODiagnosticsMode[iLevel];
+		arrTCShuttlePOC[iLevel].fbTCShuttlePOCSeq.P_stTCPocVIO  := stPOCVIO;
+
+		bPrevDiagnosticMode := arrIODiagnosticsMode[iLevel];
+	END_IF
+	
+
+	
+//</IODiagnostic>
+
+//DoorOpenBtnPress
+
+//New Btn press Event  1=MaintenanceBtn,2=AbortFlowBtn,3=DoorUnlockBtn
+//===================
+
+	(*
+	Command:          AP240ACPwr
+	Parameters:        bool OnOff          (true=On, false=Off)
+	
+	Command:          TesterAirValve
+	Parameters:        bool OnOff          (true=On, false=Off)
+	
+	Command:          APAirValve  
+	Parameters:        bool OnOff          (true=On, false=Off)
+	
+	Command:          DrawerUp
+	Parameters:        bool UpDown     (true=Up, false=Down)
+	
+	Event:            ManualButtonPressCompleted
+	Parameters:        int ButtonType (eg. 1=BuleBtn,2=GreenBtn,3=WhiteBtn)
+	       		*Note:                    
+	            Button Names are Need to be confirmed.
+	*)
+
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="FB_UpdateStatus">
+      <LineId Id="2670" Count="0" />
+      <LineId Id="2677" Count="0" />
+      <LineId Id="2680" Count="0" />
+      <LineId Id="2678" Count="1" />
+      <LineId Id="2682" Count="2" />
+      <LineId Id="2671" Count="0" />
+      <LineId Id="2774" Count="0" />
+      <LineId Id="2764" Count="6" />
+      <LineId Id="2763" Count="0" />
+      <LineId Id="2686" Count="1" />
+      <LineId Id="2685" Count="0" />
+      <LineId Id="2668" Count="1" />
+      <LineId Id="2348" Count="0" />
+      <LineId Id="2350" Count="0" />
+      <LineId Id="2344" Count="0" />
+      <LineId Id="2170" Count="1" />
+      <LineId Id="1389" Count="0" />
+      <LineId Id="1478" Count="0" />
+      <LineId Id="1390" Count="2" />
+      <LineId Id="1758" Count="0" />
+      <LineId Id="1394" Count="0" />
+      <LineId Id="1479" Count="0" />
+      <LineId Id="1383" Count="0" />
+      <LineId Id="2979" Count="0" />
+      <LineId Id="3091" Count="0" />
+      <LineId Id="2983" Count="1" />
+      <LineId Id="2980" Count="0" />
+      <LineId Id="2987" Count="0" />
+      <LineId Id="2992" Count="1" />
+      <LineId Id="1398" Count="0" />
+      <LineId Id="3004" Count="0" />
+      <LineId Id="2996" Count="0" />
+      <LineId Id="3008" Count="2" />
+      <LineId Id="2997" Count="1" />
+      <LineId Id="3005" Count="1" />
+      <LineId Id="3001" Count="0" />
+      <LineId Id="3011" Count="2" />
+      <LineId Id="3007" Count="0" />
+      <LineId Id="3000" Count="0" />
+      <LineId Id="3092" Count="0" />
+      <LineId Id="2995" Count="0" />
+      <LineId Id="1762" Count="0" />
+      <LineId Id="1761" Count="0" />
+      <LineId Id="1759" Count="0" />
+      <LineId Id="1408" Count="0" />
+      <LineId Id="1412" Count="0" />
+      <LineId Id="1411" Count="0" />
+      <LineId Id="1409" Count="0" />
+      <LineId Id="1414" Count="0" />
+      <LineId Id="1416" Count="1" />
+      <LineId Id="1413" Count="0" />
+      <LineId Id="1401" Count="0" />
+      <LineId Id="1760" Count="0" />
+      <LineId Id="2854" Count="0" />
+      <LineId Id="1152" Count="0" />
+      <LineId Id="1062" Count="0" />
+      <LineId Id="1074" Count="0" />
+      <LineId Id="1076" Count="1" />
+      <LineId Id="1245" Count="2" />
+      <LineId Id="1244" Count="0" />
+      <LineId Id="1249" Count="2" />
+      <LineId Id="1248" Count="0" />
+      <LineId Id="1228" Count="0" />
+      <LineId Id="1227" Count="0" />
+      <LineId Id="1079" Count="0" />
+      <LineId Id="1156" Count="0" />
+      <LineId Id="1224" Count="0" />
+      <LineId Id="1091" Count="0" />
+      <LineId Id="1154" Count="0" />
+      <LineId Id="1229" Count="0" />
+      <LineId Id="1310" Count="0" />
+      <LineId Id="1233" Count="4" />
+      <LineId Id="1232" Count="0" />
+      <LineId Id="1311" Count="0" />
+      <LineId Id="1239" Count="4" />
+      <LineId Id="1238" Count="0" />
+      <LineId Id="1312" Count="0" />
+      <LineId Id="1214" Count="0" />
+      <LineId Id="1230" Count="0" />
+      <LineId Id="1551" Count="0" />
+      <LineId Id="2084" Count="0" />
+      <LineId Id="1829" Count="0" />
+      <LineId Id="1552" Count="0" />
+      <LineId Id="1092" Count="7" />
+      <LineId Id="1063" Count="0" />
+      <LineId Id="1830" Count="0" />
+      <LineId Id="1231" Count="0" />
+      <LineId Id="1540" Count="0" />
+      <LineId Id="1150" Count="0" />
+      <LineId Id="1324" Count="0" />
+      <LineId Id="1322" Count="1" />
+      <LineId Id="1321" Count="0" />
+      <LineId Id="1313" Count="0" />
+      <LineId Id="1320" Count="0" />
+      <LineId Id="1314" Count="0" />
+      <LineId Id="1319" Count="0" />
+      <LineId Id="1316" Count="0" />
+      <LineId Id="1318" Count="0" />
+      <LineId Id="1315" Count="0" />
+      <LineId Id="1157" Count="0" />
+      <LineId Id="1160" Count="1" />
+      <LineId Id="1164" Count="0" />
+      <LineId Id="1065" Count="0" />
+      <LineId Id="2853" Count="0" />
+      <LineId Id="1618" Count="1" />
+      <LineId Id="1634" Count="0" />
+      <LineId Id="2250" Count="4" />
+      <LineId Id="2855" Count="23" />
+      <LineId Id="2249" Count="0" />
+      <LineId Id="2247" Count="0" />
+      <LineId Id="1833" Count="0" />
+      <LineId Id="2880" Count="6" />
+      <LineId Id="2091" Count="0" />
+      <LineId Id="2879" Count="0" />
+      <LineId Id="2887" Count="0" />
+      <LineId Id="2093" Count="3" />
+      <LineId Id="2092" Count="0" />
+      <LineId Id="2888" Count="0" />
+      <LineId Id="1849" Count="0" />
+      <LineId Id="1672" Count="0" />
+      <LineId Id="1647" Count="3" />
+      <LineId Id="1655" Count="0" />
+      <LineId Id="1929" Count="0" />
+      <LineId Id="1629" Count="0" />
+      <LineId Id="1932" Count="0" />
+      <LineId Id="1615" Count="0" />
+      <LineId Id="1846" Count="1" />
+      <LineId Id="1850" Count="0" />
+      <LineId Id="1848" Count="0" />
+      <LineId Id="1851" Count="0" />
+      <LineId Id="1845" Count="0" />
+      <LineId Id="1841" Count="0" />
+      <LineId Id="1934" Count="1" />
+      <LineId Id="1616" Count="0" />
+      <LineId Id="1614" Count="0" />
+      <LineId Id="1691" Count="0" />
+      <LineId Id="582" Count="0" />
+      <LineId Id="400" Count="0" />
+      <LineId Id="583" Count="0" />
+      <LineId Id="621" Count="2" />
+      <LineId Id="626" Count="8" />
+      <LineId Id="871" Count="0" />
+      <LineId Id="2500" Count="0" />
+      <LineId Id="872" Count="1" />
+      <LineId Id="625" Count="0" />
+      <LineId Id="624" Count="0" />
+      <LineId Id="586" Count="0" />
+      <LineId Id="841" Count="0" />
+      <LineId Id="832" Count="1" />
+      <LineId Id="842" Count="9" />
+      <LineId Id="866" Count="0" />
+      <LineId Id="834" Count="0" />
+      <LineId Id="867" Count="0" />
+      <LineId Id="835" Count="0" />
+      <LineId Id="840" Count="0" />
+      <LineId Id="836" Count="0" />
+      <LineId Id="853" Count="9" />
+      <LineId Id="868" Count="1" />
+      <LineId Id="1012" Count="1" />
+      <LineId Id="870" Count="0" />
+      <LineId Id="865" Count="0" />
+      <LineId Id="839" Count="0" />
+      <LineId Id="643" Count="2" />
+      <LineId Id="674" Count="0" />
+      <LineId Id="646" Count="2" />
+      <LineId Id="874" Count="0" />
+      <LineId Id="876" Count="1" />
+      <LineId Id="875" Count="0" />
+      <LineId Id="649" Count="0" />
+      <LineId Id="935" Count="0" />
+      <LineId Id="650" Count="0" />
+      <LineId Id="652" Count="6" />
+      <LineId Id="673" Count="0" />
+      <LineId Id="659" Count="2" />
+      <LineId Id="878" Count="0" />
+      <LineId Id="881" Count="1" />
+      <LineId Id="880" Count="0" />
+      <LineId Id="879" Count="0" />
+      <LineId Id="672" Count="0" />
+      <LineId Id="662" Count="0" />
+      <LineId Id="664" Count="2" />
+      <LineId Id="580" Count="0" />
+      <LineId Id="723" Count="0" />
+      <LineId Id="2012" Count="0" />
+      <LineId Id="726" Count="0" />
+      <LineId Id="774" Count="9" />
+      <LineId Id="811" Count="0" />
+      <LineId Id="813" Count="2" />
+      <LineId Id="812" Count="0" />
+      <LineId Id="799" Count="1" />
+      <LineId Id="727" Count="0" />
+      <LineId Id="2577" Count="0" />
+      <LineId Id="2592" Count="0" />
+      <LineId Id="2578" Count="0" />
+      <LineId Id="730" Count="0" />
+      <LineId Id="2423" Count="0" />
+      <LineId Id="731" Count="0" />
+      <LineId Id="734" Count="0" />
+      <LineId Id="736" Count="0" />
+      <LineId Id="738" Count="0" />
+      <LineId Id="761" Count="0" />
+      <LineId Id="741" Count="2" />
+      <LineId Id="747" Count="13" />
+      <LineId Id="740" Count="0" />
+      <LineId Id="735" Count="0" />
+      <LineId Id="640" Count="0" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

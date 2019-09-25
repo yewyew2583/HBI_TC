@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <DUT Name="ST_DebugColumnVIO" Id="{41e1d25e-0544-4509-82cf-ca8fc6de3573}">
+    <Declaration><![CDATA[TYPE ST_DebugColumnVIO :
+STRUCT
+//<CtrlBit>
+	bDiagnosticMode						:BOOL;
+	bShutOffAir							:BOOL;
+	bShutOffPCW							:BOOL;
+	bShutOffAllACPower					:BOOL;
+	bDebugColErrClear					:BOOL;
+	iAlmIDToRset						:DINT;
+//</CtrlBit>
+	
+//<DIO>
+	ipDBColumnPCWLeakage				:BOOL;
+	ipDBColumnPCWSupplyLeakage    		:BOOL;
+	ipDBColumnPCWReturnLeakage    		:BOOL;
+	                                    
+	opDBColumnHotAirExhaustFan 			:BOOL;
+	opDBColumnPCWValve         			:BOOL;
+	opDBColumnTstAirSol        			:BOOL;
+	opDBColumnAPAirSol         			:BOOL;
+//</DIO>
+
+//<EAP>
+	eapShutOffAllACPower				:BOOL;
+//<EAP>
+
+//<CVTIO>
+	ipDBColumnPCWRegularFlowSensor		:REAL;
+	ipDBColumnPCWSupplyPressure       	:REAL;
+	ipDBColumnPCWReturnPressure       	:REAL;
+	ipDBColumnTstAirPressure          	:REAL;
+	ipDBColumnAPAirPressure           	:REAL;
+	ipDBColumnDewPointSensor          	:REAL;
+	ipDBColumnTempSensor			    :REAL;    
+	ipDBColumnPCWSupplyTemperature    	:REAL;
+	ipDBColumnPCWReturnTemperature    	:REAL;
+//</CVTIO>
+
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

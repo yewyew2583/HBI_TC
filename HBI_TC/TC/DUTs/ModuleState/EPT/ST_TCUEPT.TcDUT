@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
+  <DUT Name="ST_TCUEPT" Id="{9f00026a-a904-41aa-bc64-905de90e5a87}">
+    <Declaration><![CDATA[TYPE ST_TCUEPT :
+STRUCT
+	// LoadPort module state 
+	//arrLPSubModule : ARRAY [1..(.NO_OF_LANES)] OF ST_LP_SubModuleEPT;
+	// Vision Shuttle 
+	TCU : E_EPT;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

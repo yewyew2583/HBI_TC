@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <DUT Name="ST_TCColumn_BIO" Id="{6dbf6b39-4ea7-4863-bfc2-b623d7e86827}">
+    <Declaration><![CDATA[TYPE ST_TCColumn_BIO :
+STRUCT
+
+	ipColumnFluid_PCW_Leakage			: E_BackdoorState;
+	ipAllTCDrawerRetractedinCell	 	: E_BackdoorState;
+	ipTbotDoorClosedSignal				: E_BackdoorState;
+	
+	
+	
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

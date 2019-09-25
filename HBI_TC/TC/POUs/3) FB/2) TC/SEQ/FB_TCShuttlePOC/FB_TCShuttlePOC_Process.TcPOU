@@ -1,0 +1,494 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <POU Name="FB_TCShuttlePOC_Process" Id="{11e55610-6c74-4d68-8d29-439e6f7b3528}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_TCShuttlePOC_Process 
+VAR_INPUT
+	iLevel : UINT;
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	//For testing purpose only
+	//bShuttleMoveInOut: BOOL;
+	//bInitialize: BOOL;
+	//bAlarmClear : BOOL;
+	bLogEveryStep : BOOL:=TRUE;
+	
+	//*****************
+	rtTCShuttleStart: R_TRIG;
+	//stTCShuttleSeqParam : ST_FlyoverSeqParam;
+	iSeqCase: INT:=1;
+	iSeqStatus: INT; //To defind current status of subsequence 
+	bError: BOOL;
+	sMessage : STRING;
+	sAlarmID: STRING(40);
+	sModuleID: STRING(INT#40);
+	sDebugSource: STRING(INT#50);
+	bExecute: BOOL;
+	iErrorID: UDINT;
+	
+	sPrevMsg: STRING;
+	iEventName : E_EventName;
+	sLogName : STRING;
+	iSendEvent :INT;
+	sFailReason: STRING;
+END_VAR
+
+
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[arrTCShuttlePOC[iLevel].fbTCShuttlePOCSeq.M_nCyclic();
+bExecute :=arrTCShuttlePOC[iLevel].stGblParam.bShuttleMoveOut=TRUE 
+			OR arrTCShuttlePOC[iLevel].stGblParam.bShuttleMoveIn 
+			OR arrTCShuttlePOC[iLevel].stGblParam.bInitialise 
+			//OR arrTCShuttlePOC[iLevel].stGblParam.bCancel 
+			//OR arrTCShuttlePOC[iLevel].stGblParam.bTIUSlideOutCancel 
+			//OR arrTCShuttlePOC[iLevel].stGblParam.bAlarmClear=TRUE 
+			OR arrTCShuttlePOC[iLevel].stGblParam.bDSPPowerOn=TRUE
+			OR arrTCShuttlePOC[iLevel].stGblParam.bDSPPowerOff=TRUE
+			OR arrTCShuttlePOC[iLevel].stGblParam.bDSPPowerAuto=TRUE;
+rtTCShuttleStart(CLK:=bExecute , Q=> );
+IF rtTCShuttleStart.Q THEN
+	iSeqCase:=1;
+END_IF
+
+IF arrTCShuttlePOC[iLevel].fbTCShuttlePOCSeq.P_sMessage <> sPrevMsg THEN
+	sPrevMsg := arrTCShuttlePOC[iLevel].fbTCShuttlePOCSeq.P_sMessage;
+	Logging.fbDebugLog.P_sModule:= CONCAT('TC L',INT_TO_STRING(iLevel));
+	Logging.fbDebugLog.M_nLogger(iLogLevel:= 1, sSource:= sDebugSource, sMessage:= arrTCShuttlePOC[iLevel].fbTCShuttlePOCSeq.P_sMessage);
+END_IF
+
+IF NOT (bExecute) THEN //OR arrTCShuttlePOC[iLevel].stGblParam.bResume 
+				 //OR  arrTCShuttlePOC[iLevel].stGblParam.bAlarmClear 
+				 //OR arrTCShuttlePOC[iLevel].stGblParam.bTIUSlideOutCancel
+				 //OR arrTCShuttlePOC[iLevel].stGblParam.bCancel) 
+				 //THEN
+	RETURN;
+END_IF
+
+IF arrTCShuttlePOC[iLevel].stGblParam.bShuttleMoveIn THEN
+	sDebugSource := 'ShuttleMoveIn';
+ELSIF arrTCShuttlePOC[iLevel].stGblParam.bShuttleMoveOut THEN
+	sDebugSource := 'ShuttleMoveOut';
+ELSIF arrTCShuttlePOC[iLevel].stGblParam.bInitialise THEN
+	sDebugSource := 'Initialise';
+ELSIF arrTCShuttlePOC[iLevel].stGblParam.bCancel THEN
+	sDebugSource := 'Cancel';
+ELSIF arrTCShuttlePOC[iLevel].stGblParam.bTIUSlideOutCancel THEN
+	sDebugSource := 'TIUSlideOut Cancel';
+ELSIF arrTCShuttlePOC[iLevel].stGblParam.bDSPPowerOff  THEN
+	sDebugSource := 'DSPPowerOff';
+ELSIF arrTCShuttlePOC[iLevel].stGblParam.bDSPPowerOn  THEN
+	sDebugSource := 'DSPPowerOn';
+ELSIF arrTCShuttlePOC[iLevel].stGblParam.bDSPPowerAuto THEN
+	sDebugSource := 'DSPPowerAuto';
+
+END_IF
+
+sMessage := CONCAT(sDebugSource,arrTCShuttlePOC[iLevel].fbTCShuttlePOCSeq.P_sMessage);
+
+CASE iSeqCase OF
+E_ProcessStep.eSeqReset://1: //Sequence Reset
+	arrTCShuttlePOC[iLevel].fbTCShuttlePOCSeq.M_nReset(bExecute:=TRUE );
+	iSeqCase:=iSeqCase+1;
+
+E_ProcessStep.eDataInput://2: //Data input
+	arrTCShuttlePOC[iLevel].fbTCShuttlePOCSeq.M_nReset(bExecute:=FALSE );
+	//arrTCShuttlePOC[iLevel].fbTCShuttlePOCSeq.P_ErrClear:=FALSE;
+	IF iLevel=1 THEN //only for POC use
+		arrTCShuttlePOC[iLevel].stGblParam.bLevel1 := TRUE;
+	ELSE
+		arrTCShuttlePOC[iLevel].stGblParam.bLevel1 := FALSE;
+	END_IF
+	
+	arrTCShuttlePOC[iLevel].fbTCShuttlePOCSeq.P_stParam := arrTCShuttlePOC[iLevel].stGblParam;
+	IF NOT arrTCShuttlePOC[iLevel].fbTCShuttlePOCSeq.P_bReset THEN
+		iSeqCase:=E_ProcessStep.eExecuting;
+	END_IF
+	
+E_ProcessStep.eExecuting://3: //Start execute
+	arrTCShuttlePOC[iLevel].stGblParam.iProcessStep:=E_ProcessStep.eExecuting;
+	IF arrTCShuttlePOC[iLevel].stGblParam.bInitialise THEN
+		iSeqStatus := arrTCShuttlePOC[iLevel].fbTCShuttlePOCSeq.M_nSystemReset();
+		
+	ELSIF arrTCShuttlePOC[iLevel].stGblParam.bDSPPowerOff OR
+		  arrTCShuttlePOC[iLevel].stGblParam.bDSPPowerOn OR
+		  arrTCShuttlePOC[iLevel].stGblParam.bDSPPowerAuto THEN
+				arrTCShuttlePOC[iLevel].stGblParam.iProcessState :=E_ProcessState.eLOADG;
+				iSeqStatus := arrTCShuttlePOC[iLevel].fbTCShuttlePOCSeq.M_nDPSPowerOnOff();
+	//ELSIF arrTCMultiLevel[iLevel].stGblParam.bAlarmReset THEN
+		//arrTCMultiLevel[iLevel].fbAlarm.M_AlarmReset(isAlmRst		:= arrTCMultiLevel[iLevel].stGblParam.iProcessState=E_ProcessState.eALPAUSED, 
+		//											   almIDToRset 	:= alarmID)
+		
+	ELSE
+		arrTCShuttlePOC[iLevel].stGblParam.iProcessState :=E_ProcessState.eLOADG;
+		iSeqStatus := arrTCShuttlePOC[iLevel].fbTCShuttlePOCSeq.M_nShuttleMoveInOut();	
+	END_IF
+	
+	IF iSeqStatus=10 THEN
+		iSeqCase:=E_ProcessStep.eSeqCompleted;//iSeqCase:=4;
+	
+	ELSIF iSeqStatus=99 THEN 
+		sAlarmID := CONCAT(sModuleID, '.xxx'); //pending alarmID
+		//iErrorID := (iLevel*1000) + arrTCShuttlePOC[iLevel].fbTCShuttlePOCSeq.P_nErrorID;
+		iErrorID := (iLevel*1000) + arrTCVIO[iLevel].iAlarmCode;
+		
+		
+		//***GetAlarmBitForFBError***//
+		arrTCShuttlePOC[iLevel].stGblParam.iAlarmID := arrTCVIO[iLevel].iAlarmCode; //P_nErrorID => Motor Error
+		//***TriggerAlarmBitForFBError***//
+		IF arrTCShuttlePOC[iLevel].stGblParam.iAlarmID<100 AND arrTCShuttlePOC[iLevel].stGblParam.iAlarmID>20 THEN
+			ALMTC.Level[iLevel].AlarmID[arrTCShuttlePOC[iLevel].stGblParam.iAlarmID] :=TRUE;
+		END_IF
+
+		
+		//Seq Alm Fail Reason
+		arrTCShuttlePOC[iLevel].stGblParam.sFailReason := arrTCShuttlePOC[iLevel].fbTCShuttlePOCSeq.P_sMessage;	
+		
+		arrTCShuttlePOC[iLevel].stGblParam.iProcessState :=E_ProcessState.eALPAUSED;
+		iSeqCase:=E_ProcessStep.eSeqError;//iSeqCase:=5;
+		arrTCShuttlePOC[iLevel].stGblParam.bAlarmOccur :=TRUE;
+		iSendEvent :=2;
+		JMP iSendEvent;	
+	END_IF
+	
+E_ProcessStep.eSeqCompleted://4: //Done
+	arrTCShuttlePOC[iLevel].stGblParam.bShuttleMoveIn:= 
+	arrTCShuttlePOC[iLevel].stGblParam.bShuttleMoveOut:= 
+	arrTCShuttlePOC[iLevel].stGblParam.bInitialise:= 
+	arrTCShuttlePOC[iLevel].stGblParam.bCancel:= 
+	arrTCShuttlePOC[iLevel].stGblParam.bTIUSlideOutCancel :=
+	arrTCShuttlePOC[iLevel].stGblParam.bDSPPowerOff:=
+	arrTCShuttlePOC[iLevel].stGblParam.bDSPPowerOn:=
+	arrTCShuttlePOC[iLevel].stGblParam.bDSPPowerAuto:=FALSE;
+	arrTCShuttlePOC[iLevel].fbTCShuttlePOCSeq.P_stParam := arrTCShuttlePOC[iLevel].stGblParam;
+	
+	IF arrTCShuttlePOC[iLevel].stGblParam.bDoorRecovery THEN
+		arrTCShuttlePOC[iLevel].stGblParam.bDoorRecovery:=FALSE;
+		arrTCShuttlePOC[iLevel].stGblParam.bDoorRecoveryCompleted:=TRUE;
+	END_IF
+	
+	arrTCShuttlePOC[iLevel].stGblParam.iAlarmID := 0;
+	arrTCShuttlePOC[iLevel].stGblParam.sFailReason := '';
+	arrTCShuttlePOC[iLevel].fbTCShuttlePOCSeq.P_stParam := arrTCShuttlePOC[iLevel].stGblParam;
+	
+	arrTCShuttlePOC[iLevel].stGblParam.iProcessState :=E_ProcessState.eAWAITGCMD;
+    iSendEvent :=1;
+	JMP iSendEvent;
+
+	
+E_ProcessStep.eSeqError://5: //Error
+	//AlmRset
+	arrTCShuttlePOC[iLevel].stGblParam.iProcessStep:=E_ProcessStep.eSeqError;
+	IF arrTCShuttlePOC[iLevel].stGblParam.bAlarmClear 
+	THEN
+		arrTCShuttlePOC[iLevel].fbTCShuttlePOCSeq.P_ErrClear:=TRUE;
+		Logging.fbDebugLog.M_nLogger(iLogLevel:= 1, sSource:= sDebugSource, sMessage:= 'Clear Alarm');
+				
+		//***ResetAlarmBit***//
+		arrTCShuttlePOC[iLevel].fbTCShuttlePOCSeq.M_SeqAlmRset(subMod:=iLevel,
+																	almID:=arrTCShuttlePOC[iLevel].stGblParam.iAlmIDToRset,isRsetAll:=FALSE);
+		
+		arrTCShuttlePOC[iLevel].stGblParam.bAlarmOccur :=FALSE;
+		arrTCShuttlePOC[iLevel].stGblParam.bAlarmClear:=FALSE;
+		arrTCShuttlePOC[iLevel].stGblParam.iProcessState :=E_ProcessState.ePAUSE;
+	//SlideOutRetry
+	ELSIF arrTCShuttlePOC[iLevel].stGblParam.bResume 
+	THEN
+		IF arrTCShuttlePOC[iLevel].stGblParam.bAlarmOccur THEN
+			arrTCShuttlePOC[iLevel].stGblParam.bResume:=FALSE;
+			iSendEvent :=2;
+			JMP iSendEvent;	
+		END_IF
+		iSeqCase:=E_ProcessStep.eDataInput;//iSeqCase:=3;
+		arrTCShuttlePOC[iLevel].stGblParam.bResume:=FALSE;
+	//Cancel+Retry
+	ELSIF arrTCShuttlePOC[iLevel].stGblParam.bCancel OR 
+		  arrTCShuttlePOC[iLevel].stGblParam.bTIUSlideOutCancel OR
+		  arrTCShuttlePOC[iLevel].stGblParam.bInitialise 
+	THEN
+		IF arrTCShuttlePOC[iLevel].stGblParam.bCancel OR arrTCShuttlePOC[iLevel].stGblParam.bTIUSlideOutCancel THEN
+			arrTCShuttlePOC[iLevel].stGblParam.bShuttleMoveIn:= 
+			arrTCShuttlePOC[iLevel].stGblParam.bShuttleMoveOut:= 
+			arrTCShuttlePOC[iLevel].stGblParam.bCancel:=FALSE;
+			arrTCShuttlePOC[iLevel].stGblParam.bTIUSlideOutCancel:=FALSE; 
+			IF arrTCShuttlePOC[iLevel].stGblParam.bAlarmOccur THEN
+				iSeqCase:=E_ProcessStep.eSeqCancel;
+				iSendEvent :=1;
+				JMP iSendEvent;
+			ELSE
+				//arrTCShuttlePOC[iLevel].stGblParam.bStartCancelAction:= TRUE;
+				//IF arrTCShuttlePOC[iLevel].stGblParam.bCancelActionDone THEN
+				//	arrTCShuttlePOC[iLevel].stGblParam.bCancelActionDone:=FALSE;
+				//	arrTCShuttlePOC[iLevel].stGblParam.bStartCancelAction:=FALSE;
+				//	iSeqCase:=E_ProcessStep.eSeqReset;//iSeqCase:=3;
+				//	iSendEvent :=1;
+				//	JMP iSendEvent;
+				//END_IF
+				
+				iSeqCase:=arrTCShuttlePOC[iLevel].stGblParam.iProcessStep:=E_ProcessStep.eSeqReset;
+				iSendEvent :=1;
+				JMP iSendEvent;
+				
+			END_IF
+			
+		END_IF
+
+		arrTCShuttlePOC[iLevel].stGblParam.bShuttleMoveIn:= 
+		arrTCShuttlePOC[iLevel].stGblParam.bShuttleMoveOut:= 
+		arrTCShuttlePOC[iLevel].stGblParam.bInitialise:= FALSE;
+		//arrTCShuttlePOC[iLevel].fbTCShuttlePOCSeq.P_stParam := arrTCShuttlePOC[iLevel].stGblParam;
+		//arrTCShuttlePOC[iLevel].stGblParam.bCancel :=FALSE; //Reset Cancel Flag here if dont want move in move out process.
+		//iSeqCase:=E_ProcessStep.eDataInput;//iSeqCase:=3;
+		//iSendEvent :=1;
+		//JMP iSendEvent;
+	END_IF
+	
+E_ProcessStep.eSeqCancel: //After Cancel,Nothing to retry!
+	arrTCShuttlePOC[iLevel].stGblParam.iProcessStep:=E_ProcessStep.eSeqCancel;
+	IF arrTCShuttlePOC[iLevel].stGblParam.bAlarmClear THEN
+		arrTCShuttlePOC[iLevel].fbTCShuttlePOCSeq.P_ErrClear:=TRUE;
+		Logging.fbDebugLog.M_nLogger(iLogLevel:= 1, sSource:= sDebugSource, sMessage:= 'Clear Alarm');
+		arrTCShuttlePOC[iLevel].stGblParam.bAlarmOccur :=FALSE;
+		arrTCShuttlePOC[iLevel].stGblParam.bAlarmClear:=FALSE;
+		arrTCShuttlePOC[iLevel].stGblParam.iProcessState :=E_ProcessState.ePAUSE;
+	END_IF
+	//arrTCShuttlePOC[iLevel].stGblParam.bStartCancelAction:= TRUE;
+	//IF arrTCShuttlePOC[iLevel].stGblParam.bCancelActionDone THEN
+	//	arrTCShuttlePOC[iLevel].stGblParam.bCancelActionDone:=FALSE;
+	//	arrTCShuttlePOC[iLevel].stGblParam.bStartCancelAction:=FALSE;
+	//END_IF
+	IF NOT arrTCShuttlePOC[iLevel].stGblParam.bAlarmOccur THEN
+			//iSendEvent :=1;
+			arrTCShuttlePOC[iLevel].stGblParam.iProcessState :=E_ProcessState.eAWAITGCMD;
+			//JMP iSendEvent;
+			//iSeqCase:=E_ProcessStep.eSeqReset;//iSeqCase:=3;
+	END_IF
+	IF arrTCShuttlePOC[iLevel].stGblParam.bInitialise THEN
+		arrTCShuttlePOC[iLevel].stGblParam.bCancel:=FALSE;
+		arrTCShuttlePOC[iLevel].stGblParam.bTIUSlideOutCancel:=FALSE;
+		
+		iSeqCase:=E_ProcessStep.eSeqReset;//iSeqCase:=3;
+	END_IF
+	
+END_CASE
+
+//send event TO TA
+iSendEvent :
+	IF iSendEvent<>0 THEN
+		CmdAndEventProcess.fbCmdAndEventUpdate.M_nCmdtoEvent(eCmd2Event_TaskName:=arrTCShuttlePOC[iLevel].stGblParam.stTACommand.eTaskName , iCmd2Event_Result:=iSendEvent , eCmd2Event_EventName:=iEventName , sCmd2Event_EventName:=sLogName );
+		sFailReason := arrTCShuttlePOC[iLevel].stGblParam.sFailReason;
+		
+		(*IF iSendEvent=2 THEN
+			sFailReason := arrTCVIO[iLevel].sAlarmMessage;
+			CmdAndEventProcess.fbCmdAndEventUpdate.M_AddEvent(
+			sLogName:= concat('AlarmTriggered, ALID:', UDINT_TO_STRING(iErrorID)) , 
+			eEventName:= E_Eventname.AlarmTriggered, 
+			eModuleID:= arrTCShuttlePOC[iLevel].stGblParam.stTACommand.eModuleID, 
+			iParam:= F_ArrayInt(iParam:=arrTCShuttlePOC[iLevel].stGblParam.stTACommand.iParam , iParam1:=UDINT_TO_INT(iErrorID) ), 
+			sParam:= arrTCShuttlePOC[iLevel].stGblParam.stTACommand.sParam,
+			bParam:= arrTCShuttlePOC[iLevel].stGblParam.stTACommand.bParam, 
+			dParam:= arrTCShuttlePOC[iLevel].stGblParam.stTACommand.dParam,
+			sFailReason:= sFailReason);
+		END_IF*)
+		
+		CmdAndEventProcess.fbCmdAndEventUpdate.M_AddEvent(
+			sLogName:= sLogName, 
+			eEventName:= iEventName, 
+			eModuleID:= arrTCShuttlePOC[iLevel].stGblParam.stTACommand.eModuleID, 
+			iParam:= arrTCShuttlePOC[iLevel].stGblParam.stTACommand.iParam,
+			sParam:= arrTCShuttlePOC[iLevel].stGblParam.stTACommand.sParam, 
+			bParam:= arrTCShuttlePOC[iLevel].stGblParam.stTACommand.bParam, 
+			dParam:= arrTCShuttlePOC[iLevel].stGblParam.stTACommand.dParam,
+			sFailReason:= sFailReason);
+		iSendEvent :=0;
+	END_IF
+		
+//arrTCShuttlePOC[iLevel].stShuttleMoveOut.iStatus :=iSeqStatus;
+
+(*IF iSeqCase=3 THEN
+	IF arrTCShuttlePOC[iLevel].stGblParam.bShuttleMoveIn OR arrTCShuttlePOC[iLevel].stGblParam.bShuttleMoveOut OR
+	arrTCShuttlePOC[iLevel].stGblParam.bInitialise THEN
+		iSeqStatus := arrTCShuttlePOC[iLevel].fbTCShuttlePOCSeq.M_nShuttleMoveInOut();
+	(*ELSIF bInitialize THEN
+		iSeqStatus := arrTCShuttlePOC[iLevel].fbTCShuttlePOCSeq.M_nMoveShuttle();*)
+	END_IF
+ELSE
+	//arrTCShuttlePOC[iLevel].fbTCShuttlePOCSeq.M_nCyclic();
+	arrTCShuttlePOC[iLevel].stGblParam.bAlarmClear:=FALSE;
+END_IF*)
+]]></ST>
+    </Implementation>
+    <LineIds Name="FB_TCShuttlePOC_Process">
+      <LineId Id="312" Count="0" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="973" Count="2" />
+      <LineId Id="1141" Count="0" />
+      <LineId Id="807" Count="0" />
+      <LineId Id="976" Count="0" />
+      <LineId Id="978" Count="0" />
+      <LineId Id="980" Count="0" />
+      <LineId Id="23" Count="3" />
+      <LineId Id="454" Count="0" />
+      <LineId Id="202" Count="0" />
+      <LineId Id="199" Count="0" />
+      <LineId Id="248" Count="0" />
+      <LineId Id="201" Count="0" />
+      <LineId Id="194" Count="0" />
+      <LineId Id="27" Count="1" />
+      <LineId Id="1325" Count="2" />
+      <LineId Id="1453" Count="0" />
+      <LineId Id="29" Count="1" />
+      <LineId Id="808" Count="0" />
+      <LineId Id="550" Count="5" />
+      <LineId Id="674" Count="1" />
+      <LineId Id="1363" Count="1" />
+      <LineId Id="983" Count="4" />
+      <LineId Id="981" Count="0" />
+      <LineId Id="673" Count="0" />
+      <LineId Id="546" Count="0" />
+      <LineId Id="938" Count="0" />
+      <LineId Id="63" Count="9" />
+      <LineId Id="323" Count="3" />
+      <LineId Id="322" Count="0" />
+      <LineId Id="525" Count="1" />
+      <LineId Id="73" Count="0" />
+      <LineId Id="75" Count="3" />
+      <LineId Id="1088" Count="0" />
+      <LineId Id="735" Count="1" />
+      <LineId Id="988" Count="0" />
+      <LineId Id="991" Count="7" />
+      <LineId Id="990" Count="0" />
+      <LineId Id="738" Count="0" />
+      <LineId Id="1041" Count="0" />
+      <LineId Id="739" Count="0" />
+      <LineId Id="737" Count="0" />
+      <LineId Id="327" Count="0" />
+      <LineId Id="143" Count="0" />
+      <LineId Id="80" Count="0" />
+      <LineId Id="579" Count="0" />
+      <LineId Id="81" Count="0" />
+      <LineId Id="935" Count="0" />
+      <LineId Id="83" Count="0" />
+      <LineId Id="932" Count="0" />
+      <LineId Id="1042" Count="0" />
+      <LineId Id="1369" Count="0" />
+      <LineId Id="1371" Count="4" />
+      <LineId Id="1370" Count="0" />
+      <LineId Id="1140" Count="0" />
+      <LineId Id="1139" Count="0" />
+      <LineId Id="1127" Count="1" />
+      <LineId Id="1126" Count="0" />
+      <LineId Id="936" Count="0" />
+      <LineId Id="84" Count="0" />
+      <LineId Id="689" Count="0" />
+      <LineId Id="835" Count="0" />
+      <LineId Id="876" Count="0" />
+      <LineId Id="479" Count="0" />
+      <LineId Id="145" Count="0" />
+      <LineId Id="91" Count="1" />
+      <LineId Id="1001" Count="2" />
+      <LineId Id="1125" Count="0" />
+      <LineId Id="1004" Count="2" />
+      <LineId Id="522" Count="0" />
+      <LineId Id="1133" Count="0" />
+      <LineId Id="1135" Count="2" />
+      <LineId Id="1134" Count="0" />
+      <LineId Id="1050" Count="0" />
+      <LineId Id="1131" Count="1" />
+      <LineId Id="1129" Count="1" />
+      <LineId Id="1051" Count="0" />
+      <LineId Id="859" Count="0" />
+      <LineId Id="523" Count="0" />
+      <LineId Id="589" Count="0" />
+      <LineId Id="600" Count="0" />
+      <LineId Id="94" Count="0" />
+      <LineId Id="1123" Count="0" />
+      <LineId Id="1087" Count="0" />
+      <LineId Id="833" Count="0" />
+      <LineId Id="1189" Count="0" />
+      <LineId Id="96" Count="0" />
+      <LineId Id="212" Count="0" />
+      <LineId Id="1378" Count="2" />
+      <LineId Id="1376" Count="1" />
+      <LineId Id="897" Count="0" />
+      <LineId Id="328" Count="0" />
+      <LineId Id="1190" Count="0" />
+      <LineId Id="796" Count="0" />
+      <LineId Id="786" Count="0" />
+      <LineId Id="1188" Count="0" />
+      <LineId Id="1142" Count="1" />
+      <LineId Id="1147" Count="0" />
+      <LineId Id="1146" Count="0" />
+      <LineId Id="1144" Count="0" />
+      <LineId Id="97" Count="0" />
+      <LineId Id="787" Count="0" />
+      <LineId Id="668" Count="0" />
+      <LineId Id="1124" Count="0" />
+      <LineId Id="1365" Count="0" />
+      <LineId Id="1184" Count="1" />
+      <LineId Id="1198" Count="0" />
+      <LineId Id="1417" Count="1" />
+      <LineId Id="1258" Count="0" />
+      <LineId Id="1366" Count="0" />
+      <LineId Id="1202" Count="0" />
+      <LineId Id="1204" Count="0" />
+      <LineId Id="1256" Count="0" />
+      <LineId Id="1416" Count="0" />
+      <LineId Id="1206" Count="1" />
+      <LineId Id="1211" Count="0" />
+      <LineId Id="1214" Count="0" />
+      <LineId Id="1259" Count="0" />
+      <LineId Id="1216" Count="1" />
+      <LineId Id="1215" Count="0" />
+      <LineId Id="1213" Count="0" />
+      <LineId Id="1316" Count="2" />
+      <LineId Id="1315" Count="0" />
+      <LineId Id="1210" Count="0" />
+      <LineId Id="1201" Count="0" />
+      <LineId Id="1205" Count="0" />
+      <LineId Id="1200" Count="0" />
+      <LineId Id="1195" Count="0" />
+      <LineId Id="672" Count="0" />
+      <LineId Id="1186" Count="1" />
+      <LineId Id="671" Count="0" />
+      <LineId Id="700" Count="0" />
+      <LineId Id="669" Count="0" />
+      <LineId Id="1148" Count="1" />
+      <LineId Id="98" Count="0" />
+      <LineId Id="1191" Count="1" />
+      <LineId Id="1328" Count="0" />
+      <LineId Id="1227" Count="0" />
+      <LineId Id="1238" Count="3" />
+      <LineId Id="1228" Count="1" />
+      <LineId Id="1308" Count="2" />
+      <LineId Id="1305" Count="2" />
+      <LineId Id="1303" Count="0" />
+      <LineId Id="1321" Count="0" />
+      <LineId Id="1304" Count="0" />
+      <LineId Id="1298" Count="0" />
+      <LineId Id="1301" Count="0" />
+      <LineId Id="1293" Count="1" />
+      <LineId Id="1368" Count="0" />
+      <LineId Id="1367" Count="0" />
+      <LineId Id="1295" Count="2" />
+      <LineId Id="1291" Count="1" />
+      <LineId Id="1285" Count="3" />
+      <LineId Id="1281" Count="3" />
+      <LineId Id="1277" Count="3" />
+      <LineId Id="1273" Count="3" />
+      <LineId Id="1269" Count="3" />
+      <LineId Id="1265" Count="3" />
+      <LineId Id="868" Count="2" />
+      <LineId Id="861" Count="0" />
+      <LineId Id="878" Count="0" />
+      <LineId Id="873" Count="0" />
+      <LineId Id="871" Count="0" />
+      <LineId Id="415" Count="0" />
+      <LineId Id="100" Count="2" />
+      <LineId Id="245" Count="0" />
+      <LineId Id="103" Count="7" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
+  <DUT Name="ST_LPState" Id="{da7a6629-73e1-4685-9c0d-2dd2d3c8ebe5}">
+    <Declaration><![CDATA[TYPE ST_LPState :
+STRUCT
+	// LoadPort module state 
+	//arrLPSubModule : ARRAY [1..(.NO_OF_LANES)] OF ST_TCSubModuleState;
+	
+	
+//	EmptyStacker : ARRAY [1..(.NO_OF_STACKERS_IN_EMPTYSTK)] OF E_State := [(.NO_OF_STACKERS_IN_EMPTYSTK)(E_State.eEnabled)];
+	// Vision Shuttle 
+	//VisionShuttle : E_State := E_State.eEnabled;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

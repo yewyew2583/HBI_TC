@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <POU Name="FB_AnlgSIM" Id="{ad10ddd2-3c62-4914-a9a7-47aaa096944f}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_AnlgSIM
+VAR_INPUT
+	Mn:REAL;
+	Mx:REAL;
+END_VAR
+
+VAR_OUTPUT
+END_VAR
+VAR_IN_OUT
+	Sen:REAL;
+END_VAR
+VAR
+	timInc : TON;
+	timRst : TON;
+	timInc2 : TON;
+	incVal:INT:=100;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+IF timInc.Q THEN
+	IF Sen >= Mx-incVal THEN
+		timRst(IN:=TRUE,PT:=T#1S);
+		IF timRst.Q THEN
+			timRst(IN:=FALSE);
+			Sen := Mn; 
+		END_IF
+	ELSE
+		IF Sen=Mn THEN
+			timInc2(IN:=TRUE,PT:=T#1S);	
+			IF timInc2.Q THEN
+				timInc2(IN:=FALSE);
+					Sen := Sen+incVal;
+			END_IF
+		ELSE
+			IF Sen >=Mx-incVal THEN
+			    Sen := Mx-incVal;
+			ELSE
+				Sen := Sen+incVal; 
+			END_IF 
+		END_IF
+	END_IF
+	timInc(IN:=FALSE);
+ELSE
+	timInc(IN:=TRUE,PT:=T#40MS);
+END_IF
+]]></ST>
+    </Implementation>
+    <LineIds Name="FB_AnlgSIM">
+      <LineId Id="11" Count="2" />
+      <LineId Id="30" Count="2" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="39" Count="1" />
+      <LineId Id="47" Count="0" />
+      <LineId Id="49" Count="0" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="44" Count="0" />
+      <LineId Id="52" Count="3" />
+      <LineId Id="51" Count="0" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="17" Count="4" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

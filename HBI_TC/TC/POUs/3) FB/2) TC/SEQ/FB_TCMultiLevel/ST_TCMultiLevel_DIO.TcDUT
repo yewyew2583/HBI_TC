@@ -1,0 +1,150 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <DUT Name="ST_TCMultiLevel_DIO" Id="{716ace5c-11d9-4c82-8d1d-0c0c072801fb}">
+    <Declaration><![CDATA[TYPE ST_TCMultiLevel_DIO :
+STRUCT
+	
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//	Input
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+ipAPPresentSensor						AT %I*: BOOL; // Actuate pan present signal, 0: Not present, 1: Present
+ipAPPowerOn	 							AT %I*: BOOL; // Actuate pan power on signal, 0: Power off, 1: Power on
+ipAPReady								AT %I*: BOOL; // Actuate pan ready signal, 0: Not ready, 1: Ready
+ipHandlerSafeToEnterPLC					AT %I*: BOOL; // Safety signal from Actuate pan PLC to indicate pan is Retracted and drawer is safe to move, 0: Not safe, 1: Safe
+ipHandlerSafeToEnterHwr					AT %I*: BOOL; // Safety signal from Actuate pan PLC to indicate pan is Retracted and drawer is safe to move, 0: Not safe, 1: Safe
+
+ipSpare_1 								AT %I*: BOOL; // Spare
+ipSpare_2 								AT %I*: BOOL; // Spare
+ipSpare_3 								AT %I*: BOOL; // Spare
+ipSpare_4 								AT %I*: BOOL; // Spare
+
+ipCellFluidLeakage1						AT %I*: BOOL; // Cell fluid leakage sensor 1, 0: No leak, 1: Leak
+ipCellFluidLeakage2						AT %I*: BOOL; // Cell fluid leakage sensor 2, 0: No leak, 1: Leak
+ipCellGroundFault						AT %I*: BOOL; // Cell ground fault sensor, 0: No fault, 1: Fault
+
+ipSpare_5 								AT %I*: BOOL; // Spare
+ipSpare_6 								AT %I*: BOOL; // Spare
+ipSpare_7 								AT %I*: BOOL; // Spare
+ipSpare_8 								AT %I*: BOOL; // Spare
+
+ipTesterPresent							AT %I*: BOOL; // Tester present signal, 0: Not present, 1: Present
+ipTesterPowerOn							AT %I*: BOOL; // Tester power on signal, 0: Power off, 1: Power on   
+ipTesterReady							AT %I*: BOOL; // Tester ready signal, 0: Not ready, 1: Ready   
+
+ipSpare_9 								AT %I*: BOOL; // Spare
+ipSpare_10  							AT %I*: BOOL; // Spare
+
+ipTCDrawerCylExtendRS					AT %I*: BOOL; // Drawer Extended feedback signal, 0: Not extended, 1: Extended
+ipTCDrawerCylRetractRS					AT %I*: BOOL; // Drawer Retracted feedback signal, 0: Not retracted, 1: Retracted
+ipTCDrawerCylUpRS						AT %I*: BOOL; // Drawer Up feedback signal, 0: Not up, 1: Up
+ipTCDrawerCylDownRS						AT %I*: BOOL; // Drawer Down feedback signal, 0: Not down, 1: Down
+
+ipTCCellDoorClosed						AT %I*: BOOL; // Back door lock status, 0: Unlocked, 1: Locked
+ipTCCellDoorOpenCloseStatus				AT %I*: BOOL; // Back door close status, 0: Opened, 1: Closed
+
+ipTesterLatchesClosed					AT %I*: BOOL; // Tester latch close status, 0: opened, 1: Closed
+
+// Push button just return an event to TA
+ipTCCellAbortFlowBtn					AT %I*: BOOL; // User request abort flow push button, 0: No request, 1: Request
+ipTCCellDoorOpenReqBtn					AT %I*: BOOL; // Back door open request push button, 0: No request, 1: Request
+ipDrawerMaintenanceModeBtn				AT %I*: BOOL; // Maintenance mode request push button, 0: No request, 1: Request
+
+ipTIUPresent							AT %I*: BOOL; // TBD
+
+ipTCCellTbotSideDoorOpenCloseStatus01	AT %I*: BOOL; // Front door close status 1,  0: Opened, 1: Closed
+ipTCCellTbotSideDoorOpenCloseStatus02	AT %I*: BOOL; // Front door close status 2,  0: Opened, 1: Closed
+ipTCCellTbotSideDoorLocked01			AT %I*: BOOL; // Front door lock status 1, 0: Unlocked, 1: Locked
+ipTCCellTbotSideDoorLocked02			AT %I*: BOOL; // Front door lock staaatus 2, 0: Unlocked, 1: Locked
+
+ipDCCellSpare_4							AT %I*: BOOL; // Spare
+ipDCCellSpare_5							AT %I*: BOOL; // Spare
+ipDCCellSpare_6							AT %I*: BOOL; // Spare
+ipDCCellSpare_7							AT %I*: BOOL; // Spare
+ipDCCellSpare_8							AT %I*: BOOL; // Spare
+ipDCCellSpare_9							AT %I*: BOOL; // Spare
+ipDCCellSpare_10						AT %I*: BOOL; // Spare
+ipDCCellSpare_11						AT %I*: BOOL; // Spare
+ipDCCellSpare_12						AT %I*: BOOL; // Spare
+ipDCCellSpare_13						AT %I*: BOOL; // Spare
+ipDCCellSpare_14						AT %I*: BOOL; // Spare
+ipDCCellSpare_15						AT %I*: BOOL; // Spare
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//	Output
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+opAP240ACPwrEnable  					AT %Q*: BOOL; // Actuate pan enable command, 0: Not enable, 1: Enable
+
+opSpare_1 								AT %Q*: BOOL; // Spare
+opSpare_2 								AT %Q*: BOOL; // Spare
+opSpare_3 								AT %Q*: BOOL; // Spare
+opSpare_4 								AT %Q*: BOOL; // Spare
+opSpare_5 								AT %Q*: BOOL; // Spare
+
+opDoorOpenReqLED						AT %Q*: BOOL; // Back door LED, 0: Turn off, 1: Turn on
+opAlarmLED 								AT %Q*: BOOL; // Alarm LED, 0: Turn off, 1: Turn on
+opTCCellAbortFlowBtnLED					AT %Q*: BOOL; // Abort flow LED, 0: Turn off, 1: Turn on
+opDrawerMaintenanceModeBtnLED   		AT %Q*: BOOL; // Maintenance LED, 0: Turn off, 1: Turn on
+
+opAPSafeToEngage           				AT %Q*: BOOL; // Signal to Actuate pan PLC safe to extend, 0: Not safe, 1: Safe
+opAPTCCReset							AT %Q*: BOOL; // TBD
+
+opSpare_6 								AT %Q*: BOOL; // Spare
+opSpare_7 								AT %Q*: BOOL; // Spare
+opSpare_8 								AT %Q*: BOOL; // Spare
+
+opCellLTIMValve							AT %Q*: BOOL; // Currently not using
+
+opCellDrawerCylExtend 					AT %Q*: BOOL; // Drawer extend command, 0: Do nothing, 1: Extend
+opCellDrawerCylRetract 					AT %Q*: BOOL; // Drawer retract command, 0: Do nothing, 1: Retract
+opCellDrawerCylUp 						AT %Q*: BOOL; // Drawer up command, 0: Do nothing, 1: Up
+opCellDrawerCylDown 					AT %Q*: BOOL; // Drawer down command, 0: Do nothing, 1: Down
+
+opTst240VACPwrEnable 					AT %Q*: BOOL; // Tester 240V AC enable command, 0: Not enable, 1: Enable 
+opCell24VPowerEnable					AT %Q*: BOOL; // 24V DC enable command, 0: Not enable, 1: Enable 
+
+opSpare_9  								AT %Q*: BOOL; // Spare
+opSpare_10 								AT %Q*: BOOL; // Spare
+
+opCellPCWValve  						AT %Q*: BOOL; // PCW valve, 0: Close, 1: Open
+
+opTIUSktAirSol_1 						AT %Q*: BOOL; // TIU socket air solenoid valve 1, 0: Close, 1: Open
+opTIUSktAirSol_2						AT %Q*: BOOL; // TIU socket air solenoid valve 2, 0: Close, 1: Open
+opAPAirSupplySol						AT %Q*: BOOL; // Actuate pan air supply solenoid valve 10 Bar (Actate Pan), 0: Close, 1: Open
+opTesterDrawerAirSupplySol				AT %Q*: BOOL; // Drawer air supply solenoid valve 6 Bar (Tester), 0: Close, 1: Open
+
+opCellTBOtSideDoorClosed1				AT %Q*: BOOL; // Front door Lock 1 command, 0: Unlock, 1: Lock 
+opCellTBOtSideDoorClosed2				AT %Q*: BOOL; // Front door Lock 2 command, 0: Unlock, 1: Lock 
+opCellDoorClosed						AT %Q*: BOOL; // Back door Lock command, 0: Unlock, 1: Lock 
+
+//Analog Input Status ---------------------------------------//
+aiXAxis 								AT %I*: INT; // Not using
+aiYAxis 								AT %I*: INT; // Not using
+aiY1Axis								AT %I*: INT; // Not using		
+aiZAxis 								AT %I*: INT; // Not using
+
+aiXAxisRet 								AT %I*: INT; // Not using
+aiYAxisRet 								AT %I*: INT; // Not using 
+aiZAxisRet 								AT %I*: INT; // Not using
+
+//==============================================================//
+//input
+//ipStartPB AT %I*: BOOL;
+//ipStopPB AT %I*: BOOL;
+//ipL1_TC_Drawer_Extended_Out_Cell AT %I*: BOOL;
+//ipL1_TC_Drawer_Retracted_In_Cell AT %I*: BOOL;	
+//ipPressure_Switch_Error			 AT %I*: BOOL;
+//output
+//opMain_Incoming_Air_Valve	AT %Q*: BOOL;
+//==============================================================//
+
+
+
+
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,4373 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4022.22">
+	<ImageDatas>
+		<ImageData Id="1000">424dd6020000000000003600000028000000100000000e0000000100180000000000a0020000c40e0000c40e00000000000000000000ff00ffff00ffff00ff808080808080808080808080808080808080808080808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff0000c00000c0ffffffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff0000c00000c0ffffffc0c0c000ffffc0c0c000ffff808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff0000c00000c0ffffffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff0000c00000c0ffffffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff0000c00000c0ffffffc0c0c0ff0000c0c0c0ff0000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff0000c00000c0ffffffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff0000c00000c0ffffffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff0000c00000c0ffffffc0c0c00000ffc0c0c00000ff808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff0000c00000c0ffffffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff0000c00000c0ffffffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff0000c00000c0ffffffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff0000c00000c0ffffffc0c0c0008000c0c0c0008000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff0000c00000c0ffffffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff</ImageData>
+		<ImageData Id="1001">424dd6020000000000003600000028000000100000000e0000000100180000000000a0020000120b0000120b00000000000000000000ff00ffff00ffff00ffff00ffff00ffff00ff808080808080808080808080808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c000ffffc0c0c000ffff808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0ff0000c0c0c0ff0000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff0000ff0000ff0000ff0000ff0000ff0000ffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ff0000ff0000ff0000ff0000ff0000ff0000ffc0c0c00000ffc0c0c00000ff808080ff00ffff00ffff00ffff00ffff00ff0000ff0000ff0000ff0000ff0000ff0000ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff0000ff0000ff0000ff0000ff0000ff0000ffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ff0000ff0000ff0000ff0000ff0000ff0000ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff0000ff0000ff0000ff0000ff0000ff0000ffc0c0c0008000c0c0c0008000808080ff00ffff00ffff00ffff00ffff00ff0000ff0000ff0000ff0000ff0000ff0000ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff</ImageData>
+		<ImageData Id="1002">424dd6020000000000003600000028000000100000000e0000000100180000000000a0020000c40e0000c40e00000000000000000000ff00ff000000000000ff00ffff00ffff00ff808080808080808080808080808080ff00ffff00ffff00ffff00ffff00ff000000ff00ffff00ff000000ff00ffff00ffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ff000000ff00ffff00ffff00ffff00ffff00ffc0c0c000ffffc0c0c000ffff808080ff00ffff00ffff00ffff00ffff00ff000000ff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff000000ff00ffff00ff000000ff00ffff00ffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ff000000000000ff00ffff00ffff00ffc0c0c0ff0000c0c0c0ff0000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c00000ffc0c0c00000ff808080ff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0008000c0c0c0008000808080ff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff</ImageData>
+		<ImageData Id="1003">424dd6020000000000003600000028000000100000000e0000000100180000000000a0020000c40e0000c40e00000000000000000000ff00ffff00ffff00ffff00ffff00ffff00ff808080808080808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ff</ImageData>
+		<ImageData Id="1004">424dd6020000000000003600000028000000100000000e000000010018000000000000000000c40e0000c40e0000000000000000000000d8ff00d8ff80808080808080808080808080808000d8ff00d8ff80808080808080808080808080808000d8ff00d8ff80808000d8ff00d8ff80808080808080808080808000d8ff00d8ff80808080808080808080808000d8ff00d8ff80808080808080808000d8ff00d8ff00000000000000000000d8ff00d8ff00000000000000000000d8ff00d8ff80808080808080808080808000000000d8ff00d8ff00000000000000d8ff00d8ff00000000000000d8ff00d8ff00000080808080808080808080808000000000000000d8ff00d8ff00000000d8ff00d8ff00000000d8ff00d8ff00000000000080808080808080808080808000000000000000000000d8ff00d8ff00d8ff00d8ff00d8ff00d8ff0000000000000000008080808080808080808080800000000000000000ff0000ff0000ff0000ff0000ff0000ff0000ff0000ff0000000000008080808080808080808080800000000000000000ff0000ff0000ff0000ff0000ff0000ff0000ff0000ff0000000000008080808080808080808080800000000000000000ff0000ff0000ff0000ff0000ff0000ff0000ff0000ff0000000000008080808080808080808080800000000000000000ff0000ff0000ff0000ff0000ff0000ff0000ff0000ff00000000000080808080808080808080808000000000000000000000000000000000d8ff00d8ff00000000000000000000000000000080808080808080808080808000000000000000000000000000000000d8ff00d8ff00000000000000000000000000000080808080808080808080808080808080808080808080808080808000d8ff00d8ff80808080808080808080808080808080808080808080808080808080808080808080808080808080808000d8ff00d8ff808080808080808080808080808080808080808080</ImageData>
+		<ImageData Id="1005">424dd6020000000000003600000028000000100000000e0000000100180000000000a0020000c40e0000c40e00000000000000000000ff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080808080808080808080808080808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080c0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c000bfff00bfffc0c0c0808080c0c0c000ffffc0c0c000ffff808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c000bfff00bfffc0c0c0808080c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c000bfff00bfffc0c0c0808080c0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080c0c0c0ff0000c0c0c0ff0000808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c000bfff00bfffc0c0c0808080c0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c000bfff00bfffc0c0c0808080c0c0c00000ffc0c0c00000ff808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c000bfff00bfffc0c0c0808080c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0000000000000c0c0c0808080c0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ff000000c0c0c0c0c0c0000000808080c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0000000000000c0c0c0808080c0c0c0008000c0c0c0008000808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff</ImageData>
+	</ImageDatas>
+	<Project ProjectGUID="{22D0EF67-3C70-4275-BC2F-E1D76F51E582}" Target64Bit="true" AutoPrioManagement="true" ShowHideConfigurations="#x306">
+		<System>
+			<Settings>
+				<IoIdleTask Priority="4"/>
+			</Settings>
+			<Tasks>
+				<Task Id="3" Priority="6" CycleTime="100000" AmsPort="350" AdtTasks="true">
+					<Name>PlcTask</Name>
+				</Task>
+			</Tasks>
+		</System>
+		<Plc>
+			<Project GUID="{C4C7F694-0124-4A28-A216-305A6F63D901}" Name="TC" PrjFilePath="TC\TC.plcproj" TmcFilePath="TC\TC.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="TC\TC.tmc">
+					<Name>TC Instance</Name>
+					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
+					<Vars VarGrpType="1">
+						<Name>PlcTask Inputs</Name>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[1].fbTCShuttlePOCSeq.stTCPocDIO.ipStartPB</Name>
+							<Comment>
+								<![CDATA[input]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[1].fbTCShuttlePOCSeq.stTCPocDIO.ipStopPB</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[1].fbTCShuttlePOCSeq.stTCPocDIO.ipL1_TC_Drawer_Extended_Out_Cell</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[1].fbTCShuttlePOCSeq.stTCPocDIO.ipL1_TC_Drawer_Retracted_In_Cell</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[1].fbTCShuttlePOCSeq.stTCPocDIO.ipMotor_Ready</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[1].fbTCShuttlePOCSeq.stTCPocDIO.ipMotor_Home_Position</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[1].fbTCShuttlePOCSeq.stTCPocDIO.ipMotor_Position_Reached</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[1].fbTCShuttlePOCSeq.stTCPocDIO.ipMotor_Ps_Table_Active</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[1].fbTCShuttlePOCSeq.stTCPocDIO.ipMotor_Error</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[1].fbTCShuttlePOCSeq.stTCPocDIO.ipTCDrawerExtendedoutCell</Name>
+							<Comment>
+								<![CDATA[follow actual IO name]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[1].fbTCShuttlePOCSeq.stTCPocDIO.ipTCDrawerRetractedinCell</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[1].fbTCShuttlePOCSeq.stTCPocDIO.ipTCDrawerExtendedupCell</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[1].fbTCShuttlePOCSeq.stTCPocDIO.ipTCDrawerRetracteddownCell</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[1].fbTCShuttlePOCSeq.stTCPocDIO.ipPressure_Switch_Error</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[1].fbTCShuttlePOCSeq.stTCPocDIO.aiXAxis</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[1].fbTCShuttlePOCSeq.stTCPocDIO.aiYAxis</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[1].fbTCShuttlePOCSeq.stTCPocDIO.aiZAxis</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[2].fbTCShuttlePOCSeq.stTCPocDIO.ipStartPB</Name>
+							<Comment>
+								<![CDATA[input]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[2].fbTCShuttlePOCSeq.stTCPocDIO.ipStopPB</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[2].fbTCShuttlePOCSeq.stTCPocDIO.ipL1_TC_Drawer_Extended_Out_Cell</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[2].fbTCShuttlePOCSeq.stTCPocDIO.ipL1_TC_Drawer_Retracted_In_Cell</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[2].fbTCShuttlePOCSeq.stTCPocDIO.ipMotor_Ready</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[2].fbTCShuttlePOCSeq.stTCPocDIO.ipMotor_Home_Position</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[2].fbTCShuttlePOCSeq.stTCPocDIO.ipMotor_Position_Reached</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[2].fbTCShuttlePOCSeq.stTCPocDIO.ipMotor_Ps_Table_Active</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[2].fbTCShuttlePOCSeq.stTCPocDIO.ipMotor_Error</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[2].fbTCShuttlePOCSeq.stTCPocDIO.ipTCDrawerExtendedoutCell</Name>
+							<Comment>
+								<![CDATA[follow actual IO name]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[2].fbTCShuttlePOCSeq.stTCPocDIO.ipTCDrawerRetractedinCell</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[2].fbTCShuttlePOCSeq.stTCPocDIO.ipTCDrawerExtendedupCell</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[2].fbTCShuttlePOCSeq.stTCPocDIO.ipTCDrawerRetracteddownCell</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[2].fbTCShuttlePOCSeq.stTCPocDIO.ipPressure_Switch_Error</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[2].fbTCShuttlePOCSeq.stTCPocDIO.aiXAxis</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[2].fbTCShuttlePOCSeq.stTCPocDIO.aiYAxis</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[2].fbTCShuttlePOCSeq.stTCPocDIO.aiZAxis</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[3].fbTCShuttlePOCSeq.stTCPocDIO.ipStartPB</Name>
+							<Comment>
+								<![CDATA[input]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[3].fbTCShuttlePOCSeq.stTCPocDIO.ipStopPB</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[3].fbTCShuttlePOCSeq.stTCPocDIO.ipL1_TC_Drawer_Extended_Out_Cell</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[3].fbTCShuttlePOCSeq.stTCPocDIO.ipL1_TC_Drawer_Retracted_In_Cell</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[3].fbTCShuttlePOCSeq.stTCPocDIO.ipMotor_Ready</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[3].fbTCShuttlePOCSeq.stTCPocDIO.ipMotor_Home_Position</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[3].fbTCShuttlePOCSeq.stTCPocDIO.ipMotor_Position_Reached</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[3].fbTCShuttlePOCSeq.stTCPocDIO.ipMotor_Ps_Table_Active</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[3].fbTCShuttlePOCSeq.stTCPocDIO.ipMotor_Error</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[3].fbTCShuttlePOCSeq.stTCPocDIO.ipTCDrawerExtendedoutCell</Name>
+							<Comment>
+								<![CDATA[follow actual IO name]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[3].fbTCShuttlePOCSeq.stTCPocDIO.ipTCDrawerRetractedinCell</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[3].fbTCShuttlePOCSeq.stTCPocDIO.ipTCDrawerExtendedupCell</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[3].fbTCShuttlePOCSeq.stTCPocDIO.ipTCDrawerRetracteddownCell</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[3].fbTCShuttlePOCSeq.stTCPocDIO.ipPressure_Switch_Error</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[3].fbTCShuttlePOCSeq.stTCPocDIO.aiXAxis</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[3].fbTCShuttlePOCSeq.stTCPocDIO.aiYAxis</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[3].fbTCShuttlePOCSeq.stTCPocDIO.aiZAxis</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[4].fbTCShuttlePOCSeq.stTCPocDIO.ipStartPB</Name>
+							<Comment>
+								<![CDATA[input]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[4].fbTCShuttlePOCSeq.stTCPocDIO.ipStopPB</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[4].fbTCShuttlePOCSeq.stTCPocDIO.ipL1_TC_Drawer_Extended_Out_Cell</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[4].fbTCShuttlePOCSeq.stTCPocDIO.ipL1_TC_Drawer_Retracted_In_Cell</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[4].fbTCShuttlePOCSeq.stTCPocDIO.ipMotor_Ready</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[4].fbTCShuttlePOCSeq.stTCPocDIO.ipMotor_Home_Position</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[4].fbTCShuttlePOCSeq.stTCPocDIO.ipMotor_Position_Reached</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[4].fbTCShuttlePOCSeq.stTCPocDIO.ipMotor_Ps_Table_Active</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[4].fbTCShuttlePOCSeq.stTCPocDIO.ipMotor_Error</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[4].fbTCShuttlePOCSeq.stTCPocDIO.ipTCDrawerExtendedoutCell</Name>
+							<Comment>
+								<![CDATA[follow actual IO name]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[4].fbTCShuttlePOCSeq.stTCPocDIO.ipTCDrawerRetractedinCell</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[4].fbTCShuttlePOCSeq.stTCPocDIO.ipTCDrawerExtendedupCell</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[4].fbTCShuttlePOCSeq.stTCPocDIO.ipTCDrawerRetracteddownCell</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[4].fbTCShuttlePOCSeq.stTCPocDIO.ipPressure_Switch_Error</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[4].fbTCShuttlePOCSeq.stTCPocDIO.aiXAxis</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[4].fbTCShuttlePOCSeq.stTCPocDIO.aiYAxis</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[4].fbTCShuttlePOCSeq.stTCPocDIO.aiZAxis</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[5].fbTCShuttlePOCSeq.stTCPocDIO.ipStartPB</Name>
+							<Comment>
+								<![CDATA[input]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[5].fbTCShuttlePOCSeq.stTCPocDIO.ipStopPB</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[5].fbTCShuttlePOCSeq.stTCPocDIO.ipL1_TC_Drawer_Extended_Out_Cell</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[5].fbTCShuttlePOCSeq.stTCPocDIO.ipL1_TC_Drawer_Retracted_In_Cell</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[5].fbTCShuttlePOCSeq.stTCPocDIO.ipMotor_Ready</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[5].fbTCShuttlePOCSeq.stTCPocDIO.ipMotor_Home_Position</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[5].fbTCShuttlePOCSeq.stTCPocDIO.ipMotor_Position_Reached</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[5].fbTCShuttlePOCSeq.stTCPocDIO.ipMotor_Ps_Table_Active</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[5].fbTCShuttlePOCSeq.stTCPocDIO.ipMotor_Error</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[5].fbTCShuttlePOCSeq.stTCPocDIO.ipTCDrawerExtendedoutCell</Name>
+							<Comment>
+								<![CDATA[follow actual IO name]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[5].fbTCShuttlePOCSeq.stTCPocDIO.ipTCDrawerRetractedinCell</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[5].fbTCShuttlePOCSeq.stTCPocDIO.ipTCDrawerExtendedupCell</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[5].fbTCShuttlePOCSeq.stTCPocDIO.ipTCDrawerRetracteddownCell</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[5].fbTCShuttlePOCSeq.stTCPocDIO.ipPressure_Switch_Error</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[5].fbTCShuttlePOCSeq.stTCPocDIO.aiXAxis</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[5].fbTCShuttlePOCSeq.stTCPocDIO.aiYAxis</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[5].fbTCShuttlePOCSeq.stTCPocDIO.aiZAxis</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[6].fbTCShuttlePOCSeq.stTCPocDIO.ipStartPB</Name>
+							<Comment>
+								<![CDATA[input]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[6].fbTCShuttlePOCSeq.stTCPocDIO.ipStopPB</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[6].fbTCShuttlePOCSeq.stTCPocDIO.ipL1_TC_Drawer_Extended_Out_Cell</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[6].fbTCShuttlePOCSeq.stTCPocDIO.ipL1_TC_Drawer_Retracted_In_Cell</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[6].fbTCShuttlePOCSeq.stTCPocDIO.ipMotor_Ready</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[6].fbTCShuttlePOCSeq.stTCPocDIO.ipMotor_Home_Position</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[6].fbTCShuttlePOCSeq.stTCPocDIO.ipMotor_Position_Reached</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[6].fbTCShuttlePOCSeq.stTCPocDIO.ipMotor_Ps_Table_Active</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[6].fbTCShuttlePOCSeq.stTCPocDIO.ipMotor_Error</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[6].fbTCShuttlePOCSeq.stTCPocDIO.ipTCDrawerExtendedoutCell</Name>
+							<Comment>
+								<![CDATA[follow actual IO name]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[6].fbTCShuttlePOCSeq.stTCPocDIO.ipTCDrawerRetractedinCell</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[6].fbTCShuttlePOCSeq.stTCPocDIO.ipTCDrawerExtendedupCell</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[6].fbTCShuttlePOCSeq.stTCPocDIO.ipTCDrawerRetracteddownCell</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[6].fbTCShuttlePOCSeq.stTCPocDIO.ipPressure_Switch_Error</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[6].fbTCShuttlePOCSeq.stTCPocDIO.aiXAxis</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[6].fbTCShuttlePOCSeq.stTCPocDIO.aiYAxis</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[6].fbTCShuttlePOCSeq.stTCPocDIO.aiZAxis</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCLevel[1].fbTCLevelSeq.stTCLevelDIO.ipColumnFluid_PCW_Leakage</Name>
+							<Comment>
+								<![CDATA[input]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCLevel[1].fbTCLevelSeq.stTCLevelDIO.ipPressure_Switch_Error</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCLevel[1].fbTCLevelSeq.stTCLevelDIO.ipCellGroundFault</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCLevel[1].fbTCLevelSeq.stTCLevelDIO.ipExhaustFanOk</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCLevel[1].fbTCLevelSeq.stTCLevelDIO.ipAPPresentSensor</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCLevel[1].fbTCLevelSeq.stTCLevelDIO.ipAPPowerOn</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCLevel[1].fbTCLevelSeq.stTCLevelDIO.ipAPReady</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCLevel[1].fbTCLevelSeq.stTCLevelDIO.ipAPDeactuatedPLC</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCLevel[1].fbTCLevelSeq.stTCLevelDIO.ipAPDeactuatedHwr</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCLevel[1].fbTCLevelSeq.stTCLevelDIO.ipAPActuatedPLC</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCLevel[1].fbTCLevelSeq.stTCLevelDIO.ipAP_DIO_1</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCLevel[1].fbTCLevelSeq.stTCLevelDIO.ipAP_DIO_2</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCLevel[1].fbTCLevelSeq.stTCLevelDIO.ipAP_DIO_3</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCLevel[1].fbTCLevelSeq.stTCLevelDIO.ipAP_DIO_4</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCLevel[1].fbTCLevelSeq.stTCLevelDIO.ipAP_DIO_5</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCLevel[1].fbTCLevelSeq.stTCLevelDIO.ipTesterPresent</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCLevel[1].fbTCLevelSeq.stTCLevelDIO.ipTesterPowerOn</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCLevel[1].fbTCLevelSeq.stTCLevelDIO.ipTesterReady</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCLevel[1].fbTCLevelSeq.stTCLevelDIO.ipTesterSpareOut1</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCLevel[1].fbTCLevelSeq.stTCLevelDIO.ipTesterSpareOut2</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCLevel[1].fbTCLevelSeq.stTCLevelDIO.ipMotor_Ready</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCLevel[1].fbTCLevelSeq.stTCLevelDIO.ipMotor_Home_Position</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCLevel[1].fbTCLevelSeq.stTCLevelDIO.ipMotor_Position_Reached</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCLevel[1].fbTCLevelSeq.stTCLevelDIO.ipMotor_Ps_Table_Active</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCLevel[1].fbTCLevelSeq.stTCLevelDIO.ipMotor_Error</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCLevel[1].fbTCLevelSeq.stTCLevelDIO.ipTCDrawerExtendedoutCell</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCLevel[1].fbTCLevelSeq.stTCLevelDIO.ipTCDrawerRetractedinCell</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCLevel[1].fbTCLevelSeq.stTCLevelDIO.ipTCDrawerExtendedupCell</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCLevel[1].fbTCLevelSeq.stTCLevelDIO.ipTCDrawerRetracteddownCell</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCLevel[1].fbTCLevelSeq.stTCLevelDIO.ipTCCellDoorLock</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCLevel[1].fbTCLevelSeq.stTCLevelDIO.ipTCCellDoorClosed</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCLevel[1].fbTCLevelSeq.stTCLevelDIO.ipTesterLatchesClosed</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCLevel[1].fbTCLevelSeq.stTCLevelDIO.ipCellFluidLeakage</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCLevel[1].fbTCLevelSeq.stTCLevelDIO.ipShuttleFluidLeakage</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCLevel[1].fbTCLevelSeq.stTCLevelDIO.ipButtonLockDoor</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCLevel[1].fbTCLevelSeq.stTCLevelDIO.ipButtonTesterInOut</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.ipAPPresentSensor</Name>
+							<Comment>
+								<![CDATA[AP //BM loopback signal]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.ipAPPowerOn</Name>
+							<Comment>
+								<![CDATA[AP //24V loop back - TCC Connected & Booting, PLC boot up timer check on AP Ready signal]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.ipAPReady</Name>
+							<Comment>
+								<![CDATA[AP //TCC Communicating, toggles to Normal state once TCC FW is booted up. Intel to provide estimated boot up duration for TCC3.0. Alarm when exceeded boot time]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.ipAPDeactuatedPLC</Name>
+							<Comment>
+								<![CDATA[[UP]AP //Soft line to indicate AP is fully deactuated. All heads are UP. Safe to move]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.ipAPDeactuatedHwr</Name>
+							<Comment>
+								<![CDATA[[UP]AP //TE deactuated hardware interlock (heads AND)]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.ipSpare_1</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.ipSpare_2</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.ipSpare_3</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.ipSpare_4</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.ipCellFluidLeakage1</Name>
+							<Comment>
+								<![CDATA[Cell Facility]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.ipCellFluidLeakage2</Name>
+							<Comment>
+								<![CDATA[Cell Facility]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.ipCellGroundFault</Name>
+							<Comment>
+								<![CDATA[Cell Facility]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.ipSpare_5</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.ipSpare_6</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.ipSpare_7</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.ipSpare_8</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.ipTesterPresent</Name>
+							<Comment>
+								<![CDATA[Tester   ]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.ipTesterPowerOn</Name>
+							<Comment>
+								<![CDATA[Tester   ]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.ipTesterReady</Name>
+							<Comment>
+								<![CDATA[Tester   ]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.ipSpare_9</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.ipSpare_10</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.ipTCDrawerCylExtendRS</Name>
+							<Comment>
+								<![CDATA[RS]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.ipTCDrawerCylRetractRS</Name>
+							<Comment>
+								<![CDATA[RS]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.ipTCDrawerCylUpRS</Name>
+							<Comment>
+								<![CDATA[RS]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.ipTCDrawerCylDownRS</Name>
+							<Comment>
+								<![CDATA[RS]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.ipTCCellDoorClosed</Name>
+							<Comment>
+								<![CDATA[?? Door]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.ipTCCellDoorOpenCloseStatus</Name>
+							<Comment>
+								<![CDATA[?? Door]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.ipTesterLatchesClosed</Name>
+							<Comment>
+								<![CDATA[Tester]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.ipTCCellAbortFlowBtn</Name>
+							<Comment>
+								<![CDATA[Btn,Green AbortFlow To put the slot into a safe state for removing the AP and Tester]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.ipTCCellDoorOpenReqBtn</Name>
+							<Comment>
+								<![CDATA[Btn,White Door Open Request]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.ipTIUPresent</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.ipDrawerMaintenanceModeBtn</Name>
+							<Comment>
+								<![CDATA[Btn,Blue switch off 6-bar solenoid valve in cell for Tester and Drawer]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.aiXAxis</Name>
+							<Comment>
+								<![CDATA[Analog Input Status ---------------------------------------//]]>
+							</Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.aiYAxis</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.aiZAxis</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.aiXAxisRet</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.aiYAxisRet</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.aiZAxisRet</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.ipAPPresentSensor</Name>
+							<Comment>
+								<![CDATA[AP //BM loopback signal]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.ipAPPowerOn</Name>
+							<Comment>
+								<![CDATA[AP //24V loop back - TCC Connected & Booting, PLC boot up timer check on AP Ready signal]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.ipAPReady</Name>
+							<Comment>
+								<![CDATA[AP //TCC Communicating, toggles to Normal state once TCC FW is booted up. Intel to provide estimated boot up duration for TCC3.0. Alarm when exceeded boot time]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.ipAPDeactuatedPLC</Name>
+							<Comment>
+								<![CDATA[[UP]AP //Soft line to indicate AP is fully deactuated. All heads are UP. Safe to move]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.ipAPDeactuatedHwr</Name>
+							<Comment>
+								<![CDATA[[UP]AP //TE deactuated hardware interlock (heads AND)]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.ipSpare_1</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.ipSpare_2</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.ipSpare_3</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.ipSpare_4</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.ipCellFluidLeakage1</Name>
+							<Comment>
+								<![CDATA[Cell Facility]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.ipCellFluidLeakage2</Name>
+							<Comment>
+								<![CDATA[Cell Facility]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.ipCellGroundFault</Name>
+							<Comment>
+								<![CDATA[Cell Facility]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.ipSpare_5</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.ipSpare_6</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.ipSpare_7</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.ipSpare_8</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.ipTesterPresent</Name>
+							<Comment>
+								<![CDATA[Tester   ]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.ipTesterPowerOn</Name>
+							<Comment>
+								<![CDATA[Tester   ]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.ipTesterReady</Name>
+							<Comment>
+								<![CDATA[Tester   ]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.ipSpare_9</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.ipSpare_10</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.ipTCDrawerCylExtendRS</Name>
+							<Comment>
+								<![CDATA[RS]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.ipTCDrawerCylRetractRS</Name>
+							<Comment>
+								<![CDATA[RS]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.ipTCDrawerCylUpRS</Name>
+							<Comment>
+								<![CDATA[RS]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.ipTCDrawerCylDownRS</Name>
+							<Comment>
+								<![CDATA[RS]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.ipTCCellDoorClosed</Name>
+							<Comment>
+								<![CDATA[?? Door]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.ipTCCellDoorOpenCloseStatus</Name>
+							<Comment>
+								<![CDATA[?? Door]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.ipTesterLatchesClosed</Name>
+							<Comment>
+								<![CDATA[Tester]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.ipTCCellAbortFlowBtn</Name>
+							<Comment>
+								<![CDATA[Btn,Green AbortFlow To put the slot into a safe state for removing the AP and Tester]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.ipTCCellDoorOpenReqBtn</Name>
+							<Comment>
+								<![CDATA[Btn,White Door Open Request]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.ipTIUPresent</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.ipDrawerMaintenanceModeBtn</Name>
+							<Comment>
+								<![CDATA[Btn,Blue switch off 6-bar solenoid valve in cell for Tester and Drawer]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.aiXAxis</Name>
+							<Comment>
+								<![CDATA[Analog Input Status ---------------------------------------//]]>
+							</Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.aiYAxis</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.aiZAxis</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.aiXAxisRet</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.aiYAxisRet</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.aiZAxisRet</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.ipAPPresentSensor</Name>
+							<Comment>
+								<![CDATA[AP //BM loopback signal]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.ipAPPowerOn</Name>
+							<Comment>
+								<![CDATA[AP //24V loop back - TCC Connected & Booting, PLC boot up timer check on AP Ready signal]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.ipAPReady</Name>
+							<Comment>
+								<![CDATA[AP //TCC Communicating, toggles to Normal state once TCC FW is booted up. Intel to provide estimated boot up duration for TCC3.0. Alarm when exceeded boot time]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.ipAPDeactuatedPLC</Name>
+							<Comment>
+								<![CDATA[[UP]AP //Soft line to indicate AP is fully deactuated. All heads are UP. Safe to move]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.ipAPDeactuatedHwr</Name>
+							<Comment>
+								<![CDATA[[UP]AP //TE deactuated hardware interlock (heads AND)]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.ipSpare_1</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.ipSpare_2</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.ipSpare_3</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.ipSpare_4</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.ipCellFluidLeakage1</Name>
+							<Comment>
+								<![CDATA[Cell Facility]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.ipCellFluidLeakage2</Name>
+							<Comment>
+								<![CDATA[Cell Facility]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.ipCellGroundFault</Name>
+							<Comment>
+								<![CDATA[Cell Facility]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.ipSpare_5</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.ipSpare_6</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.ipSpare_7</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.ipSpare_8</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.ipTesterPresent</Name>
+							<Comment>
+								<![CDATA[Tester   ]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.ipTesterPowerOn</Name>
+							<Comment>
+								<![CDATA[Tester   ]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.ipTesterReady</Name>
+							<Comment>
+								<![CDATA[Tester   ]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.ipSpare_9</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.ipSpare_10</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.ipTCDrawerCylExtendRS</Name>
+							<Comment>
+								<![CDATA[RS]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.ipTCDrawerCylRetractRS</Name>
+							<Comment>
+								<![CDATA[RS]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.ipTCDrawerCylUpRS</Name>
+							<Comment>
+								<![CDATA[RS]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.ipTCDrawerCylDownRS</Name>
+							<Comment>
+								<![CDATA[RS]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.ipTCCellDoorClosed</Name>
+							<Comment>
+								<![CDATA[?? Door]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.ipTCCellDoorOpenCloseStatus</Name>
+							<Comment>
+								<![CDATA[?? Door]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.ipTesterLatchesClosed</Name>
+							<Comment>
+								<![CDATA[Tester]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.ipTCCellAbortFlowBtn</Name>
+							<Comment>
+								<![CDATA[Btn,Green AbortFlow To put the slot into a safe state for removing the AP and Tester]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.ipTCCellDoorOpenReqBtn</Name>
+							<Comment>
+								<![CDATA[Btn,White Door Open Request]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.ipTIUPresent</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.ipDrawerMaintenanceModeBtn</Name>
+							<Comment>
+								<![CDATA[Btn,Blue switch off 6-bar solenoid valve in cell for Tester and Drawer]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.aiXAxis</Name>
+							<Comment>
+								<![CDATA[Analog Input Status ---------------------------------------//]]>
+							</Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.aiYAxis</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.aiZAxis</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.aiXAxisRet</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.aiYAxisRet</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.aiZAxisRet</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.ipAPPresentSensor</Name>
+							<Comment>
+								<![CDATA[AP //BM loopback signal]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.ipAPPowerOn</Name>
+							<Comment>
+								<![CDATA[AP //24V loop back - TCC Connected & Booting, PLC boot up timer check on AP Ready signal]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.ipAPReady</Name>
+							<Comment>
+								<![CDATA[AP //TCC Communicating, toggles to Normal state once TCC FW is booted up. Intel to provide estimated boot up duration for TCC3.0. Alarm when exceeded boot time]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.ipAPDeactuatedPLC</Name>
+							<Comment>
+								<![CDATA[[UP]AP //Soft line to indicate AP is fully deactuated. All heads are UP. Safe to move]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.ipAPDeactuatedHwr</Name>
+							<Comment>
+								<![CDATA[[UP]AP //TE deactuated hardware interlock (heads AND)]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.ipSpare_1</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.ipSpare_2</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.ipSpare_3</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.ipSpare_4</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.ipCellFluidLeakage1</Name>
+							<Comment>
+								<![CDATA[Cell Facility]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.ipCellFluidLeakage2</Name>
+							<Comment>
+								<![CDATA[Cell Facility]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.ipCellGroundFault</Name>
+							<Comment>
+								<![CDATA[Cell Facility]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.ipSpare_5</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.ipSpare_6</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.ipSpare_7</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.ipSpare_8</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.ipTesterPresent</Name>
+							<Comment>
+								<![CDATA[Tester   ]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.ipTesterPowerOn</Name>
+							<Comment>
+								<![CDATA[Tester   ]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.ipTesterReady</Name>
+							<Comment>
+								<![CDATA[Tester   ]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.ipSpare_9</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.ipSpare_10</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.ipTCDrawerCylExtendRS</Name>
+							<Comment>
+								<![CDATA[RS]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.ipTCDrawerCylRetractRS</Name>
+							<Comment>
+								<![CDATA[RS]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.ipTCDrawerCylUpRS</Name>
+							<Comment>
+								<![CDATA[RS]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.ipTCDrawerCylDownRS</Name>
+							<Comment>
+								<![CDATA[RS]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.ipTCCellDoorClosed</Name>
+							<Comment>
+								<![CDATA[?? Door]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.ipTCCellDoorOpenCloseStatus</Name>
+							<Comment>
+								<![CDATA[?? Door]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.ipTesterLatchesClosed</Name>
+							<Comment>
+								<![CDATA[Tester]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.ipTCCellAbortFlowBtn</Name>
+							<Comment>
+								<![CDATA[Btn,Green AbortFlow To put the slot into a safe state for removing the AP and Tester]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.ipTCCellDoorOpenReqBtn</Name>
+							<Comment>
+								<![CDATA[Btn,White Door Open Request]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.ipTIUPresent</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.ipDrawerMaintenanceModeBtn</Name>
+							<Comment>
+								<![CDATA[Btn,Blue switch off 6-bar solenoid valve in cell for Tester and Drawer]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.aiXAxis</Name>
+							<Comment>
+								<![CDATA[Analog Input Status ---------------------------------------//]]>
+							</Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.aiYAxis</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.aiZAxis</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.aiXAxisRet</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.aiYAxisRet</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.aiZAxisRet</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.ipAPPresentSensor</Name>
+							<Comment>
+								<![CDATA[AP //BM loopback signal]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.ipAPPowerOn</Name>
+							<Comment>
+								<![CDATA[AP //24V loop back - TCC Connected & Booting, PLC boot up timer check on AP Ready signal]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.ipAPReady</Name>
+							<Comment>
+								<![CDATA[AP //TCC Communicating, toggles to Normal state once TCC FW is booted up. Intel to provide estimated boot up duration for TCC3.0. Alarm when exceeded boot time]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.ipAPDeactuatedPLC</Name>
+							<Comment>
+								<![CDATA[[UP]AP //Soft line to indicate AP is fully deactuated. All heads are UP. Safe to move]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.ipAPDeactuatedHwr</Name>
+							<Comment>
+								<![CDATA[[UP]AP //TE deactuated hardware interlock (heads AND)]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.ipSpare_1</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.ipSpare_2</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.ipSpare_3</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.ipSpare_4</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.ipCellFluidLeakage1</Name>
+							<Comment>
+								<![CDATA[Cell Facility]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.ipCellFluidLeakage2</Name>
+							<Comment>
+								<![CDATA[Cell Facility]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.ipCellGroundFault</Name>
+							<Comment>
+								<![CDATA[Cell Facility]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.ipSpare_5</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.ipSpare_6</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.ipSpare_7</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.ipSpare_8</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.ipTesterPresent</Name>
+							<Comment>
+								<![CDATA[Tester   ]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.ipTesterPowerOn</Name>
+							<Comment>
+								<![CDATA[Tester   ]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.ipTesterReady</Name>
+							<Comment>
+								<![CDATA[Tester   ]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.ipSpare_9</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.ipSpare_10</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.ipTCDrawerCylExtendRS</Name>
+							<Comment>
+								<![CDATA[RS]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.ipTCDrawerCylRetractRS</Name>
+							<Comment>
+								<![CDATA[RS]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.ipTCDrawerCylUpRS</Name>
+							<Comment>
+								<![CDATA[RS]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.ipTCDrawerCylDownRS</Name>
+							<Comment>
+								<![CDATA[RS]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.ipTCCellDoorClosed</Name>
+							<Comment>
+								<![CDATA[?? Door]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.ipTCCellDoorOpenCloseStatus</Name>
+							<Comment>
+								<![CDATA[?? Door]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.ipTesterLatchesClosed</Name>
+							<Comment>
+								<![CDATA[Tester]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.ipTCCellAbortFlowBtn</Name>
+							<Comment>
+								<![CDATA[Btn,Green AbortFlow To put the slot into a safe state for removing the AP and Tester]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.ipTCCellDoorOpenReqBtn</Name>
+							<Comment>
+								<![CDATA[Btn,White Door Open Request]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.ipTIUPresent</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.ipDrawerMaintenanceModeBtn</Name>
+							<Comment>
+								<![CDATA[Btn,Blue switch off 6-bar solenoid valve in cell for Tester and Drawer]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.aiXAxis</Name>
+							<Comment>
+								<![CDATA[Analog Input Status ---------------------------------------//]]>
+							</Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.aiYAxis</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.aiZAxis</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.aiXAxisRet</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.aiYAxisRet</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.aiZAxisRet</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.ipAPPresentSensor</Name>
+							<Comment>
+								<![CDATA[AP //BM loopback signal]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.ipAPPowerOn</Name>
+							<Comment>
+								<![CDATA[AP //24V loop back - TCC Connected & Booting, PLC boot up timer check on AP Ready signal]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.ipAPReady</Name>
+							<Comment>
+								<![CDATA[AP //TCC Communicating, toggles to Normal state once TCC FW is booted up. Intel to provide estimated boot up duration for TCC3.0. Alarm when exceeded boot time]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.ipAPDeactuatedPLC</Name>
+							<Comment>
+								<![CDATA[[UP]AP //Soft line to indicate AP is fully deactuated. All heads are UP. Safe to move]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.ipAPDeactuatedHwr</Name>
+							<Comment>
+								<![CDATA[[UP]AP //TE deactuated hardware interlock (heads AND)]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.ipSpare_1</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.ipSpare_2</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.ipSpare_3</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.ipSpare_4</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.ipCellFluidLeakage1</Name>
+							<Comment>
+								<![CDATA[Cell Facility]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.ipCellFluidLeakage2</Name>
+							<Comment>
+								<![CDATA[Cell Facility]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.ipCellGroundFault</Name>
+							<Comment>
+								<![CDATA[Cell Facility]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.ipSpare_5</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.ipSpare_6</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.ipSpare_7</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.ipSpare_8</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.ipTesterPresent</Name>
+							<Comment>
+								<![CDATA[Tester   ]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.ipTesterPowerOn</Name>
+							<Comment>
+								<![CDATA[Tester   ]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.ipTesterReady</Name>
+							<Comment>
+								<![CDATA[Tester   ]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.ipSpare_9</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.ipSpare_10</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.ipTCDrawerCylExtendRS</Name>
+							<Comment>
+								<![CDATA[RS]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.ipTCDrawerCylRetractRS</Name>
+							<Comment>
+								<![CDATA[RS]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.ipTCDrawerCylUpRS</Name>
+							<Comment>
+								<![CDATA[RS]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.ipTCDrawerCylDownRS</Name>
+							<Comment>
+								<![CDATA[RS]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.ipTCCellDoorClosed</Name>
+							<Comment>
+								<![CDATA[?? Door]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.ipTCCellDoorOpenCloseStatus</Name>
+							<Comment>
+								<![CDATA[?? Door]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.ipTesterLatchesClosed</Name>
+							<Comment>
+								<![CDATA[Tester]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.ipTCCellAbortFlowBtn</Name>
+							<Comment>
+								<![CDATA[Btn,Green AbortFlow To put the slot into a safe state for removing the AP and Tester]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.ipTCCellDoorOpenReqBtn</Name>
+							<Comment>
+								<![CDATA[Btn,White Door Open Request]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.ipTIUPresent</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.ipDrawerMaintenanceModeBtn</Name>
+							<Comment>
+								<![CDATA[Btn,Blue switch off 6-bar solenoid valve in cell for Tester and Drawer]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.aiXAxis</Name>
+							<Comment>
+								<![CDATA[Analog Input Status ---------------------------------------//]]>
+							</Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.aiYAxis</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.aiZAxis</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.aiXAxisRet</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.aiYAxisRet</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.aiZAxisRet</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbTCColumn.stTCColumnDIO.ipColumnFluid_PCW_Leakage</Name>
+							<Comment>
+								<![CDATA[LeakSensor]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbTCColumn.stTCColumnDIO.ipAllTCDrawerRetractedinCell</Name>
+							<Comment>
+								<![CDATA[BeamSensor]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbTCColumn.stTCColumnDIO.ipSystemColumnGroundFault</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbSLTCExtra.stDIO.ipRTD1</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbSLTCExtra.stDIO.ipRTD2</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbSLTCExtra.stDIO.ipHeaterCurrent1</Name>
+							<Type>DINT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbSLTCExtra.stDIO.ipHeaterCurrent2</Name>
+							<Type>DINT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbSLTCExtra.stDIO.ipHeaterCurrent3</Name>
+							<Type>DINT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbSLTCExtra.stDIO.ipHeaterCurrent4</Name>
+							<Type>DINT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbSLTCExtra.stDIO.ipTEUpRS</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbSLTCExtra.stDIO.ipTEPressRegFeedBack</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbSLTCExtra.stDIO.ipDEPressRegFeedBack</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbSLTCExtra.stDIO.ipDEPressureSensor</Name>
+							<Type>INT</Type>
+						</Var>
+					</Vars>
+					<Vars VarGrpType="2">
+						<Name>PlcTask Outputs</Name>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[1].fbTCShuttlePOCSeq.stTCPocDIO.opL1_TC_Drawer_IN</Name>
+							<Comment>
+								<![CDATA[output]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[1].fbTCShuttlePOCSeq.stTCPocDIO.opL1_TC_Drawer_OUT</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[1].fbTCShuttlePOCSeq.stTCPocDIO.opMotor_Enable</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[1].fbTCShuttlePOCSeq.stTCPocDIO.opMotor_Reset_Errors</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[1].fbTCShuttlePOCSeq.stTCPocDIO.opMotor_Homing</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[1].fbTCShuttlePOCSeq.stTCPocDIO.opMotor_Index0</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[1].fbTCShuttlePOCSeq.stTCPocDIO.opMotor_Index1</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[1].fbTCShuttlePOCSeq.stTCPocDIO.opMotor_Start_Position</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[1].fbTCShuttlePOCSeq.stTCPocDIO.opCellDrawerExtendUp</Name>
+							<Comment>
+								<![CDATA[follow actual IO name]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[1].fbTCShuttlePOCSeq.stTCPocDIO.opCellDrawerRetractDown</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[1].fbTCShuttlePOCSeq.stTCPocDIO.opMain_Incoming_Air_Valve</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[2].fbTCShuttlePOCSeq.stTCPocDIO.opL1_TC_Drawer_IN</Name>
+							<Comment>
+								<![CDATA[output]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[2].fbTCShuttlePOCSeq.stTCPocDIO.opL1_TC_Drawer_OUT</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[2].fbTCShuttlePOCSeq.stTCPocDIO.opMotor_Enable</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[2].fbTCShuttlePOCSeq.stTCPocDIO.opMotor_Reset_Errors</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[2].fbTCShuttlePOCSeq.stTCPocDIO.opMotor_Homing</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[2].fbTCShuttlePOCSeq.stTCPocDIO.opMotor_Index0</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[2].fbTCShuttlePOCSeq.stTCPocDIO.opMotor_Index1</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[2].fbTCShuttlePOCSeq.stTCPocDIO.opMotor_Start_Position</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[2].fbTCShuttlePOCSeq.stTCPocDIO.opCellDrawerExtendUp</Name>
+							<Comment>
+								<![CDATA[follow actual IO name]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[2].fbTCShuttlePOCSeq.stTCPocDIO.opCellDrawerRetractDown</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[2].fbTCShuttlePOCSeq.stTCPocDIO.opMain_Incoming_Air_Valve</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[3].fbTCShuttlePOCSeq.stTCPocDIO.opL1_TC_Drawer_IN</Name>
+							<Comment>
+								<![CDATA[output]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[3].fbTCShuttlePOCSeq.stTCPocDIO.opL1_TC_Drawer_OUT</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[3].fbTCShuttlePOCSeq.stTCPocDIO.opMotor_Enable</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[3].fbTCShuttlePOCSeq.stTCPocDIO.opMotor_Reset_Errors</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[3].fbTCShuttlePOCSeq.stTCPocDIO.opMotor_Homing</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[3].fbTCShuttlePOCSeq.stTCPocDIO.opMotor_Index0</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[3].fbTCShuttlePOCSeq.stTCPocDIO.opMotor_Index1</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[3].fbTCShuttlePOCSeq.stTCPocDIO.opMotor_Start_Position</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[3].fbTCShuttlePOCSeq.stTCPocDIO.opCellDrawerExtendUp</Name>
+							<Comment>
+								<![CDATA[follow actual IO name]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[3].fbTCShuttlePOCSeq.stTCPocDIO.opCellDrawerRetractDown</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[3].fbTCShuttlePOCSeq.stTCPocDIO.opMain_Incoming_Air_Valve</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[4].fbTCShuttlePOCSeq.stTCPocDIO.opL1_TC_Drawer_IN</Name>
+							<Comment>
+								<![CDATA[output]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[4].fbTCShuttlePOCSeq.stTCPocDIO.opL1_TC_Drawer_OUT</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[4].fbTCShuttlePOCSeq.stTCPocDIO.opMotor_Enable</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[4].fbTCShuttlePOCSeq.stTCPocDIO.opMotor_Reset_Errors</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[4].fbTCShuttlePOCSeq.stTCPocDIO.opMotor_Homing</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[4].fbTCShuttlePOCSeq.stTCPocDIO.opMotor_Index0</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[4].fbTCShuttlePOCSeq.stTCPocDIO.opMotor_Index1</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[4].fbTCShuttlePOCSeq.stTCPocDIO.opMotor_Start_Position</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[4].fbTCShuttlePOCSeq.stTCPocDIO.opCellDrawerExtendUp</Name>
+							<Comment>
+								<![CDATA[follow actual IO name]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[4].fbTCShuttlePOCSeq.stTCPocDIO.opCellDrawerRetractDown</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[4].fbTCShuttlePOCSeq.stTCPocDIO.opMain_Incoming_Air_Valve</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[5].fbTCShuttlePOCSeq.stTCPocDIO.opL1_TC_Drawer_IN</Name>
+							<Comment>
+								<![CDATA[output]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[5].fbTCShuttlePOCSeq.stTCPocDIO.opL1_TC_Drawer_OUT</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[5].fbTCShuttlePOCSeq.stTCPocDIO.opMotor_Enable</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[5].fbTCShuttlePOCSeq.stTCPocDIO.opMotor_Reset_Errors</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[5].fbTCShuttlePOCSeq.stTCPocDIO.opMotor_Homing</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[5].fbTCShuttlePOCSeq.stTCPocDIO.opMotor_Index0</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[5].fbTCShuttlePOCSeq.stTCPocDIO.opMotor_Index1</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[5].fbTCShuttlePOCSeq.stTCPocDIO.opMotor_Start_Position</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[5].fbTCShuttlePOCSeq.stTCPocDIO.opCellDrawerExtendUp</Name>
+							<Comment>
+								<![CDATA[follow actual IO name]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[5].fbTCShuttlePOCSeq.stTCPocDIO.opCellDrawerRetractDown</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[5].fbTCShuttlePOCSeq.stTCPocDIO.opMain_Incoming_Air_Valve</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[6].fbTCShuttlePOCSeq.stTCPocDIO.opL1_TC_Drawer_IN</Name>
+							<Comment>
+								<![CDATA[output]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[6].fbTCShuttlePOCSeq.stTCPocDIO.opL1_TC_Drawer_OUT</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[6].fbTCShuttlePOCSeq.stTCPocDIO.opMotor_Enable</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[6].fbTCShuttlePOCSeq.stTCPocDIO.opMotor_Reset_Errors</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[6].fbTCShuttlePOCSeq.stTCPocDIO.opMotor_Homing</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[6].fbTCShuttlePOCSeq.stTCPocDIO.opMotor_Index0</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[6].fbTCShuttlePOCSeq.stTCPocDIO.opMotor_Index1</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[6].fbTCShuttlePOCSeq.stTCPocDIO.opMotor_Start_Position</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[6].fbTCShuttlePOCSeq.stTCPocDIO.opCellDrawerExtendUp</Name>
+							<Comment>
+								<![CDATA[follow actual IO name]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[6].fbTCShuttlePOCSeq.stTCPocDIO.opCellDrawerRetractDown</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCShuttlePOC[6].fbTCShuttlePOCSeq.stTCPocDIO.opMain_Incoming_Air_Valve</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCLevel[1].fbTCLevelSeq.stTCLevelDIO.opHotAirExhaustFan</Name>
+							<Comment>
+								<![CDATA[output]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCLevel[1].fbTCLevelSeq.stTCLevelDIO.opHBI_APCellPCWValve</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCLevel[1].fbTCLevelSeq.stTCLevelDIO.opHBI_Tst_CellPCWValve</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCLevel[1].fbTCLevelSeq.stTCLevelDIO.opMain_Incoming_Air_Valve</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCLevel[1].fbTCLevelSeq.stTCLevelDIO.opAP24VDCPwr</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCLevel[1].fbTCLevelSeq.stTCLevelDIO.opAP_240AC_Pwr</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCLevel[1].fbTCLevelSeq.stTCLevelDIO.opDoorOpenReq</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCLevel[1].fbTCLevelSeq.stTCLevelDIO.opTesterInOut</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCLevel[1].fbTCLevelSeq.stTCLevelDIO.opTesterInProgress</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCLevel[1].fbTCLevelSeq.stTCLevelDIO.opAP_TIU_Skt_Air</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCLevel[1].fbTCLevelSeq.stTCLevelDIO.opDoorLock</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCLevel[1].fbTCLevelSeq.stTCLevelDIO.opAP_DIO_1</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCLevel[1].fbTCLevelSeq.stTCLevelDIO.opAP_DIO_2</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCLevel[1].fbTCLevelSeq.stTCLevelDIO.opAP_DIO_3</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCLevel[1].fbTCLevelSeq.stTCLevelDIO.opAP_DIO_4</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCLevel[1].fbTCLevelSeq.stTCLevelDIO.opAP_DIO_5</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCLevel[1].fbTCLevelSeq.stTCLevelDIO.opTesterPresent</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCLevel[1].fbTCLevelSeq.stTCLevelDIO.opAlarm</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCLevel[1].fbTCLevelSeq.stTCLevelDIO.opCellDrawerExtend</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCLevel[1].fbTCLevelSeq.stTCLevelDIO.opCellDrawerRetract</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCLevel[1].fbTCLevelSeq.stTCLevelDIO.opCellDrawerExtendUp</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCLevel[1].fbTCLevelSeq.stTCLevelDIO.opCellDrawerRetractDown</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCLevel[1].fbTCLevelSeq.stTCLevelDIO.opMotor_Enable</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCLevel[1].fbTCLevelSeq.stTCLevelDIO.opMotor_Reset_Errors</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCLevel[1].fbTCLevelSeq.stTCLevelDIO.opMotor_Homing</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCLevel[1].fbTCLevelSeq.stTCLevelDIO.opMotor_Index0</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCLevel[1].fbTCLevelSeq.stTCLevelDIO.opMotor_Index1</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCLevel[1].fbTCLevelSeq.stTCLevelDIO.opMotor_Start_Position</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCLevel[1].fbTCLevelSeq.stTCLevelDIO.opTst_240VAC_Pwr</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCLevel[1].fbTCLevelSeq.stTCLevelDIO.opSocketCleaning</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCLevel[1].fbTCLevelSeq.stTCLevelDIO.opSocketPurging</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.opAP240ACPwrEnable</Name>
+							<Comment>
+								<![CDATA[AP Power]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.opSpare_1</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.opSpare_2</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.opSpare_3</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.opDoorOpenReqLED</Name>
+							<Comment>
+								<![CDATA[PB LED]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.opAlarmLED</Name>
+							<Comment>
+								<![CDATA[Alarm LED]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.opSpare_4</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.opSpare_5</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.opTCCellAbortFlowBtnLED</Name>
+							<Comment>
+								<![CDATA[PB Abort Flow LED]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.opDrawerMaintenanceModeBtnLED</Name>
+							<Comment>
+								<![CDATA[PB Maintenance LED	switch off 6-bar solenoid valve in cell]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.opAPSafeToMoveSignal</Name>
+							<Comment>
+								<![CDATA[Input to TCC (safe to Actuate/De-actuate)]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.opAPTCCReset</Name>
+							<Comment>
+								<![CDATA[***???]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.opSpare_6</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.opSpare_7</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.opSpare_8</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.opCellLTIMValve</Name>
+							<Comment>
+								<![CDATA[***???]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.opCellDrawerCylExtend</Name>
+							<Comment>
+								<![CDATA[Cyl Ext]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.opCellDrawerCylRetract</Name>
+							<Comment>
+								<![CDATA[Cyl Ret]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.opCellDrawerCylUp</Name>
+							<Comment>
+								<![CDATA[Cyl Up]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.opCellDrawerCylDown</Name>
+							<Comment>
+								<![CDATA[Cyl Dn]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.opTst240VACPwrEnable</Name>
+							<Comment>
+								<![CDATA[Tester Power]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.opSpare_9</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.opSpare_10</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.opCellPCWValve</Name>
+							<Comment>
+								<![CDATA[???]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.opAPTIUSktAir</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.opAPTBD</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.opAPAirSupplySol</Name>
+							<Comment>
+								<![CDATA[AP Main Supply (10bar) solenoid valve]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.opTesterDrawerAirSupplySol</Name>
+							<Comment>
+								<![CDATA[Drawer and Tester (6bar) solenoid valve]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.opCell24VPowerEnable</Name>
+							<Comment>
+								<![CDATA[Turn On/Off TCC 24V Secondary Power Supply**//]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.opSpare_11</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.opSpare_12</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.opCellDoorClosed</Name>
+							<Comment>
+								<![CDATA[DoorLock]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.opAP240ACPwrEnable</Name>
+							<Comment>
+								<![CDATA[AP Power]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.opSpare_1</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.opSpare_2</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.opSpare_3</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.opDoorOpenReqLED</Name>
+							<Comment>
+								<![CDATA[PB LED]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.opAlarmLED</Name>
+							<Comment>
+								<![CDATA[Alarm LED]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.opSpare_4</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.opSpare_5</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.opTCCellAbortFlowBtnLED</Name>
+							<Comment>
+								<![CDATA[PB Abort Flow LED]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.opDrawerMaintenanceModeBtnLED</Name>
+							<Comment>
+								<![CDATA[PB Maintenance LED	switch off 6-bar solenoid valve in cell]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.opAPSafeToMoveSignal</Name>
+							<Comment>
+								<![CDATA[Input to TCC (safe to Actuate/De-actuate)]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.opAPTCCReset</Name>
+							<Comment>
+								<![CDATA[***???]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.opSpare_6</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.opSpare_7</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.opSpare_8</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.opCellLTIMValve</Name>
+							<Comment>
+								<![CDATA[***???]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.opCellDrawerCylExtend</Name>
+							<Comment>
+								<![CDATA[Cyl Ext]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.opCellDrawerCylRetract</Name>
+							<Comment>
+								<![CDATA[Cyl Ret]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.opCellDrawerCylUp</Name>
+							<Comment>
+								<![CDATA[Cyl Up]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.opCellDrawerCylDown</Name>
+							<Comment>
+								<![CDATA[Cyl Dn]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.opTst240VACPwrEnable</Name>
+							<Comment>
+								<![CDATA[Tester Power]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.opSpare_9</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.opSpare_10</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.opCellPCWValve</Name>
+							<Comment>
+								<![CDATA[???]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.opAPTIUSktAir</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.opAPTBD</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.opAPAirSupplySol</Name>
+							<Comment>
+								<![CDATA[AP Main Supply (10bar) solenoid valve]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.opTesterDrawerAirSupplySol</Name>
+							<Comment>
+								<![CDATA[Drawer and Tester (6bar) solenoid valve]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.opCell24VPowerEnable</Name>
+							<Comment>
+								<![CDATA[Turn On/Off TCC 24V Secondary Power Supply**//]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.opSpare_11</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.opSpare_12</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.opCellDoorClosed</Name>
+							<Comment>
+								<![CDATA[DoorLock]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.opAP240ACPwrEnable</Name>
+							<Comment>
+								<![CDATA[AP Power]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.opSpare_1</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.opSpare_2</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.opSpare_3</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.opDoorOpenReqLED</Name>
+							<Comment>
+								<![CDATA[PB LED]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.opAlarmLED</Name>
+							<Comment>
+								<![CDATA[Alarm LED]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.opSpare_4</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.opSpare_5</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.opTCCellAbortFlowBtnLED</Name>
+							<Comment>
+								<![CDATA[PB Abort Flow LED]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.opDrawerMaintenanceModeBtnLED</Name>
+							<Comment>
+								<![CDATA[PB Maintenance LED	switch off 6-bar solenoid valve in cell]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.opAPSafeToMoveSignal</Name>
+							<Comment>
+								<![CDATA[Input to TCC (safe to Actuate/De-actuate)]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.opAPTCCReset</Name>
+							<Comment>
+								<![CDATA[***???]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.opSpare_6</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.opSpare_7</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.opSpare_8</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.opCellLTIMValve</Name>
+							<Comment>
+								<![CDATA[***???]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.opCellDrawerCylExtend</Name>
+							<Comment>
+								<![CDATA[Cyl Ext]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.opCellDrawerCylRetract</Name>
+							<Comment>
+								<![CDATA[Cyl Ret]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.opCellDrawerCylUp</Name>
+							<Comment>
+								<![CDATA[Cyl Up]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.opCellDrawerCylDown</Name>
+							<Comment>
+								<![CDATA[Cyl Dn]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.opTst240VACPwrEnable</Name>
+							<Comment>
+								<![CDATA[Tester Power]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.opSpare_9</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.opSpare_10</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.opCellPCWValve</Name>
+							<Comment>
+								<![CDATA[???]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.opAPTIUSktAir</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.opAPTBD</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.opAPAirSupplySol</Name>
+							<Comment>
+								<![CDATA[AP Main Supply (10bar) solenoid valve]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.opTesterDrawerAirSupplySol</Name>
+							<Comment>
+								<![CDATA[Drawer and Tester (6bar) solenoid valve]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.opCell24VPowerEnable</Name>
+							<Comment>
+								<![CDATA[Turn On/Off TCC 24V Secondary Power Supply**//]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.opSpare_11</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.opSpare_12</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.opCellDoorClosed</Name>
+							<Comment>
+								<![CDATA[DoorLock]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.opAP240ACPwrEnable</Name>
+							<Comment>
+								<![CDATA[AP Power]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.opSpare_1</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.opSpare_2</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.opSpare_3</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.opDoorOpenReqLED</Name>
+							<Comment>
+								<![CDATA[PB LED]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.opAlarmLED</Name>
+							<Comment>
+								<![CDATA[Alarm LED]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.opSpare_4</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.opSpare_5</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.opTCCellAbortFlowBtnLED</Name>
+							<Comment>
+								<![CDATA[PB Abort Flow LED]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.opDrawerMaintenanceModeBtnLED</Name>
+							<Comment>
+								<![CDATA[PB Maintenance LED	switch off 6-bar solenoid valve in cell]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.opAPSafeToMoveSignal</Name>
+							<Comment>
+								<![CDATA[Input to TCC (safe to Actuate/De-actuate)]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.opAPTCCReset</Name>
+							<Comment>
+								<![CDATA[***???]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.opSpare_6</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.opSpare_7</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.opSpare_8</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.opCellLTIMValve</Name>
+							<Comment>
+								<![CDATA[***???]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.opCellDrawerCylExtend</Name>
+							<Comment>
+								<![CDATA[Cyl Ext]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.opCellDrawerCylRetract</Name>
+							<Comment>
+								<![CDATA[Cyl Ret]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.opCellDrawerCylUp</Name>
+							<Comment>
+								<![CDATA[Cyl Up]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.opCellDrawerCylDown</Name>
+							<Comment>
+								<![CDATA[Cyl Dn]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.opTst240VACPwrEnable</Name>
+							<Comment>
+								<![CDATA[Tester Power]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.opSpare_9</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.opSpare_10</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.opCellPCWValve</Name>
+							<Comment>
+								<![CDATA[???]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.opAPTIUSktAir</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.opAPTBD</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.opAPAirSupplySol</Name>
+							<Comment>
+								<![CDATA[AP Main Supply (10bar) solenoid valve]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.opTesterDrawerAirSupplySol</Name>
+							<Comment>
+								<![CDATA[Drawer and Tester (6bar) solenoid valve]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.opCell24VPowerEnable</Name>
+							<Comment>
+								<![CDATA[Turn On/Off TCC 24V Secondary Power Supply**//]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.opSpare_11</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.opSpare_12</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.opCellDoorClosed</Name>
+							<Comment>
+								<![CDATA[DoorLock]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.opAP240ACPwrEnable</Name>
+							<Comment>
+								<![CDATA[AP Power]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.opSpare_1</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.opSpare_2</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.opSpare_3</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.opDoorOpenReqLED</Name>
+							<Comment>
+								<![CDATA[PB LED]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.opAlarmLED</Name>
+							<Comment>
+								<![CDATA[Alarm LED]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.opSpare_4</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.opSpare_5</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.opTCCellAbortFlowBtnLED</Name>
+							<Comment>
+								<![CDATA[PB Abort Flow LED]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.opDrawerMaintenanceModeBtnLED</Name>
+							<Comment>
+								<![CDATA[PB Maintenance LED	switch off 6-bar solenoid valve in cell]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.opAPSafeToMoveSignal</Name>
+							<Comment>
+								<![CDATA[Input to TCC (safe to Actuate/De-actuate)]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.opAPTCCReset</Name>
+							<Comment>
+								<![CDATA[***???]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.opSpare_6</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.opSpare_7</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.opSpare_8</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.opCellLTIMValve</Name>
+							<Comment>
+								<![CDATA[***???]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.opCellDrawerCylExtend</Name>
+							<Comment>
+								<![CDATA[Cyl Ext]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.opCellDrawerCylRetract</Name>
+							<Comment>
+								<![CDATA[Cyl Ret]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.opCellDrawerCylUp</Name>
+							<Comment>
+								<![CDATA[Cyl Up]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.opCellDrawerCylDown</Name>
+							<Comment>
+								<![CDATA[Cyl Dn]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.opTst240VACPwrEnable</Name>
+							<Comment>
+								<![CDATA[Tester Power]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.opSpare_9</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.opSpare_10</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.opCellPCWValve</Name>
+							<Comment>
+								<![CDATA[???]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.opAPTIUSktAir</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.opAPTBD</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.opAPAirSupplySol</Name>
+							<Comment>
+								<![CDATA[AP Main Supply (10bar) solenoid valve]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.opTesterDrawerAirSupplySol</Name>
+							<Comment>
+								<![CDATA[Drawer and Tester (6bar) solenoid valve]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.opCell24VPowerEnable</Name>
+							<Comment>
+								<![CDATA[Turn On/Off TCC 24V Secondary Power Supply**//]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.opSpare_11</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.opSpare_12</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.opCellDoorClosed</Name>
+							<Comment>
+								<![CDATA[DoorLock]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.opAP240ACPwrEnable</Name>
+							<Comment>
+								<![CDATA[AP Power]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.opSpare_1</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.opSpare_2</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.opSpare_3</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.opDoorOpenReqLED</Name>
+							<Comment>
+								<![CDATA[PB LED]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.opAlarmLED</Name>
+							<Comment>
+								<![CDATA[Alarm LED]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.opSpare_4</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.opSpare_5</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.opTCCellAbortFlowBtnLED</Name>
+							<Comment>
+								<![CDATA[PB Abort Flow LED]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.opDrawerMaintenanceModeBtnLED</Name>
+							<Comment>
+								<![CDATA[PB Maintenance LED	switch off 6-bar solenoid valve in cell]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.opAPSafeToMoveSignal</Name>
+							<Comment>
+								<![CDATA[Input to TCC (safe to Actuate/De-actuate)]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.opAPTCCReset</Name>
+							<Comment>
+								<![CDATA[***???]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.opSpare_6</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.opSpare_7</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.opSpare_8</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.opCellLTIMValve</Name>
+							<Comment>
+								<![CDATA[***???]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.opCellDrawerCylExtend</Name>
+							<Comment>
+								<![CDATA[Cyl Ext]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.opCellDrawerCylRetract</Name>
+							<Comment>
+								<![CDATA[Cyl Ret]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.opCellDrawerCylUp</Name>
+							<Comment>
+								<![CDATA[Cyl Up]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.opCellDrawerCylDown</Name>
+							<Comment>
+								<![CDATA[Cyl Dn]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.opTst240VACPwrEnable</Name>
+							<Comment>
+								<![CDATA[Tester Power]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.opSpare_9</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.opSpare_10</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.opCellPCWValve</Name>
+							<Comment>
+								<![CDATA[???]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.opAPTIUSktAir</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.opAPTBD</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.opAPAirSupplySol</Name>
+							<Comment>
+								<![CDATA[AP Main Supply (10bar) solenoid valve]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.opTesterDrawerAirSupplySol</Name>
+							<Comment>
+								<![CDATA[Drawer and Tester (6bar) solenoid valve]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.opCell24VPowerEnable</Name>
+							<Comment>
+								<![CDATA[Turn On/Off TCC 24V Secondary Power Supply**//]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.opSpare_11</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.opSpare_12</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.opCellDoorClosed</Name>
+							<Comment>
+								<![CDATA[DoorLock]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbTCColumn.stTCColumnDIO.opHotAirExhaustFan</Name>
+							<Comment>
+								<![CDATA[MC contactor]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbSLTCExtra.stDIO.opASCOValve_1</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbSLTCExtra.stDIO.opASCOValve_2</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbSLTCExtra.stDIO.opMainIncomingAirValve</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbSLTCExtra.stDIO.opPowerEnable</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbSLTCExtra.stDIO.opAC_SSR1</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbSLTCExtra.stDIO.opAC_SSR2</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbSLTCExtra.stDIO.opAC_SSR3</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbSLTCExtra.stDIO.opAC_SSR4</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbSLTCExtra.stDIO.opWaterValve</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbSLTCExtra.stDIO.opTESolValve</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbSLTCExtra.stDIO.opDESolValve</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbSLTCExtra.stDIO.opTEPressRegAOut</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbSLTCExtra.stDIO.opDEPressRegAOut</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbSLTCExtra.stDIO.ipHeaterCurCtrl1</Name>
+							<Comment>
+								<![CDATA[<AfterConversion>
+</AfterConversion>
+<ControlBit>]]>
+							</Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbSLTCExtra.stDIO.ipHeaterCurCtrl2</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbSLTCExtra.stDIO.ipHeaterCurCtrl3</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbSLTCExtra.stDIO.ipHeaterCurCtrl4</Name>
+							<Type>INT</Type>
+						</Var>
+					</Vars>
+					<TaskPouOids>
+						<TaskPouOid Prio="6" OTCID="#x08502001"/>
+					</TaskPouOids>
+				</Instance>
+			</Project>
+		</Plc>
+		<Io>
+			<Device DevType="111" DevFlags="#x0003" AmsPort="28673" AmsNetId="5.58.224.120.2.1" RemoteName="Device 1 (EtherCAT)" Id="1">
+				<Name>Device 1 (EtherCAT)</Name>
+				<AddressInfo>
+					<Ccat>
+						<Address>-801112064</Address>
+						<Offset>131072</Offset>
+						<Size>8192</Size>
+						<BaseAddr>0</BaseAddr>
+						<BusNo>3</BusNo>
+						<SlotNo>0</SlotNo>
+						<VendorId>5612</VendorId>
+						<DeviceId>20480</DeviceId>
+						<Dma>
+							<Address>0</Address>
+							<Offset>4096</Offset>
+							<Size>256</Size>
+							<BaseAddr>2</BaseAddr>
+							<RxChn>0</RxChn>
+							<TxChn>1</TxChn>
+						</Dma>
+						<Identification>
+							<Value>498694182</Value>
+							<Version>1</Version>
+							<Size>256</Size>
+						</Identification>
+					</Ccat>
+				</AddressInfo>
+				<Image Id="1" AddrType="9" ImageType="3">
+					<Name>Image</Name>
+				</Image>
+				<Box BoxType="9099" Id="1">
+					<Name>Term 1 (EK1200)</Name>
+					<ImageId>1000</ImageId>
+					<EtherCAT PdiType="#x0100" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x04b02c52" RevisionNo="#x00001388" InfoDataState="false" PortPhys="49" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EK1200-5000 EtherCAT Power supply (2A E-Bus)" Desc="EK1200" PortABoxInfo="#x00ffffff"/>
+					<Box BoxType="9099" Id="2">
+						<Name>Term 2 (EL1889)</Name>
+						<ImageId>7</ImageId>
+						<EtherCAT SlaveType="1" PdiType="#x0104" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x07613052" RevisionNo="#x00130000" RepeatSupport="true" CheckRevisionNoType="3" PortPhys="51" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL1889 16Ch. Dig. Input 24V, 3ms, negative" Desc="EL1889" PortABoxInfo="#x01000001">
+							<SyncMan>001002000000010004000000000000000200001000010000</SyncMan>
+							<Fmmu>0000000000000000001000010100000002000000000000000000000000000000</Fmmu>
+							<Pdo Name="Channel 1" Index="#x1a00" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x6000" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 2" Index="#x1a01" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x6010" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 3" Index="#x1a02" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x6020" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 4" Index="#x1a03" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x6030" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 5" Index="#x1a04" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x6040" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 6" Index="#x1a05" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x6050" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 7" Index="#x1a06" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x6060" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 8" Index="#x1a07" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x6070" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 9" Index="#x1a08" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x6080" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 10" Index="#x1a09" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x6090" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 11" Index="#x1a0a" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x60a0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 12" Index="#x1a0b" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x60b0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 13" Index="#x1a0c" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x60c0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 14" Index="#x1a0d" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x60d0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 15" Index="#x1a0e" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x60e0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 16" Index="#x1a0f" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x60f0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+						</EtherCAT>
+					</Box>
+					<Box BoxType="9099" Id="3">
+						<Name>Term 3 (EL1889)</Name>
+						<ImageId>7</ImageId>
+						<EtherCAT SlaveType="1" PdiType="#x0104" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x07613052" RevisionNo="#x00130000" RepeatSupport="true" CheckRevisionNoType="3" PortPhys="51" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL1889 16Ch. Dig. Input 24V, 3ms, negative" Desc="EL1889" PortABoxInfo="#x01000002">
+							<SyncMan>001002000000010004000000000000000200001000010000</SyncMan>
+							<Fmmu>0000000000000000001000010100000002000000000000000000000000000000</Fmmu>
+							<Pdo Name="Channel 1" Index="#x1a00" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x6000" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 2" Index="#x1a01" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x6010" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 3" Index="#x1a02" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x6020" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 4" Index="#x1a03" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x6030" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 5" Index="#x1a04" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x6040" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 6" Index="#x1a05" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x6050" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 7" Index="#x1a06" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x6060" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 8" Index="#x1a07" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x6070" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 9" Index="#x1a08" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x6080" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 10" Index="#x1a09" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x6090" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 11" Index="#x1a0a" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x60a0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 12" Index="#x1a0b" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x60b0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 13" Index="#x1a0c" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x60c0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 14" Index="#x1a0d" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x60d0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 15" Index="#x1a0e" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x60e0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 16" Index="#x1a0f" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x60f0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+						</EtherCAT>
+					</Box>
+					<Box BoxType="9099" Id="4">
+						<Name>Term 4 (EL2889)</Name>
+						<ImageId>1001</ImageId>
+						<EtherCAT SlaveType="1" PdiType="#x0104" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x0b493052" RevisionNo="#x00120000" RepeatSupport="true" PortPhys="51" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL2889 16Ch. Dig. Output 24V, 0.5A, negative" Desc="EL2889" PortABoxInfo="#x01000003">
+							<SyncMan>000f01004400010003000000000000000100000f44090000</SyncMan>
+							<SyncMan>010f01004400010003000000000000000100010f44090000</SyncMan>
+							<Fmmu>0000000000000000000f00020100000001000000000000000000000000000000</Fmmu>
+							<Pdo Name="Channel 1" Index="#x1600" InOut="1" Flags="#x0011" SyncMan="0">
+								<Entry Name="Output" Index="#x7000" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 2" Index="#x1601" InOut="1" Flags="#x0011" SyncMan="0">
+								<Entry Name="Output" Index="#x7010" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 3" Index="#x1602" InOut="1" Flags="#x0011" SyncMan="0">
+								<Entry Name="Output" Index="#x7020" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 4" Index="#x1603" InOut="1" Flags="#x0011" SyncMan="0">
+								<Entry Name="Output" Index="#x7030" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 5" Index="#x1604" InOut="1" Flags="#x0011" SyncMan="0">
+								<Entry Name="Output" Index="#x7040" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 6" Index="#x1605" InOut="1" Flags="#x0011" SyncMan="0">
+								<Entry Name="Output" Index="#x7050" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 7" Index="#x1606" InOut="1" Flags="#x0011" SyncMan="0">
+								<Entry Name="Output" Index="#x7060" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 8" Index="#x1607" InOut="1" Flags="#x0011" SyncMan="0">
+								<Entry Name="Output" Index="#x7070" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 9" Index="#x1608" InOut="1" Flags="#x0011" SyncMan="1">
+								<Entry Name="Output" Index="#x7080" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 10" Index="#x1609" InOut="1" Flags="#x0011" SyncMan="1">
+								<Entry Name="Output" Index="#x7090" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 11" Index="#x160a" InOut="1" Flags="#x0011" SyncMan="1">
+								<Entry Name="Output" Index="#x70a0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 12" Index="#x160b" InOut="1" Flags="#x0011" SyncMan="1">
+								<Entry Name="Output" Index="#x70b0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 13" Index="#x160c" InOut="1" Flags="#x0011" SyncMan="1">
+								<Entry Name="Output" Index="#x70c0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 14" Index="#x160d" InOut="1" Flags="#x0011" SyncMan="1">
+								<Entry Name="Output" Index="#x70d0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 15" Index="#x160e" InOut="1" Flags="#x0011" SyncMan="1">
+								<Entry Name="Output" Index="#x70e0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 16" Index="#x160f" InOut="1" Flags="#x0011" SyncMan="1">
+								<Entry Name="Output" Index="#x70f0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+						</EtherCAT>
+					</Box>
+					<Box BoxType="9099" Id="5">
+						<Name>Term 5 (EL6070-0033)</Name>
+						<ImageId>1002</ImageId>
+						<EtherCAT SlaveType="2" PdiType="#x0005" MboxDataLinkLayer="true" StateMBoxPolling="true" CycleMBoxPollingTime="0" CoeType="35" FoeType="1" VendorId="#x00000002" ProductCode="#x17b63052" RevisionNo="#x00120021" InfoDataAddr="true" RepeatSupport="true" TimeoutMailbox2="3000" CheckRevisionNoType="3" PortPhys="51" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL6070-0033 1Ch. Licence key terminal, individual licences" Desc="EL6070-0033" PortABoxInfo="#x01000004">
+							<SyncMan>001000012600010001000000300000010001001026010000</SyncMan>
+							<SyncMan>001100012200010002000000300000010001001122010000</SyncMan>
+							<Fmmu>00000000000000000d0800010100000003000000000000000000000000000000</Fmmu>
+							<CoeProfile ProfileNo="43914121" DisplayName="Licensing"/>
+						</EtherCAT>
+					</Box>
+					<Box BoxType="9099" Id="6">
+						<Name>Term 6 (EL9011)</Name>
+						<ImageId>1003</ImageId>
+						<EtherCAT CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x23333050" InfoDataState="false" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL9011 End Terminal" Desc="EL9011" PortABoxInfo="#x01000005"/>
+					</Box>
+				</Box>
+				<EtherCAT/>
+			</Device>
+			<Device DevType="109" DevFlags="#x0004" Id="2">
+				<Name>Device 2 (RT-Ethernet Adapter)</Name>
+				<AddressInfo>
+					<Pnp>
+						<DeviceDesc>Local Area Connection 2 (TwinCAT-Intel PCI Ethernet</DeviceDesc>
+						<DeviceName>\DEVICE\{CA57B885-2C9F-441E-A698-CD5505F62449}</DeviceName>
+						<DeviceData>0001053ae079</DeviceData>
+					</Pnp>
+				</AddressInfo>
+				<Ethernet DeviceDesc="Local Area Connection 2 (TwinCAT-Intel PCI Ethernet Adapter (Gigabit) #2)" Ports="8" VLanMode="2" VLanIds="0a0014001e00280032003c00460050005a00">
+					<Esl SyncSlaveProtocolPort="-1"/>
+				</Ethernet>
+			</Device>
+			<Device DevType="111" DevFlags="#x0003" AmsPort="28676" AmsNetId="5.58.224.120.5.1" RemoteName="Device 4 (EtherCAT)" Id="4">
+				<Name>Device 4 (EtherCAT)</Name>
+				<AddressInfo>
+					<TcCom>
+						<ObjectId>#x03010026</ObjectId>
+					</TcCom>
+				</AddressInfo>
+				<Image Id="4" AddrType="9" ImageType="3">
+					<Name>Image</Name>
+				</Image>
+				<Box BoxType="9099" Id="7">
+					<Name>Box 7 (CU2508)</Name>
+					<ImageId>1004</ImageId>
+					<EtherCAT SlaveType="1" PdiType="#x0100" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x09cc5432" PortPhys="17" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="CU2508 Ethernet Port" Desc="CU2508" PortABoxInfo="#x00ffffff"/>
+				</Box>
+				<Box BoxType="9099" Id="8">
+					<Name>Term 8 (EK1101)</Name>
+					<ImageId>1005</ImageId>
+					<EtherCAT SlaveType="1" PdiType="#x0d04" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x044d2c52" RevisionNo="#x00120000" PortPhys="305" IdentificationAdo="4096" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EK1101 EtherCAT Coupler (2A E-Bus, ID switch)" Desc="EK1101" PortABoxInfo="#x01000007">
+						<SyncMan>001002000000010004000000000000000000001000000000</SyncMan>
+						<Fmmu>0000000000000000001000010100000002000000000000000000000000000000</Fmmu>
+						<Pdo Name="ID" Index="#x1a00" Flags="#x0010" SyncMan="0">
+							<Entry Name="ID" Index="#x6000" Sub="#x01">
+								<Type>UINT</Type>
+							</Entry>
+						</Pdo>
+					</EtherCAT>
+					<Box BoxType="9099" Id="9">
+						<Name>Term 9 (EL1889)</Name>
+						<ImageId>7</ImageId>
+						<EtherCAT SlaveType="1" PdiType="#x0104" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x07613052" RevisionNo="#x00130000" RepeatSupport="true" CheckRevisionNoType="3" PortPhys="51" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL1889 16Ch. Dig. Input 24V, 3ms, negative" Desc="EL1889" PortABoxInfo="#x01000008">
+							<SyncMan>001002000000010004000000000000000200001000010000</SyncMan>
+							<Fmmu>0000000000000000001000010100000002000000000000000000000000000000</Fmmu>
+							<Pdo Name="Channel 1" Index="#x1a00" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x6000" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 2" Index="#x1a01" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x6010" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 3" Index="#x1a02" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x6020" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 4" Index="#x1a03" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x6030" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 5" Index="#x1a04" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x6040" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 6" Index="#x1a05" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x6050" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 7" Index="#x1a06" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x6060" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 8" Index="#x1a07" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x6070" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 9" Index="#x1a08" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x6080" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 10" Index="#x1a09" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x6090" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 11" Index="#x1a0a" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x60a0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 12" Index="#x1a0b" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x60b0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 13" Index="#x1a0c" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x60c0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 14" Index="#x1a0d" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x60d0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 15" Index="#x1a0e" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x60e0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 16" Index="#x1a0f" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x60f0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+						</EtherCAT>
+					</Box>
+					<Box BoxType="9099" Id="10">
+						<Name>Term 10 (EL1889)</Name>
+						<ImageId>7</ImageId>
+						<EtherCAT SlaveType="1" PdiType="#x0104" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x07613052" RevisionNo="#x00130000" RepeatSupport="true" CheckRevisionNoType="3" PortPhys="51" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL1889 16Ch. Dig. Input 24V, 3ms, negative" Desc="EL1889" PortABoxInfo="#x01000009">
+							<SyncMan>001002000000010004000000000000000200001000010000</SyncMan>
+							<Fmmu>0000000000000000001000010100000002000000000000000000000000000000</Fmmu>
+							<Pdo Name="Channel 1" Index="#x1a00" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x6000" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 2" Index="#x1a01" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x6010" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 3" Index="#x1a02" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x6020" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 4" Index="#x1a03" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x6030" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 5" Index="#x1a04" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x6040" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 6" Index="#x1a05" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x6050" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 7" Index="#x1a06" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x6060" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 8" Index="#x1a07" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x6070" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 9" Index="#x1a08" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x6080" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 10" Index="#x1a09" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x6090" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 11" Index="#x1a0a" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x60a0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 12" Index="#x1a0b" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x60b0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 13" Index="#x1a0c" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x60c0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 14" Index="#x1a0d" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x60d0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 15" Index="#x1a0e" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x60e0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 16" Index="#x1a0f" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x60f0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+						</EtherCAT>
+					</Box>
+					<Box BoxType="9099" Id="11">
+						<Name>Term 11 (EL2889)</Name>
+						<ImageId>1001</ImageId>
+						<EtherCAT SlaveType="1" PdiType="#x0104" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x0b493052" RevisionNo="#x00120000" RepeatSupport="true" PortPhys="51" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL2889 16Ch. Dig. Output 24V, 0.5A, negative" Desc="EL2889" PortABoxInfo="#x0100000a">
+							<SyncMan>000f01004400010003000000000000000100000f44090000</SyncMan>
+							<SyncMan>010f01004400010003000000000000000100010f44090000</SyncMan>
+							<Fmmu>0000000000000000000f00020100000001000000000000000000000000000000</Fmmu>
+							<Pdo Name="Channel 1" Index="#x1600" InOut="1" Flags="#x0011" SyncMan="0">
+								<Entry Name="Output" Index="#x7000" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 2" Index="#x1601" InOut="1" Flags="#x0011" SyncMan="0">
+								<Entry Name="Output" Index="#x7010" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 3" Index="#x1602" InOut="1" Flags="#x0011" SyncMan="0">
+								<Entry Name="Output" Index="#x7020" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 4" Index="#x1603" InOut="1" Flags="#x0011" SyncMan="0">
+								<Entry Name="Output" Index="#x7030" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 5" Index="#x1604" InOut="1" Flags="#x0011" SyncMan="0">
+								<Entry Name="Output" Index="#x7040" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 6" Index="#x1605" InOut="1" Flags="#x0011" SyncMan="0">
+								<Entry Name="Output" Index="#x7050" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 7" Index="#x1606" InOut="1" Flags="#x0011" SyncMan="0">
+								<Entry Name="Output" Index="#x7060" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 8" Index="#x1607" InOut="1" Flags="#x0011" SyncMan="0">
+								<Entry Name="Output" Index="#x7070" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 9" Index="#x1608" InOut="1" Flags="#x0011" SyncMan="1">
+								<Entry Name="Output" Index="#x7080" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 10" Index="#x1609" InOut="1" Flags="#x0011" SyncMan="1">
+								<Entry Name="Output" Index="#x7090" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 11" Index="#x160a" InOut="1" Flags="#x0011" SyncMan="1">
+								<Entry Name="Output" Index="#x70a0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 12" Index="#x160b" InOut="1" Flags="#x0011" SyncMan="1">
+								<Entry Name="Output" Index="#x70b0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 13" Index="#x160c" InOut="1" Flags="#x0011" SyncMan="1">
+								<Entry Name="Output" Index="#x70c0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 14" Index="#x160d" InOut="1" Flags="#x0011" SyncMan="1">
+								<Entry Name="Output" Index="#x70d0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 15" Index="#x160e" InOut="1" Flags="#x0011" SyncMan="1">
+								<Entry Name="Output" Index="#x70e0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 16" Index="#x160f" InOut="1" Flags="#x0011" SyncMan="1">
+								<Entry Name="Output" Index="#x70f0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+						</EtherCAT>
+					</Box>
+					<Box BoxType="9099" Id="12">
+						<Name>Term 12 (EL2889)</Name>
+						<ImageId>1001</ImageId>
+						<EtherCAT SlaveType="1" PdiType="#x0104" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x0b493052" RevisionNo="#x00120000" RepeatSupport="true" PortPhys="51" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL2889 16Ch. Dig. Output 24V, 0.5A, negative" Desc="EL2889" PortABoxInfo="#x0100000b">
+							<SyncMan>000f01004400010003000000000000000100000f44090000</SyncMan>
+							<SyncMan>010f01004400010003000000000000000100010f44090000</SyncMan>
+							<Fmmu>0000000000000000000f00020100000001000000000000000000000000000000</Fmmu>
+							<Pdo Name="Channel 1" Index="#x1600" InOut="1" Flags="#x0011" SyncMan="0">
+								<Entry Name="Output" Index="#x7000" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 2" Index="#x1601" InOut="1" Flags="#x0011" SyncMan="0">
+								<Entry Name="Output" Index="#x7010" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 3" Index="#x1602" InOut="1" Flags="#x0011" SyncMan="0">
+								<Entry Name="Output" Index="#x7020" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 4" Index="#x1603" InOut="1" Flags="#x0011" SyncMan="0">
+								<Entry Name="Output" Index="#x7030" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 5" Index="#x1604" InOut="1" Flags="#x0011" SyncMan="0">
+								<Entry Name="Output" Index="#x7040" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 6" Index="#x1605" InOut="1" Flags="#x0011" SyncMan="0">
+								<Entry Name="Output" Index="#x7050" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 7" Index="#x1606" InOut="1" Flags="#x0011" SyncMan="0">
+								<Entry Name="Output" Index="#x7060" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 8" Index="#x1607" InOut="1" Flags="#x0011" SyncMan="0">
+								<Entry Name="Output" Index="#x7070" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 9" Index="#x1608" InOut="1" Flags="#x0011" SyncMan="1">
+								<Entry Name="Output" Index="#x7080" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 10" Index="#x1609" InOut="1" Flags="#x0011" SyncMan="1">
+								<Entry Name="Output" Index="#x7090" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 11" Index="#x160a" InOut="1" Flags="#x0011" SyncMan="1">
+								<Entry Name="Output" Index="#x70a0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 12" Index="#x160b" InOut="1" Flags="#x0011" SyncMan="1">
+								<Entry Name="Output" Index="#x70b0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 13" Index="#x160c" InOut="1" Flags="#x0011" SyncMan="1">
+								<Entry Name="Output" Index="#x70c0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 14" Index="#x160d" InOut="1" Flags="#x0011" SyncMan="1">
+								<Entry Name="Output" Index="#x70d0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 15" Index="#x160e" InOut="1" Flags="#x0011" SyncMan="1">
+								<Entry Name="Output" Index="#x70e0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 16" Index="#x160f" InOut="1" Flags="#x0011" SyncMan="1">
+								<Entry Name="Output" Index="#x70f0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+						</EtherCAT>
+					</Box>
+					<Box BoxType="9099" Id="13">
+						<Name>Term 7 (EL9011)</Name>
+						<ImageId>1003</ImageId>
+						<EtherCAT CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x23333050" InfoDataState="false" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL9011 End Terminal" Desc="EL9011" PortABoxInfo="#x0100000c"/>
+					</Box>
+				</Box>
+				<EtherCAT/>
+			</Device>
+		</Io>
+	</Project>
+	<Mappings>
+		<MappingInfo Identifier="{00000000-2001-0850-0020-500810000403}" Id="#x02030010"/>
+		<MappingInfo Identifier="{00000000-2001-0850-0020-500840000403}" Id="#x02030020"/>
+		<OwnerA Name="TIPC^TC^TC Instance">
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 2 (EL1889)">
+				<Link VarA="PlcTask Inputs^GVL_TC.fbTCColumn.stTCColumnDIO.ipColumnFluid_PCW_Leakage" VarB="Channel 1^Input"/>
+			</OwnerB>
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 3 (EL1889)">
+				<Link VarA="PlcTask Inputs^GVL_TC.fbTCColumn.stTCColumnDIO.ipSystemColumnGroundFault" VarB="Channel 2^Input"/>
+			</OwnerB>
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 4 (EL2889)">
+				<Link VarA="PlcTask Outputs^GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.opTesterDrawerAirSupplySol" VarB="Channel 16^Output"/>
+				<Link VarA="PlcTask Outputs^GVL_TC.fbTCColumn.stTCColumnDIO.opHotAirExhaustFan" VarB="Channel 9^Output"/>
+			</OwnerB>
+			<OwnerB Name="TIID^Device 4 (EtherCAT)^Term 8 (EK1101)^Term 10 (EL1889)">
+				<Link VarA="PlcTask Inputs^GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.ipDrawerMaintenanceModeBtn" VarB="Channel 16^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.ipSpare_10" VarB="Channel 5^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.ipSpare_9" VarB="Channel 4^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.ipTCCellAbortFlowBtn" VarB="Channel 13^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.ipTCCellDoorClosed" VarB="Channel 10^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.ipTCCellDoorOpenCloseStatus" VarB="Channel 11^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.ipTCCellDoorOpenReqBtn" VarB="Channel 14^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.ipTCDrawerCylDownRS" VarB="Channel 9^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.ipTCDrawerCylExtendRS" VarB="Channel 6^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.ipTCDrawerCylRetractRS" VarB="Channel 7^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.ipTCDrawerCylUpRS" VarB="Channel 8^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.ipTIUPresent" VarB="Channel 15^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.ipTesterLatchesClosed" VarB="Channel 12^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.ipTesterPowerOn" VarB="Channel 2^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.ipTesterPresent" VarB="Channel 1^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.ipTesterReady" VarB="Channel 3^Input"/>
+			</OwnerB>
+			<OwnerB Name="TIID^Device 4 (EtherCAT)^Term 8 (EK1101)^Term 11 (EL2889)">
+				<Link VarA="PlcTask Outputs^GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.opAP240ACPwrEnable" VarB="Channel 1^Output"/>
+				<Link VarA="PlcTask Outputs^GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.opAlarmLED" VarB="Channel 6^Output"/>
+				<Link VarA="PlcTask Outputs^GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.opDoorOpenReqLED" VarB="Channel 5^Output"/>
+				<Link VarA="PlcTask Outputs^GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.opDrawerMaintenanceModeBtnLED" VarB="Channel 10^Output"/>
+				<Link VarA="PlcTask Outputs^GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.opTCCellAbortFlowBtnLED" VarB="Channel 9^Output"/>
+			</OwnerB>
+			<OwnerB Name="TIID^Device 4 (EtherCAT)^Term 8 (EK1101)^Term 12 (EL2889)">
+				<Link VarA="PlcTask Outputs^GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.opAPTBD" VarB="Channel 10^Output"/>
+				<Link VarA="PlcTask Outputs^GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.opAPTIUSktAir" VarB="Channel 9^Output"/>
+				<Link VarA="PlcTask Outputs^GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.opCell24VPowerEnable" VarB="Channel 13^Output"/>
+				<Link VarA="PlcTask Outputs^GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.opCellDoorClosed" VarB="Channel 16^Output"/>
+				<Link VarA="PlcTask Outputs^GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.opCellDrawerCylDown" VarB="Channel 4^Output"/>
+				<Link VarA="PlcTask Outputs^GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.opCellDrawerCylExtend" VarB="Channel 1^Output"/>
+				<Link VarA="PlcTask Outputs^GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.opCellDrawerCylRetract" VarB="Channel 2^Output"/>
+				<Link VarA="PlcTask Outputs^GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.opCellDrawerCylUp" VarB="Channel 3^Output"/>
+				<Link VarA="PlcTask Outputs^GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.opTst240VACPwrEnable" VarB="Channel 5^Output"/>
+			</OwnerB>
+			<OwnerB Name="TIID^Device 4 (EtherCAT)^Term 8 (EK1101)^Term 9 (EL1889)">
+				<Link VarA="PlcTask Inputs^GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.ipCellFluidLeakage1" VarB="Channel 10^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.ipCellFluidLeakage2" VarB="Channel 11^Input"/>
+			</OwnerB>
+		</OwnerA>
+	</Mappings>
+</TcSmProject>

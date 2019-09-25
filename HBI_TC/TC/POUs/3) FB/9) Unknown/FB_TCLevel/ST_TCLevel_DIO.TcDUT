@@ -1,0 +1,95 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <DUT Name="ST_TCLevel_DIO" Id="{04c06eb8-9dc2-422b-ab3b-6af3e766f398}">
+    <Declaration><![CDATA[TYPE ST_TCLevel_DIO :
+STRUCT
+	//input
+	ipColumnFluid_PCW_Leakage AT %I*: BOOL;
+	ipPressure_Switch_Error AT %I*: BOOL;
+	
+	ipCellGroundFault AT %I*: BOOL;
+	ipExhaustFanOk AT %I*: BOOL;
+	
+	ipAPPresentSensor		AT %I*: BOOL;
+	ipAPPowerOn	 			AT %I*: BOOL;
+	ipAPReady				AT %I*: BOOL;
+	ipAPDeactuatedPLC		AT %I*: BOOL;
+	ipAPDeactuatedHwr		AT %I*: BOOL;
+	ipAPActuatedPLC		AT %I*: BOOL;
+
+	ipAP_DIO_1			AT %I*: BOOL;
+	ipAP_DIO_2			AT %I*: BOOL;
+	ipAP_DIO_3			AT %I*: BOOL;
+	ipAP_DIO_4			AT %I*: BOOL;
+	ipAP_DIO_5			AT %I*: BOOL;
+	
+	ipTesterPresent		AT %I*: BOOL;
+	ipTesterPowerOn		AT %I*: BOOL;
+	ipTesterReady		AT %I*: BOOL;
+	ipTesterSpareOut1		AT %I*: BOOL;
+	ipTesterSpareOut2		AT %I*: BOOL;
+	
+	ipMotor_Ready 						AT %I*: BOOL;
+	ipMotor_Home_Position 				AT %I*: BOOL;
+	ipMotor_Position_Reached 			AT %I*: BOOL;
+	ipMotor_Ps_Table_Active 			AT %I*: BOOL;
+	ipMotor_Error 						AT %I*: BOOL;
+	
+	ipTCDrawerExtendedoutCell		AT %I*: BOOL;
+	ipTCDrawerRetractedinCell		AT %I*: BOOL;
+	ipTCDrawerExtendedupCell		AT %I*: BOOL;
+	ipTCDrawerRetracteddownCell		AT %I*: BOOL;
+	
+	ipTCCellDoorLock	AT %I*: BOOL;
+	ipTCCellDoorClosed		AT %I*: BOOL;
+	ipTesterLatchesClosed		AT %I*: BOOL;
+	ipCellFluidLeakage		AT %I*: BOOL;
+	ipShuttleFluidLeakage		AT %I*: BOOL;
+	ipButtonLockDoor		AT %I*: BOOL;
+	ipButtonTesterInOut		AT %I*: BOOL;
+	
+	//output
+	opHotAirExhaustFan AT %Q*: BOOL;
+	opHBI_APCellPCWValve AT %Q*: BOOL;
+	opHBI_Tst_CellPCWValve  AT %Q*: BOOL;
+	opMain_Incoming_Air_Valve AT %Q*: BOOL;
+	
+	opAP24VDCPwr  AT %Q*: BOOL;
+	opAP_240AC_Pwr  AT %Q*: BOOL; 
+	
+	opDoorOpenReq AT %Q*: BOOL;
+	opTesterInOut AT %Q*: BOOL;
+	opTesterInProgress AT %Q*: BOOL;
+	opAP_TIU_Skt_Air AT %Q*: BOOL;
+	opDoorLock AT %Q*: BOOL;
+	
+	opAP_DIO_1 AT %Q*: BOOL;
+	opAP_DIO_2 AT %Q*: BOOL;
+	opAP_DIO_3 AT %Q*: BOOL;
+	opAP_DIO_4 AT %Q*: BOOL;
+	opAP_DIO_5 AT %Q*: BOOL;
+	
+	opTesterPresent AT %Q*: BOOL;
+	opAlarm AT %Q*: BOOL;
+	
+	opCellDrawerExtend AT %Q*: BOOL;
+	opCellDrawerRetract AT %Q*: BOOL;
+	opCellDrawerExtendUp AT %Q*: BOOL;
+	opCellDrawerRetractDown AT %Q*: BOOL;
+	
+	opMotor_Enable						AT %Q*: BOOL;
+	opMotor_Reset_Errors				AT %Q*: BOOL;
+	opMotor_Homing						AT %Q*: BOOL;
+	opMotor_Index0						AT %Q*: BOOL;
+	opMotor_Index1						AT %Q*: BOOL;
+	opMotor_Start_Position				AT %Q*: BOOL;
+	
+	opTst_240VAC_Pwr AT %Q*: BOOL;
+	
+	opSocketCleaning AT %Q*: BOOL;
+	opSocketPurging AT %Q*: BOOL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,805 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <POU Name="FB_DebugColumn" Id="{a7017636-c9e1-403a-a9f7-6b0925000aa6}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_DebugColumn
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR	
+	fb_DebugCart_Motor				: FB_DCMotor;
+	
+	stDebugColumnDIO				: ST_DebugColumnDIO;
+	stDebugColumnVIO				: ST_DebugColumnVIO;
+	stDebugColumnBIO				: ST_DebugColumnBIO;
+	
+	//debug station
+	stDebugStationDIO					:ST_DebugStation_DIO;
+	stDebugStationVIO					:ST_DebugStation_VIO;
+	stDebugStationBIO					:ST_DebugStation_BIO;
+	
+	fbBD_ipBdoor 					: Tc3_HBI_Utilities.FB_BackDoor_Digital;
+	fb_facility_DewPoint_OFA6Bar 	: FB_Facility;
+	
+	timInc 							: TON;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[Conversion(isSimulation:=bAnalogIOSim);
+M_IOMapping();
+M_PCW_Cyclic();
+
+fb_DebugCart_Motor();]]></ST>
+    </Implementation>
+    <Method Name="Conversion" Id="{51823aa7-0cba-4746-93d5-cd64ea2d0196}">
+      <Declaration><![CDATA[METHOD Conversion : BOOL
+VAR_INPUT
+	isSimulation:BOOL;
+END_VAR
+VAR
+	tempSimIpt:LREAL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF isSimulation THEN
+	//GetRand(Seed:=0,Num=>tempSimIpt);
+	//stDebugColumnDIO.simDBColumnPCWRegularFlowSensor := tempSimIpt*10000;
+	stDebugColumnDIO.fbSimDBColumnPCWRegularFlowSensor(Mn:=spDBColumnPCWRegularFlowSensor.iMn, mx:=spDBColumnPCWRegularFlowSensor.iMx, Sen:= stDebugColumnDIO.simDBColumnPCWRegularFlowSensor);
+	//stDebugColumnDIO.simDBColumnPCWRegularFlowSensor := INC(IN:=LREAL_TO_INT (stDebugColumnDIO.simDBColumnPCWRegularFlowSensor));													
+	stDebugColumnDIO.ipDBColumnPCWRegularFlowSensor	:= 	ANLG_TO_ABC(iMn:= spDBColumnPCWRegularFlowSensor.iMn, 
+																	iMx:= spDBColumnPCWRegularFlowSensor.iMx, 
+																	oMn:= spDBColumnPCWRegularFlowSensor.oMn, 
+																	oMx:= spDBColumnPCWRegularFlowSensor.oMx, 
+																	ofs:= spDBColumnPCWRegularFlowSensor.ofs, 
+																	val:= LREAL_TO_INT(stDebugColumnDIO.simDBColumnPCWRegularFlowSensor) , 
+																	b  := spDBColumnPCWRegularFlowSensor.b);
+	//GetRand(Seed:=0,Num=>tempSimIpt);
+	//stDebugColumnDIO.simDBColumnPCWSupplyPressure := tempSimIpt*10000;
+	stDebugColumnDIO.fbSimDBColumnPCWSupplyPressure(Mn:=spDBColumnPCWSupplyPressure.iMn, mx:=spDBColumnPCWSupplyPressure.iMx, Sen:= stDebugColumnDIO.simDBColumnPCWSupplyPressure);
+	//stDebugColumnDIO.simDBColumnPCWSupplyPressure := INC(IN:=LREAL_TO_INT (stDebugColumnDIO.simDBColumnPCWSupplyPressure));													
+	stDebugColumnDIO.ipDBColumnPCWSupplyPressure		:= 	ANLG_TO_ABC(iMn:= spDBColumnPCWSupplyPressure.iMn, 
+																	iMx:= spDBColumnPCWSupplyPressure.iMx, 
+																	oMn:= spDBColumnPCWSupplyPressure.oMn, 
+																	oMx:= spDBColumnPCWSupplyPressure.oMx, 
+																	ofs:= spDBColumnPCWSupplyPressure.ofs, 
+																	val:= LREAL_TO_INT(stDebugColumnDIO.simDBColumnPCWSupplyPressure) , 
+																	b  := spDBColumnPCWSupplyPressure.b);																	
+	//GetRand(Seed:=0,Num=>tempSimIpt);
+	//stDebugColumnDIO.simDBColumnPCWReturnPressure := tempSimIpt*10000;
+	stDebugColumnDIO.fbSimDBColumnPCWReturnPressure(Mn:=spDBColumnPCWReturnPressure.iMn, mx:=spDBColumnPCWReturnPressure.iMx, Sen:= stDebugColumnDIO.simDBColumnPCWReturnPressure);
+	//stDebugColumnDIO.simDBColumnPCWReturnPressure := INC(IN:=LREAL_TO_INT (stDebugColumnDIO.simDBColumnPCWReturnPressure));															
+	stDebugColumnDIO.ipDBColumnPCWReturnPressure		:= 	ANLG_TO_ABC(iMn:= spDBColumnPCWReturnPressure.iMn, 
+																	iMx:= spDBColumnPCWReturnPressure.iMx, 
+																	oMn:= spDBColumnPCWReturnPressure.oMn, 
+																	oMx:= spDBColumnPCWReturnPressure.oMx, 
+																	ofs:= spDBColumnPCWReturnPressure.ofs, 
+																	val:= LREAL_TO_INT(stDebugColumnDIO.simDBColumnPCWReturnPressure) , 
+																	b  := spDBColumnPCWReturnPressure.b);
+	//GetRand(Seed:=0,Num=>tempSimIpt);
+	//stDebugColumnDIO.simDBColumnTstAirPressure := tempSimIpt*10000;
+	stDebugColumnDIO.fbSimDBColumnTstAirPressure(Mn:=spDBColumnTstAirPressure.iMn, mx:=spDBColumnTstAirPressure.iMx, Sen:= stDebugColumnDIO.simDBColumnTstAirPressure);
+	//stDebugColumnDIO.simDBColumnTstAirPressure := INC(IN:=LREAL_TO_INT (stDebugColumnDIO.simDBColumnTstAirPressure));														
+	stDebugColumnDIO.ipDBColumnTstAirPressure	:= 	ANLG_TO_ABC(iMn:= spDBColumnTstAirPressure.iMn, 
+					 												iMx:= spDBColumnTstAirPressure.iMx, 
+																	oMn:= spDBColumnTstAirPressure.oMn, 
+																	oMx:= spDBColumnTstAirPressure.oMx, 
+																	ofs:= spDBColumnTstAirPressure.ofs, 
+																	val:= LREAL_TO_INT(stDebugColumnDIO.simDBColumnTstAirPressure) , 
+																	b  := spDBColumnTstAirPressure.b);
+	//GetRand(Seed:=0,Num=>tempSimIpt);
+	//stDebugColumnDIO.simDBColumnAPAirPressure := tempSimIpt*10000;
+	stDebugColumnDIO.fbSimDBColumnAPAirPressure(Mn:=spDBColumnAPAirPressure.iMn, mx:=spDBColumnAPAirPressure.iMx, Sen:= stDebugColumnDIO.simDBColumnAPAirPressure);
+	//stDebugColumnDIO.simDBColumnAPAirPressure := INC(IN:=LREAL_TO_INT (stDebugColumnDIO.simDBColumnAPAirPressure));															
+	stDebugColumnDIO.ipDBColumnAPAirPressure	:= 	ANLG_TO_ABC(iMn:= spDBColumnAPAirPressure.iMn, 
+																	iMx:= spDBColumnAPAirPressure.iMx, 
+																	oMn:= spDBColumnAPAirPressure.oMn, 
+																	oMx:= spDBColumnAPAirPressure.oMx, 
+																	ofs:= spDBColumnAPAirPressure.ofs, 
+																	val:= LREAL_TO_INT(stDebugColumnDIO.simDBColumnAPAirPressure) , 
+																	b  := spDBColumnAPAirPressure.b);
+	//GetRand(Seed:=0,Num=>tempSimIpt);
+	//stDebugColumnDIO.simDBColumnDewPointSensor := tempSimIpt*10000;
+	stDebugColumnDIO.fbSimDBColumnDewPointSensor(Mn:=spDBColumnDewPointSensor.iMn, mx:=spDBColumnDewPointSensor.iMx, Sen:= stDebugColumnDIO.simDBColumnDewPointSensor);
+	//stDebugColumnDIO.simDBColumnDewPointSensor := INC(IN:=LREAL_TO_INT (stDebugColumnDIO.simDBColumnDewPointSensor));															
+	stDebugColumnDIO.ipDBColumnDewPointSensor	:= 	ANLG_TO_ABC(iMn:= spDBColumnDewPointSensor.iMn, 
+																	iMx:= spDBColumnDewPointSensor.iMx, 
+																	oMn:= spDBColumnDewPointSensor.oMn, 
+																	oMx:= spDBColumnDewPointSensor.oMx, 
+																	ofs:= spDBColumnDewPointSensor.ofs, 
+																	val:= LREAL_TO_INT(stDebugColumnDIO.simDBColumnDewPointSensor) , 
+																	b  := spDBColumnDewPointSensor.b);
+
+	//GetRand(Seed:=0,Num=>tempSimIpt);
+	//stDebugColumnDIO.simDBColumnTempSensor := tempSimIpt*10000;
+	stDebugColumnDIO.fbSimDBColumnTempSensor(Mn:=spDBColumnTempSensor.iMn, mx:=spDBColumnTempSensor.iMx, Sen:= stDebugColumnDIO.simDBColumnTempSensor);
+	//stDebugColumnDIO.simDBColumnDewPointSensor := INC(IN:=LREAL_TO_INT (stDebugColumnDIO.simDBColumnDewPointSensor));															
+	stDebugColumnDIO.ipDBColumnTempSensor	:= 	ANLG_TO_ABC(iMn:= spDBColumnTempSensor.iMn, 
+																	iMx:= spDBColumnTempSensor.iMx, 
+																	oMn:= spDBColumnTempSensor.oMn, 
+																	oMx:= spDBColumnTempSensor.oMx, 
+																	ofs:= spDBColumnTempSensor.ofs, 
+																	val:= LREAL_TO_INT(stDebugColumnDIO.simDBColumnTempSensor) , 
+																	b  := spDBColumnTempSensor.b);
+																															
+	//GetRand(Seed:=0,Num=>tempSimIpt);
+	//stDebugColumnDIO.simDBColumnPCWSupplyTemperature := tempSimIpt*10000;
+	stDebugColumnDIO.fbSimDBColumnPCWSupplyTemperature(Mn:=spDBColumnPCWSupplyTemperature.iMn, mx:=spDBColumnPCWSupplyTemperature.iMx, Sen:= stDebugColumnDIO.simDBColumnPCWSupplyTemperature);
+	//stDebugColumnDIO.simDBColumnPCWSupplyTemperature := INC(IN:=LREAL_TO_INT (stDebugColumnDIO.simDBColumnPCWSupplyTemperature));														
+	stDebugColumnDIO.ipDBColumnPCWSupplyTemperature	:= 	ANLG_TO_ABC(iMn:= spDBColumnPCWSupplyTemperature.iMn, 
+																	iMx:= spDBColumnPCWSupplyTemperature.iMx, 
+																	oMn:= spDBColumnPCWSupplyTemperature.oMn, 
+																	oMx:= spDBColumnPCWSupplyTemperature.oMx, 
+																	ofs:= spDBColumnPCWSupplyTemperature.ofs, 
+																	val:= LREAL_TO_INT(stDebugColumnDIO.simDBColumnPCWSupplyTemperature) , 
+																	b  := spDBColumnPCWSupplyTemperature.b);																	
+	//GetRand(Seed:=0,Num=>tempSimIpt);
+	//stDebugColumnDIO.simDBColumnPCWReturnTemperature := tempSimIpt*10000;
+	stDebugColumnDIO.fbSimDBColumnPCWReturnTemperature(Mn:=spDBColumnPCWReturnTemperature.iMn, mx:=spDBColumnPCWReturnTemperature.iMx, Sen:= stDebugColumnDIO.simDBColumnPCWReturnTemperature);
+	//stDebugColumnDIO.simDBColumnPCWReturnTemperature := INC(IN:=LREAL_TO_INT (stDebugColumnDIO.simDBColumnPCWReturnTemperature));														
+	stDebugColumnDIO.ipDBColumnPCWReturnTemperature	:= 	ANLG_TO_ABC(iMn:= spDBColumnPCWReturnTemperature.iMn, 
+																	iMx:= spDBColumnPCWReturnTemperature.iMx, 
+																	oMn:= spDBColumnPCWReturnTemperature.oMn, 
+																	oMx:= spDBColumnPCWReturnTemperature.oMx, 
+																	ofs:= spDBColumnPCWReturnTemperature.ofs, 
+																	val:= LREAL_TO_INT(stDebugColumnDIO.simDBColumnPCWReturnTemperature) , 
+																	b  := spDBColumnPCWReturnTemperature.b);
+																	
+	IF NOT bDebugStation THEN
+	stDebugColumnDIO.ipDBColumnPCWRegularFlowSensor :=
+	stDebugColumnDIO.ipDBColumnPCWSupplyPressure 	:=
+	stDebugColumnDIO.ipDBColumnPCWReturnPressure 	:=
+	stDebugColumnDIO.ipDBColumnTstAirPressure 		:=
+	stDebugColumnDIO.ipDBColumnAPAirPressure 		:=
+	stDebugColumnDIO.ipDBColumnDewPointSensor 		:=
+	stDebugColumnDIO.ipDBColumnPCWSupplyTemperature := 0;
+	END_IF
+																	
+ELSE															
+	stDebugColumnDIO.ipDBColumnPCWRegularFlowSensor	:= 	ANLG_TO_ABC(iMn:= spDBColumnPCWRegularFlowSensor.iMn, 
+																	iMx:= spDBColumnPCWRegularFlowSensor.iMx, 
+																	oMn:= spDBColumnPCWRegularFlowSensor.oMn, 
+																	oMx:= spDBColumnPCWRegularFlowSensor.oMx, 
+																	ofs:= spDBColumnPCWRegularFlowSensor.ofs, 
+																	val:= LREAL_TO_INT(stDebugColumnDIO.ipAnlgDBColumnPCWRegularFlowSensor) , 
+																	b  := spDBColumnPCWRegularFlowSensor.b);
+											
+	stDebugColumnDIO.ipDBColumnPCWSupplyPressure		:= 	ANLG_TO_ABC(iMn:= spDBColumnPCWSupplyPressure.iMn, 
+																	iMx:= spDBColumnPCWSupplyPressure.iMx, 
+																	oMn:= spDBColumnPCWSupplyPressure.oMn, 
+																	oMx:= spDBColumnPCWSupplyPressure.oMx, 
+																	ofs:= spDBColumnPCWSupplyPressure.ofs, 
+																	val:= LREAL_TO_INT(stDebugColumnDIO.ipAnlgDBColumnPCWSupplyPressure) , 
+																	b  := spDBColumnPCWSupplyPressure.b);																	
+												
+	stDebugColumnDIO.ipDBColumnPCWReturnPressure		:= 	ANLG_TO_ABC(iMn:= spDBColumnPCWReturnPressure.iMn, 
+																	iMx:= spDBColumnPCWReturnPressure.iMx, 
+																	oMn:= spDBColumnPCWReturnPressure.oMn, 
+																	oMx:= spDBColumnPCWReturnPressure.oMx, 
+																	ofs:= spDBColumnPCWReturnPressure.ofs, 
+																	val:= LREAL_TO_INT(stDebugColumnDIO.ipAnlgDBColumnPCWReturnPressure) , 
+																	b  := spDBColumnPCWReturnPressure.b);
+												
+	stDebugColumnDIO.ipDBColumnTstAirPressure	:= 	ANLG_TO_ABC(iMn:= spDBColumnTstAirPressure.iMn, 
+																	iMx:= spDBColumnTstAirPressure.iMx, 
+																	oMn:= spDBColumnTstAirPressure.oMn, 
+																	oMx:= spDBColumnTstAirPressure.oMx, 
+																	ofs:= spDBColumnTstAirPressure.ofs, 
+																	val:= LREAL_TO_INT(stDebugColumnDIO.ipAnlgDBColumnTstAirPressure) , 
+																	b  := spDBColumnTstAirPressure.b);
+													
+	stDebugColumnDIO.ipDBColumnAPAirPressure	:= 	ANLG_TO_ABC(iMn:= spDBColumnAPAirPressure.iMn, 
+																	iMx:= spDBColumnAPAirPressure.iMx, 
+																	oMn:= spDBColumnAPAirPressure.oMn, 
+																	oMx:= spDBColumnAPAirPressure.oMx, 
+																	ofs:= spDBColumnAPAirPressure.ofs, 
+																	val:= LREAL_TO_INT(stDebugColumnDIO.ipAnlgDBColumnAPAirPressure) , 
+																	b  := spDBColumnAPAirPressure.b);
+											
+	stDebugColumnDIO.ipDBColumnDewPointSensor	:= 	ANLG_TO_ABC(iMn:= spDBColumnDewPointSensor.iMn, 
+																	iMx:= spDBColumnDewPointSensor.iMx, 
+																	oMn:= spDBColumnDewPointSensor.oMn, 
+																	oMx:= spDBColumnDewPointSensor.oMx, 
+																	ofs:= spDBColumnDewPointSensor.ofs, 
+																	val:= LREAL_TO_INT(stDebugColumnDIO.ipAnlgDBColumnDewPointSensor) , 
+																	b  := spDBColumnDewPointSensor.b);		
+														
+	stDebugColumnDIO.ipDBColumnTempSensor	:= 	ANLG_TO_ABC(iMn:= spDBColumnTempSensor.iMn, 
+																	iMx:= spDBColumnTempSensor.iMx, 
+																	oMn:= spDBColumnTempSensor.oMn, 
+																	oMx:= spDBColumnTempSensor.oMx, 
+																	ofs:= spDBColumnTempSensor.ofs, 
+																	val:= LREAL_TO_INT(stDebugColumnDIO.ipAnlgDBColumnTempSensor) , 
+																	b  := spDBColumnTempSensor.b);																																
+												
+	stDebugColumnDIO.ipDBColumnPCWSupplyTemperature	:= 	ANLG_TO_ABC(iMn:= spDBColumnPCWSupplyTemperature.iMn, 
+																	iMx:= spDBColumnPCWSupplyTemperature.iMx, 
+																	oMn:= spDBColumnPCWSupplyTemperature.oMn, 
+																	oMx:= spDBColumnPCWSupplyTemperature.oMx, 
+																	ofs:= spDBColumnPCWSupplyTemperature.ofs, 
+																	val:= LREAL_TO_INT(stDebugColumnDIO.ipAnlgDBColumnPCWSupplyTemperature) , 
+																	b  := spDBColumnPCWSupplyTemperature.b);																	
+												
+	stDebugColumnDIO.ipDBColumnPCWReturnTemperature	:= 	ANLG_TO_ABC(iMn:= spDBColumnPCWReturnTemperature.iMn, 
+																	iMx:= spDBColumnPCWReturnTemperature.iMx, 
+																	oMn:= spDBColumnPCWReturnTemperature.oMn, 
+																	oMx:= spDBColumnPCWReturnTemperature.oMx, 
+																	ofs:= spDBColumnPCWReturnTemperature.ofs, 
+																	val:= LREAL_TO_INT(stDebugColumnDIO.ipAnlgDBColumnPCWReturnTemperature) , 
+																	b  := spDBColumnPCWReturnTemperature.b);	
+	            	  															
+	
+END_IF
+
+(*
+
+*** Bef BS data Array should be sorted in accending order
+***[ignore half OF the elements array just after one comparison.]
+1 Compare x with the middle element.
+2 If x == mid element, return mid index.
+3 Else If x > mid element, x is in right half of array after mid element. So we recur/iterate for right half.
+4 Else (x is smaller) recur for the left half.
+where 
+	x is the item to search
+	
+// C# implementation of recursive Binary Search 
+using System; 
+  
+class BS 
+{ 
+    // Returns index of x if it is present in // arr[l..r], else return -1 
+    static int binarySearch(int[] arr, int l, int r, int x) 
+    { 
+        if (r >= l) 
+		{ 
+            //1
+			int mid = l + (r - l) / 2; 
+            //2
+            if (arr[mid] == x) 
+                return mid; 
+  			//3
+            if (arr[mid] > x) 
+                return binarySearch(arr, l, mid - 1, x); 
+            //4
+            return binarySearch(arr, mid + 1, r, x); 
+        } 
+        // reach here when element is'nt present in array 
+        return -1; 
+    } 
+  
+    public static void Main() 
+    { 
+  
+        int[] arr = { 2, 3, 4, 10, 40 }; 
+        int n = arr.Length; 
+        int x = 10; 
+  
+        int result = binarySearch(arr, 0, n - 1, x); 
+  
+        if (result == -1) 
+            Console.WriteLine("Element not present"); 
+        else
+            Console.WriteLine("Element found at index "
+                              + result); 
+    } 
+} 
+	
+===========================================================
+
+using System; 
+  
+class BS 
+{ 
+	int BS (int[] arr, int key)
+ 	{
+		min=0; max=arr.length-1;
+		while(min =< max)
+		{
+			mid = (min+max)/2;
+			if(key=arr[mid]) return ++mid;
+			else if (key<arr[mid]) max = mid-1;
+			else min = mid+1;
+		}
+		return -1;
+	}
+	
+    static int Bns(int[] arr, int x) 
+    { 
+        int l = 0, r = arr.Length - 1; 
+        while (l <= r) 
+		{ 
+            int m = l + (r - l) / 2; 
+            if (arr[m] == x) 			// Check if x is present at mid 
+                return m; 
+            if (arr[m] < x) 			// If x greater, ignore left half
+                l = m + 1; 
+            else
+                r = m - 1; 				// If x is smaller, ignore right half 
+        } 
+        return -1; 						// if element not present,  reach here 
+    } 
+  
+    // Driver method to test above 
+    public static void Main() 
+    { 
+        int[] arr = { 2, 3, 4, 10, 40 }; 
+        int n = arr.Length; 
+        int x = 10; 
+        int result = binarySearch(arr, x); 
+        if (result == -1) 
+            Console.WriteLine("Element not present"); 
+        else
+            Console.WriteLine("Element found at "
+                              + "index " + result); 
+    } 
+} 
+
+
+*)
+
+//Left]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="INC" Id="{b4e63e92-4ac3-40f9-8063-add026b48b2f}">
+      <Declaration><![CDATA[METHOD INC : INT
+VAR_INPUT
+	IN:INT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+	IF IN >= 32768 THEN
+		INC := 0; 
+	ELSE
+		INC := IN+5; 
+	END_IF
+
+
+(*
+IF timInc.Q THEN
+	IF IN >= 32768 THEN
+		INC := 0; 
+	ELSE
+		INC := IN+500; 
+	END_IF
+	timInc(IN:=FALSE);
+ELSE
+	timInc(IN:=TRUE,PT:=T#500MS);
+END_IF
+
+*)]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_IOMapping" Id="{73944cda-71da-4297-ba44-ad2fa907c180}">
+      <Declaration><![CDATA[METHOD M_IOMapping : BOOL
+VAR_INPUT
+	
+END_VAR
+
+VAR
+	bSimuLeakage:Bool:=FALSE;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+
+//stDebugColDIO.ipDBColumnPCWRegularFlowSensor  :=  stDebugColDIO.ipAnlgDBColumnPCWRegularFlowSensor	; //Do Some Conversion
+//stDebugColDIO.ipDBColumnPCWSupplyPressure     :=  stDebugColDIO.ipAnlgDBColumnPCWSupplyPressure     ;
+//stDebugColDIO.ipDBColumnPCWReturnPressure     :=  stDebugColDIO.ipAnlgDBColumnPCWReturnPressure     ;
+//stDebugColDIO.ipDBColumnTstAirPressure        :=  stDebugColDIO.ipAnlgDBColumnTstAirPressure        ;
+//stDebugColDIO.ipDBColumnAPAirPressure         :=  stDebugColDIO.ipAnlgDBColumnAPAirPressure         ;
+//stDebugColDIO.ipDBColumnDewPointSensor        :=  stDebugColDIO.ipAnlgDBColumnDewPointSensor        ;
+//stDebugColDIO.ipDBColumnPCWSupplyTemperature  :=  stDebugColDIO.ipAnlgDBColumnPCWSupplyTemperature  ;
+//stDebugColDIO.ipDBColumnPCWReturnTemperature  :=  stDebugColDIO.ipAnlgDBColumnPCWReturnTemperature  ;
+
+
+	stDebugColumnVIO.ipDBColumnPCWLeakage		:= NOT fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , 
+	                                            					bActual:=stDebugColumnDIO.ipDBColumnPCWLeakage , 
+	                                            					bSimu:=bSimuLeakage , 
+	                                            					iBackDoor:=stDebugColumnBIO.ipDBColumnPCWLeakage );
+	stDebugColumnVIO.ipDBColumnPCWSupplyLeakage		:= NOT fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , 
+	                                            					bActual:=stDebugColumnDIO.ipDBColumnPCWSupplyLeakage , 
+	                                            					bSimu:=bSimuLeakage , 
+	                                            					iBackDoor:=stDebugColumnBIO.ipDBColumnPCWSupplyLeakage );
+	stDebugColumnVIO.ipDBColumnPCWReturnLeakage		:= NOT fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , 
+	                                            					bActual:=stDebugColumnDIO.ipDBColumnPCWReturnLeakage , 
+	                                            					bSimu:=bSimuLeakage , 
+	                                            					iBackDoor:=stDebugColumnBIO.ipDBColumnPCWReturnLeakage );
+																				
+//EAP===========================================================================================																	
+	stDebugColumnDIO.eapDBColumnPCWLeakage := 			stDebugColumnVIO.ipDBColumnPCWLeakage;		
+	stDebugColumnDIO.eapDBColumnPCWSupplyLeakage :=		stDebugColumnVIO.ipDBColumnPCWSupplyLeakage;															
+	stDebugColumnDIO.eapDBColumnPCWReturnLeakage 	:=	stDebugColumnVIO.ipDBColumnPCWReturnLeakage;															
+//=============================================================================================
+
+
+
+(*IF stDebugColumnVIO.bShutOffPCW  THEN
+	stDebugColumnVIO.opDBColumnPCWValve						:=FALSE;
+ELSE
+	stDebugColumnVIO.opDBColumnPCWValve						:=TRUE;
+END_IF*)
+
+IF stDebugColumnVIO.bShutOffAllACPower THEN
+	stDebugColumnVIO.eapShutOffAllACPower					:= TRUE;	//control eap to shut off AC power in debug cart full cell
+ELSE
+	stDebugColumnVIO.eapShutOffAllACPower					:= FALSE;	//control eap to shut off AC power in debug cart full cell
+END_IF
+
+IF stDebugColumnVIO.bShutOffAir THEN
+	stDebugColumnVIO.opDBColumnTstAirSol:=FALSE;
+	stDebugColumnVIO.opDBColumnAPAirSol:=FALSE;
+ELSE
+	stDebugColumnVIO.opDBColumnTstAirSol := TRUE;
+	stDebugColumnVIO.opDBColumnAPAirSol := TRUE;
+END_IF
+
+	stDebugColumnVIO.opDBColumnHotAirExhaustFan := FunONOFF; //TRUE;
+
+
+IF NOT stDebugColumnVIO.bDiagnosticMode	THEN		
+//Colum DIO is Control by PLC, Not Direct accessed by TA
+	stDebugColumnDIO.opDBColumnHotAirExhaustFan := stDebugColumnVIO.opDBColumnHotAirExhaustFan;		
+	//stDebugColumnDIO.opDBColumnPCWValve       := stDebugColumnVIO.opDBColumnPCWValve;
+	stDebugColumnDIO.opDBColumnPCWValve			:= DebugCart_ColumnPCWValve;
+	stDebugColumnDIO.opDBColumnTstAirSol        := stDebugColumnVIO.opDBColumnTstAirSol;				
+	stDebugColumnDIO.opDBColumnAPAirSol         := stDebugColumnVIO.opDBColumnAPAirSol;
+	stDebugColumnDIO.eapShutOffAllACPower		:= stDebugColumnVIO.eapShutOffAllACPower;
+END_IF			]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_PCW_Cyclic" Id="{24ef1c2b-9e14-4841-b482-7c35f9e66dcb}">
+      <Declaration><![CDATA[METHOD M_PCW_Cyclic : BOOL
+VAR_INPUT
+	
+END_VAR
+
+VAR
+	tempReal	: REAL;
+	i			: INT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[//<PCW Behavior Note>
+	(*
+	PCW behavior Condition  (Suggestion from Intel)
+	PCW SUPPLY THERMOCOUPLE LH  > 14°C, Warning: “PCW supply high temp”, Action: Nil
+	(Tester) Incoming pressure for 6bar LH <550 kPa , Warning: “6 bar OFA LH air pressure low”,  Action: Nil
+	(AP) Incoming pressure for 9 bar  LH < 850kPa, Warning:  “9 bar OFA LH air pressure low”, Action: Nil
+	PCW Return Temperature – PCW Supply Temperature > 10degC, Warning: “Excessive heat load into PCW”, Action = Nil
+	T-BOT Dew Point - PCW Supply Temperature > -2degC, Warning : “Dew point – PCW temperature above control limit, condensation warning.”, Action = Nil
+	T-BOT Dew Point - PCW Supply Temperature > 0degC, Alarm: “Dew point – PCW temperature above critical control limit, condensation alarm.”, Action = Shut off PCW Supply and Return
+	If Either One of the Leak Sensor is Trigger, Alarm: “System PCW Leakage .”, Action = Shut off PCW Supply and Return.
+	*)
+//</PCW Behavior Note>
+//<_____>
+	//tempReal:=stDebugColDIO.ipDBColumnPCWRegularFlowSensor  ;
+	//tempReal:=stDebugColDIO.ipDBColumnPCWSupplyPressure     ;
+	//tempReal:=stDebugColDIO.ipDBColumnPCWReturnPressure     ;
+	//tempReal:=stDebugColDIO.ipDBColumnTstAirPressure        ;
+	//tempReal:=stDebugColDIO.ipDBColumnAPAirPressure         ;
+	//tempReal:=stDebugColDIO.ipDBColumnDewPointSensor        ;
+	//tempReal:=stDebugColDIO.ipDBColumnPCWSupplyTemperature  ;
+	//tempReal:=stDebugColDIO.ipDBColumnPCWReturnTemperature  ;
+//</_____>
+//<PCW Behavior> ALM_LC01
+
+	fb_facility_DewPoint_OFA6Bar(); //debug column facility check OFA6bar and Dew point
+	
+	//Warning up after warning timer expired, auto clear
+	ALM_DCCOL.AlarmID[E_DCFACAlarm.eCondensationWarning]				:=DewPoint_Warning;
+	IF DewPoint_Alarm THEN
+		//Alarm up after alarm timer expired
+		ALM_DCCOL.AlarmID[E_DCFACAlarm.eCriticalCondensationAlarm]		:=TRUE;
+	END_IF
+	
+	//Warning up after warning timer expired, auto clear
+	ALM_DCCOL.AlarmID[E_DCFACAlarm.e6BarLowOFAAirPressureWarning]		:=OFA6Bar_Warning;
+	IF OFA6Bar_Alarm THEN
+		//Alarm up after alarm timer expired
+		ALM_DCCOL.AlarmID[E_DCFACAlarm.e6BarLowOFAAirPressureAlarm]		:=TRUE;
+	END_IF
+	
+	IF DewPoint_Abort OR OFA6Bar_Abort THEN
+		//after delay 60seconds, trigger EAP to shut off AP & tester 240 AC power in full cell stack.
+		stDebugColumnVIO.bShutOffAllACPower								:= TRUE;
+	ELSIF (NOT ALM_DCCOL.AlarmID[E_DCFACAlarm.eCriticalCondensationAlarm]) AND (NOT ALM_DCCOL.AlarmID[E_DCFACAlarm.e6BarLowOFAAirPressureAlarm]) THEN
+		stDebugColumnVIO.bShutOffAllACPower								:= FALSE;
+	END_IF
+	
+	
+	IF stDebugColumnDIO.ipDBColumnPCWSupplyTemperature > lmtPCWSupplyHighTempWarning_Limit THEN		// 14 THEN		
+		ALM_DCCOL.AlarmID[E_DCFACAlarm.ePCWSupplyHighTempWarning]:=TRUE; 
+		//'Warning: PCW supply high temp'
+	END_IF	
+	(*IF stDebugColumnDIO.ipDBColumnTstAirPressure < lmt6BarLowOFAAirPressureWarning_Limit THEN	//550  THEN		
+		ALM_DCCOL.AlarmID[E_DCFACAlarm.e6BarLowOFAAirPressureWarning]:=TRUE;
+		//'Warning: 6 bar OFA LH air pressure low'
+	END_IF	*)
+	IF stDebugColumnDIO.ipDBColumnAPAirPressure < lmt9BarLowOFAAirPressureWarning_limit THEN		//850  THEN		
+		ALM_DCCOL.AlarmID[E_DCFACAlarm.e9BarLowOFAAirPressureWarning]:=TRUE;
+		//'Warning: 9 bar OFA LH air pressure low'
+	END_IF	
+	IF stDebugColumnDIO.ipDBColumnPCWReturnTemperature - stDebugColumnDIO.ipDBColumnPCWSupplyTemperature > lmtExcessiveHeatLoadIntoPCWWarning_Limit THEN	//14  THEN		
+		ALM_DCCOL.AlarmID[E_DCFACAlarm.eExcessiveHeatLoadIntoPCWWarning]:=TRUE;
+		//'Warning: Excessive heat load into PCW'
+	END_IF
+	(*IF stDebugColumnDIO.ipDBColumnDewPointSensor - stDebugColumnDIO.ipDBColumnPCWSupplyTemperature > lmtCondensationWarning_Limit THEN	//-2  THEN		
+		ALM_DCCOL.AlarmID[E_DCFACAlarm.eCondensationWarning]:=TRUE;
+		//'(Dew point – PCW temperature) is above control limit, Condensation Warning'
+	END_IF	
+	IF stDebugColumnDIO.ipDBColumnDewPointSensor - stDebugColumnDIO.ipDBColumnPCWSupplyTemperature > lmtCriticalCondensationAlarm_Limit THEN	//0  THEN		
+		ALM_DCCOL.AlarmID[E_DCFACAlarm.eCriticalCondensationAlarm]:=TRUE;
+		//'(Dew point – PCW temperature) is above critical control limit, Condensation Alarm'
+		stDebugColumnVIO.bShutOffPCW:=TRUE;
+	END_IF*)
+		
+	IF stDebugColumnDIO.eapDBColumnPCWLeakage OR stDebugColumnDIO.eapDBColumnPCWSupplyLeakage OR stDebugColumnDIO.eapDBColumnPCWReturnLeakage THEN		
+		IF stDebugColumnDIO.eapDBColumnPCWLeakage THEN
+			ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWLeakageAlarm]:=TRUE;
+		END_IF
+		IF stDebugColumnDIO.eapDBColumnPCWSupplyLeakage THEN
+			ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWSupplyLeakageAlarm]:=TRUE;
+		END_IF
+		IF stDebugColumnDIO.eapDBColumnPCWReturnLeakage THEN
+			ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWReturnLeakageAlarm]:=TRUE;
+		END_IF
+		
+		//'Alarm: System PCW Leakage'
+		//stDebugColumnVIO.bShutOffPCW:=TRUE;
+		//stDebugColumnVIO.bShutOffAir:=TRUE;
+	END_IF
+//</PCW Behavior>
+
+//**** Asign and Set the Alarm bit later. [DONE]
+
+(*IF 	NOT ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWLeakageAlarm] 
+	AND NOT ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWSupplyLeakageAlarm]
+	AND NOT ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWReturnLeakageAlarm]
+	AND NOT ALM_DCCOL.AlarmID[E_DCFACAlarm.eCriticalCondensationAlarm]
+	AND NOT ALM_DCCOL.AlarmID[E_DCFACAlarm.e6BarLowOFAAirPressureAlarm] THEN
+	stDebugColumnVIO.bShutOffPCW						:=FALSE;
+	
+	IF (NOT ALM_DCCOL.AlarmID[E_DCFACAlarm.e6BarLowOFAAirPressureAlarm] AND NOT ALM_DCCOL.AlarmID[E_DCFACAlarm.eCriticalCondensationAlarm]) THEN
+		stDebugColumnVIO.bShutOffAllACPower				:=FALSE;
+	END_IF
+END_IF*)
+
+IF stDebugColumnVIO.bDebugColErrClear THEN
+	IF NOT bProductionMode OR bHMIResetAllAlarm THEN
+		FOR i:=1 TO 20 DO
+			//stAlmMod.Common.AlarmID[i]:=FALSE;
+			ALM_DCCOL.AlarmID[i]:=FALSE;
+		END_FOR
+	ELSE
+		//stAlmMod.Common.AlarmID[vIO.iAlmIDToRset]:=FALSE;
+		ALM_DCCOL.AlarmID[stDebugColumnVIO.iAlmIDToRset]:=FALSE;
+	END_IF
+	stDebugColumnVIO.bDebugColErrClear:=FALSE;
+END_IF
+
+
+//===============================================
+(*
+        public void Register<T>(object recipient, Action<T> action)
+        {
+            Register(recipient, action, null);
+        }
+		
+		public void Register<T>(object recipient, Action<T> action, object context)
+        {
+            Register(recipient, action, context);
+        }
+
+        /// Registers a recipient for message T and a matching context. action para executed when  message is sent.
+        public void Register<T>(object recipient, Action<T> action, object context)
+        {
+            var key = new MessengerKey(recipient, context);
+            Dictionary.TryAdd(key, action);					//KeyValuePair of <MessagerKey,Action<T>> where MessagerKey consists recipient and context, T is Type of message.
+        }
+
+
+        public void Send<T>(T message, object context)
+        {
+            IEnumerable<KeyValuePair<MessengerKey, object>> result;
+
+            if (context == null)        
+                //Get all recipients where the context is null.
+                result = from r in Dictionary where r.Key.Context == null select r;
+            else                        
+                //Get all recipients where the context is matching.
+                result = from r in Dictionary where r.Key.Context != null && r.Key.Context.Equals(context) select r;
+
+            foreach (var action in result.Select(x => x.Value).OfType<Action<T>>())
+                // Send the message to all recipients.
+                action(message);        
+        }
+
+
+
+
+*)
+
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="P_stVIO" Id="{fc7b64c7-e17d-473f-a050-d2027649ae9a}">
+      <Declaration><![CDATA[PROPERTY P_stVIO : ST_DebugColumnVIO]]></Declaration>
+      <Get Name="Get" Id="{c5a444ce-760f-404c-9550-7585143b96f3}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[P_stVIO:=stDebugColumnVIO;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{d07bb929-2830-44a7-941d-29a442544d36}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[stDebugColumnVIO:=P_stVIO;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <LineIds Name="FB_DebugColumn">
+      <LineId Id="9" Count="0" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="61" Count="0" />
+      <LineId Id="56" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_DebugColumn.Conversion">
+      <LineId Id="11" Count="0" />
+      <LineId Id="179" Count="1" />
+      <LineId Id="381" Count="0" />
+      <LineId Id="12" Count="7" />
+      <LineId Id="181" Count="1" />
+      <LineId Id="382" Count="0" />
+      <LineId Id="20" Count="7" />
+      <LineId Id="183" Count="1" />
+      <LineId Id="383" Count="0" />
+      <LineId Id="28" Count="7" />
+      <LineId Id="185" Count="1" />
+      <LineId Id="384" Count="0" />
+      <LineId Id="36" Count="7" />
+      <LineId Id="187" Count="1" />
+      <LineId Id="385" Count="0" />
+      <LineId Id="44" Count="7" />
+      <LineId Id="189" Count="1" />
+      <LineId Id="386" Count="0" />
+      <LineId Id="52" Count="7" />
+      <LineId Id="203" Count="0" />
+      <LineId Id="210" Count="1" />
+      <LineId Id="387" Count="0" />
+      <LineId Id="212" Count="6" />
+      <LineId Id="204" Count="0" />
+      <LineId Id="202" Count="0" />
+      <LineId Id="191" Count="1" />
+      <LineId Id="388" Count="0" />
+      <LineId Id="60" Count="7" />
+      <LineId Id="194" Count="1" />
+      <LineId Id="389" Count="0" />
+      <LineId Id="68" Count="7" />
+      <LineId Id="163" Count="1" />
+      <LineId Id="167" Count="5" />
+      <LineId Id="165" Count="1" />
+      <LineId Id="76" Count="48" />
+      <LineId Id="223" Count="6" />
+      <LineId Id="219" Count="0" />
+      <LineId Id="125" Count="17" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="240" Count="0" />
+      <LineId Id="231" Count="0" />
+      <LineId Id="235" Count="1" />
+      <LineId Id="296" Count="0" />
+      <LineId Id="237" Count="2" />
+      <LineId Id="232" Count="0" />
+      <LineId Id="241" Count="2" />
+      <LineId Id="247" Count="3" />
+      <LineId Id="297" Count="0" />
+      <LineId Id="251" Count="0" />
+      <LineId Id="253" Count="0" />
+      <LineId Id="255" Count="1" />
+      <LineId Id="295" Count="0" />
+      <LineId Id="257" Count="0" />
+      <LineId Id="298" Count="0" />
+      <LineId Id="259" Count="0" />
+      <LineId Id="261" Count="2" />
+      <LineId Id="266" Count="1" />
+      <LineId Id="269" Count="0" />
+      <LineId Id="271" Count="1" />
+      <LineId Id="274" Count="0" />
+      <LineId Id="276" Count="2" />
+      <LineId Id="280" Count="14" />
+      <LineId Id="246" Count="0" />
+      <LineId Id="245" Count="0" />
+      <LineId Id="299" Count="0" />
+      <LineId Id="303" Count="3" />
+      <LineId Id="347" Count="0" />
+      <LineId Id="349" Count="0" />
+      <LineId Id="364" Count="0" />
+      <LineId Id="366" Count="2" />
+      <LineId Id="370" Count="3" />
+      <LineId Id="369" Count="0" />
+      <LineId Id="374" Count="0" />
+      <LineId Id="365" Count="0" />
+      <LineId Id="351" Count="0" />
+      <LineId Id="307" Count="0" />
+      <LineId Id="310" Count="2" />
+      <LineId Id="348" Count="0" />
+      <LineId Id="313" Count="0" />
+      <LineId Id="316" Count="0" />
+      <LineId Id="319" Count="1" />
+      <LineId Id="323" Count="3" />
+      <LineId Id="330" Count="16" />
+      <LineId Id="302" Count="0" />
+      <LineId Id="300" Count="0" />
+      <LineId Id="233" Count="1" />
+      <LineId Id="230" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_DebugColumn.INC">
+      <LineId Id="27" Count="0" />
+      <LineId Id="32" Count="3" />
+      <LineId Id="28" Count="3" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="18" Count="3" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_DebugColumn.M_IOMapping">
+      <LineId Id="14" Count="1" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="16" Count="6" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="54" Count="0" />
+      <LineId Id="123" Count="11" />
+      <LineId Id="204" Count="0" />
+      <LineId Id="108" Count="0" />
+      <LineId Id="120" Count="2" />
+      <LineId Id="53" Count="0" />
+      <LineId Id="201" Count="0" />
+      <LineId Id="200" Count="0" />
+      <LineId Id="49" Count="0" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="93" Count="0" />
+      <LineId Id="96" Count="0" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="162" Count="0" />
+      <LineId Id="167" Count="0" />
+      <LineId Id="179" Count="0" />
+      <LineId Id="172" Count="0" />
+      <LineId Id="188" Count="0" />
+      <LineId Id="164" Count="0" />
+      <LineId Id="144" Count="1" />
+      <LineId Id="147" Count="2" />
+      <LineId Id="151" Count="1" />
+      <LineId Id="143" Count="0" />
+      <LineId Id="92" Count="0" />
+      <LineId Id="90" Count="1" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="29" Count="1" />
+      <LineId Id="205" Count="0" />
+      <LineId Id="31" Count="1" />
+      <LineId Id="191" Count="0" />
+      <LineId Id="81" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_DebugColumn.M_PCW_Cyclic">
+      <LineId Id="331" Count="160" />
+      <LineId Id="140" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_DebugColumn.P_stVIO.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_DebugColumn.P_stVIO.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,99 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <DUT Name="ST_TCLevel_VIO" Id="{6b2bc44e-af7d-4116-b156-8dfdfe06febb}">
+    <Declaration><![CDATA[TYPE ST_TCLevel_VIO :
+STRUCT
+		//input
+	ipColumnFluid_PCW_Leakage : BOOL;
+	ipPressure_Switch_Error : BOOL;
+	
+	ipCellGroundFault : BOOL;
+	ipExhaustFanOk    : BOOL;
+	
+	ipAPPresentSensor		: BOOL;
+	ipAPPowerOn	 			: BOOL;
+	ipAPReady				: BOOL;
+	ipAPDeactuatedPLC		: BOOL;
+	ipAPDeactuatedHwr		: BOOL;
+	ipAPActuatedPLC		: BOOL;
+
+	ipAP_DIO_1			: BOOL;
+	ipAP_DIO_2			: BOOL;
+	ipAP_DIO_3			: BOOL;
+	ipAP_DIO_4			: BOOL;
+	ipAP_DIO_5			: BOOL;
+	
+	ipTesterPresent		: BOOL;
+	ipTesterPowerOn		: BOOL;
+	ipTesterReady		: BOOL;
+	ipTesterSpareOut1		: BOOL;
+	ipTesterSpareOut2		: BOOL;
+	
+	ipMotor_Ready 						: BOOL;
+	ipMotor_Home_Position 				: BOOL;
+	ipMotor_Position_Reached 			: BOOL;
+	ipMotor_Ps_Table_Active 			: BOOL;
+	ipMotor_Error 						: BOOL;
+	
+	ipTCDrawerExtendedoutCell		: BOOL;
+	ipTCDrawerRetractedinCell		: BOOL;
+	ipTCDrawerExtendedupCell		: BOOL;
+	ipTCDrawerRetracteddownCell		: BOOL;
+	
+	ipTCCellDoorLock	: BOOL;
+	ipTCCellDoorClosed		: BOOL;
+	ipTesterLatchesClosed		: BOOL;
+	ipCellFluidLeakage		: BOOL;
+	ipShuttleFluidLeakage		: BOOL;
+	ipButtonLockDoor		: BOOL;
+	ipButtonTesterInOut			: BOOL;
+	
+	//output
+	opHotAirExhaustFan : BOOL;
+	opHBI_APCellPCWValve : BOOL;
+	opHBI_Tst_CellPCWValve  : BOOL;
+	opMain_Incoming_Air_Valve : BOOL;
+	
+	opAP24VDCPwr  : BOOL;
+	opAP_240AC_Pwr  : BOOL; 
+	
+	opDoorOpenReq : BOOL;
+	opTesterInOut : BOOL;
+	opTesterInProgress : BOOL;
+	opAP_TIU_Skt_Air : BOOL;
+	opDoorLock : BOOL;
+	
+	opAP_DIO_1 : BOOL;
+	opAP_DIO_2 : BOOL;
+	opAP_DIO_3 : BOOL;
+	opAP_DIO_4 : BOOL;
+	opAP_DIO_5 : BOOL;
+	
+	opTesterPresent : BOOL;
+	opAlarm : BOOL;
+	
+	opCellDrawerExtend : BOOL;
+	opCellDrawerRetract : BOOL;
+	opCellDrawerExtendUp : BOOL;
+	opCellDrawerRetractDown : BOOL;
+	
+	opMotor_Enable						: BOOL;
+	opMotor_Reset_Errors				: BOOL;
+	opMotor_Homing						: BOOL;
+	opMotor_Index0						: BOOL;
+	opMotor_Index1						: BOOL;
+	opMotor_Start_Position				: BOOL;
+	
+	opTst_240VAC_Pwr : BOOL;
+	
+	opSocketCleaning : BOOL;
+	opSocketPurging : BOOL;
+	
+	
+	//internal variable
+	bMoveShuttle : BOOL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

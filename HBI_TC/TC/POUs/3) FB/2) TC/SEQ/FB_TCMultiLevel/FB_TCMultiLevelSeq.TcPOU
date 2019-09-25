@@ -1,0 +1,3438 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <POU Name="FB_TCMultiLevelSeq" Id="{d05d5490-7299-4891-9098-6afe4d42641d}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_TCMultiLevelSeq EXTENDS Tc3_HBI_System.FB_Basic
+VAR_INPUT
+	iLevel								: UINT;
+	lvlAlmMod							: ST_AlarmModules;
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR	
+	// Cylinder instance
+	fbTCDrawerExtRet					: Tc3_HBI_Cylinder.FB_Cylinder;
+	inTCDrawerExtRet					: Tc3_HBI_Cylinder.I_Cylinder:= fbTCDrawerExtRet;
+		                        		
+	fbTCDrawerUpDn						: Tc3_HBI_Cylinder.FB_Cylinder;
+	inTCDrawerUpDn						: Tc3_HBI_Cylinder.I_Cylinder:= fbTCDrawerUpDn;
+	
+	fbMotor_Ready 						: Tc3_HBI_Utilities.FB_SensorSignal;
+	fbMotor_Home_Position 				: Tc3_HBI_Utilities.FB_SensorSignal;
+	fbMotor_Position_Reached			: Tc3_HBI_Utilities.FB_SensorSignal;
+	fbMotor_Ps_Table_Active				: Tc3_HBI_Utilities.FB_SensorSignal; //temp use for level1 movein ready
+	fbMotor_Error						: Tc3_HBI_Utilities.FB_SensorSignal;
+	fbBD_ipBdoor 						: Tc3_HBI_Utilities.FB_BackDoor_Digital;
+	
+	delay								: FB_Delay;
+	
+	inPOn								: BOOL;
+	outPon								: BOOL;
+
+	doorLockChkTim						: TON; // Timer To Check DoorLockFeedBack After DoorLock Output is On.
+	
+	DIFU								: R_TRIG;
+	
+	stDbStnVIO							: ST_DebugStation_VIO; // For Debug Sation VIO; 
+	stMLDIO 							: ST_TCMultiLevel_DIO;
+	stOldMLVIO 							: ST_TCMultiLevel_VIO;
+	stMLBIO								: ST_TCMultiLevel_BIO;
+	stTCMLSeqParam 						: ST_TCMultiLevelSeqParam;
+	stTCColVIO							: ST_TCColumn_VIO;
+	stTCColDIO							: ST_TCColumn_DIO;
+	
+	FB_M_nCyclic_tSensorDelay			: TIME	:= T#200MS; // By default
+	FB_M_nCyclic_tSensorTimeOut			: TIME	:= T#10S;
+
+	// Common var 
+	bPause 								: BOOL; // Sequence pause
+	bBypassSingleMove 					: BOOL	:= TRUE;
+	bStep								: BOOL;
+	rtStep								: R_TRIG;
+	rtStepCase							: R_TRIG;
+	rtError								: R_TRIG;
+	iStkSeqCase 						: INT;
+	iSeqStep							: INT;
+	iSysRsetSeqStep						: INT;
+	arrSeqStep							: ARRAY [0..50] OF E_SeqSts; // Seq
+	arrSysRsetSeqStep					: ARRAY [0..50] OF E_SeqSts; // Sys Rset seq
+	
+	sMessage 							: STRING;
+	bErrClear							: BOOL;
+	bStepDone							: BOOL;
+	bSafeExecute						: BOOL;
+	iStkSingStackUp						: INT;
+	iLibrySts 							: ARRAY [1..20] OF UDINT;
+	                            		
+	sMsg 								: STRING;
+	FB_M_nCyclic_tDelay					: TIME	:= T#200MS;
+	
+	nI									: UINT;
+	rtStartTrig							: R_Trig;
+	rtStopTrig							: R_Trig;
+	StartPbDly							: Ton;
+	StopPbDly							: Ton;
+	                            		
+	btest								: BOOL;
+	
+	tDPSDelayToComplete					: TON; // DPSPowerOnOff
+	tDPSDelayToAutoComplete				: TON; // DPSPowerAuto
+	                            		
+	tAPACPwrDelayToComplete				: TON; // AP240ACPowerOnOff
+	tAPACPwrDelayToAutoComplete			: TON; // AP240ACPowerAuto
+	
+	tBef								: TIME; // Before Dwr Action
+	tAft								: TIME; // After Dwr Action
+	tSpn								: REAL; // Duration Time Span
+	tUpDnlock							: BOOL;
+	tInOutlock							: BOOL;
+	i									: INT;
+	pwrOnChkTim							: TON; // PowerOnFeedBackCheck Delay After Power On Durin SystemRset
+	
+	DIFUTstPresent						: R_TRIG;
+	DIFUOn_TstPwr						: R_TRIG;
+	DIFUAPPresent						: R_TRIG;
+	DIFUOn_AP240Pwr						: R_TRIG;
+	DIFUSet_bChkTstOn					: R_TRIG; 	
+	DIFUSet_bChkAP240On					: R_TRIG; 	
+	
+	
+	tstOnCheckTim						: TON; // delay to check TesterOnFeedback
+	ap240OnCheckTim						: TON; // delay to check AP240OnFeedback
+	tstPresentTim						: TON; // delay to On Tester Air Valve after Tester Present
+	apPresentTimer						: TON;
+	isLeakage							: BOOL;
+	isGroundFault						: BOOL;
+	isTstPwrOnFault						: BOOL;
+	TBOT_TC_ACPower_Signal					: BOOL;
+	bTIISenSimArray						: ARRAY[1..NO_OF_TII_SENSOR] OF BOOL;  //TII Sensor Sim by HMI
+	bBtnSimArray						: ARRAY[1..NO_OF_BTNLED] OF BOOL;  //Btn Press Sim by HMI
+
+//<TII Interlock>
+	itl_opAP_240ACPwrEnable  			: BOOL	:= FALSE;
+    itl_opDoorOpenReqLED				: BOOL	:= FALSE;
+    itl_opAlarmLED 						: BOOL	:= FALSE;
+    itl_opTesterAPDetachReqBtnLED		: BOOL	:= FALSE;
+    itl_opTesterDrawerAirOffReqBtnLED   : BOOL	:= FALSE;
+    itl_opAP_SafeToMoveSignal           : BOOL	:= FALSE;
+    itl_opAP_TCCReset					: BOOL	:= FALSE;
+    itl_opCell_LTIMValve				: BOOL	:= FALSE;
+    itl_opCellDrawerCylExtend 			: BOOL	:= FALSE;
+    itl_opCellDrawerCylRetract 			: BOOL	:= FALSE;
+    itl_opCellDrawerCylUp 				: BOOL	:= FALSE;
+    itl_opCellDrawerCylDown 			: BOOL	:= FALSE;
+    itl_opTst240VACPwrEnable 			: BOOL	:= FALSE;
+    itl_opCellPCWValve  				: BOOL	:= FALSE;
+    itl_opTIUSktAirSol_1				: BOOL	:= FALSE;
+    itl_opTIUSktAirSol_2				: BOOL	:= FALSE;
+    itl_opAP_AirSupplySol				: BOOL	:= FALSE;
+    itl_opTesterDrawerAirSupplySol	    : BOOL	:= FALSE;
+    itl_opCell_24VPowerEnable			: BOOL	:= FALSE;
+    itl_opCellDoorClosed				: BOOL	:= FALSE;
+//</TII Interlock>	
+
+//<AirOnOff>
+	iAPAirStep							: INT	:= 1;
+	iTstAirStep							: INT	:= 1;
+	iTIUSktAirStep						: INT	:= 1;
+//</AirOnOff>
+
+//<PowerOnOff>
+	iAPPwrStep							: INT	:= 1;
+	iTstPwrStep							: INT	:= 1;
+//</AirOnOff>
+
+	FB_TC_AP240ACPower					: DFB_Cylinder;
+	DUT_TC_AP240ACPower					: DUT_Cylinder;
+	TC_AP240Power_Perm					: WORD;
+	TC_AP240Power_SD					: WORD;
+	TC_AP240ACPower_Reset				: R_TRIG;
+	TC_AP240ACPower_Precondition		: BOOL; 
+	
+	
+	TC_APAirSupplySol_Reset				: R_TRIG;
+	TC_TesterDrawerAirSupplySol_Reset	: R_TRIG;
+END_VAR
+
+VAR PERSISTENT
+	_Start_Up							: BOOL; // BOOL to indicate PLC first start up
+	stMLVIO 							: ST_TCMultiLevel_VIO;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="AirOnOff" Id="{125af07d-16d0-4314-bb0d-60a6457d3652}">
+      <Declaration><![CDATA[METHOD AirOnOff : UDINT
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[CASE iAPAirStep OF
+	1: 	//ON
+		//apPresentTimer(IN:=stMLVIO.ipAPPresentSensor, PT:=APPrstChkDelay);
+		TC_APAirSupplySol_Reset(CLK:= (NOT itl_opAP_AirSupplySol));
+		IF (stMLVIO.bEnableAPAirSupOnInit OR stMLVIO.eAPAirSupCmd=E_Pwr.ON OR TC_APAirSupplySol_Reset.Q) THEN //OR stMLVIO.ipAPReady) (*AND apPresentTimer.Q*) THEN //tytier2
+			stMLVIO.opAPAirSupplySol:= TRUE;
+		END_IF
+		iAPAirStep:=2;
+	2:	//ON
+		IF stMLVIO.opAPAirSupplySol AND stMLVIO.bEnableAPAirSupOnInit THEN
+			stMLVIO.bEnableAPAirSupOnInit:= FALSE;
+		END_IF
+		iAPAirStep:=3;
+	3:	//ON
+		IF stMLVIO.opAPAirSupplySol AND stMLVIO.eAPAirSupCmd=E_Pwr.ON THEN
+				stMLVIO.eAPAirSupCmd:=E_Pwr.DONE;
+		END_IF
+		iAPAirStep:=4;
+	4:  //OFF
+		IF stMLVIO.opAPAirSupplySol
+		AND(stMLVIO.eAPAirSupCmd=E_Pwr.OFF OR itl_opAP_AirSupplySol) THEN
+		 	stMLVIO.opAPAirSupplySol:= FALSE;
+			//stMLVIO.eAPAirSupCmd:=E_Pwr.DONE;
+		END_IF
+		iAPAirStep:=5;
+	5:	//OFF
+		IF NOT stMLVIO.opAPAirSupplySol AND stMLVIO.eAPAirSupCmd=E_Pwr.OFF THEN
+			stMLVIO.eAPAirSupCmd:=E_Pwr.DONE;
+		END_IF
+		iAPAirStep:=1;
+END_CASE
+
+CASE iTstAirStep OF
+	1: 	//ON
+		//tstPresentTim(IN:=stMLVIO.ipTesterPresent, PT:=TstPrstChkDelay);
+		TC_TesterDrawerAirSupplySol_Reset(CLK:= (NOT itl_opTesterDrawerAirSupplySol));
+		IF ( stMLVIO.bEnableDwrAirSupOnInit OR stMLVIO.eTstAirSupCmd=E_Pwr.ON OR TC_TesterDrawerAirSupplySol_Reset.Q) (*AND tstPresentTim.Q*) THEN
+			stMLVIO.opTesterDrawerAirSupplySol:= TRUE;
+		END_IF
+		iTstAirStep:=2;
+	2:	//ON
+		IF stMLVIO.opTesterDrawerAirSupplySol AND stMLVIO.bEnableDwrAirSupOnInit THEN
+			stMLVIO.bEnableDwrAirSupOnInit:= FALSE;
+		END_IF
+		iTstAirStep:=3;
+	3:	//ON
+		IF stMLVIO.opTesterDrawerAirSupplySol AND stMLVIO.eTstAirSupCmd=E_Pwr.ON THEN
+			stMLVIO.eTstAirSupCmd:=E_Pwr.DONE;
+		END_IF
+		iTstAirStep:=4;
+	4:  //OFF
+		iTstAirStep:=5;
+	5:	//OFF
+		IF 	stMLVIO.opTesterDrawerAirSupplySol 
+			AND (stMLVIO.eTstAirSupCmd=E_Pwr.OFF  OR itl_opTesterDrawerAirSupplySol) THEN
+			stMLVIO.opTesterDrawerAirSupplySol:= FALSE;
+			//stMLVIO.eTstAirSupCmd:=E_Pwr.DONE;
+		END_IF
+		iTstAirStep:=6;
+	6:	//OFF
+		IF NOT stMLVIO.opTesterDrawerAirSupplySol AND stMLVIO.eTstAirSupCmd=E_Pwr.OFF THEN
+			stMLVIO.eTstAirSupCmd:=E_Pwr.DONE;
+		END_IF
+		iTstAirStep:=1;
+END_CASE
+
+CASE iTIUSktAirStep OF
+	1: 	
+		iTIUSktAirStep:=2;
+	2:
+		//ON
+		IF NOT stMLVIO.opTIUSktAirSol_1 AND stMLVIO.eTIUSktAir1Cmd=E_Pwr.ON THEN 
+			stMLVIO.opTIUSktAirSol_1:= TRUE;
+		END_IF
+		IF NOT	stMLVIO.opTIUSktAirSol_2 AND stMLVIO.eTIUSktAir2Cmd=E_Pwr.ON THEN
+			stMLVIO.opTIUSktAirSol_2:= TRUE;
+		END_IF
+		iTIUSktAirStep:=3;
+		
+	3:	//ON
+		IF stMLVIO.opTIUSktAirSol_1 AND stMLVIO.eTIUSktAir1Cmd=E_Pwr.ON THEN
+			stMLVIO.eTIUSktAir1Cmd:=E_Pwr.DONE;
+		END_IF
+		IF stMLVIO.opTIUSktAirSol_2 AND stMLVIO.eTIUSktAir2Cmd=E_Pwr.ON THEN
+			stMLVIO.eTIUSktAir2Cmd:=E_Pwr.DONE;
+		END_IF
+		iTIUSktAirStep:=4;
+	4:	//OFF
+		IF 	stMLVIO.opTIUSktAirSol_1 AND stMLVIO.eTIUSktAir1Cmd=E_Pwr.OFF THEN 
+			stMLVIO.opTIUSktAirSol_1:= FALSE;
+		END_IF
+		IF 	stMLVIO.opTIUSktAirSol_2 AND stMLVIO.eTIUSktAir2Cmd=E_Pwr.OFF THEN 
+			stMLVIO.opTIUSktAirSol_2:= FALSE;
+		END_IF
+		iTIUSktAirStep:=5;
+	5:	//OFF
+		IF NOT stMLVIO.opTIUSktAirSol_1 AND stMLVIO.eTIUSktAir1Cmd=E_Pwr.OFF THEN
+			stMLVIO.eTIUSktAir1Cmd:=E_Pwr.DONE;
+		END_IF
+		IF NOT stMLVIO.opTIUSktAirSol_1 AND stMLVIO.eTIUSktAir1Cmd=E_Pwr.OFF THEN
+			stMLVIO.eTIUSktAir1Cmd:=E_Pwr.DONE;
+		END_IF
+		
+		iTIUSktAirStep:=1;
+END_CASE
+
+
+
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="DwrAirOnInit" Id="{345d20aa-8bac-429c-8166-21514382a04a}">
+      <Declaration><![CDATA[METHOD DwrAirOnInit : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT stMLVIO.bEnableDwrAirSupOnInit THEN stMLVIO.bEnableDwrAirSupOnInit:=TRUE; END_IF	]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_240APPwr" Id="{158c9825-e25a-4c2e-b234-be6bf1c15da6}">
+      <Declaration><![CDATA[METHOD M_240APPwr : UDINT
+VAR_INPUT
+	iLevel:INT:=1;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+//<APPowerOn>
+(*	DIFUAPPresent(clk:=stMLVIO.ipAPPresentSensor AND (NOT itl_opAP_240ACPwrEnable));
+	IF DIFUAPPresent.Q THEN
+		stMLVIO.bAP240ACPowerOnOff 						:= TRUE;
+	END_IF
+
+	//OnPower===========================================================================================================
+	//TII AP240 PowerOnError
+	stMLVIO.bTIIAP240OnError := ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipAPPowerOn] 	;
+	stMLVIO.bTIIAPPrstError:= ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipAPPresentSensor] 	;
+	DIFUOn_AP240Pwr(clk:=(stMLVIO.ipAPPresentSensor) AND NOT isLeakage AND NOT isGroundFault AND (stMLVIO.bAP240ACPowerOnOff OR stMLVIO.bEnableAPPwrSupOnInit));
+	
+	IF DIFUOn_AP240Pwr.Q THEN
+		stMLVIO.opAP240ACPwrEnable						:=TRUE;
+	END_IF
+	ap240OnCheckTim(IN:=stMLVIO.opAP240ACPwrEnable,PT:=APPwrOnChkDelay);
+	DIFUSet_bChkAP240On(CLK:=stMLVIO.ipAPPresentSensor AND (stMLVIO.bAP240ACPowerOnOff OR stMLVIO.bEnableAPPwrSupOnInit) AND ap240OnCheckTim.Q);
+	IF DIFUSet_bChkAP240On.Q THEN
+		//ap240OnCheckTim(IN:=FALSE);
+		stMLVIO.bChkAP240On								:=TRUE;	
+	END_IF
+	//CheckTesterAfter2s=====================================================================================================
+	IF (NOT stMLVIO.ipAPPowerOn OR NOT stMLVIO.ipAPPresentSensor)
+		AND stMLVIO.bChkAP240On AND stMLVIO.bAP240ACPowerOnOff AND (stMLVIO.bTIIAP240OnError OR stMLVIO.bTIIAPPrstError)THEN
+		stMLVIO.bChkAP240On								:=FALSE;
+		stMLVIO.opAP240ACPwrEnable						:=FALSE;
+		stMLVIO.bAP240ACPowerOnOff						:=FALSE;
+		stMLVIO.bEnableAPPwrSupOnInit					:=FALSE;
+	END_IF	
+	
+	//PCW Valve ==============================================================================================================
+	IF stMLVIO.ipAPPresentSensor (*AND stMLVIO.bChkAP240On AND stMLVIO.opAP240ACPwrEnable*)AND 
+							   NOT  stMLVIO.bTIIAP240OnError AND NOT isLeakage AND NOT isGroundFault 
+							   AND NOT (stMLVIO.ipTesterPresent AND NOT stMLVIO.ipTesterPowerOn)
+								THEN
+		stMLVIO.opCellPCWValve							:=TRUE;
+	//ELSIF (*NOT stMLVIO.ipTesterPowerOn*)ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipTesterPowerOn]  AND stMLVIO.bChkTesterOn AND stMLVIO.opTst240VACPwrEnable THEN
+	//	stMLVIO.opCellPCWValve:=FALSE;
+	//	stMLVIO.bChkTesterOn:=FALSE;	
+	//	stMLVIO.bDPSPowerOnOff:=FALSE;
+	END_IF	
+	
+	//OFF if Power Off Command ===============================================================================================
+	IF NOT stMLVIO.bAP240ACPowerOnOff 	AND NOT stMLVIO.bEnableAPPwrSupOnInit
+										AND (stMLVIO.bChkAP240On OR stMLVIO.opAP240ACPwrEnable) THEN
+		stMLVIO.bChkAP240On								:=FALSE;				
+		stMLVIO.opAP240ACPwrEnable						:=FALSE;
+	END_IF
+	
+	//Off All Output If Leakage
+	IF isLeakage OR isGroundFault OR ( NOT stMLVIO.ipAPPresentSensor ) OR (NOT TBOT_TC_ACPower_Signal) OR 
+	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTesterPowerOn]	OR 	eapShutOffAllACPower
+	THEN
+		stMLVIO.bChkAP240On								:=FALSE;
+		stMLVIO.opAP240ACPwrEnable						:=FALSE;
+		stMLVIO.bAP240ACPowerOnOff						:=FALSE;
+		stMLVIO.bEnableAPPwrSupOnInit					:=FALSE;
+		IF (NOT stMLVIO.ipTesterPresent AND NOT stMLVIO.ipAPPresentSensor) OR isLeakage OR isGroundFault THEN
+			stMLVIO.opCellPCWValve						:=FALSE;
+		END_IF
+	END_IF
+
+	//Reset PwrOnInit after Actual power is On
+	IF stMLVIO.bEnableAPPwrSupOnInit AND stMLDIO.opAP240ACPwrEnable THEN
+		stMLVIO.bEnableAPPwrSupOnInit					:=FALSE;
+	END_IF
+*)
+	
+	
+	
+// new implementation motor
+PermSD();
+
+TC_AP240ACPower_Precondition		:= (
+											stMLVIO.ipAPPresentSensor AND stMLVIO.ipAPReady	AND	//precondition
+											(NOT itl_opAP_240ACPwrEnable) AND 					//TIIAlarm interlock checking
+											(NOT eapShutOffAllACPower OR NOT bDebugCart) AND	//EAP shut off from debug station facility. 1: shutoff, 0: Normal
+											(NOT TBOT_TC_ACPower_Signal OR bDebugCart)				//TBOT signal to TC. 1:shutoff, 0: Normal
+										) AND			
+										Ap240AcPowerMode <> 1;								//power on and off manual command);
+
+TC_AP240ACPower_Reset(CLK:= TC_AP240ACPower_Precondition);
+
+DUT_TC_AP240ACPower.AutInp		:= TC_AP240ACPower_Precondition;
+DUT_TC_AP240ACPower.Reset		:= TC_AP240ACPower_Reset.Q;
+DUT_TC_AP240ACPower.Travel_Time	:= 5;
+
+
+FB_TC_AP240ACPower(
+	Sec_P		:= Sec_P, 
+	ID		:= 'TC_AP240ACPower', 
+	Simulate		:= DUT_TC_AP240ACPower.Simulate, 
+	Permissive		:= TC_AP240Power_Perm, 
+	ShutDown		:= TC_AP240Power_SD, 
+	AutoInp		:= DUT_TC_AP240ACPower.AutInp, 
+	Command		:= DUT_TC_AP240ACPower.CMD, 
+	IExtend		:= stMLVIO.ipAPPowerOn, 
+	IRetract		:= (NOT stMLVIO.ipAPPowerOn), 
+	Travel_Time		:= DUT_TC_AP240ACPower.Travel_Time, 
+	SetOutput_Pulse		:= FALSE, 
+	FailedHoldLast		:= FALSE,
+	OExtend		=> stMLVIO.opAP240ACPwrEnable, 
+	ORetract		=> , 
+	DUT		:= DUT_TC_AP240ACPower);
+//</APPowerOn>
+
+GVL_DUT_TC_AP240ACPower		:= DUT_TC_AP240ACPower;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_240TstPwr" Id="{3f386753-5c64-4d66-9d59-10a613bee6e1}">
+      <Declaration><![CDATA[METHOD M_240TstPwr : UDINT
+VAR_INPUT
+	iLevel:INT:=1;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[	
+//<TesterPowerOn>
+	//On Output if Tester Present and DPSPowerOn
+	//stMLVIO.opTst240VACPwrEnable 	:=	stMLVIO.bDPSPowerOnOff AND stMLVIO.ipTesterPresent	;
+	//TII Tester PowerOnError
+	
+	stMLVIO.bTIITstPrstError:= ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipTesterPresent] 	;
+	stMLVIO.bTIITesterOnError := ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipTesterPowerOn] 	;
+	(*stMLVIO.bTIITesterLatchClosedError := ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipTesterLatchesClosed] 	;*)
+	//Reset DPSPowerONOFF bit if Tester On Error
+	//stMLVIO.bDPSPowerOnOff := NOT stMLVIO.bTIITesterOnError;
+	
+	//SelfStartForTstPwrOn====================================================================================================
+	DIFUTstPresent(clk:=stMLVIO.ipTesterPresent AND stMLVIO.ipTesterLatchesClosed AND (NOT itl_opTst240VACPwrEnable));
+	//DIFUTstPresent(clk:=stMLVIO.ipTesterPresent AND stMLVIO.ipTesterLatchesClosed AND NOT stMLVIO.opAlarmLED);//To Auto On After Any Of the Alarm Occurance)
+	IF DIFUTstPresent.Q THEN
+		stMLVIO.bDPSPowerOnOff := TRUE;
+	END_IF
+	
+	//OnTesterPower===========================================================================================================
+	DIFUOn_TstPwr(clk:=stMLVIO.ipTesterPresent AND stMLVIO.ipTesterLatchesClosed AND (stMLVIO.bDPSPowerOnOff OR stMLVIO.bEnableTstPwrSupOnInit));
+	IF DIFUOn_TstPwr.Q THEN                                                                                     
+		stMLVIO.opTst240VACPwrEnable:=TRUE;
+	END_IF
+	//TesterOnFeedBackCheckDelay==============================================================================================
+	tstOnCheckTim(IN:=stMLVIO.opTst240VACPwrEnable,PT:=TstPwrOnChkDelay); //Wait for 20s after TesterPwr On
+	DIFUSet_bChkTstOn(CLK:=stMLVIO.ipTesterPresent	 AND (stMLVIO.bDPSPowerOnOff OR stMLVIO.bEnableTstPwrSupOnInit) AND tstOnCheckTim.Q);
+	IF DIFUSet_bChkTstOn.Q THEN
+		//tstOnCheckTim(IN:=FALSE);
+		stMLVIO.bChkTesterOn:=TRUE;	
+	END_IF
+	//ResetTimerForNextShot
+	//IF stMLVIO.bDPSPowerOnOff AND stMLVIO.bChkTesterOn THEN
+	//	tstOnCheckTim(IN:=FALSE);
+	//END_IF
+	//CheckTesterAfter20s=====================================================================================================
+	IF (NOT stMLVIO.ipTesterPowerOn (*OR NOT stMLVIO.ipTesterPresent*) OR NOT stMLVIO.ipTesterLatchesClosed ) 
+									AND stMLVIO.bChkTesterOn (*AND stMLVIO.bDPSPowerOnOff *)
+									AND (stMLVIO.bTIITesterOnError (*OR stMLVIO.bTIITesterLatchClosedError*) OR stMLVIO.bTIITstPrstError)THEN
+		stMLVIO.bChkTesterOn:=FALSE;
+		stMLVIO.opTst240VACPwrEnable:=FALSE;
+		stMLVIO.bDPSPowerOnOff:=FALSE;
+		stMLVIO.opCellPCWValve:=FALSE;
+		stMLVIO.bEnableTstPwrSupOnInit:=FALSE;
+	END_IF	
+	//OFF if Power Off Command ===============================================================================================
+	IF NOT stMLVIO.bDPSPowerOnOff AND NOT stMLVIO.bEnableTstPwrSupOnInit 
+	   							  AND (stMLVIO.bChkTesterOn OR stMLVIO.opTst240VACPwrEnable   (* OR 
+stMLVIO.opCellPCWValve*) )THEN
+		stMLVIO.bChkTesterOn:=FALSE;
+		stMLVIO.opTst240VACPwrEnable:=FALSE;
+		(*stMLVIO.opCellPCWValve:=FALSE;*)
+	END_IF
+	//PCW Valve ==============================================================================================================
+
+	IF stMLVIO.ipTesterPowerOn AND stMLVIO.bChkTesterOn AND stMLVIO.opTst240VACPwrEnable AND 
+							   NOT  stMLVIO.bTIITesterOnError AND NOT isLeakage AND NOT isGroundFault THEN
+		stMLVIO.opCellPCWValve:=TRUE;
+	//ELSIF (*NOT stMLVIO.ipTesterPowerOn*)ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipTesterPowerOn]  AND stMLVIO.bChkTesterOn AND stMLVIO.opTst240VACPwrEnable THEN
+	//	stMLVIO.opCellPCWValve:=FALSE;
+	//	stMLVIO.bChkTesterOn:=FALSE;	
+	//	stMLVIO.bDPSPowerOnOff:=FALSE;
+	END_IF	
+	//OffPCWValve and All Output If Leakage
+	IF isLeakage OR isGroundFault OR ( NOT stMLVIO.ipTesterPresent ) OR TBOT_TC_ACPower_Signal OR eapShutOffAllACPower THEN
+		stMLVIO.bChkTesterOn:=FALSE;	
+		stMLVIO.opTst240VACPwrEnable:=FALSE;
+		stMLVIO.bDPSPowerOnOff:=FALSE;
+		stMLVIO.bEnableTstPwrSupOnInit:=FALSE;
+	END_IF
+	IF (NOT stMLVIO.ipTesterPresent AND NOT stMLVIO.ipAPPresentSensor) OR isLeakage OR isGroundFault OR
+		(stMLVIO.ipTesterPresent AND NOT stMLVIO.ipTesterPowerOn  AND NOT stMLVIO.ipTesterLatchesClosed ) 
+	THEN
+		stMLVIO.opCellPCWValve:=FALSE;
+	END_IF
+	
+	//Reset PweOnInit after Actual power is On
+	IF stMLVIO.bEnableTstPwrSupOnInit AND stMLDIO.opTst240VACPwrEnable THEN
+		stMLVIO.bEnableTstPwrSupOnInit:=FALSE;
+	END_IF
+	//==============================================================================================================
+//</TesterPowerOn>
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_GetTIUStatus" Id="{fb2f011d-463a-4a71-89d1-e39639a1bcb2}">
+      <Declaration><![CDATA[METHOD M_GetTIUStatus : INT
+VAR_INPUT
+	b0:BOOL;
+	b1:BOOL;
+	b2:BOOL;
+	b3:BOOL;
+END_VAR
+VAR
+	result:INT;
+END_VAR
+
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[result.0				:= b0;
+result.1				:= b1;
+result.2				:= b2;
+result.3				:= b3;
+M_GetTIUStatus			:= result;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_InputBackDoor" Id="{671b77c7-1523-4320-b84b-a1aa06230f8a}">
+      <Declaration><![CDATA[METHOD M_InputBackDoor : UDINT
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[(*inTCDrawerIn.P_ipExtend:=stTCLevelVIO.ipTCDrawerExtendedoutCell:=fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , bActual:=stTCLevelDIO.ipL1_TC_Drawer_Extended_Out_Cell , 
+								bSimu:=inTCDrawerIn.P_opExtend , iBackDoor:=stTCLevelBIO.ipL1_TC_Drawer_Extended_Out_Cell );
+inTCDrawerIn.P_ipRetract:=stTCLevelVIO.ipTCDrawerRetractedinCell:=fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , bActual:=stTCLevelDIO.ipL1_TC_Drawer_Retracted_In_Cell , 
+								bSimu:=inTCDrawerIn.P_opRetract , iBackDoor:=stTCLevelBIO.ipL1_TC_Drawer_Retracted_In_Cell );*)
+
+(*stTCLevelVIO.ipStartPB:=fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , bActual:=stTCLevelDIO.ipStartPB , 
+								bSimu:=TRUE , iBackDoor:=stTCLevelBIO.ipStartPB );
+
+stTCLevelVIO.ipStopPB:=fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , bActual:=stTCLevelDIO.ipStopPB , 
+								bSimu:=TRUE , iBackDoor:=stTCLevelBIO.ipStopPB );*)
+								
+//<HMI_TII_Sensor_Simulation>
+	IF bHMIEnTIISenSimulation THEN
+		//bTIISenSimArray:= stHMITIISenSimArray[iLevel].bHMITIIByPassArray;
+		FOR i:=1 TO NO_OF_TII_SENSOR DO
+			bTIISenSimArray[i]:= NOT stHMITIISenSimArray[iLevel].bHMITIIByPassArray[i];
+		END_FOR
+	ELSE
+		FOR i:=1 TO NO_OF_TII_SENSOR DO
+			bTIISenSimArray[i]:=TRUE;
+		END_FOR
+	END_IF
+//</HMI_TII_Sensor_Simulation>	
+
+//<HMI_ManualBtnPress_Simulation>
+	IF bHMIBtnSimulation THEN
+		//bTIISenSimArray:= stHMITIISenSimArray[iLevel].bHMITIIByPassArray;
+		FOR i:=1 TO NO_OF_BTNLED DO
+			bBtnSimArray[i]:= NOT stHMIBtnSimArray[iLevel].bHMITIIByPassArray[i];
+		END_FOR
+	ELSE
+		FOR i:=1 TO NO_OF_BTNLED DO
+			bBtnSimArray[i]:=TRUE;
+		END_FOR
+	END_IF
+//</HMI_ManualBtnPress_Simulation>	
+
+//<Input_BackDoor>														
+	stMLVIO.ipAPPresentSensor 		:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode AND bTIISenSimArray[E_TIIAlarm.ipAPPresentSensor] , 
+																	bActual:=stMLDIO.ipAPPresentSensor , 
+	   																bSimu:=TRUE, 
+																	iBackDoor:=stMLBIO.ipAPPresentSensor );
+																	//stTCMultiLevelBIO.ipAP_PresentSensor 
+											
+	stMLVIO.ipAPPowerOn				:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode AND bTIISenSimArray[E_TIIAlarm.ipAPPowerOn] , 
+	                                            					bActual:=stMLDIO.ipAPPowerOn , 
+	                                            					bSimu:=TRUE , 
+	                                            					iBackDoor:=stMLBIO.ipAPPowerOn );
+	
+	stMLVIO.ipAPReady				:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode AND bTIISenSimArray[E_TIIAlarm.ipAPReady] , 
+	                                            					bActual:=stMLDIO.ipAPReady , 
+	                                            					bSimu:=TRUE , 
+	                                            					iBackDoor:=stMLBIO.ipAPReady );
+				
+	stMLVIO.ipHandlerSafeToEnterPLC		:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , 
+	                                            					bActual:=stMLDIO.ipHandlerSafeToEnterPLC , 
+	                                            					bSimu:=TRUE , 
+	                                            					iBackDoor:=stMLBIO.ipHandlerSafeToEnterPLC );
+	
+	stMLVIO.ipHandlerSafeToEnterHwr		:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , 
+	                                            					bActual:=stMLDIO.ipHandlerSafeToEnterHwr , 
+	                                            					bSimu:=TRUE , 
+	                                            					iBackDoor:=stMLBIO.ipHandlerSafeToEnterHwr );
+			
+	stMLVIO.ipCellFluidLeakage1		:= NOT fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode AND bTIISenSimArray[E_TIIAlarm.ipCellFluidLeakage1] , 
+	                                            						bActual:=stMLDIO.ipCellFluidLeakage1 , 
+	                                            						bSimu:=TRUE , 
+	                                            						iBackDoor:=stMLBIO.ipCellFluidLeakage1 );
+				
+	stMLVIO.ipCellFluidLeakage2		:= NOT fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode AND bTIISenSimArray[E_TIIAlarm.ipCellFluidLeakage2] , 
+	                                            						bActual:=stMLDIO.ipCellFluidLeakage2 , 
+	                                            						bSimu:=TRUE , 
+	                                            						iBackDoor:=stMLBIO.ipCellFluidLeakage2 );
+				
+	stMLVIO.ipCellGroundFault 		:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode AND bTIISenSimArray[E_TIIAlarm.ipCellGroundFault] , 
+	                                            					bActual:=stMLDIO.ipCellGroundFault , 
+	                                            					bSimu:=FALSE , 
+	                                            					iBackDoor:=stMLBIO.ipCellGroundFault );
+				
+	stMLVIO.ipTesterPresent			:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode AND bTIISenSimArray[E_TIIAlarm.ipTesterPresent] , 
+	                                            					bActual:=stMLDIO.ipTesterPresent , 
+	                                            					bSimu:=TRUE , 
+	                                            					iBackDoor:=stMLBIO.ipTesterPresent );
+	
+	stMLVIO.ipTesterPowerOn			:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode AND bTIISenSimArray[E_TIIAlarm.ipTesterPowerOn], 
+	                                            					bActual:=stMLDIO.ipTesterPowerOn , 
+	                                            					bSimu:=TRUE , 
+	                                            					iBackDoor:=stMLBIO.ipTesterPowerOn );
+	
+	stMLVIO.ipTesterReady				:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode, 
+	                                            						bActual:=stMLDIO.ipTesterReady , 
+	                                            						bSimu:=TRUE , 
+	                                            						iBackDoor:=stMLBIO.ipTesterReady );
+																					  
+																					  
+	stMLVIO.ipTCCellDoorOpenReqBtn				:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode AND bBtnSimArray[2+1], 
+	                                            								bActual:=stMLDIO.ipTCCellDoorOpenReqBtn , 
+	                                            								bSimu:=FALSE , 
+	                                            								iBackDoor:=stMLBIO.ipTCCellDoorOpenReqBtn );
+	
+	stMLVIO.ipDrawerMaintenanceModeBtn			:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode AND bBtnSimArray[0+1], 
+	                                            								bActual:=stMLDIO.ipDrawerMaintenanceModeBtn , 
+	                                            								bSimu:=FALSE , 
+	                                            								iBackDoor:=stMLBIO.ipDrawerMaintenanceModeBtn );
+	
+	stMLVIO.ipTCCellAbortFlowBtn				:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode AND bBtnSimArray[1+1], 
+	                                            								bActual:=stMLDIO.ipTCCellAbortFlowBtn , 
+	                                            								bSimu:=FALSE , 
+	                                            								iBackDoor:=stMLBIO.ipTCCellAbortFlowBtn );																				  
+																					  
+	//===
+	IF (stMLVIO.bPLCRebootStatusForExtRetRs AND fbTCDrawerExtRet.P_opRetract) OR fbTCDrawerExtRet.P_opExtend THEN //(stMLVIO.ipTCDrawerCylExtendRS OR stMLVIO.ipTCDrawerCylRetractRS) THEN
+		stMLVIO.bPLCRebootStatusForExtRetRs :=FALSE;
+	END_IF
+	IF (stMLVIO.bPLCRebootStatusForUpDownRs AND fbTCDrawerUpDn.P_opRetract) OR fbTCDrawerUpDn.P_opExtend  THEN //(stMLVIO.ipTCDrawerCylUpRS OR stMLVIO.ipTCDrawerCylDownRS)  THEN
+		stMLVIO.bPLCRebootStatusForUpDownRs :=FALSE;
+	END_IF
+	inTCDrawerExtRet.P_ipExtend:=stMLVIO.ipTCDrawerCylExtendRS	:=fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , 
+																							 	bActual:=stMLDIO.ipTCDrawerCylExtendRS,
+																								bSimu:=fbTCDrawerExtRet.P_opExtend , 
+																								iBackDoor:=stMLBIO.ipTCDrawerCylExtendRS );
+	
+	inTCDrawerExtRet.P_ipRetract:=stMLVIO.ipTCDrawerCylRetractRS	:=fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , 
+																									bActual:=stMLDIO.ipTCDrawerCylRetractRS,
+																									bSimu:=stMLVIO.bPLCRebootStatusForExtRetRs OR fbTCDrawerExtRet.P_opRetract , 
+																									iBackDoor:=stMLBIO.ipTCDrawerCylRetractRS );
+	
+	inTCDrawerUpDn.P_ipExtend:=stMLVIO.ipTCDrawerCylUpRS			:=fbBD_ipBdoor.M_bBackDoorCtrl(	bProductionMode:=bProductionMode , 
+																									bActual:=stMLDIO.ipTCDrawerCylUpRS , 
+																									bSimu:=fbTCDrawerUpDn.P_opExtend , 
+																									iBackDoor:=stMLBIO.ipTCDrawerCylUpRS );
+																									  
+	inTCDrawerUpDn.P_ipRetract:=stMLVIO.ipTCDrawerCylDownRS		:=fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , 
+																								bActual:=stMLDIO.ipTCDrawerCylDownRS , 
+																								bSimu:=stMLVIO.bPLCRebootStatusForUpDownRs OR fbTCDrawerUpDn.P_opRetract , 
+																								iBackDoor:=stMLBIO.ipTCDrawerCylDownRS );
+	//===
+																					  
+	stMLVIO.ipTCCellDoorClosed		:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode AND bTIISenSimArray[E_TIIAlarm.ipTCCellDoorClosed], 
+	                                            					bActual:=stMLDIO.ipTCCellDoorClosed , 
+	                                            					bSimu:=TRUE , 
+	                                            					iBackDoor:=stMLBIO.ipTCCellDoorClosed );
+																	
+	stMLVIO.ipTCCellTbotSideDoorLocked01		:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode, 
+	                                            					bActual:=stMLDIO.ipTCCellTbotSideDoorLocked01 , 
+	                                            					bSimu:=TRUE , 
+	                                            					iBackDoor:=stMLBIO.ipTCCellTbotSideDoorLocked01 );
+
+	stMLVIO.ipTCCellTbotSideDoorLocked02		:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , 
+	                                            					bActual:=stMLDIO.ipTCCellTbotSideDoorLocked02 , 
+	                                            					bSimu:=TRUE , 
+	                                            					iBackDoor:=stMLBIO.ipTCCellTbotSideDoorLocked02 );	
+																
+			
+	stMLVIO.ipTCCellDoorOpenCloseStatus	:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , 
+	                                                					bActual:=stMLDIO.ipTCCellDoorOpenCloseStatus , 
+	                                                					bSimu:=TRUE , 
+	                                                					iBackDoor:=stMLBIO.ipTCCellDoorOpenCloseStatus );
+																		
+	stMLVIO.ipTCCellTbotSideDoorOpenCloseStatus01		:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode, 
+	                                            					bActual:=stMLDIO.ipTCCellTbotSideDoorOpenCloseStatus01 , 
+	                                            					bSimu:=TRUE , 
+	                                            					iBackDoor:=stMLBIO.ipTCCellTbotSideDoorOpenCloseStatus01 );
+
+	stMLVIO.ipTCCellTbotSideDoorOpenCloseStatus02		:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , 
+	                                            					bActual:=stMLDIO.ipTCCellTbotSideDoorOpenCloseStatus02 , 
+	                                            					bSimu:=TRUE , 
+	                                            					iBackDoor:=stMLBIO.ipTCCellTbotSideDoorOpenCloseStatus02 );	
+		
+	stMLVIO.ipTesterLatchesClosed		:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode AND bTIISenSimArray[E_TIIAlarm.ipTesterLatchesClosed], 
+	                                            						bActual:=stMLDIO.ipTesterLatchesClosed , 
+	                                            						bSimu:=TRUE, 
+	                                            						iBackDoor:=stMLBIO.ipTesterLatchesClosed );
+	
+	stMLVIO.ipTIUPresent				:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , 
+	                                            						bActual:=stMLDIO.ipTIUPresent , 
+	                                            						bSimu:=TRUE,
+	                                            						iBackDoor:=stMLBIO.ipTIUPresent );	
+//</Input_BackDoor>
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_InterlockTII" Id="{88edcd8a-14ef-48d8-99bb-1f383da7f5f2}">
+      <Declaration><![CDATA[METHOD M_InterlockTII : UDINT
+VAR_INPUT
+	ilevel:INT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+//<TII_Interlock_Bit>									
+	itl_opTst240VACPwrEnable:=		ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipTesterPresent	  	 	] 	
+								OR	ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipTesterPowerOn	   		] 	
+								OR	ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipTesterLatchesClosed 	] 
+								OR	ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipCellFluidLeakage1		] 
+								OR	ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipCellFluidLeakage2		] 
+								OR	ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipCellGroundFault 	   	] 
+								OR	ALMTC.Common.AlarmID[E_ColAlarm.ipColumnFluid_PCW_Leakage 		]
+								OR	ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.TBOT_TC_ACPower_Signal 	];		
+	
+	itl_opCell_24VPowerEnable:=	(*	ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipAPPresentSensor		]
+								OR*)ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipCellFluidLeakage1		] 
+	                            OR	ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipCellFluidLeakage2		] 
+	                            OR	ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipCellGroundFault 	   	] 
+								OR	ALMTC.Common.AlarmID[E_ColAlarm.ipColumnFluid_PCW_Leakage 		];
+	                                
+	itl_opAP_240ACPwrEnable:=		ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipTesterPowerOn			] // NEW REQ : if TesterPowerOnFeedBack Alarm, OFF AP240ACpwr
+								OR	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipAPPowerOn				]
+								OR 	ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipAPReady				]
+								OR	ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipCellFluidLeakage1		] 
+	                            OR	ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipCellFluidLeakage2		] 
+	                            OR	ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipCellGroundFault 	   	] 
+								OR	ALMTC.Common.AlarmID[E_ColAlarm.ipColumnFluid_PCW_Leakage 		]
+								OR	ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.TBOT_TC_ACPower_Signal 	];
+	                                
+	itl_opCellPCWValve:=			ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipTesterPowerOn			] 
+								OR	ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipCellFluidLeakage1		] 
+	                            OR	ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipCellFluidLeakage2		] 
+	                            OR	ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipCellGroundFault 	   	] 
+								OR	ALMTC.Common.AlarmID[E_ColAlarm.ipColumnFluid_PCW_Leakage 		];
+								
+	itl_opAP_AirSupplySol:=		(*	ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipAPPowerOn 		   		]
+								OR*)ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipCellFluidLeakage1		] 
+	                            OR	ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipCellFluidLeakage2		] 
+	                            OR	ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipCellGroundFault 	   	]
+								OR	ALMTC.Common.AlarmID[E_ColAlarm.ipColumnFluid_PCW_Leakage 		]
+								OR	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipAPReady				];
+	                               
+	itl_opTesterDrawerAirSupplySol:=	(*	ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipTesterPowerOn	   		]
+										OR*)ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipCellFluidLeakage1		] 
+	                            		OR	ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipCellFluidLeakage2		] 
+	                            		OR	ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipCellGroundFault 	   	] 
+										OR	ALMTC.Common.AlarmID[E_ColAlarm.ipColumnFluid_PCW_Leakage 		]
+										OR	(bDebugCart AND 
+											(ALMTC.Level[iLevel].AlarmID[E_AlarmID.TBotSideDoorCloseSignalNotDetected	] OR
+											 ALMTC.Level[iLevel].AlarmID[E_AlarmID.TBotSideDoorLockSignalNotDetected	]));
+								    
+	itl_opTIUSktAirSol_1:=		(*	ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipAPPresentSensor	   	] 		
+								OR	ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipCellFluidLeakage1		] 
+	                            OR	ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipCellFluidLeakage2		] 
+	                            OR*)ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipCellGroundFault 	   	] 
+								(*OR	ALMTC.Common.AlarmID[E_ColAlarm.ipColumnFluid_PCW_Leakage 		]*);		
+
+	itl_opTIUSktAirSol_2:=		(*	ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipAPPresentSensor	   	] 		
+								OR	ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipCellFluidLeakage1		] 
+	                            OR	ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipCellFluidLeakage2		] 
+	                            OR*)ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipCellGroundFault 	   	] 
+								(*OR	ALMTC.Common.AlarmID[E_ColAlarm.ipColumnFluid_PCW_Leakage 		]*);						
+	
+	(*itl_opCellDrawerCylUp	:=		ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipCellFluidLeakage1		] 
+	                            OR	ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipCellFluidLeakage2		] 
+	                            OR	ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipCellGroundFault 	   	] ;	*)
+	
+	itl_opCellDrawerCylExtend:=			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipAPPresentSensor			]									
+									OR	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipAPDeactuatedPLC			]	
+									OR	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipAPDeactuatedHwr			]	
+									OR	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTesterPresent				]								
+									OR	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTIUPresent					];	
+									
+	itl_opAP_SafeToMoveSignal:=			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTesterLatchesClosed		]
+									OR	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCDrawerCylRetractRS		]
+									OR	ALMTC.Level[iLevel].AlarmID[E_AlarmID.DrawerDownError				]
+									OR	ALMTC.Level[iLevel].AlarmID[E_AlarmID.DrawerRetractError			]
+									OR	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCCellDoorClosed			]
+									
+	                            	OR	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellGroundFault 	   		] 	
+									OR	ALMTC.Common.AlarmID[E_ColAlarm.ipColumnFluid_PCW_Leakage	]
+									//OR column present?
+									//OR facility leak?
+									
+									OR	(bDebugCart AND 
+											(ALMTC.Level[iLevel].AlarmID[E_AlarmID.TBotSideDoorCloseSignalNotDetected	] OR
+											 ALMTC.Level[iLevel].AlarmID[E_AlarmID.TBotSideDoorLockSignalNotDetected	]));
+										
+									
+//</TII_Interlock_Bit>
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_IOMapping" Id="{e3ee4a20-fc21-496d-a3bf-b8671140ad85}">
+      <Declaration><![CDATA[METHOD M_IOMapping : UDINT
+VAR_INPUT
+	ilevel:INT;
+END_VAR
+
+VAR_IN_OUT
+	//dIO : ST_TCMultiLevel_DIO;
+	//vIO : ST_TCMultiLevel_VIO;
+	//vIO : ST_TCMultiLevel_BIO;
+	//stTCMultiLevelSeqParam : ST_TCMultiLevelSeqParam;	
+END_VAR
+VAR
+//	itl_opAP_240ACPwrEnable  			:BOOL:=FALSE;
+//    itl_opDoorOpenReqLED				:BOOL:=FALSE;
+//    itl_opAlarmLED 						:BOOL:=FALSE;
+//    itl_opTesterAPDetachReqBtnLED		:BOOL:=FALSE;
+//    itl_opTesterDrawerAirOffReqBtnLED   :BOOL:=FALSE;
+//    itl_opAP_SafeToMoveSignal           :BOOL:=FALSE;
+//    itl_opAP_TCCReset					:BOOL:=FALSE;
+//    itl_opCell_LTIMValve				:BOOL:=FALSE;
+//    itl_opCellDrawerCylExtend 			:BOOL:=FALSE;
+//    itl_opCellDrawerCylRetract 			:BOOL:=FALSE;
+//    itl_opCellDrawerCylUp 				:BOOL:=FALSE;
+//    itl_opCellDrawerCylDown 			:BOOL:=FALSE;
+//    itl_opTst240VACPwrEnable 			:BOOL:=FALSE;
+//    itl_opCellPCWValve  				:BOOL:=FALSE;
+//    itl_opAP_TIU_Skt_Air 				:BOOL:=FALSE;
+//    itl_opAP_TBD						:BOOL:=FALSE;
+//    itl_opAP_AirSupplySol				:BOOL:=FALSE;
+//    itl_opTesterDrawerAirSupplySol	    :BOOL:=FALSE;
+//    itl_opCell_24VPowerEnable			:BOOL:=FALSE;
+//    itl_opCellDoorClosed				:BOOL:=FALSE;
+	
+END_VAR
+
+
+
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[	M_InputBackDoor();																				  
+//<POC_Analog_Read>
+//	IF (NOT bDebugCart AND iLevel = 3) OR (bDebugCart  AND iLevel <> 3) THEN
+	aiXConverted[iLevel] := (stMLDIO.aiXAxis*8.0/32767.0)-4.0;
+	aiYConverted[iLevel] := (stMLDIO.aiYAxis*8.0/32767.0)-4;
+	aiY1Converted[iLevel] := (stMLDIO.aiY1Axis*8.0/32767.0)-4;
+	aiZConverted[iLevel] := (stMLDIO.aiZAxis*8.0/32767.0)-4;	
+	aiXConvertedRet[iLevel] := (stMLDIO.aiXAxisRet*8.0/32767.0)-4;
+	aiYConvertedRet[iLevel] := (stMLDIO.aiYAxisRet*8.0/32767.0)-4;
+	aiZConvertedRet[iLevel] := (stMLDIO.aiZAxisRet*8.0/32767.0)-4;
+//	END_IF
+//</POC_Analog_Read>
+
+//<DrawerExtendRetract>
+	stMLVIO.opCellDrawerCylExtend 	:= fbTCDrawerExtRet.P_opExtend;
+	stMLVIO.opCellDrawerCylRetract 	:= fbTCDrawerExtRet.P_opRetract;
+	stMLVIO.opCellDrawerCylUp 		:= fbTCDrawerUpDn.P_opExtend; 					
+	stMLVIO.opCellDrawerCylDown 	:= fbTCDrawerUpDn.P_opRetract; 
+//</DrawerExtendRetract>
+
+	isLeakage:= stMLVIO.ipCellFluidLeakage1 OR stMLVIO.ipCellFluidLeakage2	;									//Used by Tst Pwr On Chk
+	isGroundFault := stMLVIO.ipCellGroundFault OR ALMTC.Common.AlarmID[E_ColAlarm.ipColumnFluid_PCW_Leakage] ;	//Used by Tst Pwr On Chk
+	
+	IF bDebugCart = FALSE AND bDebugStation = FALSE THEN
+		TBOT_TC_ACPower_Signal	:= stMLVIO.TBOT_TC_ACPower_Signal	:= stTCMLSeqParam.bTCCellACPwrOff;
+	END_IF
+	
+	M_InterlockTII(iLevel:=iLevel);
+	M_240TstPwr(iLevel:=iLevel);
+	M_240APPwr(iLevel:=iLevel);
+
+//inPOn :=stTCMultiLevelVIO.ipAP_PresentSensor AND stTCMultiLevelVIO.ipTesterLatchesClosed;
+//delay(msec:=20000,in:=inPOn,out:=outPon);
+
+//<ButtonLEDs>
+	//stMLVIO.opDoorOpenReqLED 	:= stMLVIO.bButtons[0];
+	//stMLVIO.opTCCellAbortFlowBtnLED 	:= stMLVIO.bButtons[1];
+	//stMLVIO.opDrawerMaintenanceModeBtnLED 	:= stMLVIO.bButtons[2];
+//</ButtonLEDs>
+
+//<AirSupply>
+	AirOnOff(); // Tester Air and AP Air
+//<AirSupply>
+
+//<24VSencondaryPwr>
+	IF NOT ( isLeakage OR isGroundFault)THEN
+		stMLVIO.opCell24VPowerEnable:=TRUE;
+	ELSE
+		stMLVIO.opCell24VPowerEnable:=FALSE;
+	END_IF
+//<24VSencondaryPwr>>
+
+
+//Do not have manual command, so we can on automatically if pass permissive.
+IF bDebugCart THEN
+	stMLVIO.opAPSafeToEngage	:=	(stMLVIO.ipTCDrawerCylDownRS AND stMLVIO.ipTCDrawerCylRetractRS AND NOT stMLVIO.ipTCDrawerCylExtendRS) 	//pass criteria: drawer retract: 1, drawer down: 1, drawer extend: 0
+							  		AND (stMLVIO.ipTCCellTbotSideDoorOpenCloseStatus01 AND stMLVIO.ipTCCellTbotSideDoorOpenCloseStatus02) 	//pass criteria: front door closed1&2: 1 
+									AND stMLVIO.ipTCCellDoorOpenCloseStatus 																//pass criteria: back door/ TC door closed : 1
+									AND	(stMLVIO.ipTCCellTbotSideDoorLocked01 AND stMLVIO.ipTCCellTbotSideDoorLocked02)						//pass criteria: front door locked1&2: 1
+									AND stMLVIO.ipTCCellDoorClosed 																			//pass criteria: back door/ TC door locked: 1
+									AND stMLVIO.opTesterDrawerAirSupplySol 																	//pass criteria: tester air 6 bar valve: 1
+									AND ((NOT stMLVIO.ipTesterPresent) OR (stMLVIO.ipTesterPresent AND stMLVIO.ipTesterLatchesClosed)); 	//pass criteria: testerpresent : 0 OR tester present and tester latches closed : 1
+
+															 	
+ELSE
+	stMLVIO.opAPSafeToEngage	:=	(stMLVIO.ipTCDrawerCylDownRS AND stMLVIO.ipTCDrawerCylRetractRS) 									//pass criteria: drawer retract: 1, drawer down: 1
+									AND stMLVIO.ipTCCellDoorOpenCloseStatus 															//pass criteria: back door/ TC door closed : 1
+									AND stMLVIO.ipTCCellDoorClosed 																		//pass criteria: back door/ TC door locked: 1
+									AND stMLVIO.opTesterDrawerAirSupplySol  															//pass criteria: tester air 6 bar valve: 1
+									AND ((NOT stMLVIO.ipTesterPresent) OR (stMLVIO.ipTesterPresent AND stMLVIO.ipTesterLatchesClosed));	//pass criteria: testerpresent : 0 OR tester present and tester latches closed : 1
+
+	
+END_IF
+	
+	stMLVIO.opCellPCWValve		:= (stMLVIO.ipAPPresentSensor AND NOT stMLVIO.ipTesterPresent) OR
+									(stMLVIO.ipTesterPowerOn);
+		
+//<Output>
+	IF stMLVIO.bDiagnosticMode=FALSE THEN
+		stMLDIO.opAP240ACPwrEnable  			:= 		NOT	itl_opAP_240ACPwrEnable  							AND	stMLVIO.opAP240ACPwrEnable  				;//AND stMLVIO.bTstDelInt	(*&!	bTstAC	Off*)	;
+		stMLDIO.opDoorOpenReqLED				:= 		NOT	itl_opDoorOpenReqLED								AND	stMLVIO.opDoorOpenReqLED					;
+		stMLDIO.opAlarmLED 						:= 		NOT	itl_opAlarmLED 				        				AND	stMLVIO.opAlarmLED 							;		
+		stMLDIO.opTCCellAbortFlowBtnLED			:= 		NOT	itl_opTesterAPDetachReqBtnLED						AND	stMLVIO.opTCCellAbortFlowBtnLED		    	;
+		stMLDIO.opDrawerMaintenanceModeBtnLED 	:= 		NOT	itl_opTesterDrawerAirOffReqBtnLED   				AND	stMLVIO.opDrawerMaintenanceModeBtnLED     	;
+		stMLDIO.opAPSafeToEngage         		:= 		NOT	itl_opAP_SafeToMoveSignal           				AND	stMLVIO.opAPSafeToEngage             		;
+		stMLDIO.opAPTCCReset					:= 		NOT	itl_opAP_TCCReset									AND	stMLVIO.opAPTCCReset						;	
+		stMLDIO.opCellLTIMValve					:= 		NOT	itl_opCell_LTIMValve		        				AND	stMLVIO.opCellLTIMValve						;
+		stMLDIO.opCellDrawerCylExtend 			:= 	    (NOT	itl_opCellDrawerCylExtend 	OR TRUE)			AND	stMLVIO.opCellDrawerCylExtend 				; //:= fbTCDrawerExtRet.P_opExtend; (* AND TBot InterLock Sen*)	
+		stMLDIO.opCellDrawerCylRetract 			:= 		(NOT	itl_opCellDrawerCylRetract 	OR TRUE)			AND	stMLVIO.opCellDrawerCylRetract 				; //:= fbTCDrawerExtRet.P_opRetract ; (* OR (NOT fbTCDrawerIn.P_opRetract AND TBot InterLock Sen) *)	
+		stMLDIO.opCellDrawerCylUp 				:= 		(NOT	itl_opCellDrawerCylUp 		OR TRUE)			AND stMLVIO.opCellDrawerCylUp 					; //:= fbTCDrawerUpDn.P_opExtend; 		
+		stMLDIO.opCellDrawerCylDown 			:= 		(NOT	itl_opCellDrawerCylDown 	OR TRUE)			AND	stMLVIO.opCellDrawerCylDown 				; //:= fbTCDrawerUpDn.P_opRetract; 
+		stMLDIO.opTst240VACPwrEnable 			:= 		NOT	itl_opTst240VACPwrEnable 							AND	stMLVIO.opTst240VACPwrEnable 				;
+		stMLDIO.opCellPCWValve  				:= 		NOT	itl_opCellPCWValve  			    				AND	stMLVIO.opCellPCWValve  					;	//AND stMLVIO.bTstDelInt	;
+		stMLDIO.opTIUSktAirSol_1 				:= 		NOT	itl_opTIUSktAirSol_1 								AND stMLVIO.opTIUSktAirSol_1 					;
+		stMLDIO.opTIUSktAirSol_2				:= 		NOT	itl_opTIUSktAirSol_2								AND stMLVIO.opTIUSktAirSol_2					;	
+		stMLDIO.opAPAirSupplySol				:= 		NOT	itl_opAP_AirSupplySol 								AND stMLVIO.opAPAirSupplySol					;
+		stMLDIO.opTesterDrawerAirSupplySol		:= 		NOT	itl_opTesterDrawerAirSupplySol	    				AND stMLVIO.opTesterDrawerAirSupplySol	    	;
+		stMLDIO.opCell24VPowerEnable			:= 		NOT	itl_opCell_24VPowerEnable							AND	stMLVIO.opCell24VPowerEnable				;			    //AND stMLVIO.bTstDelInt  ;
+		stMLDIO.opCellDoorClosed				:= 	   (NOT itl_opCellDoorClosed OR TRUE)						AND stMLVIO.opCellDoorClosed					;
+		stMLDIO.opCellTBOtSideDoorClosed1		:= 		stMLVIO.opCellTBOtSideDoorClosed1					;
+		stMLDIO.opCellTBOtSideDoorClosed2		:= 		stMLVIO.opCellTBOtSideDoorClosed2					;
+		
+	ELSE
+		stTCColVIO:=  fbTCColumn.P_stTCColumnVIO;
+		IF 	M_IsEAPError()> 0 OR 
+			( bDebugCart AND 	(stMLDIO.ipTCCellTbotSideDoorOpenCloseStatus01 OR stMLDIO.ipTCCellTbotSideDoorLocked01) OR (stMLDIO.ipTCCellTbotSideDoorOpenCloseStatus02 OR stMLDIO.ipTCCellTbotSideDoorLocked02)) OR  
+			( stMLVIO.ipAPPresentSensor  AND NOT (stMLVIO.ipHandlerSafeToEnterHwr AND stMLVIO.ipHandlerSafeToEnterPLC) AND NOT stMLVIO.ipAPReady ) //OR 
+		(*(stMLVIO.ipCellFluidLeakage1 OR stMLVIO.ipCellFluidLeakage1 OR stTCColVIO.ipColumnFluid_PCW_Leakage )*) THEN		
+			stMLDIO.opCellDrawerCylExtend		:= 		(NOT	itl_opCellDrawerCylExtend 	OR TRUE		)AND	stMLVIO.opCellDrawerCylExtend 				; 
+			stMLDIO.opCellDrawerCylRetract		:= 		(NOT	itl_opCellDrawerCylRetract 	OR TRUE		)AND	stMLVIO.opCellDrawerCylRetract 				; 	
+			//stMLDIO.opCellDrawerCylUp			:= 		(NOT	itl_opCellDrawerCylUp 		OR TRUE		)AND 	stMLVIO.opCellDrawerCylUp 					; 
+			//stMLDIO.opCellDrawerCylDown			:= 		(NOT	itl_opCellDrawerCylDown 	OR TRUE		)AND	stMLVIO.opCellDrawerCylDown 			    ; 
+		END_IF                                                                                                                                                    		
+		(*
+		//<DrawerExtendRetract>
+			stMLVIO.opCellDrawerCylExtend 	:= fbTCDrawerExtRet.P_opExtend		:= 	stMLDIO.opCellDrawerCylExtend 	;
+			stMLVIO.opCellDrawerCylRetract 	:= fbTCDrawerExtRet.P_opRetract     :=  stMLDIO.opCellDrawerCylRetract 	;
+			stMLVIO.opCellDrawerCylUp 		:= fbTCDrawerUpDn.P_opExtend		:= 	stMLDIO.opCellDrawerCylUp 		;		
+			stMLVIO.opCellDrawerCylDown 	:= fbTCDrawerUpDn.P_opRetract       :=  stMLDIO.opCellDrawerCylDown 	;
+		//</DrawerExtendRetract>
+		*)
+	END_IF
+//</Output>]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_IsEAPError" Id="{e48d78cc-04e2-4730-bd22-ba4cf04a5d13}">
+      <Declaration><![CDATA[METHOD M_IsEAPError : INT
+VAR_INPUT
+END_VAR
+
+VAR_OUTPUT
+	sMsg					: STRING;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// Receive drawer not safe to move from TBOT
+IF stTCMLSeqParam.bTCDwrSafeToMoveEAP = FALSE THEN 
+	sMsg									:= 'TBot EAP not safe to move!';;
+	M_IsEAPError							:= E_AlarmID.TBotEAPNotSafeToMoveError; //25;
+// Receive anti-collision signal from TBOT
+ELSIF (NOT stTCMLSeqParam.bTBotAntiCollisionTriggered) THEN
+	sMsg									:= 'TBotAntiCollisionTriggered Error';
+	M_IsEAPError							:= E_AlarmID.TBotEAPAntiCollisionTriggered;//26;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_IsSanityCheckFailed" Id="{09eea1b5-4824-425a-98ec-d047b3c77afc}">
+      <Declaration><![CDATA[METHOD M_IsSanityCheckFailed : INT
+VAR_INPUT
+	stColVIO:ST_TCColumn_VIO;
+END_VAR
+VAR_OUTPUT
+	sMsg:STRING;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[//Check TCC Request
+IF stMLVIO.bTCCSessionActiveStatusFlag THEN
+	sMsg													:= 'Module is In Manual TCC Request Operation Session';
+	M_IsSanityCheckFailed									:= E_AlarmID.TCCSessionActive;//27;
+//Check Door Sensor;
+ELSIF (NOT stMLVIO.ipTCCellDoorOpenCloseStatus)  THEN
+	sMsg													:= 'Cell Door latch is not dected ,Please Close the door';
+	M_IsSanityCheckFailed									:= E_AlarmID.DoorCloseSignalNotDetected;//31;
+// Check door lock status if the command not initialize
+ELSIF (NOT stMLVIO.ipTCCellDoorClosed) AND (NOT stTCMLSeqParam.bInitialise) THEN
+	sMsg													:= 'Cell Door is not Locked ,Please Lock the door';
+	M_IsSanityCheckFailed									:= E_AlarmID.DoorLockSignalNotDetected;//32;
+// Check front door close status if it is debug cart and command not initialize
+ELSIF (NOT stMLVIO.ipTCCellTbotSideDoorOpenCloseStatus01 OR NOT stMLVIO.ipTCCellTbotSideDoorOpenCloseStatus02) AND (NOT stTCMLSeqParam.bInitialise) AND bDebugCart THEN
+	sMsg													:= 'TBot Side Door latch is not dected ,Please Close the door';
+	M_IsSanityCheckFailed									:= E_AlarmID.TBotSideDoorCloseSignalNotDetected;//33;
+(*
+ELSIF (NOT stMLVIO.ipTCCellTbotSideDoorLocked01 OR NOT stMLVIO.ipTCCellTbotSideDoorLocked02) AND NOT stTCMLSeqParam.bInitialise AND bDebugCart THEN
+	sMsg:='TBot Side Door is not Locked ,Please Lock the door';
+	M_IsSanityCheckFailed:=E_AlarmID.TBotSideDoorLockSignalNotDetected;//34;
+*)
+//Check AP Up
+ELSIF stMLVIO.ipAPPresentSensor THEN
+	IF (NOT stMLVIO.ipHandlerSafeToEnterHwr) OR (NOT stMLVIO.ipHandlerSafeToEnterPLC) THEN
+		sMsg												:= 'AP is not Deactuated (UP)!';
+		M_IsSanityCheckFailed								:= E_AlarmID.APIsNotInUPPosition; //30;
+	END_IF
+//Check Cell Retract //Can ByPass Now
+//ELSIF NOT stColVIO.ipAllTCDrawerRetractedinCell AND stTCMLSeqParam.bShuttleMoveOut THEN
+//	isError:=TRUE;
+//	sMessage:='All Level are Not In Retracted Position';
+//	//*Set Error Bit;
+ELSIF bDebugCart THEN
+	IF (NOT stMLVIO.ipTCCellTbotSideDoorOpenCloseStatus01) OR (NOT stMLVIO.ipTCCellTbotSideDoorOpenCloseStatus02) THEN
+		sMsg												:= 'Cell Front Door NOT Closed ,Please Close the door';
+		M_IsSanityCheckFailed								:= E_AlarmID.DoorCloseSignalNotDetected;//40;
+	END_IF
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_nCmptInOut" Id="{c3fa4dbd-caf3-402c-9f5c-8537b02d385b}">
+      <Declaration><![CDATA[METHOD M_nCmptInOut : UDINT
+VAR_INPUT
+	bExtend						: BOOL;
+END_VAR
+
+VAR
+END_VAR
+
+VAR_IN_OUT
+	sErrorMsg 					: STRING;
+END_VAR
+
+
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF bExtend THEN
+	iLibrySts[1]					:= inTCDrawerExtRet.M_nExtend(bExecute:= TRUE);
+ELSE
+	iLibrySts[1]					:= inTCDrawerExtRet.M_nRetract(bExecute:= TRUE);
+END_IF
+
+IF iLibrySts[1] = 10 THEN
+	inTCDrawerExtRet.M_nOff();
+	M_nCmptInOut					:= 10;
+ELSIF inTCDrawerExtRet.P_bError THEN
+	sErrorMsg						:= CONCAT(sMessage,fbTCDrawerExtRet.P_sMessage);
+	stMLVIO.iAlarmCode				:= inTCDrawerExtRet.P_nErrorID;
+	M_nCmptInOut					:= 99;
+END_IF	]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_nCmptUpDown" Id="{5d35f409-d04b-4a9c-b96e-73bd2f3eaefb}">
+      <Declaration><![CDATA[METHOD M_nCmptUpDown : UDINT
+VAR_INPUT
+	bExtend					: BOOL;
+END_VAR
+
+VAR
+END_VAR
+
+VAR_IN_OUT
+	sErrorMsg				: STRING;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[	
+	
+IF bExtend THEN
+	iLibrySts[1]					:= inTCDrawerUpDn.M_nExtend(bExecute:= TRUE);
+ELSE
+	iLibrySts[1]					:= inTCDrawerUpDn.M_nRetract(bExecute:= TRUE);
+END_IF
+
+IF iLibrySts[1] = 10 THEN
+	inTCDrawerUpDn.M_nOff();
+	M_nCmptUpDown					:= 10;
+ELSIF inTCDrawerUpDn.P_bError THEN
+	sErrorMsg						:= CONCAT(sMessage,fbTCDrawerUpDn.P_sMessage);
+	stMLVIO.iAlarmCode				:= inTCDrawerUpDn.P_nErrorID;
+	M_nCmptUpDown					:= 99;
+END_IF	
+
+
+	
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_nCyclic" Id="{d892c72f-d562-4499-959e-3dade4011a0e}">
+      <Declaration><![CDATA[METHOD M_nCyclic : UDINT
+VAR_INPUT
+	iLevel:INT;
+END_VAR
+
+
+VAR
+	//stTCM: INT;
+	stGblParam: INT;
+	varTest:bool;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[//M_nCompCylinder(bExtend:=TRUE, fbTCDrawerUp, sMsg);
+//M_IOMapping();
+
+M_IOMapping(iLevel:=iLevel);
+
+rtError(CLK:=_bError, Q=> );
+btest:=TRUE;
+
+	fbTCDrawerExtRet.M_nReset(bExecute:=_bReset OR rtError.Q );
+	fbTCDrawerUpDn.M_nReset(bExecute:=_bReset OR rtError.Q );
+		
+IF _bReset OR bStepDone OR rtError.Q THEN
+	inTCDrawerExtRet.M_nOff();
+	inTCDrawerUpDn.M_nOff();
+	
+	//sensor
+
+	FOR nI:=1 TO 20 DO 
+		iLibrySts[1] := 0;
+	END_FOR
+	
+	bStepDone:=FALSE; 
+END_IF
+
+inTCDrawerExtRet.P_SensorDelay:= tDwrCylExtRetSensorDelay;	//FB_M_nCyclic_tSensorDelay  ;  //T#12S; 
+inTCDrawerExtRet.P_Timeout:= 	tDwrCylExtRetTimeOut;	//FB_M_nCyclic_tSensorTimeOut; //T#30S;;    
+
+inTCDrawerUpDn.P_SensorDelay:= tDwrCylUpDownSensorDelay; //FB_M_nCyclic_tSensorDelay;
+inTCDrawerUpDn.P_Timeout:= tDwrCylUpDownTimeOut;//FB_M_nCyclic_tSensorTimeOut;
+
+(*IF stTCSeqParam.bInitComplt THEN //temp...This portion will be done by Initialise sequence
+END_IF*)
+	
+IF _bReset THEN
+	IF stTCMLSeqParam.bInitialise THEN
+		iSysRsetSeqStep:=0;
+	ELSE
+		iSeqStep:=0;
+	END_IF
+	iStkSeqCase:=0;
+	bStepDone:=FALSE;
+	sMessage:='';
+	_bError:=FALSE;
+	_nErrorID:=0;
+ELSIF bErrClear THEN
+	_bError:=FALSE;
+	_nErrorID:=0;
+	bErrClear:=FALSE;
+END_IF
+
+bPause:=_bReset OR _bError OR bErrClear;
+//M_StkSingStackUp state
+IF _bError THEN
+	iStkSingStackUp:=99;
+ELSIF _bReset THEN
+	iStkSingStackUp:=0;
+ELSIF iStkSeqCase=E_SeqSts.eDone THEN
+	iStkSingStackUp:=10;
+ELSIF NOT bPause THEN
+	iStkSingStackUp:=3;
+END_IF
+
+inTCDrawerExtRet.P_nExtendAlarmID:=E_AlarmID.DrawerExtendError;
+inTCDrawerExtRet.P_nRetractAlarmID:=E_AlarmID.DrawerRetractError;
+inTCDrawerUpDn	 .P_nExtendAlarmID:=E_AlarmID.DrawerUpError;
+inTCDrawerUpDn	 .P_nRetractAlarmID:=E_AlarmID.DrawerDownError;
+
+//<IN_OUT>
+	IF stMLVIO.ipTCDrawerCylRetractRS AND NOT stMLVIO.ipTCDrawerCylExtendRS THEN
+		stMLVIO.bTIUInOutStatusFlag:= FALSE;
+	ELSE
+		stMLVIO.bTIUInOutStatusFlag:= TRUE;
+	END_IF
+//</IN_OUT>
+//<UP_DOWN>
+	IF stMLVIO.ipTCDrawerCylDownRS AND NOT stMLVIO.ipTCDrawerCylUpRS THEN
+		stMLVIO.bTIUUpDownStatusFlag:= FALSE;
+	ELSE
+		stMLVIO.bTIUUpDownStatusFlag:= TRUE;
+	END_IF
+//</UP_DOWN>
+//<DCCell_DoorStatus>
+	IF bDebugCart THEN
+	(*
+		stMLVIO.opCellFrontDoorClosedStatus		:= 	stMLVIO.opCellFrontDoorClosed1 AND stMLVIO.opCellFrontDoorClosed2;
+		stMLVIO.ipTCCellFrontDoorLockedStatus	:= 	stMLVIO.opCellFrontDoorClosed1 AND stMLVIO.opCellFrontDoorClosed2; //stMLVIO.ipTCCellFrontDoorOpenCloseStatus1 AND stMLVIO.ipTCCellFrontDoorOpenCloseStatus2;
+	*)
+	//(*
+		stMLVIO.bCellFrontDoorLockedStatus	:= 	stMLVIO.opCellTBOtSideDoorClosed1 AND stMLVIO.opCellTBOtSideDoorClosed2;
+		stMLVIO.bCellFrontDoorClosedStatus 	:= 	stMLVIO.ipTCCellTbotSideDoorOpenCloseStatus01 AND stMLVIO.ipTCCellTbotSideDoorOpenCloseStatus02;
+	//*)
+		
+	END_IF
+//</DCCell_DoorStatus>
+
+
+stMLVIO.opAlarmLED:= stMLVIO.TIIAlarmLED OR _bError OR stMLVIO.isSysError;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_nDPSPowerOnOff" Id="{23018554-f366-4756-8a3f-c3b4774f229e}">
+      <Declaration><![CDATA[METHOD M_nDPSPowerOnOff : INT
+VAR_INPUT
+END_VAR
+VAR
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[M_nDPSPowerOnOff:=iStkSingStackUp;
+
+IF bPause THEN
+	RETURN;
+
+ELSIF stMLVIO.isTIIError OR stMLVIO.isSysError THEN  
+	IF FALSE (*DIFU Cyl Tii Err*) THEN
+	;
+	ELSE
+		M_nDPSPowerOnOff:=20;		
+		RETURN;
+	END_IF
+END_IF
+IF iSeqStep>0 THEN
+	;//Do nothing;
+ELSIF stTCMLSeqParam.bDSPPowerOff OR
+	  stTCMLSeqParam.bDSPPowerOn OR
+	  stTCMLSeqParam.bDSPPowerAuto 
+	  THEN
+	arrSeqStep[0]:=E_SeqSts.eInit;					//Init
+	arrSeqStep[1]:=E_SeqSts.eSanityCheckForDPSPwr;	//Sanity check
+	arrSeqStep[2]:=E_SeqSts.eDPSPwrOnOff;			//DPSPowerOnOff
+	arrSeqStep[3]:=E_SeqSts.eDone;					//Done
+	
+ELSIF stTCMLSeqParam.bAP240ACPowerOff OR
+	  stTCMLSeqParam.bAP240ACPowerOn OR
+	  stTCMLSeqParam.bAP240ACPowerAuto 
+	  THEN
+	arrSeqStep[0]:=E_SeqSts.eInit;						//Init
+	arrSeqStep[1]:=E_SeqSts.eSanityCheckForAPPwr;		//Sanity check
+	arrSeqStep[2]:=E_SeqSts.eAP240ACPwrOnOff;			//AP240ACPowerOnOff
+	arrSeqStep[3]:=E_SeqSts.eDone;						//Done
+	
+END_IF
+
+
+//Sequence start
+iStkSeqCase:=arrSeqStep[iSeqStep];
+
+// State machine
+CASE iStkSeqCase OF
+E_SeqSts.eInit: //Init
+	//TDelay(IN:=FALSE);
+	sMessage:='Start Executing';
+	bStepDone:=TRUE;
+	
+E_SeqSts.eSanityCheckForDPSPwr: 			//Sanity check DPS
+	sMessage:='CheckTeir2IIAlarm';
+	
+	tDPSDelayToComplete(IN:=FALSE);
+	tDPSDelayToAutoComplete(IN:=FALSE);
+	bStepDone:=TRUE;
+
+E_SeqSts.eSanityCheckForAPPwr: 				//Sanity check AP
+	sMessage:='CheckTeir2IIAlarm';
+	
+	tAPACPwrDelayToComplete(IN:=FALSE);
+	tAPACPwrDelayToAutoComplete(IN:=FALSE);
+	bStepDone:=TRUE;	
+	
+	
+E_SeqSts.eDPSPwrOnOff:											// DSPPowerOnOff
+		tDPSDelayToComplete(IN:=TRUE, PT:=T#2S); 				// origin T#10s
+		IF tDPSDelayToComplete.Q THEN
+			IF stTCMLSeqParam.bDSPPowerOff THEN 				(*0=Off, 1=On, 2=Auto(Off->On) *)
+				stMLVIO.bDPSPowerOnOff:=FALSE;//TRUE;
+				tDPSDelayToAutoComplete(IN:=TRUE, PT:=T#0S);
+				sMessage:='DSPPowerOff';
+			ELSIF stTCMLSeqParam.bDSPPowerON THEN
+				stMLVIO.bDPSPowerOnOff:=TRUE;//FALSE;
+				tDPSDelayToAutoComplete(IN:=TRUE, PT:=T#0S);
+				sMessage:='DSPPowerOn';
+			ELSIF  stTCMLSeqParam.bDSPPowerAuto THEN
+				stMLVIO.bDPSPowerOnOff:=FALSE;//TRUE;
+				sMessage:='DSPPowerOff';
+				tDPSDelayToAutoComplete(IN:=TRUE, PT:=T#2S);	// origin T#10s
+				IF tDPSDelayToAutoComplete.Q THEN
+					stMLVIO.bDPSPowerOnOff:=TRUE;//FALSE;	
+					sMessage:='DSPPowerOn';
+				END_IF
+			END_IF
+		END_IF
+IF tDPSDelayToComplete.Q AND tDPSDelayToAutoComplete.Q THEN
+	tDPSDelayToComplete(IN:=FALSE);
+	tDPSDelayToAutoComplete(IN:=FALSE);
+	bStepDone:=TRUE;
+END_IF
+	
+		
+E_SeqSts.eAP240ACPwrOnOff:										// AP240ACPowerOnOff
+		tAPACPwrDelayToComplete(IN:=TRUE, PT:=T#2S); 			// origin T#10s
+		IF tAPACPwrDelayToComplete.Q THEN
+			IF stTCMLSeqParam.bAP240ACPowerOff THEN 			(*0=Off, 1=On, 2=Auto(Off->On) *)
+				stMLVIO.bAP240ACPowerOnOff		:=FALSE;//TRUE;
+				Ap240AcPowerMode		:= 1;
+				tAPACPwrDelayToAutoComplete(IN:= TRUE, PT:=T#0S);
+				sMessage:='AP240AC PowerOff';
+			ELSIF stTCMLSeqParam.bAP240ACPowerOn THEN
+				stMLVIO.bAP240ACPowerOnOff		:= TRUE;//FALSE;
+				Ap240AcPowerMode		:= 2;
+				tAPACPwrDelayToAutoComplete(IN:=TRUE, PT:=T#0S);
+				sMessage:='AP240AC PowerOn';
+			ELSIF  stTCMLSeqParam.bAP240ACPowerAuto THEN
+				stMLVIO.bAP240ACPowerOnOff		:= FALSE;//TRUE;
+				Ap240AcPowerMode		:= 1;
+				sMessage:='AP240AC PowerOff';
+				tAPACPwrDelayToAutoComplete(IN:=TRUE, PT:=T#2S); // origin T#10s
+				IF tAPACPwrDelayToAutoComplete.Q THEN
+					stMLVIO.bAP240ACPowerOnOff		:= TRUE;//FALSE;
+					Ap240AcPowerMode		:= 2;	
+					sMessage:='AP240AC PowerOn';
+				END_IF
+			END_IF
+		END_IF
+IF tAPACPwrDelayToComplete.Q AND tAPACPwrDelayToAutoComplete.Q THEN
+	tAPACPwrDelayToComplete(IN:=FALSE);
+	tAPACPwrDelayToAutoComplete(IN:=FALSE);
+	bStepDone:=TRUE;
+END_IF
+
+	
+E_SeqSts.eDone:	// Done
+	sMessage:='Done';
+	M_nDPSPowerOnOff:=10;
+END_CASE	
+
+(*IF _nErrorID>0 OR _bError THEN
+	_bError:=TRUE;
+ELS*)
+IF (bStep OR bBypassSingleMove OR iStkSeqCase<=E_SeqSts.eSanityCheck) 
+AND iStkSeqCase<E_SeqSts.eDone AND bStepDone THEN
+	iSeqStep:=iSeqStep+1;
+END_IF
+
+rtStep(CLK:=bStep AND NOT bBypassSingleMove, Q=>bStep );]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_nShuttleMoveInOut" Id="{678f1901-d1d0-4ab8-9f2a-61ea8068b3b1}">
+      <Declaration><![CDATA[METHOD M_nShuttleMoveInOut : INT
+VAR
+	stColVIO					: ST_TCColumn_VIO;
+	isError						: BOOL;
+	sDebugLog					: STRING; 
+	lrPosition					: LREAL;
+	i							: INT; //for loop
+	addEvntOk					: BOOL;
+	iTIUStatus					: INT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[M_nShuttleMoveInOut:=iStkSingStackUp;
+IF (bPause) THEN //AND NOT stTCMLSeqParam.bCancel (* OR stTCMultiLevelVIO.isTIIError *) THEN	
+	RETURN;
+ELSIF stMLVIO.isTIIError THEN //OR stMLVIO.isSysError THEN  
+	IF FALSE (*DIFU Cyl Tii Err*) THEN
+		
+	//  TO RESET CYL LIBRARY ALARM and RETRACT CYL BACK
+		fbTCDrawerExtRet.M_nOff();
+	//	fbTCDrawerExtRet.M_nExtend(bExecute:= FALSE);
+	//	fbTCDrawerExtRet.M_nRetract(bExecute:= TRUE);
+	
+		inTCDrawerExtRet.P_opExtend:=FALSE;
+		inTCDrawerExtRet.P_opRetract:= TRUE;
+		fbTCDrawerExtRet.M_nReset(bExecute:=TRUE );						//ResetCyl
+		iStkSeqCase:=0;                                 				
+		//inTCDrawerExtRet.P_ipRetract:=TRUE;							//RemapInput
+		//iLibrySts[1]:=M_nCmptInOut(bExtend:=FALSE,  sErrorMSg:=sMsg);	//Retract
+		//SetOkToStop
+	ELSE
+		//To unblock the sequence during some of the alarm
+		IF 	//64, 	2#0000 00000 00000 00000 00000 00010 00000 leak 1
+			//128,	2#0000 00000 00000 00000 00000 00100 00000 leak 2
+			//256,	2#0000 00000 00000 00000 00000 01000 00000 GRD
+			//2948, 2#0000 00000 00000 00000 01000 00000 00000 GRD
+			(* NOT ( ( stMLVIO.iUnBlock =64 OR 
+					stMLVIO.iUnBlock =128 OR 
+					stMLVIO.iUnBlock =256 OR 
+					stMLVIO.iUnBlock =192 OR 
+					stMLVIO.iUnBlock =320 OR 
+					stMLVIO.iUnBlock =384 OR 
+					stMLVIO.iUnBlock =448) OR 
+					//stMLVIO.iUnBlock =2048)OR
+			//2, 2#0010 SYS Leak
+			//4, 2#0100 SYS GRD 
+				(	stMLVIO.iSysUnBlockAlm =2 OR 
+					stMLVIO.iSysUnBlockAlm =4 OR 
+					stMLVIO.iSysUnBlockAlm =6) )
+				OR *)
+			(stMLVIO.bAlarmBlock OR
+			stMLVIO.iSysUnBlockAlm = 2 OR 
+			stMLVIO.iSysUnBlockAlm = 4 OR 
+			stMLVIO.iSysUnBlockAlm = 6)  
+		THEN
+			M_nShuttleMoveInOut:=20;		//return fail event
+			RETURN;
+		END_IF
+		
+		//M_nShuttleMoveInOut:=20;		
+		//RETURN;
+	END_IF
+
+//ELSIF  !stTCMultiLevelVIO.isTIIError AND SysEror THEN 
+	//M_nShuttleMoveInOut:=30;		
+	//RETURN;	
+//ELSIF  stTCMultiLevelVIO.isTIIError AND SysEror THEN 
+	//M_nShuttleMoveInOut:=40;
+	//RETURN;	
+	
+	
+END_IF
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//	State Assignment
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+IF iSeqStep > 0 THEN
+	;//Do nothing;
+ELSIF stTCMLSeqParam.bDrawerUp 
+	//OR stTCMLSeqParam.bDrawerUpBefFrtDoorOpen
+								THEN 		//*Manual Cyl-Up_Down Command*
+	iStkSeqCase := 0; 						//reset to init step, then do recovery
+	arrSeqStep[0]:=E_SeqSts.eInit;			//Init
+	arrSeqStep[1]:=E_SeqSts.eSanityCheck;	//Sanity check	
+	arrSeqStep[2]:=E_SeqSts.eMoveDrawerUp;	//Move drawer up
+	arrSeqStep[3]:=E_SeqSts.eDone;		
+	
+ELSIF stTCMLSeqParam.bDrawerDown  
+	//OR (stTCMLSeqParam.bDoorRecovery AND bDebugCart)
+								  THEN 		//*Manual Cyl-Up_Down Command*
+	iStkSeqCase := 0; 						//reset to init step, then do recovery
+	arrSeqStep[0]:=E_SeqSts.eInit;			//Init
+	arrSeqStep[1]:=E_SeqSts.eSanityCheck;	//Sanity check	
+	arrSeqStep[2]:=E_SeqSts.eMoveDrawerDown;//Move drawer Down
+	arrSeqStep[3]:=E_SeqSts.eDone;	
+	
+ELSIF stTCMLSeqParam.bCancel THEN			//OR stTCMLSeqParam.bDoorRecovery(* || Cancel || Initial || System Reset || DoorCloseRecovery *) THEN 
+	iStkSeqCase := 0; 						//reset to init step, then do recovery
+	arrSeqStep[0]:=E_SeqSts.eInit;			//Init
+	arrSeqStep[1]:=E_SeqSts.eSanityCheck;	//Sanity check	
+	arrSeqStep[2]:=E_SeqSts.eTBotEAPSanityCheck;	//Sanity check
+	arrSeqStep[3]:=E_SeqSts.eMoveDrawerUp;	//Move drawer up
+	arrSeqStep[4]:=E_SeqSts.eTBotEAPSanityCheck;	//Sanity check
+	arrSeqStep[5]:=E_SeqSts.eMoveDrawerIn;	//Move drawer In
+	arrSeqStep[6]:=E_SeqSts.eMoveDrawerDown;	//Move drawer In
+	arrSeqStep[7]:=E_SeqSts.eDone;			//done
+	
+ELSIF stTCMLSeqParam.bShuttleMoveOut OR stTCMLSeqParam.bTBotbShuttleMoveOutReq THEN
+	arrSeqStep[0]											:= E_SeqSts.eInit; // Init
+	arrSeqStep[1]											:= E_SeqSts.eSanityCheck; // Sanity check
+	arrSeqStep[2]											:= E_SeqSts.eTBotEAPSanityCheck; // Sanity check
+	arrSeqStep[3]											:= E_SeqSts.eMoveDrawerUp; // Move drawer up
+	arrSeqStep[4]											:= E_SeqSts.eTBotEAPSanityCheck;
+	arrSeqStep[5]											:= E_SeqSts.eMoveDrawerOut; // Move drawer out*)
+	arrSeqStep[6]											:= E_SeqSts.eDone; // Done
+	
+ELSIF stTCMLSeqParam.bDrawerUpBefFrtDoorOpen THEN
+	arrSeqStep[0]											:= E_SeqSts.eInit; // Init
+	arrSeqStep[1]											:= E_SeqSts.eFrontDoorOpenConditionCheck; // Check DebugCarFronDoor Open Condition //have jump
+	arrSeqStep[2]											:= E_SeqSts.eSanityCheck; // Sanity check
+	arrSeqStep[3]											:= E_SeqSts.eTBotEAPSanityCheck; // Sanity check
+	arrSeqStep[4]											:= E_SeqSts.eMoveDrawerUp; // Move drawer up
+	arrSeqStep[5]											:= E_SeqSts.eTBotEAPSanityCheck;
+	arrSeqStep[6]											:= E_SeqSts.eMoveDrawerOut; //eOnDrawerOutputOnly;		//Move drawer out*)
+	arrSeqStep[7]											:= E_SeqSts.eTurnOffAPAirValve; //not using put in side FB_dooropenclose
+	arrSeqStep[8]											:= E_SeqSts.eTurnOffTesterAirValve; //not using put in side FB_dooropenclose
+	arrSeqStep[9]											:= E_SeqSts.eDone; //done
+		
+	
+ELSIF stTCMLSeqParam.bShuttleMoveIn OR stTCMLSeqParam.bDoorRecovery OR stTCMLSeqParam.bTBotbShuttleMoveInReq THEN
+	arrSeqStep[0]											:= E_SeqSts.eInit; //Init
+	arrSeqStep[1]											:= E_SeqSts.eSanityCheck; //Sanity check
+	arrSeqStep[2]											:= E_SeqSts.eChkTIUPosition; //check drawer position to skip drawer up action if already drawer up
+	arrSeqStep[3]											:= E_SeqSts.eTBotEAPSanityCheck; //Sanity check
+	arrSeqStep[4]											:= E_SeqSts.eMoveDrawerUp;	//Move drawer up
+	arrSeqStep[5]											:= E_SeqSts.eTBotEAPSanityCheck; //Sanity check
+	arrSeqStep[6]											:= E_SeqSts.eTurnOnTesterAirValve;	//turn on 6 bar tester air valve
+	arrSeqStep[7]											:= E_SeqSts.eMoveDrawerIn;	//Move drawer In
+	arrSeqStep[8]											:= E_SeqSts.eMoveDrawerDown; //Move drawer down
+	arrSeqStep[9]											:= E_SeqSts.eTurnOnAPAirValve;	//turn on 10 bar AP air valve
+	arrSeqStep[10]											:= E_SeqSts.eDone; //done
+END_IF
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//	Current sequence case
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+iStkSeqCase													:= arrSeqStep[iSeqStep];
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//	State machine
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+CASE iStkSeqCase OF
+	E_SeqSts.eFrontDoorOpenConditionCheck:
+		// 1. Drawer Up input signal = true
+		// 2. Drawer Down output signal = false
+		// 3. Drawer Up output signal = true
+		// 4. Drawer retract output signal = false
+		// 5. Drawer extend output signal = true
+		// 6. Front door lock signal = true
+		// 7. Front door lock signal = true
+		IF stMLVIO.ipTCDrawerCylUpRS AND stMLVIO.opCellDrawerCylDown = FALSE AND stMLVIO.opCellDrawerCylUP = TRUE AND stMLVIO.opCellDrawerCylRetract = FALSE AND 
+			stMLVIO.opCellDrawerCylExtend = TRUE AND stMLVIO.opCellTBOtSideDoorClosed1 = FALSE AND stMLVIO.opCellTBOtSideDoorClosed1 = FALSE THEN
+			iSeqStep										:= 7; // Completed
+		ELSE
+			bStepDone										:= TRUE; 
+		END_IF
+		
+	E_SeqSts.eInit: //Init
+		
+		//TDelay(IN:=FALSE);
+		sMessage											:= 'Start Executing';
+		
+		IF stTCMLSeqParam.bInitialise THEN
+			;
+		END_IF
+		bStepDone											:= TRUE;
+		
+	E_SeqSts.eSanityCheck: //Sanity sheck (#01-CHECK TBOT SAFTY SIGNAL and #02-AP PIN SAFTY SIGNAL)
+		sMessage											:= 'Sanity Check ';
+		stColVIO											:= fbTCColumn.P_stTCColumnVIO;
+	(*
+		isError:=FALSE;
+		//Check TCC Request
+		IF stMLVIO.bTCCSessionActiveStatusFlag THEN
+			isError:=TRUE;
+			sMessage:='Module is In Manual TCC Request Operation Session';
+			ALMTC.Level[iLevel].AlarmID[27] :=TRUE;
+			//*Set Error Bit;
+		//Check Door Sensor;
+		ELSIF NOT stMLVIO.ipTCCellDoorClosed OR NOT stMLVIO.ipTCCellDoorOpenCloseStatus THEN
+			isError:=TRUE;
+			sMessage:='Cell Door NOT Closed AND Locked,Please Close the door';
+			ALMTC.Level[iLevel].AlarmID[32] :=TRUE;
+			//*Set Error Bit;
+		//Check AP Up
+		ELSIF stMLVIO.ipAPPresentSensor THEN
+			IF NOT stMLVIO.ipAPDeactuatedHwr OR NOT stMLVIO.ipAPDeactuatedPLC THEN
+				isError:=TRUE;
+				sMessage:='AP is not Deactuated (UP)!';
+				ALMTC.Level[iLevel].AlarmID[30] :=TRUE;
+			END_IF
+		//*Set Error Bit;
+		//Check Cell Retract //Can ByPass Now
+		//ELSIF NOT stColVIO.ipAllTCDrawerRetractedinCell AND stTCMLSeqParam.bShuttleMoveOut THEN
+		//	isError:=TRUE;
+		//	sMessage:='All Level are Not In Retracted Position';
+		//	//*Set Error Bit;
+		END_IF
+		IF isError THEN
+			M_nShuttleMoveInOut:=30;
+			//*Set Error Bit;
+		ELSE
+			bStepDone:=TRUE;
+		END_IF
+	*)
+	(*
+		IF M_IsSanityCheckFailed(stColVIO:=stColVIO, sMsg=>sMessage) THEN
+			M_nShuttleMoveInOut:=30;
+		ELSE
+			bStepDone:=TRUE;
+		END_IF
+	*)	
+		//***
+		_nErrorID											:= INT_TO_UDINT(M_IsSanityCheckFailed(
+																			stColVIO:= stColVIO, 
+																			sMsg=> sMessage)) ;
+		IF _nErrorID = 0 THEN
+			bStepDone										:= TRUE;
+		END_IF
+		
+	eChkTIUPosition:
+		iTIUStatus											:= M_GetTIUStatus(
+																b3:= stMLVIO.ipTCDrawerCylUpRS,
+																b2:= stMLVIO.ipTCDrawerCylDownRS,
+																b1:= stMLVIO.ipTCDrawerCylExtendRS,
+																b0:= stMLVIO.ipTCDrawerCylRetractRS); // Up,Down,Ext,Ret
+		IF bProductionMode THEN
+			CASE iTIUStatus OF 
+				0: (*No drawer position feedback signal*)	
+					bStepDone									:= TRUE;
+				1: (*Drawer is retracted but no Up or Down signal*)		
+					iSeqStep									:= 6; 
+				2: (*Drawer is extended but no Up or Down signal*)	
+					bStepDone									:= TRUE;
+				3: (*Error - Receive drawer extended and retracted signal*)		
+					_nErrorID									:= E_AlarmID.BothTIUUpDownSignalDetected; 
+					sMessage									:= 'Both Reed Switchs of Cylinder are Detected';
+				4: (*Drawer is Down but no retracted or extended signal*)	
+					bStepDone									:= TRUE;
+				5: (*Drawer is retracted and Down*)		
+					iSeqStep									:= 6; 
+				6: (*Drawer is extended and Down*)	
+					bStepDone									:= TRUE;
+				7: (*Error - Receive drawer is down, extended and retracted signal*)		
+					_nErrorID									:= E_AlarmID.BothTIUUpDownSignalDetected; 
+					sMessage									:= 'Both Reed Switchs OF Cylinder are Detected';
+				8: (*Drawer is Up but no retracted or extended signal*)	
+					bStepDone									:= TRUE;
+				9: (*Drawer is retracted and Up*)		
+					iSeqStep									:= 6; 
+				10: (*Drawer is extended and Up*)		
+					iSeqStep									:= 5; 	
+				11, 12, 13, 14, 15: (*Error*)	
+					_nErrorID									:= E_AlarmID.BothTIUExternRetractSignalDetected; 
+					sMessage									:= 'Both Reed Switchs of Cylinder are Detected';
+			END_CASE
+		ELSE
+			CASE iTIUStatus OF 
+				0:(*UpInDn*)	
+					bStepDone									:= TRUE;
+				1:(*Down*)		
+					iSeqStep									:= 6; 
+				2:(*UpInDn*)	                                   
+					bStepDone									:= TRUE;
+				3:(*UpInDn*)	                                   
+					bStepDone									:= TRUE;
+				4:(*UpInDn*)	                                   
+					bStepDone									:= TRUE;
+				5:(*Done*)		                                   
+					iSeqStep									:= 6; 
+				6:(*UpInDn*)	                                   
+					bStepDone									:= TRUE;
+				7:(*V_Err*)		                                   
+					bStepDone									:= TRUE;
+				8:(*UpInDn*)	                                   
+					bStepDone									:= TRUE;
+				9:(*Down*)		                                   
+					iSeqStep									:= 6; 
+				10:(*InDn*)		                                   
+					iSeqStep									:= 6;
+				11:(*V_Err*)	                                   
+					bStepDone									:= TRUE;
+				12:(*H_Err*)	                                   
+					bStepDone									:= TRUE;
+				13:(*H_Err*)	                                   
+					iSeqStep									:= 6; 
+				14:(*H_Err*)	                                   
+					bStepDone									:= TRUE;
+				15:(*H_Err*)	                                   
+					bStepDone									:= TRUE;
+			END_CASE
+		END_IF	
+		
+	E_SeqSts.eTBotEAPSanityCheck:
+		sMessage												:= 'Checking TBot EAP';
+		_nErrorID												:= INT_TO_UDINT(M_IsEAPError(sMsg=>sMessage)) ;
+		IF _nErrorID=0 THEN
+			bStepDone											:= TRUE;
+		END_IF
+		
+	E_SeqSts.eMoveDrawerUp, E_SeqSts.eMoveDrawerDown: //drawer up, drawer down
+		sMessage												:= SEL(iStkSeqCase = E_SeqSts.eMoveDrawerUp,' Drawer Down ',' Drawer Up ');
+		IF (NOT tUpDnlock) THEN
+			tBef 												:= TIME();
+			tUpDnlock											:= TRUE;
+		END_IF
+		iLibrySts[1]											:= M_nCmptUpDown(
+																	bExtend:= iStkSeqCase = E_SeqSts.eMoveDrawerUp,  
+																	sErrorMSg:= sMsg);
+		
+		IF iLibrySts[1] = 10 THEN
+			tAft												:= TIME();
+			tUpDnlock											:= FALSE;
+			sMessage											:= CONCAT(sMessage,'Duration: ');
+			sMessage											:= CONCAT(sMessage,REAL_TO_STRING((TIME_TO_REAL(tAft-tBef)/1000)));
+			sMessage											:= CONCAT(sMessage,' seconds');
+			bStepDone											:= TRUE;
+		ELSIF iLibrySts[1] = 99 THEN
+			tUpDnlock											:= FALSE;
+			sMessage											:= CONCAT(sMessage,sMsg);
+			_bError												:= TRUE;
+		END_IF
+	
+	E_SeqSts.eMoveDrawerIn, E_SeqSts.eMoveDrawerOut: //drawer in, drawer out
+		sMessage												:= SEL(iStkSeqCase = E_SeqSts.eMoveDrawerIn,
+																	' Drawer Out ',
+																	' Drawer In ');
+		IF (NOT tInOutlock) THEN
+			tBef 												:= TIME();
+			tInOutlock											:= TRUE;
+		END_IF	
+		
+		//IF stTCMLSeqParam.bShuttleMoveIn THEN  stMLVIO.bTIUInOutStatusFlag:=TRUE; END_IF
+		iLibrySts[1]											:= M_nCmptInOut(
+																	bExtend:= iStkSeqCase = E_SeqSts.eMoveDrawerOut,  
+																	sErrorMSg:= sMsg);
+		
+		IF iLibrySts[1] = 10 THEN
+			//<Cyl_Duration_Log>
+				tAft											:= TIME();
+				tInOutlock										:= FALSE;
+				sMessage										:= CONCAT(sMessage,'Duration: ');
+				sMessage										:= CONCAT(sMessage,REAL_TO_STRING((TIME_TO_REAL(tAft-tBef)/1000)));
+				sMessage										:= CONCAT(sMessage,' seconds');
+			//<Cyl_Duration_Log>
+			bStepDone											:= TRUE;
+			
+		ELSIF iLibrySts[1] = 99 AND (bDebugCart AND stMLVIO.iAlarmCode = E_AlarmID.DrawerExtendError) THEN //to reset DwrExtError without stepping to process.E_SeqErr Step
+			inTCDrawerExtRet.M_nOff();//inTCDrawerExtRet.M_nReset();
+			iLibrySts[1]										:= 10;
+			bStepDone											:= TRUE;
+			
+		ELSIF iLibrySts[1] = 99 THEN
+			tInOutlock											:= FALSE;
+			sMessage											:= CONCAT(sMessage,sMsg);
+			_bError												:= TRUE;
+		END_IF
+		
+	
+	E_SeqSts.eTurnOffAPAirValve: //only for debug cart front door
+		//stMLVIO.opAPAirSupplySol 										:= FALSE; //not able to false it maybe library turn it back on
+		bStepDone														:= TRUE;
+		
+		
+	E_SeqSts.eTurnOffTesterAirValve: //only for debug cart front door
+		//stMLVIO.opTesterDrawerAirSupplySol 							:= FALSE; //not able to false it maybe library turn it back on
+		bStepDone														:= TRUE;
+		
+	
+	E_SeqSts.eTurnOnAPAirValve: //only for debug cart front door
+		IF bDebugCart THEN
+			IF stMLVIO.ipAPPresentSensor THEN 
+				stMLVIO.opAPAirSupplySol								:= TRUE;
+			END_IF
+		END_IF
+		
+		bStepDone														:= TRUE;
+	
+	
+	E_SeqSts.eTurnOnTesterAirValve: //only for debug cart front door
+		IF bDebugCart THEN
+			stMLVIO.opTesterDrawerAirSupplySol							:= TRUE;
+		END_IF
+		
+		bStepDone														:= TRUE;
+	
+	E_SeqSts.eOnDrawerOutputOnly:				//On Output Only
+		//stMLVIO.opCellDrawerCylExtend:= TRUE;
+		inTCDrawerExtRet.M_nExtend(
+			bExecute											:= TRUE);
+		bStepDone												:= TRUE;
+		
+	E_SeqSts.eDone:	// Done
+		sMessage												:= 'Done';
+		(*
+		IF stTCMLSeqParam.bShuttleMoveOut THEN
+			IF stMLVIO.ipTCDrawerCylExtendRS THEN
+				stMLVIO.bTIUInOutStatusFlag:=TRUE;
+			END_IF
+		ELSIF stTCMLSeqParam.bShuttleMoveIn THEN
+			IF stMLVIO.ipTCDrawerCylRetractRS THEN
+				stMLVIO.bTIUInOutStatusFlag:=FALSE;
+			END_IF;
+		END_IF *)
+		//bCommand:=FALSE;
+		M_nShuttleMoveInOut										:= 10;
+END_CASE	
+
+IF _nErrorID > 0 OR _bError THEN
+	_bError													:= TRUE;
+ELSIF (stMLVIO.bStep OR stMLVIO.bBypassSingleMove OR iStkSeqCase <= E_SeqSts.eSanityCheck) AND iStkSeqCase < E_SeqSts.eDone AND bStepDone THEN
+	iSeqStep												:= iSeqStep + 1;
+	stMLVIO.bStep											:= FALSE;
+END_IF
+
+//rtStep(CLK:=bStep AND NOT bBypassSingleMove, Q=>bStep );]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_nSystemReset" Id="{942afd54-b1c1-4798-a25e-93d4e56947c9}">
+      <Declaration><![CDATA[METHOD M_nSystemReset : INT
+VAR_INPUT
+END_VAR
+VAR
+	stColVIO:ST_TCColumn_VIO;
+	isError:BOOL;
+	sError:STRING;
+	iTIUStatus: INT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[M_nSystemReset														:= iStkSingStackUp;
+
+IF bPause THEN
+	RETURN;
+ELSIF stMLVIO.isTIIError OR stMLVIO.isSysError THEN 
+	// Get System Error Here!!! 
+	IF FALSE (*DIFU Cyl Tii Err*) THEN
+		
+	//  TO RESET CYL LIBRARY ALARM and RETRACT CYL BACK
+		fbTCDrawerExtRet.M_nOff();
+	//	fbTCDrawerExtRet.M_nExtend(bExecute:= FALSE);
+	//	fbTCDrawerExtRet.M_nRetract(bExecute:= TRUE);
+	
+		inTCDrawerExtRet.P_opExtend:=FALSE;
+		inTCDrawerExtRet.P_opRetract:= TRUE;
+		fbTCDrawerExtRet.M_nReset(bExecute:=TRUE );						//ResetCyl
+		iStkSeqCase:=0;                                 				
+		//inTCDrawerExtRet.P_ipRetract:=TRUE;							//RemapInput
+		//iLibrySts[1]:=M_nCmptInOut(bExtend:=FALSE,  sErrorMSg:=sMsg);	//Retract
+		//SetOkToStop
+	ELSE
+		IF 			//64, 2#00000000000000000000000001000000 leak 1
+					//128,2#00000000000000000000000010000000 leak 2
+					//256,2#00000000000000000000000100000000 GRD
+			(*NOT ( 
+					( 
+					stMLVIO.iUnBlock =64 OR  	//  	  0011 0100   	ipAPReady, ipAPDeactuatedPLC, ipAPDeactuatedHwr
+					stMLVIO.iUnBlock =128 OR  	//  	  1000 0000  	ipCellGroundFault
+					stMLVIO.iUnBlock =256 OR 	//  	1 0000 0000		ipTesterPresent
+					stMLVIO.iUnBlock =192 OR 	//   	  1100 0000  	ipCellFluidLeakage2, ipCellGroundFault
+					stMLVIO.iUnBlock =320 OR 	//  	1 0100 0000		ipCellFluidLeakage2, ipTesterPresent
+					stMLVIO.iUnBlock =384 OR 	//  	1 1000 0000 	ipCellGroundFault, ipTesterPresent
+					stMLVIO.iUnBlock =448 OR	//  	1 1100 0000 	ipCellFluidLeakage2, ipCellGroundFault, ipTesterPresent
+					stMLVIO.iUnBlock = 2048		//	  100 0000 0000  //removed testerReady check from every flow
+					)
+					OR
+					//2, 2#0010 SYS Leak
+					//4, 2#0100 SYS GRD 
+					(	
+					stMLVIO.iSysUnBlockAlm =2 OR 
+					stMLVIO.iSysUnBlockAlm =4 OR 
+					stMLVIO.iSysUnBlockAlm =6
+					) 
+				)*)
+			(stMLVIO.bAlarmBlock OR
+			stMLVIO.iSysUnBlockAlm = 2 OR 
+			stMLVIO.iSysUnBlockAlm = 4 OR 
+			stMLVIO.iSysUnBlockAlm = 6) 
+		THEN
+			pwrOnChkTim(
+				In													:= FALSE);
+			M_nSystemReset											:= 20;		//return fail event
+			RETURN;
+		END_IF
+		//pwrOnChkTim(In:=FALSE);
+		//M_nSystemReset:=20;		
+		//RETURN;
+	END_IF
+END_IF
+
+IF iSysRsetSeqStep > 0 THEN
+	;//Do nothing;
+ELSIF stTCMLSeqParam.bInitialise THEN
+	// Production
+	IF bProductionMode THEN
+		arrSysRsetSeqStep[0]										:= E_SeqSts.eInit; // Init
+		arrSysRsetSeqStep[1]										:= E_SeqSts.eSanityCheck; // Sanity check
+		arrSysRsetSeqStep[2]										:= E_SeqSts.eDoorLock; // DoorLock		Air valve can be only after door is lock.
+		arrSysRsetSeqStep[3]										:= E_SeqSts.ePwrOn; // Pwr On		Power On will wait for t>20 sec to let the Power On Error Come out if there's any Error. 
+		arrSysRsetSeqStep[4]										:= E_SeqSts.eChkTIUPosition;
+		arrSysRsetSeqStep[5]										:= E_SeqSts.eTBotEAPSanityCheck; // EAP check
+		arrSysRsetSeqStep[6]										:= E_SeqSts.eMoveDrawerUp; // Up
+		arrSysRsetSeqStep[7]										:= E_SeqSts.eTBotEAPSanityCheck; // EAP check
+		arrSysRsetSeqStep[8]										:= E_SeqSts.eMoveDrawerIn; // In
+		arrSysRsetSeqStep[9]										:= E_SeqSts.eMoveDrawerDown; // Down
+		arrSysRsetSeqStep[10]										:= E_SeqSts.eDone; // Done
+	// Simulation
+	ELSE
+		arrSysRsetSeqStep[0]										:= E_SeqSts.eInit;				//Init
+		arrSysRsetSeqStep[1]										:= E_SeqSts.eSanityCheck;		//Sanity check
+		arrSysRsetSeqStep[2]										:= E_SeqSts.eDoorLock;			//DoorLock		Air valve can be only after door is lock.
+		arrSysRsetSeqStep[3]										:= E_SeqSts.ePwrOn;				//Pwr On		Power On will wait for t>20 sec to let the Power On Error Come out if there's any Error. 
+		arrSysRsetSeqStep[4]										:= E_SeqSts.eChkTIUPosition;
+		arrSysRsetSeqStep[5]										:= E_SeqSts.eTBotEAPSanityCheck;	//EAP check
+		arrSysRsetSeqStep[6]										:= E_SeqSts.eMoveDrawerUp;		//Up
+		arrSysRsetSeqStep[7]										:= E_SeqSts.eTBotEAPSanityCheck;	//EAP check
+		arrSysRsetSeqStep[8]										:= E_SeqSts.eMoveDrawerIn;		//In
+		arrSysRsetSeqStep[9]										:= E_SeqSts.eMoveDrawerDown; 	//Down
+		arrSysRsetSeqStep[10]										:= E_SeqSts.eDone;				//Done
+	END_IF
+END_IF
+
+//Sequence start
+iStkSeqCase:=arrSysRsetSeqStep[iSysRsetSeqStep];
+
+// State machine
+CASE iStkSeqCase OF
+E_SeqSts.eInit: //Init
+	
+	//TDelay(IN:=FALSE);
+	sMessage:='Start Executing';
+	bStepDone:=TRUE;
+	
+E_SeqSts.eSanityCheck: //Sanity sheck
+	sMessage														:= 'Sanity Check ';
+	stColVIO														:= fbTCColumn.P_stTCColumnVIO;
+	_nErrorID														:= INT_TO_UDINT(M_IsSanityCheckFailed(
+																					stColVIO:= stColVIO, 
+																					sMsg=> sMessage));
+	IF _nErrorID=0 THEN
+		bStepDone:=TRUE;
+	END_IF
+	
+//25	TBot EAP NOT SofeToMove Error
+//26	TBot EAP AntiCollision Triggered
+//27	TCC Session Active
+//28	Both TIU Extern & Retract  Signal  are Detected
+//29	Both TIU Up & Down  Signal  are Detected
+//30	AP is not in UP Position
+//31	Door Close Signal is not Detected
+//32	Door Lock Signal is not Detected
+	
+E_SeqSts.eTBotEAPSanityCheck:
+
+	sMessage:='Checking TBot EAP';
+
+
+	_nErrorID:=INT_TO_UDINT(M_IsEAPError(sMsg=>sMessage));
+	IF _nErrorID=0 THEN
+		bStepDone:=TRUE;
+	END_IF	
+E_SeqSts.eDoorLock:
+	sMessage														:=' Door Lock ';
+	sError															:='';
+	// Run only when PLC first start up
+	IF (NOT _Start_Up) THEN
+		 //Check Door Closed Status
+		IF (NOT stMLVIO.ipTCCellDoorOpenCloseStatus) THEN
+			sError													:= 'Door is not Closed';
+			//SetErrorBit*
+			sMessage												:= CONCAT(sMessage,sError);
+			_bError													:= TRUE;
+			bStepDone												:= FALSE;
+			_Start_Up												:= TRUE; // Prevent to run door close again
+		ELSE
+			//LockDoor
+			IF bDebugCart THEN
+				stMLVIO.opCellTBOtSideDoorClosed1					:= TRUE;				
+				stMLVIO.opCellTBOtSideDoorClosed2					:= TRUE;
+			END_IF
+			
+			stMLVIO.opCellDoorClosed								:= TRUE;
+			
+			//wait 2 sec to check door lock
+			doorLockChkTim(In := TRUE, PT := T#2S);
+			IF  doorLockChkTim.Q THEN
+				doorLockChkTim(In := FALSE);
+				bStepDone											:= TRUE;
+				_Start_Up											:= TRUE; // Prevent to run door close again
+			END_IF
+		END_IF
+	ELSE
+		bStepDone													:= TRUE;
+	END_IF
+
+E_SeqSts.eCheckDoorLock:
+	
+	IF NOT stMLVIO.ipTCCellDoorClosed THEN
+		sError:='Door Lock Signal not Detected Error';
+		//SetErrorBit*
+	ELSIF NOT stMLVIO.ipTCCellTbotSideDoorLocked01 AND bDebugCart THEN
+		sError:='Front Door Lock_1 Signal not Detected Error';
+	ELSIF NOT stMLVIO.ipTCCellTbotSideDoorLocked02 AND bDebugCart THEN
+		sError:='Front Door Lock_2 Signal not Detected Error';
+	END_IF
+
+	IF sError<>'' THEN
+		sMessage:=CONCAT(sMessage,sError);
+		_bError:=TRUE;
+		bStepDone:=FALSE;
+	ELSE
+		bStepDone:=TRUE;
+	END_IF
+	
+	
+E_SeqSts.ePwrOn:
+
+	//=============================================================
+	IF (NOT bAlwaysOnAPPwrOnInit) AND (NOT stMLVIO.ipAPPresentSensor) THEN
+		// Set TstPwrProcessCmdBit;    arrTCMLTstPwrProcess();
+	END_IF
+	//=============================================================
+	
+	sMessage											:= ' Enable Air Supply ';
+	M_Pwr(
+		e												:= TRUE);
+	
+	pwrOnChkTim(
+		In												:= TRUE,
+		PT												:= INT_TO_TIME(1));
+	IF pwrOnChkTim.Q THEN
+		pwrOnChkTim(In:=FALSE);
+		bStepDone										:= TRUE;
+	END_IF
+
+eChkTIUPosition:
+	iTIUStatus:=M_GetTIUStatus(b3:=stMLVIO.ipTCDrawerCylUpRS,b2:= stMLVIO.ipTCDrawerCylDownRS,b1:=stMLVIO.ipTCDrawerCylExtendRS,b0:=stMLVIO.ipTCDrawerCylRetractRS); // Up,Down,Ext,Ret
+	IF bProductionMode THEN
+		CASE iTIUStatus OF 
+			0:(*UpInDn*)	bStepDone:=TRUE;
+			1:(*Down*)		iSysRsetSeqStep:=8; // 9;
+			2:(*UpInDn*)	bStepDone:=TRUE;
+			3:(*V_Err*)		_nErrorID:=E_AlarmID.BothTIUUpDownSignalDetected; sMessage:= 'Both Reed Switchs of Cylinder are Detected';
+			4:(*UpInDn*)	bStepDone:=TRUE;
+			5:(*Done*)		iSysRsetSeqStep:=8; //10;
+			6:(*UpInDn*)	bStepDone:=TRUE;
+			7:(*V_Err*)		_nErrorID:=E_AlarmID.BothTIUUpDownSignalDetected; sMessage:= 'Both Reed Switchs of Cylinder are Detected';
+			8:(*UpInDn*)	bStepDone:=TRUE;
+			9:(*Down*)		iSysRsetSeqStep:=8; //9;
+			10:(*UpInDn*)	bStepDone:=TRUE;
+			11,(*V_Err*)	
+			12,(*H_Err*)	
+			13,(*H_Err*)	
+			14,(*H_Err*)	
+			15:(*H_Err*)	_nErrorID:=E_AlarmID.BothTIUExternRetractSignalDetected; sMessage:= 'Both Reed Switchs of Cylinder are Detected';
+		END_CASE
+	ELSE
+		CASE iTIUStatus OF 
+			0:(*UpInDn*)	bStepDone:=TRUE;
+			1:(*Down*)		iSysRsetSeqStep:=8; // 9;   //8= In_Down, 9=Down
+			2:(*UpInDn*)	bStepDone:=TRUE;
+			3:(*UpInDn*)	bStepDone:=TRUE;
+			4:(*UpInDn*)	bStepDone:=TRUE;
+			5:(*Done*)		iSysRsetSeqStep:=8; // 10;/ //10= Done
+			6:(*UpInDn*)	bStepDone:=TRUE;
+			7:(*V_Err*)		bStepDone:=TRUE;
+			8:(*UpInDn*)	bStepDone:=TRUE;
+			9:(*Down*)		iSysRsetSeqStep:=8; // 9;
+			10:(*UpInDn*)	bStepDone:=TRUE;
+			11:(*V_Err*)	bStepDone:=TRUE;
+			12:(*H_Err*)	bStepDone:=TRUE;
+			13:(*H_Err*)	iSysRsetSeqStep:=8; //9;
+			14:(*H_Err*)	bStepDone:=TRUE;
+			15:(*H_Err*)	bStepDone:=TRUE;
+		END_CASE
+	END_IF	
+	
+E_SeqSts.eChkTIUUpDown: //Is Down and Ret
+	IF stMLVIO.ipTCDrawerCylUpRS AND NOT stMLVIO.ipTCDrawerCylDownRS THEN
+		iSysRsetSeqStep:=7;//eChkTIUExtRet
+	ELSIF stMLVIO.ipTCDrawerCylUpRS AND  stMLVIO.ipTCDrawerCylDownRS  THEN
+		//Error
+		IF NOT bProductionMode THEN
+			bStepDone:=TRUE;
+		ELSE
+			sMessage:= 'Both Reed Switchs of Cylinder are Detected';
+			//bErr:=TRUE;
+			M_nSystemReset:=30;
+		END_IF
+	ELSE
+		bStepDone:=TRUE;
+	END_IF
+	
+E_SeqSts.eChkTIUExtRet: //Is Down and Ret
+	IF stMLVIO.ipTCDrawerCylRetractRS AND NOT stMLVIO.ipTCDrawerCylExtendRS THEN
+		iSysRsetSeqStep:=11; //Done
+	ELSIF stMLVIO.ipTCDrawerCylRetractRS AND  stMLVIO.ipTCDrawerCylExtendRS  THEN
+		//Error
+		IF NOT bProductionMode THEN
+			bStepDone:=TRUE;
+		ELSE
+			sMessage:= 'Both Reed Switchs of Cylinder are Detected';
+			//bErr:=TRUE;
+			M_nSystemReset:=30;
+		END_IF
+	ELSE
+		bStepDone:=TRUE;
+	END_IF
+	
+E_SeqSts.eMoveDrawerUp:
+	DwrAirOnInit();	//****
+	//stMLVIO.bTIUInOutStatusFlag:=TRUE;
+	sMessage:=' Drawer Up ';
+	iLibrySts[1]:=M_nCmptUpDown(bExtend:=TRUE,  sErrorMSg:=sMsg);
+	
+	IF iLibrySts[1]=10 THEN
+		bStepDone:=TRUE;
+	ELSIF iLibrySts[1]=99 THEN
+		sMessage:=CONCAT(sMessage,sMsg);
+		_bError:=TRUE;
+	END_IF	
+	
+E_SeqSts.eMoveDrawerIn:	
+	DwrAirOnInit();	//****
+	sMessage:=' Drawer In ';
+	iLibrySts[1]:=M_nCmptInOut(bExtend:=FALSE,  sErrorMSg:=sMsg);
+	IF iLibrySts[1]=10 THEN
+		bStepDone:=TRUE;
+	ELSIF iLibrySts[1]=99 THEN
+		sMessage:=CONCAT(sMessage,sMsg);
+		_bError:=TRUE;
+	END_IF
+	
+E_SeqSts.eMoveDrawerDown:
+	DwrAirOnInit();	//****
+	sMessage:=' Drawer Down ';
+	iLibrySts[1]:=M_nCmptUpDown(bExtend:=FALSE,  sErrorMSg:=sMsg);
+	
+	IF iLibrySts[1]=10 THEN
+		bStepDone:=TRUE;
+	ELSIF iLibrySts[1]=99 THEN
+		sMessage:=CONCAT(sMessage,sMsg);
+		_bError:=TRUE;
+	END_IF
+	
+E_SeqSts.eDone:	// Done
+	DwrAirOnInit();	//****
+	sMessage:='Done';
+	//IF stMLVIO.ipTCDrawerCylRetractRS THEN
+	//	stMLVIO.bTIUInOutStatusFlag:=FALSE;
+	//END_IF;
+	M_nSystemReset:=10;
+END_CASE	
+
+
+IF _nErrorID>0 OR _bError THEN
+	_bError:=TRUE;
+ELSIF (stMLVIO.bStep OR stMLVIO.bBypassSingleMove  OR iStkSeqCase<=E_SeqSts.eSanityCheck)
+AND iStkSeqCase<E_SeqSts.eDone AND bStepDone THEN
+	iSysRsetSeqStep:=iSysRsetSeqStep+1;
+END_IF
+
+//rtStep(CLK:=bStep AND NOT bBypassSingleMove, Q=>bStep );]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Pwr" Id="{b22dc467-cf02-4b3c-a883-1f42dfbedd64}">
+      <Declaration><![CDATA[METHOD M_Pwr : bool
+VAR_INPUT
+	e:BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+	//stMLVIO.opAP240ACPwrEnable:=
+	//stMLVIO.opCell24VPowerEnable:=
+	//stMLVIO.opTst240VACPwrEnable:=
+	//stMLVIO.opCellPCWValve:=
+	//stMLVIO.bEnableSKTAirSupOnInit:=
+	//stMLVIO.bEnableAPPwrSupOnInit:=
+	stMLVIO.bEnableAPAirSupOnInit:=
+	//stMLVIO.bEnableTstPwrSupOnInit:=
+	stMLVIO.bEnableDwrAirSupOnInit:=
+	FunONOFF:= 
+	e;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_SeqAlmRset" Id="{5b34250c-a5b5-4e02-9baa-75a97529b213}">
+      <Declaration><![CDATA[METHOD M_SeqAlmRset : UDINT
+VAR_INPUT
+	subMod:DINT;
+	almID:DINT;
+	isRsetAll:BOOL;
+END_VAR
+VAR
+	i:UINT;
+END_VAR
+
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF isRsetAll THEN
+	FOR i:=1 TO NO_OF_ALARM_TAG DO
+		ALMTC.Level[subMod].AlarmID[i] := FALSE;
+	END_FOR
+ELSE
+	ALMTC.Level[subMod].AlarmID[almID] := FALSE;
+END_IF
+	
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_TstPwrOn_Init" Id="{7d2593a5-51f2-4707-85f2-1acb02228976}">
+      <Declaration><![CDATA[METHOD M_TstPwrOn_Init : UDINT
+VAR_INPUT
+	t:UINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[(*
+
+IF iSeqStep>0 THEN
+	;//Do nothing;
+ELSIF stTCMLSeqParam.bShuttleMoveOut THEN
+	arrSeqStep[0]:=E_SeqSts.eInit;						//Init
+	arrSeqStep[1]:=E_SeqSts.eSanityCheck;				//Sanity check
+	arrSeqStep[2]:=E_SeqSts.eTBotEAPSanityCheck;		//Sanity check
+	arrSeqStep[3]:=E_SeqSts.eMoveDrawerUp;				//Move drawer up
+	arrSeqStep[4]:=E_SeqSts.eTBotEAPSanityCheck;
+	arrSeqStep[5]:=E_SeqSts.eMoveDrawerOut;				//Move drawer out
+	arrSeqStep[6]:=E_SeqSts.eDone;						//done
+	
+ELSIF stTCMLSeqParam.bShuttleMoveIn (* OR stTCMLSeqParam.bDoorRecovery*) THEN
+	arrSeqStep[0]:=E_SeqSts.eInit;			//Init
+	arrSeqStep[1]:=E_SeqSts.eSanityCheck;	//Sanity check
+	arrSeqStep[2]:=E_SeqSts.eChkTIUPosition;
+	arrSeqStep[3]:=E_SeqSts.eTBotEAPSanityCheck;	//Sanity check
+	arrSeqStep[4]:=E_SeqSts.eMoveDrawerUp;	//Move drawer up
+	arrSeqStep[5]:=E_SeqSts.eTBotEAPSanityCheck;	//Sanity check
+	arrSeqStep[6]:=E_SeqSts.eMoveDrawerIn;	//Move drawer In
+	arrSeqStep[7]:=E_SeqSts.eMoveDrawerDown;	//Move drawer down
+	arrSeqStep[8]:=E_SeqSts.eDone;			//done
+
+END_IF
+
+
+CASE tstPwrSubStp OF
+	E_TstPwrStep.CheckCmd 		 :   
+									IF 0 < arrTCMultiLevel[iLevel].stGblParam.iTstPwr AND arrTCMultiLevel[iLevel].stGblParam.iTstPwr < 3 THEN
+										NEXT(stp:=E_TstPwrStep.SanityCheck, msg:=logMsg);
+									ELSIF arrTCMultiLevel[iLevel].stGblParam.iTstPwr = 0 THEN
+										NEXT(stp:=E_TstPwrStep.OFF_PWR, msg:=logMsg);
+									END_IF
+	
+	E_TstPwrStep.SanityCheck	 :  //Ltch?
+									//Prst?
+									
+									IF NOT stMLVIO.ipTesterLatchesClosed THEN
+										_bError:=TRUE;
+										sMessage:='Tester Latch Not Close';
+									ELSIF NOT stMLVIO.ipTesterPresent THEN
+										_bError:=TRUE;
+										sMessage:='Tester Not Present';
+									END_IF
+									
+									t:= SEL(_bError, 
+											NEXT(stp:=E_TstPwrStep.CheckCycPwr, msg:=logMsg),	
+											NEXT(stp:=E_TstPwrStep.SEND_EVENT, msg:=logMsg));	// t = G? F:T
+																		
+	E_TstPwrStep.CheckCycPwr     :
+									t:= SEL(arrTCMultiLevel[iLevel].stGblParam.iTstPwr=2, 	
+											NEXT(stp:=E_TstPwrStep.ON_PWR, msg:=logMsg),	
+											NEXT(stp:=E_TstPwrStep.ChkPwrOutputOn, msg:=logMsg));	// t = G? F:T
+	
+	E_TstPwrStep.ChkPwrOutputOn  :	
+									
+									t:= SEL(NOT stMLVIO.opTst240VACPwrEnable, // AND stVIO.ipTesterPowerOn, 	
+											NEXT(stp:=E_TstPwrStep.ON_PWR, msg:=logMsg),	
+											NEXT(stp:=E_TstPwrStep.ON_PWR, msg:=logMsg));	// t = G? F:T
+	
+	
+	E_TstPwrStep.OFF_PWR_FOR_CYC :
+									stMLVIO.opTst240VACPwrEnable:=FALSE;
+									NEXT(stp:=E_TstPwrStep.SanityCheck, msg:=logMsg);
+
+	
+	E_TstPwrStep.WAIT_5          :	
+									//Wait 5 sec
+									IF tim.Q THEN
+										tim(IN:=FALSE);
+										NEXT(stp:=E_TstPwrStep.ON_PWR, msg:=logMsg);
+									END_IF								
+	
+	E_TstPwrStep.ON_PWR          :	
+									stMLVIO.opTst240VACPwrEnable:=TRUE;;
+									NEXT(stp:=E_TstPwrStep.SEND_EVENT, msg:=logMsg);
+	
+	E_TstPwrStep.WAIT_20         :	
+									//Wait 20 sec
+									IF tim.Q THEN
+										tim(IN:=FALSE);
+										NEXT(stp:=E_TstPwrStep.ChkPwrOnFeedBack, msg:=logMsg);
+									END_IF	
+	
+	E_TstPwrStep.ChkPwrOnFeedBack:
+									IF NOT stMLVIO.ipTesterPowerOn THEN
+										_bError:=TRUE;
+										sMessage:='Tester Power On Signal is not detected after 20 sec';
+									END_IF
+									
+									t:= SEL(_bError, 
+											NEXT(stp:=E_TstPwrStep.ON_PCW, msg:=logMsg),	
+											NEXT(stp:=E_TstPwrStep.OFF_PWR_FOR_ERR, msg:=logMsg));	// t = G? F:T
+		
+	
+	
+	E_TstPwrStep.ON_PCW          :
+									stMLVIO.opCellPCWValve:=TRUE;
+									PassOut();
+									NEXT(stp:=E_TstPwrStep.SEND_EVENT, msg:=logMsg);
+	
+	E_TstPwrStep.OFF_PWR_FOR_ERR :
+									stMLVIO.opTst240VACPwrEnable:=FALSE;
+									PassOut();
+									NEXT(stp:=E_TstPwrStep.SEND_EVENT, msg:=logMsg);
+	
+	E_TstPwrStep.OFF_PWR		 :	
+									stMLVIO.opTst240VACPwrEnable:=FALSE;
+									PassOut();
+									NEXT(stp:=E_TstPwrStep.SEND_EVENT, msg:=logMsg);
+	
+	
+END_CASE
+*)]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="NEXT" Id="{a9519a38-9493-41c4-a7c2-372d1c6cdc36}">
+      <Declaration><![CDATA[METHOD NEXT : UINT
+VAR_INPUT
+	msg:STRING:='';
+END_VAR
+VAR_IN_OUT
+	stp:INT;
+END_VAR
+
+
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF msg<>'' THEN
+	;//Logging
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="P_ErrClear" Id="{71cdd4bd-ba6b-49c4-b14e-5c7fbe82818d}">
+      <Declaration><![CDATA[PROPERTY P_ErrClear : BOOL]]></Declaration>
+      <Get Name="Get" Id="{0807d10a-eeb3-4695-8e30-917d319f4063}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{310d3e4b-5140-4768-8917-acf05dd9b656}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[bErrClear := P_ErrClear;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="P_sEAPMessage" Id="{18ba7c01-66e5-4c94-b5ad-aff18d302282}">
+      <Declaration><![CDATA[PROPERTY P_sEAPMessage : STRING]]></Declaration>
+      <Get Name="Get" Id="{27fb4b6d-0ca2-4d6f-8e3d-004883171bad}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[//P_sEAPMessage:=sEAPMessage;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="P_sMessage" Id="{dc9296a0-98ab-4663-8d36-692691155897}">
+      <Declaration><![CDATA[PROPERTY P_sMessage : string]]></Declaration>
+      <Get Name="Get" Id="{a4fb15c2-10b8-4edb-bb87-4f4e0e50a2a6}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[P_sMessage := sMessage;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="P_stParam" Id="{265f886d-b4db-434b-ba25-4d3682189875}">
+      <Declaration><![CDATA[PROPERTY PUBLIC P_stParam : ST_TCMultiLevelSeqParam]]></Declaration>
+      <Get Name="Get" Id="{169fc1e3-c53d-48e4-8a95-0c7e2cfbff75}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[P_stParam := stTCMLSeqParam;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{06c4b386-8ad2-4d1e-8d4a-b037f883ddcd}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[stTCMLSeqParam := P_stParam;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="P_stTCMultiLevelVIO" Id="{b9b49ce6-01ea-4b6a-ba50-0e5aa0c680b0}">
+      <Declaration><![CDATA[PROPERTY PUBLIC P_stTCMultiLevelVIO : ST_TCMultiLevel_VIO]]></Declaration>
+      <Get Name="Get" Id="{d386f3a9-6214-4e5f-82b6-219668a4713d}">
+        <Declaration><![CDATA[PUBLIC VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[P_stTCMultiLevelVIO := stMLVIO;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{fe6c83cd-158b-4b53-ba82-75a689b4212b}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[stMLVIO := P_stTCMultiLevelVIO;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Action Name="PermSD" Id="{8f6317db-aed8-42b3-a3e7-277a2f515be4}">
+      <Implementation>
+        <ST><![CDATA[FC_BitToWord(
+	BOOL_00		:= TRUE, 
+	BOOL_01		:= TRUE, 
+	BOOL_02		:= TRUE, 
+	BOOL_03		:= TRUE, 
+	BOOL_04		:= TRUE, 
+	BOOL_05		:= TRUE, 
+	BOOL_06		:= TRUE, 
+	BOOL_07		:= TRUE, 
+	BOOL_08		:= TRUE, 
+	BOOL_09		:= TRUE, 
+	BOOL_10		:= TRUE, 
+	BOOL_11		:= TRUE, 
+	BOOL_12		:= TRUE, 
+	BOOL_13		:= TRUE, 
+	BOOL_14		:= TRUE, 
+	BOOL_15		:= TRUE, 
+	Output_Word		=> TC_AP240Power_Perm);
+	
+FC_BitToWord(
+	BOOL_00		:= FALSE, 
+	BOOL_01		:= FALSE, 
+	BOOL_02		:= FALSE, 
+	BOOL_03		:= FALSE, 
+	BOOL_04		:= FALSE, 
+	BOOL_05		:= FALSE, 
+	BOOL_06		:= FALSE, 
+	BOOL_07		:= FALSE, 
+	BOOL_08		:= FALSE, 
+	BOOL_09		:= FALSE, 
+	BOOL_10		:= FALSE, 
+	BOOL_11		:= FALSE, 
+	BOOL_12		:= FALSE, 
+	BOOL_13		:= FALSE, 
+	BOOL_14		:= FALSE, 
+	BOOL_15		:= FALSE, 
+	Output_Word		=> TC_AP240Power_SD);]]></ST>
+      </Implementation>
+    </Action>
+    <Method Name="PowerCheck" Id="{2fc41cdb-1d0f-4e9b-8cf7-3fd2fc04ecc6}">
+      <Declaration><![CDATA[METHOD PowerCheck : UDINT
+VAR_INPUT
+	
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[CASE iAPPwrStep OF
+	1:
+		iAPPwrStep:=2;
+	2:
+		iAPPwrStep:=3;
+	3:
+		iAPPwrStep:=4;
+	4:
+		iAPPwrStep:=5;
+	5:
+		iAPPwrStep:=6;
+	6:
+		iAPPwrStep:=7;
+	7:
+		iAPPwrStep:=8;
+	8:
+		iAPPwrStep:=9;
+	9:
+		iAPPwrStep:=10;
+	10:
+		iAPPwrStep:=1;
+END_CASE]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_TCMultiLevelSeq">
+      <LineId Id="162" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TCMultiLevelSeq.AirOnOff">
+      <LineId Id="23" Count="1" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="225" Count="0" />
+      <LineId Id="214" Count="0" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="47" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="34" Count="1" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="48" Count="0" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="37" Count="1" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="49" Count="0" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="40" Count="2" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="43" Count="0" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="45" Count="1" />
+      <LineId Id="44" Count="0" />
+      <LineId Id="51" Count="0" />
+      <LineId Id="6" Count="0" />
+      <LineId Id="53" Count="2" />
+      <LineId Id="121" Count="0" />
+      <LineId Id="220" Count="0" />
+      <LineId Id="122" Count="1" />
+      <LineId Id="59" Count="2" />
+      <LineId Id="124" Count="1" />
+      <LineId Id="64" Count="2" />
+      <LineId Id="126" Count="1" />
+      <LineId Id="69" Count="2" />
+      <LineId Id="77" Count="1" />
+      <LineId Id="130" Count="3" />
+      <LineId Id="81" Count="1" />
+      <LineId Id="113" Count="0" />
+      <LineId Id="134" Count="1" />
+      <LineId Id="116" Count="0" />
+      <LineId Id="112" Count="0" />
+      <LineId Id="52" Count="0" />
+      <LineId Id="143" Count="0" />
+      <LineId Id="146" Count="0" />
+      <LineId Id="152" Count="0" />
+      <LineId Id="187" Count="0" />
+      <LineId Id="153" Count="0" />
+      <LineId Id="181" Count="2" />
+      <LineId Id="185" Count="0" />
+      <LineId Id="189" Count="1" />
+      <LineId Id="188" Count="0" />
+      <LineId Id="180" Count="0" />
+      <LineId Id="186" Count="0" />
+      <LineId Id="158" Count="3" />
+      <LineId Id="178" Count="1" />
+      <LineId Id="177" Count="0" />
+      <LineId Id="164" Count="2" />
+      <LineId Id="168" Count="0" />
+      <LineId Id="170" Count="0" />
+      <LineId Id="192" Count="1" />
+      <LineId Id="191" Count="0" />
+      <LineId Id="171" Count="4" />
+      <LineId Id="196" Count="1" />
+      <LineId Id="195" Count="0" />
+      <LineId Id="194" Count="0" />
+      <LineId Id="176" Count="0" />
+      <LineId Id="144" Count="0" />
+      <LineId Id="139" Count="1" />
+      <LineId Id="100" Count="0" />
+      <LineId Id="102" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TCMultiLevelSeq.DwrAirOnInit">
+      <LineId Id="6" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TCMultiLevelSeq.M_240APPwr">
+      <LineId Id="6" Count="2" />
+      <LineId Id="10" Count="8" />
+      <LineId Id="127" Count="0" />
+      <LineId Id="20" Count="20" />
+      <LineId Id="78" Count="0" />
+      <LineId Id="77" Count="0" />
+      <LineId Id="41" Count="5" />
+      <LineId Id="48" Count="6" />
+      <LineId Id="76" Count="0" />
+      <LineId Id="55" Count="1" />
+      <LineId Id="84" Count="0" />
+      <LineId Id="83" Count="0" />
+      <LineId Id="57" Count="12" />
+      <LineId Id="75" Count="0" />
+      <LineId Id="89" Count="0" />
+      <LineId Id="123" Count="2" />
+      <LineId Id="138" Count="0" />
+      <LineId Id="174" Count="0" />
+      <LineId Id="176" Count="5" />
+      <LineId Id="175" Count="0" />
+      <LineId Id="156" Count="0" />
+      <LineId Id="136" Count="0" />
+      <LineId Id="157" Count="0" />
+      <LineId Id="144" Count="0" />
+      <LineId Id="140" Count="0" />
+      <LineId Id="128" Count="1" />
+      <LineId Id="106" Count="15" />
+      <LineId Id="92" Count="0" />
+      <LineId Id="70" Count="0" />
+      <LineId Id="183" Count="0" />
+      <LineId Id="182" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TCMultiLevelSeq.M_240TstPwr">
+      <LineId Id="6" Count="12" />
+      <LineId Id="101" Count="0" />
+      <LineId Id="20" Count="6" />
+      <LineId Id="28" Count="26" />
+      <LineId Id="92" Count="0" />
+      <LineId Id="55" Count="15" />
+      <LineId Id="72" Count="0" />
+      <LineId Id="74" Count="3" />
+      <LineId Id="94" Count="0" />
+      <LineId Id="96" Count="0" />
+      <LineId Id="95" Count="0" />
+      <LineId Id="91" Count="0" />
+      <LineId Id="89" Count="0" />
+      <LineId Id="78" Count="6" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TCMultiLevelSeq.M_GetTIUStatus">
+      <LineId Id="5" Count="0" />
+      <LineId Id="16" Count="4" />
+    </LineIds>
+    <LineIds Name="FB_TCMultiLevelSeq.M_InputBackDoor">
+      <LineId Id="6" Count="178" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TCMultiLevelSeq.M_InterlockTII">
+      <LineId Id="6" Count="8" />
+      <LineId Id="122" Count="0" />
+      <LineId Id="15" Count="7" />
+      <LineId Id="123" Count="0" />
+      <LineId Id="133" Count="0" />
+      <LineId Id="77" Count="0" />
+      <LineId Id="23" Count="2" />
+      <LineId Id="121" Count="0" />
+      <LineId Id="26" Count="1" />
+      <LineId Id="132" Count="0" />
+      <LineId Id="29" Count="1" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="131" Count="0" />
+      <LineId Id="36" Count="4" />
+      <LineId Id="89" Count="0" />
+      <LineId Id="41" Count="5" />
+      <LineId Id="115" Count="1" />
+      <LineId Id="114" Count="0" />
+      <LineId Id="48" Count="12" />
+      <LineId Id="129" Count="1" />
+      <LineId Id="61" Count="0" />
+      <LineId Id="128" Count="0" />
+      <LineId Id="62" Count="4" />
+      <LineId Id="91" Count="2" />
+      <LineId Id="95" Count="1" />
+      <LineId Id="104" Count="0" />
+      <LineId Id="106" Count="0" />
+      <LineId Id="102" Count="0" />
+      <LineId Id="108" Count="0" />
+      <LineId Id="112" Count="1" />
+      <LineId Id="107" Count="0" />
+      <LineId Id="97" Count="2" />
+      <LineId Id="101" Count="0" />
+      <LineId Id="100" Count="0" />
+      <LineId Id="68" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TCMultiLevelSeq.M_IOMapping">
+      <LineId Id="16919" Count="4" />
+      <LineId Id="17309" Count="0" />
+      <LineId Id="16924" Count="0" />
+      <LineId Id="16926" Count="4" />
+      <LineId Id="17721" Count="0" />
+      <LineId Id="16993" Count="0" />
+      <LineId Id="17642" Count="0" />
+      <LineId Id="16995" Count="3" />
+      <LineId Id="17720" Count="0" />
+      <LineId Id="17001" Count="1" />
+      <LineId Id="17836" Count="1" />
+      <LineId Id="17798" Count="0" />
+      <LineId Id="17838" Count="0" />
+      <LineId Id="17601" Count="0" />
+      <LineId Id="17475" Count="0" />
+      <LineId Id="17603" Count="0" />
+      <LineId Id="17602" Count="0" />
+      <LineId Id="17117" Count="11" />
+      <LineId Id="17140" Count="8" />
+      <LineId Id="17971" Count="1" />
+      <LineId Id="17149" Count="0" />
+      <LineId Id="17578" Count="0" />
+      <LineId Id="17582" Count="2" />
+      <LineId Id="17599" Count="0" />
+      <LineId Id="17598" Count="0" />
+      <LineId Id="17585" Count="0" />
+      <LineId Id="17883" Count="0" />
+      <LineId Id="17970" Count="0" />
+      <LineId Id="17881" Count="0" />
+      <LineId Id="17579" Count="0" />
+      <LineId Id="17590" Count="0" />
+      <LineId Id="17592" Count="0" />
+      <LineId Id="17600" Count="0" />
+      <LineId Id="17586" Count="0" />
+      <LineId Id="17884" Count="0" />
+      <LineId Id="17878" Count="0" />
+      <LineId Id="17887" Count="0" />
+      <LineId Id="17594" Count="0" />
+      <LineId Id="17927" Count="0" />
+      <LineId Id="17929" Count="0" />
+      <LineId Id="17973" Count="0" />
+      <LineId Id="17926" Count="0" />
+      <LineId Id="17151" Count="21" />
+      <LineId Id="17270" Count="1" />
+      <LineId Id="17173" Count="1" />
+      <LineId Id="17760" Count="0" />
+      <LineId Id="17175" Count="0" />
+      <LineId Id="17229" Count="0" />
+      <LineId Id="17228" Count="0" />
+      <LineId Id="17759" Count="0" />
+      <LineId Id="17680" Count="2" />
+      <LineId Id="17179" Count="1" />
+      <LineId Id="17182" Count="8" />
+      <LineId Id="245" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TCMultiLevelSeq.M_IsEAPError">
+      <LineId Id="65" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="48" Count="0" />
+      <LineId Id="66" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="56" Count="0" />
+      <LineId Id="32" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TCMultiLevelSeq.M_IsSanityCheckFailed">
+      <LineId Id="11" Count="1" />
+      <LineId Id="44" Count="0" />
+      <LineId Id="49" Count="0" />
+      <LineId Id="17" Count="1" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="48" Count="0" />
+      <LineId Id="116" Count="0" />
+      <LineId Id="72" Count="1" />
+      <LineId Id="71" Count="0" />
+      <LineId Id="117" Count="0" />
+      <LineId Id="95" Count="2" />
+      <LineId Id="107" Count="0" />
+      <LineId Id="98" Count="1" />
+      <LineId Id="94" Count="0" />
+      <LineId Id="108" Count="0" />
+      <LineId Id="23" Count="2" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="47" Count="0" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="31" Count="3" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="59" Count="0" />
+      <LineId Id="61" Count="0" />
+      <LineId Id="60" Count="0" />
+      <LineId Id="58" Count="0" />
+      <LineId Id="63" Count="0" />
+      <LineId Id="36" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TCMultiLevelSeq.M_nCmptInOut">
+      <LineId Id="6" Count="10" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="17" Count="1" />
+    </LineIds>
+    <LineIds Name="FB_TCMultiLevelSeq.M_nCmptUpDown">
+      <LineId Id="695" Count="0" />
+      <LineId Id="722" Count="0" />
+      <LineId Id="721" Count="0" />
+      <LineId Id="696" Count="5" />
+      <LineId Id="724" Count="0" />
+      <LineId Id="702" Count="0" />
+      <LineId Id="704" Count="1" />
+      <LineId Id="737" Count="0" />
+      <LineId Id="706" Count="0" />
+      <LineId Id="693" Count="1" />
+      <LineId Id="636" Count="0" />
+      <LineId Id="648" Count="0" />
+      <LineId Id="231" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TCMultiLevelSeq.M_nCyclic">
+      <LineId Id="186" Count="3" />
+      <LineId Id="272" Count="0" />
+      <LineId Id="190" Count="1" />
+      <LineId Id="289" Count="0" />
+      <LineId Id="192" Count="1" />
+      <LineId Id="200" Count="5" />
+      <LineId Id="214" Count="6" />
+      <LineId Id="227" Count="10" />
+      <LineId Id="321" Count="0" />
+      <LineId Id="324" Count="1" />
+      <LineId Id="238" Count="0" />
+      <LineId Id="320" Count="0" />
+      <LineId Id="239" Count="11" />
+      <LineId Id="252" Count="9" />
+      <LineId Id="297" Count="0" />
+      <LineId Id="350" Count="0" />
+      <LineId Id="299" Count="1" />
+      <LineId Id="280" Count="0" />
+      <LineId Id="382" Count="0" />
+      <LineId Id="311" Count="0" />
+      <LineId Id="362" Count="0" />
+      <LineId Id="338" Count="1" />
+      <LineId Id="361" Count="0" />
+      <LineId Id="337" Count="0" />
+      <LineId Id="383" Count="0" />
+      <LineId Id="377" Count="4" />
+      <LineId Id="376" Count="0" />
+      <LineId Id="384" Count="0" />
+      <LineId Id="395" Count="2" />
+      <LineId Id="414" Count="0" />
+      <LineId Id="398" Count="1" />
+      <LineId Id="415" Count="0" />
+      <LineId Id="400" Count="2" />
+      <LineId Id="426" Count="0" />
+      <LineId Id="403" Count="0" />
+      <LineId Id="374" Count="1" />
+      <LineId Id="373" Count="0" />
+      <LineId Id="288" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TCMultiLevelSeq.M_nDPSPowerOnOff">
+      <LineId Id="6" Count="3" />
+      <LineId Id="337" Count="0" />
+      <LineId Id="343" Count="1" />
+      <LineId Id="358" Count="0" />
+      <LineId Id="362" Count="0" />
+      <LineId Id="359" Count="1" />
+      <LineId Id="342" Count="0" />
+      <LineId Id="361" Count="0" />
+      <LineId Id="12" Count="1" />
+      <LineId Id="189" Count="0" />
+      <LineId Id="195" Count="0" />
+      <LineId Id="197" Count="0" />
+      <LineId Id="196" Count="0" />
+      <LineId Id="190" Count="0" />
+      <LineId Id="192" Count="2" />
+      <LineId Id="279" Count="0" />
+      <LineId Id="281" Count="7" />
+      <LineId Id="280" Count="0" />
+      <LineId Id="188" Count="0" />
+      <LineId Id="40" Count="7" />
+      <LineId Id="49" Count="1" />
+      <LineId Id="57" Count="0" />
+      <LineId Id="59" Count="1" />
+      <LineId Id="217" Count="0" />
+      <LineId Id="250" Count="0" />
+      <LineId Id="248" Count="1" />
+      <LineId Id="229" Count="0" />
+      <LineId Id="322" Count="0" />
+      <LineId Id="325" Count="4" />
+      <LineId Id="61" Count="0" />
+      <LineId Id="323" Count="1" />
+      <LineId Id="215" Count="0" />
+      <LineId Id="233" Count="4" />
+      <LineId Id="261" Count="0" />
+      <LineId Id="238" Count="2" />
+      <LineId Id="262" Count="0" />
+      <LineId Id="241" Count="1" />
+      <LineId Id="263" Count="0" />
+      <LineId Id="243" Count="2" />
+      <LineId Id="264" Count="0" />
+      <LineId Id="246" Count="1" />
+      <LineId Id="231" Count="0" />
+      <LineId Id="254" Count="0" />
+      <LineId Id="273" Count="1" />
+      <LineId Id="265" Count="1" />
+      <LineId Id="214" Count="0" />
+      <LineId Id="292" Count="5" />
+      <LineId Id="367" Count="0" />
+      <LineId Id="298" Count="3" />
+      <LineId Id="368" Count="0" />
+      <LineId Id="302" Count="3" />
+      <LineId Id="369" Count="0" />
+      <LineId Id="306" Count="3" />
+      <LineId Id="370" Count="0" />
+      <LineId Id="310" Count="7" />
+      <LineId Id="290" Count="0" />
+      <LineId Id="289" Count="0" />
+      <LineId Id="94" Count="1" />
+      <LineId Id="163" Count="0" />
+      <LineId Id="165" Count="10" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TCMultiLevelSeq.M_nShuttleMoveInOut">
+      <LineId Id="1485" Count="0" />
+      <LineId Id="139" Count="1" />
+      <LineId Id="1250" Count="0" />
+      <LineId Id="1287" Count="0" />
+      <LineId Id="1456" Count="1" />
+      <LineId Id="1319" Count="2" />
+      <LineId Id="1323" Count="0" />
+      <LineId Id="1322" Count="0" />
+      <LineId Id="1324" Count="0" />
+      <LineId Id="1316" Count="0" />
+      <LineId Id="1342" Count="0" />
+      <LineId Id="1315" Count="0" />
+      <LineId Id="1318" Count="0" />
+      <LineId Id="1313" Count="0" />
+      <LineId Id="1288" Count="0" />
+      <LineId Id="2206" Count="0" />
+      <LineId Id="2170" Count="2" />
+      <LineId Id="2264" Count="0" />
+      <LineId Id="2173" Count="6" />
+      <LineId Id="2289" Count="0" />
+      <LineId Id="2180" Count="3" />
+      <LineId Id="2095" Count="0" />
+      <LineId Id="2287" Count="0" />
+      <LineId Id="2489" Count="2" />
+      <LineId Id="2288" Count="0" />
+      <LineId Id="2184" Count="0" />
+      <LineId Id="2093" Count="0" />
+      <LineId Id="2099" Count="0" />
+      <LineId Id="2094" Count="0" />
+      <LineId Id="1292" Count="0" />
+      <LineId Id="2097" Count="0" />
+      <LineId Id="1293" Count="0" />
+      <LineId Id="1291" Count="0" />
+      <LineId Id="1289" Count="0" />
+      <LineId Id="1253" Count="0" />
+      <LineId Id="1258" Count="1" />
+      <LineId Id="1255" Count="0" />
+      <LineId Id="1251" Count="0" />
+      <LineId Id="1260" Count="0" />
+      <LineId Id="1458" Count="1" />
+      <LineId Id="133" Count="0" />
+      <LineId Id="2337" Count="2" />
+      <LineId Id="142" Count="0" />
+      <LineId Id="2340" Count="0" />
+      <LineId Id="143" Count="1" />
+      <LineId Id="1426" Count="0" />
+      <LineId Id="1986" Count="0" />
+      <LineId Id="1985" Count="0" />
+      <LineId Id="1427" Count="3" />
+      <LineId Id="1424" Count="0" />
+      <LineId Id="1431" Count="0" />
+      <LineId Id="1433" Count="0" />
+      <LineId Id="2008" Count="0" />
+      <LineId Id="1984" Count="0" />
+      <LineId Id="1434" Count="3" />
+      <LineId Id="1432" Count="0" />
+      <LineId Id="1425" Count="0" />
+      <LineId Id="999" Count="0" />
+      <LineId Id="1006" Count="0" />
+      <LineId Id="1000" Count="1" />
+      <LineId Id="1668" Count="0" />
+      <LineId Id="1002" Count="0" />
+      <LineId Id="1669" Count="0" />
+      <LineId Id="1003" Count="0" />
+      <LineId Id="1670" Count="0" />
+      <LineId Id="1004" Count="1" />
+      <LineId Id="145" Count="0" />
+      <LineId Id="147" Count="1" />
+      <LineId Id="1645" Count="0" />
+      <LineId Id="411" Count="0" />
+      <LineId Id="1573" Count="0" />
+      <LineId Id="412" Count="0" />
+      <LineId Id="141" Count="0" />
+      <LineId Id="1227" Count="0" />
+      <LineId Id="2035" Count="0" />
+      <LineId Id="2039" Count="0" />
+      <LineId Id="2235" Count="0" />
+      <LineId Id="2040" Count="4" />
+      <LineId Id="2393" Count="1" />
+      <LineId Id="2045" Count="0" />
+      <LineId Id="2033" Count="1" />
+      <LineId Id="1960" Count="0" />
+      <LineId Id="763" Count="1" />
+      <LineId Id="2311" Count="3" />
+      <LineId Id="2458" Count="0" />
+      <LineId Id="2315" Count="1" />
+      <LineId Id="2457" Count="0" />
+      <LineId Id="1263" Count="0" />
+      <LineId Id="997" Count="0" />
+      <LineId Id="2345" Count="2" />
+      <LineId Id="131" Count="0" />
+      <LineId Id="1044" Count="1" />
+      <LineId Id="2341" Count="2" />
+      <LineId Id="1047" Count="0" />
+      <LineId Id="2344" Count="0" />
+      <LineId Id="1048" Count="0" />
+      <LineId Id="2237" Count="0" />
+      <LineId Id="2373" Count="6" />
+      <LineId Id="2238" Count="0" />
+      <LineId Id="2372" Count="0" />
+      <LineId Id="2239" Count="2" />
+      <LineId Id="2236" Count="0" />
+      <LineId Id="2242" Count="0" />
+      <LineId Id="1378" Count="0" />
+      <LineId Id="1403" Count="1" />
+      <LineId Id="1052" Count="2" />
+      <LineId Id="1220" Count="0" />
+      <LineId Id="1059" Count="3" />
+      <LineId Id="1219" Count="0" />
+      <LineId Id="1723" Count="0" />
+      <LineId Id="1825" Count="1" />
+      <LineId Id="1695" Count="0" />
+      <LineId Id="1703" Count="0" />
+      <LineId Id="1709" Count="0" />
+      <LineId Id="1716" Count="0" />
+      <LineId Id="1779" Count="0" />
+      <LineId Id="1727" Count="0" />
+      <LineId Id="1708" Count="0" />
+      <LineId Id="1704" Count="0" />
+      <LineId Id="1710" Count="0" />
+      <LineId Id="1719" Count="0" />
+      <LineId Id="1780" Count="0" />
+      <LineId Id="1726" Count="0" />
+      <LineId Id="1711" Count="0" />
+      <LineId Id="1706" Count="0" />
+      <LineId Id="1802" Count="0" />
+      <LineId Id="1805" Count="2" />
+      <LineId Id="1803" Count="0" />
+      <LineId Id="1725" Count="0" />
+      <LineId Id="1713" Count="0" />
+      <LineId Id="1754" Count="1" />
+      <LineId Id="1751" Count="2" />
+      <LineId Id="1748" Count="2" />
+      <LineId Id="1696" Count="0" />
+      <LineId Id="1701" Count="0" />
+      <LineId Id="1697" Count="0" />
+      <LineId Id="1818" Count="0" />
+      <LineId Id="1862" Count="0" />
+      <LineId Id="1820" Count="1" />
+      <LineId Id="1823" Count="1" />
+      <LineId Id="1819" Count="0" />
+      <LineId Id="1860" Count="1" />
+      <LineId Id="1574" Count="0" />
+      <LineId Id="2317" Count="1" />
+      <LineId Id="1863" Count="2" />
+      <LineId Id="1890" Count="0" />
+      <LineId Id="1893" Count="1" />
+      <LineId Id="2319" Count="3" />
+      <LineId Id="1895" Count="2" />
+      <LineId Id="2323" Count="0" />
+      <LineId Id="1898" Count="0" />
+      <LineId Id="2324" Count="0" />
+      <LineId Id="1899" Count="0" />
+      <LineId Id="2325" Count="0" />
+      <LineId Id="1900" Count="0" />
+      <LineId Id="2326" Count="0" />
+      <LineId Id="2348" Count="0" />
+      <LineId Id="1901" Count="0" />
+      <LineId Id="2328" Count="0" />
+      <LineId Id="1902" Count="0" />
+      <LineId Id="2327" Count="0" />
+      <LineId Id="1903" Count="0" />
+      <LineId Id="2329" Count="0" />
+      <LineId Id="1904" Count="0" />
+      <LineId Id="2330" Count="1" />
+      <LineId Id="1905" Count="0" />
+      <LineId Id="2332" Count="0" />
+      <LineId Id="1906" Count="0" />
+      <LineId Id="2333" Count="0" />
+      <LineId Id="1907" Count="0" />
+      <LineId Id="2334" Count="0" />
+      <LineId Id="1908" Count="0" />
+      <LineId Id="2335" Count="1" />
+      <LineId Id="1913" Count="3" />
+      <LineId Id="2349" Count="0" />
+      <LineId Id="1917" Count="0" />
+      <LineId Id="2350" Count="0" />
+      <LineId Id="1918" Count="0" />
+      <LineId Id="2364" Count="0" />
+      <LineId Id="1919" Count="0" />
+      <LineId Id="2363" Count="0" />
+      <LineId Id="1920" Count="0" />
+      <LineId Id="2362" Count="0" />
+      <LineId Id="1921" Count="0" />
+      <LineId Id="2361" Count="0" />
+      <LineId Id="1922" Count="0" />
+      <LineId Id="2360" Count="0" />
+      <LineId Id="1923" Count="0" />
+      <LineId Id="2359" Count="0" />
+      <LineId Id="1924" Count="0" />
+      <LineId Id="2358" Count="0" />
+      <LineId Id="1925" Count="0" />
+      <LineId Id="2357" Count="0" />
+      <LineId Id="1926" Count="0" />
+      <LineId Id="2356" Count="0" />
+      <LineId Id="1927" Count="0" />
+      <LineId Id="2355" Count="0" />
+      <LineId Id="1928" Count="0" />
+      <LineId Id="2354" Count="0" />
+      <LineId Id="1929" Count="0" />
+      <LineId Id="2353" Count="0" />
+      <LineId Id="1930" Count="0" />
+      <LineId Id="2352" Count="0" />
+      <LineId Id="1931" Count="0" />
+      <LineId Id="2351" Count="0" />
+      <LineId Id="1932" Count="0" />
+      <LineId Id="1891" Count="1" />
+      <LineId Id="1575" Count="0" />
+      <LineId Id="1859" Count="0" />
+      <LineId Id="1809" Count="0" />
+      <LineId Id="1867" Count="1" />
+      <LineId Id="1866" Count="0" />
+      <LineId Id="1099" Count="1" />
+      <LineId Id="1103" Count="0" />
+      <LineId Id="1520" Count="2" />
+      <LineId Id="1519" Count="0" />
+      <LineId Id="1105" Count="0" />
+      <LineId Id="2365" Count="1" />
+      <LineId Id="1106" Count="1" />
+      <LineId Id="1517" Count="0" />
+      <LineId Id="1523" Count="0" />
+      <LineId Id="1491" Count="2" />
+      <LineId Id="1108" Count="1" />
+      <LineId Id="1524" Count="0" />
+      <LineId Id="1110" Count="2" />
+      <LineId Id="1114" Count="2" />
+      <LineId Id="2367" Count="1" />
+      <LineId Id="1525" Count="2" />
+      <LineId Id="1117" Count="0" />
+      <LineId Id="1548" Count="1" />
+      <LineId Id="1223" Count="0" />
+      <LineId Id="2370" Count="1" />
+      <LineId Id="1162" Count="1" />
+      <LineId Id="1621" Count="0" />
+      <LineId Id="1512" Count="0" />
+      <LineId Id="1528" Count="0" />
+      <LineId Id="1513" Count="1" />
+      <LineId Id="1486" Count="0" />
+      <LineId Id="1622" Count="0" />
+      <LineId Id="1164" Count="0" />
+      <LineId Id="2212" Count="0" />
+      <LineId Id="2208" Count="2" />
+      <LineId Id="2207" Count="0" />
+      <LineId Id="2211" Count="0" />
+      <LineId Id="1165" Count="0" />
+      <LineId Id="1529" Count="0" />
+      <LineId Id="1166" Count="2" />
+      <LineId Id="1465" Count="0" />
+      <LineId Id="2409" Count="0" />
+      <LineId Id="2418" Count="0" />
+      <LineId Id="2422" Count="0" />
+      <LineId Id="2421" Count="0" />
+      <LineId Id="2433" Count="0" />
+      <LineId Id="2424" Count="0" />
+      <LineId Id="2428" Count="0" />
+      <LineId Id="2479" Count="0" />
+      <LineId Id="2411" Count="0" />
+      <LineId Id="2434" Count="2" />
+      <LineId Id="2459" Count="0" />
+      <LineId Id="2437" Count="0" />
+      <LineId Id="2441" Count="0" />
+      <LineId Id="2440" Count="0" />
+      <LineId Id="2460" Count="0" />
+      <LineId Id="2442" Count="1" />
+      <LineId Id="2438" Count="0" />
+      <LineId Id="2412" Count="0" />
+      <LineId Id="2446" Count="0" />
+      <LineId Id="2461" Count="0" />
+      <LineId Id="2450" Count="0" />
+      <LineId Id="2462" Count="1" />
+      <LineId Id="2444" Count="1" />
+      <LineId Id="2047" Count="1" />
+      <LineId Id="2070" Count="0" />
+      <LineId Id="2369" Count="0" />
+      <LineId Id="1466" Count="0" />
+      <LineId Id="1171" Count="0" />
+      <LineId Id="1174" Count="1" />
+      <LineId Id="1837" Count="0" />
+      <LineId Id="1551" Count="0" />
+      <LineId Id="1828" Count="0" />
+      <LineId Id="1552" Count="0" />
+      <LineId Id="1830" Count="0" />
+      <LineId Id="1553" Count="0" />
+      <LineId Id="1833" Count="0" />
+      <LineId Id="1836" Count="0" />
+      <LineId Id="1832" Count="0" />
+      <LineId Id="1550" Count="0" />
+      <LineId Id="1176" Count="0" />
+      <LineId Id="1388" Count="0" />
+      <LineId Id="1178" Count="4" />
+      <LineId Id="1185" Count="0" />
+      <LineId Id="1405" Count="0" />
+      <LineId Id="1186" Count="1" />
+      <LineId Id="231" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TCMultiLevelSeq.M_nSystemReset">
+      <LineId Id="6" Count="3" />
+      <LineId Id="378" Count="0" />
+      <LineId Id="403" Count="0" />
+      <LineId Id="379" Count="14" />
+      <LineId Id="996" Count="3" />
+      <LineId Id="1011" Count="1" />
+      <LineId Id="1000" Count="5" />
+      <LineId Id="1061" Count="0" />
+      <LineId Id="1013" Count="0" />
+      <LineId Id="1026" Count="0" />
+      <LineId Id="1006" Count="2" />
+      <LineId Id="1014" Count="0" />
+      <LineId Id="1009" Count="1" />
+      <LineId Id="1015" Count="1" />
+      <LineId Id="1091" Count="2" />
+      <LineId Id="1090" Count="0" />
+      <LineId Id="983" Count="1" />
+      <LineId Id="1071" Count="0" />
+      <LineId Id="986" Count="0" />
+      <LineId Id="985" Count="0" />
+      <LineId Id="975" Count="0" />
+      <LineId Id="452" Count="0" />
+      <LineId Id="394" Count="1" />
+      <LineId Id="376" Count="0" />
+      <LineId Id="396" Count="0" />
+      <LineId Id="11" Count="2" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="1072" Count="0" />
+      <LineId Id="368" Count="0" />
+      <LineId Id="775" Count="9" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="1074" Count="0" />
+      <LineId Id="358" Count="0" />
+      <LineId Id="602" Count="3" />
+      <LineId Id="736" Count="0" />
+      <LineId Id="606" Count="4" />
+      <LineId Id="359" Count="0" />
+      <LineId Id="540" Count="0" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="41" Count="9" />
+      <LineId Id="57" Count="0" />
+      <LineId Id="59" Count="0" />
+      <LineId Id="61" Count="0" />
+      <LineId Id="834" Count="0" />
+      <LineId Id="852" Count="0" />
+      <LineId Id="878" Count="0" />
+      <LineId Id="1075" Count="1" />
+      <LineId Id="892" Count="1" />
+      <LineId Id="877" Count="0" />
+      <LineId Id="933" Count="0" />
+      <LineId Id="800" Count="7" />
+      <LineId Id="797" Count="0" />
+      <LineId Id="553" Count="0" />
+      <LineId Id="845" Count="0" />
+      <LineId Id="683" Count="0" />
+      <LineId Id="242" Count="0" />
+      <LineId Id="916" Count="0" />
+      <LineId Id="876" Count="0" />
+      <LineId Id="894" Count="1" />
+      <LineId Id="551" Count="0" />
+      <LineId Id="245" Count="0" />
+      <LineId Id="250" Count="0" />
+      <LineId Id="320" Count="0" />
+      <LineId Id="1053" Count="0" />
+      <LineId Id="1051" Count="0" />
+      <LineId Id="321" Count="1" />
+      <LineId Id="319" Count="0" />
+      <LineId Id="594" Count="0" />
+      <LineId Id="592" Count="0" />
+      <LineId Id="591" Count="0" />
+      <LineId Id="593" Count="0" />
+      <LineId Id="1058" Count="0" />
+      <LineId Id="246" Count="0" />
+      <LineId Id="330" Count="0" />
+      <LineId Id="947" Count="1" />
+      <LineId Id="1055" Count="0" />
+      <LineId Id="946" Count="0" />
+      <LineId Id="1056" Count="0" />
+      <LineId Id="318" Count="0" />
+      <LineId Id="945" Count="0" />
+      <LineId Id="576" Count="0" />
+      <LineId Id="410" Count="0" />
+      <LineId Id="429" Count="0" />
+      <LineId Id="431" Count="0" />
+      <LineId Id="430" Count="0" />
+      <LineId Id="1057" Count="0" />
+      <LineId Id="428" Count="0" />
+      <LineId Id="1037" Count="0" />
+      <LineId Id="1059" Count="1" />
+      <LineId Id="1052" Count="0" />
+      <LineId Id="412" Count="1" />
+      <LineId Id="1039" Count="0" />
+      <LineId Id="418" Count="1" />
+      <LineId Id="579" Count="0" />
+      <LineId Id="949" Count="3" />
+      <LineId Id="420" Count="7" />
+      <LineId Id="414" Count="0" />
+      <LineId Id="1040" Count="0" />
+      <LineId Id="336" Count="0" />
+      <LineId Id="190" Count="0" />
+      <LineId Id="932" Count="0" />
+      <LineId Id="931" Count="0" />
+      <LineId Id="926" Count="4" />
+      <LineId Id="256" Count="0" />
+      <LineId Id="234" Count="0" />
+      <LineId Id="1077" Count="0" />
+      <LineId Id="438" Count="0" />
+      <LineId Id="442" Count="0" />
+      <LineId Id="1078" Count="1" />
+      <LineId Id="443" Count="2" />
+      <LineId Id="441" Count="0" />
+      <LineId Id="712" Count="0" />
+      <LineId Id="634" Count="0" />
+      <LineId Id="714" Count="0" />
+      <LineId Id="716" Count="0" />
+      <LineId Id="774" Count="0" />
+      <LineId Id="752" Count="0" />
+      <LineId Id="718" Count="0" />
+      <LineId Id="720" Count="0" />
+      <LineId Id="753" Count="0" />
+      <LineId Id="722" Count="2" />
+      <LineId Id="726" Count="8" />
+      <LineId Id="719" Count="0" />
+      <LineId Id="754" Count="0" />
+      <LineId Id="756" Count="16" />
+      <LineId Id="755" Count="0" />
+      <LineId Id="773" Count="0" />
+      <LineId Id="715" Count="0" />
+      <LineId Id="636" Count="1" />
+      <LineId Id="707" Count="0" />
+      <LineId Id="638" Count="0" />
+      <LineId Id="690" Count="6" />
+      <LineId Id="645" Count="0" />
+      <LineId Id="641" Count="0" />
+      <LineId Id="644" Count="0" />
+      <LineId Id="639" Count="0" />
+      <LineId Id="663" Count="0" />
+      <LineId Id="665" Count="3" />
+      <LineId Id="697" Count="6" />
+      <LineId Id="669" Count="2" />
+      <LineId Id="647" Count="1" />
+      <LineId Id="192" Count="0" />
+      <LineId Id="962" Count="0" />
+      <LineId Id="288" Count="0" />
+      <LineId Id="240" Count="0" />
+      <LineId Id="195" Count="6" />
+      <LineId Id="93" Count="0" />
+      <LineId Id="185" Count="1" />
+      <LineId Id="963" Count="0" />
+      <LineId Id="205" Count="0" />
+      <LineId Id="207" Count="0" />
+      <LineId Id="209" Count="4" />
+      <LineId Id="204" Count="0" />
+      <LineId Id="340" Count="0" />
+      <LineId Id="342" Count="0" />
+      <LineId Id="964" Count="0" />
+      <LineId Id="344" Count="7" />
+      <LineId Id="341" Count="0" />
+      <LineId Id="188" Count="0" />
+      <LineId Id="95" Count="0" />
+      <LineId Id="965" Count="0" />
+      <LineId Id="863" Count="2" />
+      <LineId Id="862" Count="0" />
+      <LineId Id="165" Count="2" />
+      <LineId Id="880" Count="2" />
+      <LineId Id="284" Count="0" />
+      <LineId Id="172" Count="3" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TCMultiLevelSeq.M_Pwr">
+      <LineId Id="5" Count="0" />
+      <LineId Id="19" Count="2" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="27" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TCMultiLevelSeq.M_SeqAlmRset">
+      <LineId Id="25" Count="0" />
+      <LineId Id="59" Count="0" />
+      <LineId Id="63" Count="1" />
+      <LineId Id="55" Count="0" />
+      <LineId Id="58" Count="0" />
+      <LineId Id="56" Count="0" />
+      <LineId Id="47" Count="0" />
+      <LineId Id="40" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TCMultiLevelSeq.M_TstPwrOn_Init">
+      <LineId Id="432" Count="1" />
+      <LineId Id="50" Count="1" />
+      <LineId Id="77" Count="18" />
+      <LineId Id="101" Count="0" />
+      <LineId Id="103" Count="0" />
+      <LineId Id="326" Count="37" />
+      <LineId Id="365" Count="0" />
+      <LineId Id="367" Count="10" />
+      <LineId Id="379" Count="0" />
+      <LineId Id="381" Count="9" />
+      <LineId Id="392" Count="11" />
+      <LineId Id="405" Count="4" />
+      <LineId Id="411" Count="4" />
+      <LineId Id="417" Count="3" />
+      <LineId Id="427" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="434" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TCMultiLevelSeq.NEXT">
+      <LineId Id="16" Count="0" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TCMultiLevelSeq.P_ErrClear.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TCMultiLevelSeq.P_ErrClear.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TCMultiLevelSeq.P_sEAPMessage.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TCMultiLevelSeq.P_sMessage.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TCMultiLevelSeq.P_stParam.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TCMultiLevelSeq.P_stParam.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TCMultiLevelSeq.P_stTCMultiLevelVIO.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TCMultiLevelSeq.P_stTCMultiLevelVIO.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TCMultiLevelSeq.PermSD">
+      <LineId Id="2" Count="35" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TCMultiLevelSeq.PowerCheck">
+      <LineId Id="5" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="8" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

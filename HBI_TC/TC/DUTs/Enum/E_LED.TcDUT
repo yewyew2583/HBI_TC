@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
+  <DUT Name="E_LED" Id="{bb63c7ef-1cce-4133-987f-6b42ccaa7405}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE E_LED :
+(
+	MaintenanceBtn := 0,
+	AbortFlowBtn,
+	DoorUnlockBtn,
+	Aarm
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

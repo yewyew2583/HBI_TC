@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <DUT Name="ST_EAP" Id="{d7707bbb-923f-40a7-98ca-85bab3b7430b}">
+    <Declaration><![CDATA[TYPE ST_EAP :
+STRUCT
+	arrTBOT_TC_SubLevelEAP  :ARRAY [1..NO_OF_COLUMN,1..NO_OF_LEVEL] OF ST_TBOT_TC_SubLevelEAP;
+	stTBOT_TC_EAP : ARRAY [1..NO_OF_COLUMN] OF ST_TBOT_TC_EAP;
+	//iAntiCollisionTriggered	AT %I*: INT :=0;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

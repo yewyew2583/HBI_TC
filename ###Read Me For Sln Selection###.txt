@@ -1,0 +1,21 @@
+Each solution hase different IO mapping and setups.
+In AEM, currently TC has variations as 
+					Alpha TC, 
+					DebugStation TC, 
+					DebugCart Cell TC, 
+					SLTC_POC.
+					SLTC_CX16.
+
+Inorder to run in related TC module, please select the solution file accordingly.
+
+HBI_TC.sln		:For HBI TC (Alpha)
+HBI_DFC_TC.sln		:For HBI DebugCart FullCellStack IPC (Degub Cart)
+HBI_DSTN_TC.sln		:For HBI DebugCart DebugStation IPC  (Degub Cart)
+HBI_SLTC_POC.sln		:For SLTC_POC	(AEM INTERNAL Testing Machine)
+HBI_SLTC.sln 		:For SLTC_CX16	(AEM INTERNAL Testing Machine)
+
+Simulation:
+HBI_TC_Sim.sln		:For All TC (For Simulation but All IO modules are disable) //Since IO are disable, It can be use as Simulation for All version!
+
+
+

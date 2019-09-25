@@ -1,0 +1,886 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <POU Name="FB_TCLevelSeq" Id="{11f955cf-89db-4d93-b6a1-63d5d2bc4991}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_TCLevelSeq EXTENDS Tc3_HBI_System.FB_Basic
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	fbCellGroundFault : Tc3_HBI_Utilities.FB_SensorSignal;
+	fbStkHeightLimitSen 		: Tc3_HBI_Utilities.FB_SensorSignal;
+	fbAPPresentSensor : Tc3_HBI_Utilities.FB_SensorSignal;
+	fbAPPowerOn	 			: Tc3_HBI_Utilities.FB_SensorSignal;
+	fbAPReady				: Tc3_HBI_Utilities.FB_SensorSignal;
+	fbAPDeactuatedPLC		: Tc3_HBI_Utilities.FB_SensorSignal;
+	fbAPDeactuatedHwr		: Tc3_HBI_Utilities.FB_SensorSignal;
+	fbAPActuatedPLC		: Tc3_HBI_Utilities.FB_SensorSignal;
+	fbAPHwrReset		: Tc3_HBI_Utilities.FB_SensorSignal;
+	
+	stTCLevelDIO : ST_TCLevel_DIO;
+	stTCLevelVIO : ST_TCLevel_VIO;
+	stTCLevelBIO : ST_TCLevel_BIO;
+	
+	//below copy paste from ShuttlePOC
+		
+	// Cylinder instance
+	fbTCDrawerIn		: Tc3_HBI_Cylinder.FB_Cylinder;
+	inTCDrawerIn		: Tc3_HBI_Cylinder.I_Cylinder:= fbTCDrawerIn;
+		
+	fbTCDrawerUp		: Tc3_HBI_Cylinder.FB_Cylinder;
+	inTCDrawerUp		: Tc3_HBI_Cylinder.I_Cylinder:= fbTCDrawerUp;
+	
+	fbMotor_Ready 						: Tc3_HBI_Utilities.FB_SensorSignal;
+	fbMotor_Home_Position 				: Tc3_HBI_Utilities.FB_SensorSignal;
+	fbMotor_Position_Reached			: Tc3_HBI_Utilities.FB_SensorSignal;
+	fbMotor_Ps_Table_Active				: Tc3_HBI_Utilities.FB_SensorSignal; //temp use for level1 movein ready
+	fbMotor_Error						: Tc3_HBI_Utilities.FB_SensorSignal;
+	
+	fbBD_ipBdoor : Tc3_HBI_Utilities.FB_BackDoor_Digital;
+	
+	stTCSeqParam : ST_TCSeqParam;
+	
+	
+	FB_M_nCyclic_tSensorDelay: TIME:= T#100MS;//by default
+	FB_M_nCyclic_tSensorTimeOut: TIME:= T#5S;
+
+	// Common var 
+	bPause : BOOL; //Sequence pause
+	bBypassSingleMove : BOOL:=TRUE;
+	bStep : BOOL;
+	rtStep: R_TRIG;
+	rtStepCase: R_TRIG;
+	rtError: R_TRIG;
+	iStkSeqCase : INT;
+	iSeqStep: INT;
+	arrSeqStep: ARRAY [0..50] OF E_SeqSts; //Uport seq
+	//sUportMsg : STRING;
+	sMessage : STRING;
+	bErrClear: BOOL;
+	bStepDone: BOOL;
+	bSafeExecute: BOOL;
+	iStkSingStackUp:INT;
+	iLibrySts : ARRAY [1..20] OF UDINT;
+	
+	sMsg : STRING;
+	TDelay: TON;
+	FB_M_nCyclic_tDelay: TIME:= T#200MS;
+	
+	nI : UINT;
+	rtStartTrig : R_Trig;
+	rtDoorLockTrig : R_Trig;
+	StartPbDly: Ton;
+	DoorLockPbDly: Ton;
+	//testing
+	(*bLogEveryStep : BOOL:=TRUE;
+	
+	//*****************
+	rtTCShuttleStart: R_TRIG;
+	//stTCShuttleSeqParam : ST_FlyoverSeqParam;
+	iSeqCase: INT:=1;
+	iSeqStatus: INT; //To defind current status of subsequence 
+	bError: BOOL;
+	//sMessage : STRING;
+	sAlarmID: STRING(40);
+	sModuleID: STRING(INT#40);
+	sDebugSource: STRING(INT#50);
+	bExecute: BOOL;
+	iErrorID: UDINT;
+	
+	sPrevMsg: STRING;*)
+	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="M_IOMapping" Id="{70cc1e7a-dc00-4212-8d50-d83b0d4695f5}">
+      <Declaration><![CDATA[METHOD M_IOMapping : UDINT
+VAR_INPUT
+END_VAR
+
+
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[stTCLevelVIO.ipMotor_Ready:=fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , 
+								bActual:=stTCLevelDIO.ipMotor_Ready , 
+								bSimu:=TRUE,  
+								iBackDoor:=stTCLevelBIO.ipMotor_Ready );
+								
+stTCLevelVIO.ipMotor_Home_Position:=fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , 
+								bActual:=stTCLevelDIO.ipMotor_Home_Position , 
+								bSimu:=TRUE,  
+								iBackDoor:=stTCLevelBIO.ipMotor_Home_Position );
+								
+stTCLevelVIO.ipMotor_Position_Reached:=fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , 
+								bActual:=stTCLevelDIO.ipMotor_Position_Reached , 
+								bSimu:=TRUE,  
+								iBackDoor:=stTCLevelBIO.ipMotor_Position_Reached );
+								
+stTCLevelVIO.ipMotor_Ps_Table_Active:=fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , 
+								bActual:=stTCLevelDIO.ipMotor_Ps_Table_Active , 
+								bSimu:=TRUE,  
+								iBackDoor:=stTCLevelBIO.ipMotor_Ps_Table_Active );
+								
+stTCLevelVIO.ipMotor_Error:=fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , 
+								bActual:=stTCLevelDIO.ipMotor_Error , 
+								bSimu:=FALSE,  
+								iBackDoor:=stTCLevelBIO.ipMotor_Error );
+
+stTCLevelVIO.ipPressure_Switch_Error:=fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , 
+								bActual:=stTCLevelDIO.ipPressure_Switch_Error , 
+								bSimu:=TRUE,  
+								iBackDoor:=stTCLevelBIO.ipPressure_Switch_Error );
+
+
+//temp, need to check extend or retract after finalize. no output assign yet 
+(*inTCDrawerIn.P_ipExtend:=stTCLevelVIO.ipTCDrawerExtendedoutCell:=fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , bActual:=stTCLevelDIO.ipTCDrawerExtendedoutCell , 
+								bSimu:=inTCDrawerIn.P_opExtend , iBackDoor:=stTCLevelBIO.ipTCDrawerExtendedoutCell );
+inTCDrawerIn.P_ipRetract:=stTCLevelVIO.ipTCDrawerRetractedinCell:=fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , bActual:=stTCLevelDIO.ipTCDrawerExtendedoutCell , 
+								bSimu:=inTCDrawerIn.P_opRetract , iBackDoor:=stTCLevelBIO.ipTCDrawerRetractedinCell );*)
+								
+
+inTCDrawerUp.P_ipExtend:=stTCLevelVIO.ipTCDrawerExtendedupCell:=fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , bActual:=stTCLevelVIO.ipTCDrawerExtendedupCell , 
+								bSimu:=inTCDrawerUp.P_opExtend , iBackDoor:=stTCLevelBIO.ipTCDrawerExtendedupCell );
+inTCDrawerUp.P_ipRetract:=stTCLevelVIO.ipTCDrawerRetracteddownCell:=fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , bActual:=stTCLevelVIO.ipTCDrawerRetracteddownCell , 
+								bSimu:=inTCDrawerUp.P_opRetract , stTCLevelBIO.ipTCDrawerRetracteddownCell );
+
+stTCLevelVIO.ipTCDrawerRetractedinCell:=fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , 
+								bActual:=stTCLevelDIO.ipTCDrawerRetractedinCell , 
+								bSimu:=TRUE,  
+								iBackDoor:=stTCLevelBIO.ipTCDrawerRetractedinCell );
+								
+stTCLevelVIO.ipTCDrawerExtendedoutCell:=fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , 
+								bActual:=stTCLevelDIO.ipTCDrawerExtendedoutCell , 
+								bSimu:=TRUE,  
+								iBackDoor:=stTCLevelBIO.ipTCDrawerExtendedoutCell );
+								
+stTCLevelVIO.ipCellGroundFault:=fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , 
+								bActual:=stTCLevelDIO.ipCellGroundFault , 
+								bSimu:=TRUE,  
+								iBackDoor:=stTCLevelBIO.ipCellGroundFault );
+
+stTCLevelVIO.ipAPPowerOn:=fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , 
+								bActual:=stTCLevelDIO.ipAPPowerOn , 
+								bSimu:=TRUE,  
+								iBackDoor:=stTCLevelBIO.ipAPPowerOn );
+
+stTCLevelVIO.ipAPReady:=fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , 
+								bActual:=stTCLevelDIO.ipAPReady , 
+								bSimu:=TRUE,  
+								iBackDoor:=stTCLevelBIO.ipAPReady );
+								
+stTCLevelVIO.ipAPDeactuatedPLC:=fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , 
+								bActual:=stTCLevelDIO.ipAPDeactuatedPLC , 
+								bSimu:=TRUE,  
+								iBackDoor:=stTCLevelBIO.ipAPDeactuatedPLC );
+
+stTCLevelVIO.ipAPDeactuatedHwr:=fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , 
+								bActual:=stTCLevelDIO.ipAPDeactuatedHwr, 
+								bSimu:=TRUE,  
+								iBackDoor:=stTCLevelBIO.ipAPDeactuatedHwr );
+
+stTCLevelVIO.ipAPActuatedPLC:=fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , 
+								bActual:=stTCLevelDIO.ipAPActuatedPLC, 
+								bSimu:=TRUE,  
+								iBackDoor:=stTCLevelBIO.ipAPActuatedPLC );
+								
+								
+stTCLevelVIO.ipTesterPresent:=fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , 
+								bActual:=stTCLevelDIO.ipTesterPresent, 
+								bSimu:=TRUE,  
+								iBackDoor:=stTCLevelBIO.ipTesterPresent );
+								
+stTCLevelVIO.ipTesterPowerOn:=fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , 
+								bActual:=stTCLevelDIO.ipTesterPowerOn, 
+								bSimu:=TRUE,  
+								iBackDoor:=stTCLevelBIO.ipTesterPowerOn );
+								
+stTCLevelVIO.ipTesterReady:=fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , 
+								bActual:=stTCLevelDIO.ipTesterReady, 
+								bSimu:=TRUE,  
+								iBackDoor:=stTCLevelBIO.ipTesterReady );
+
+stTCLevelVIO.ipTCCellDoorLock:=fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , 
+								bActual:=stTCLevelDIO.ipTCCellDoorLock, 
+								bSimu:=TRUE,  
+								iBackDoor:=stTCLevelBIO.ipTCCellDoorLock );
+	
+stTCLevelVIO.ipTCCellDoorClosed:=fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , 
+								bActual:=stTCLevelDIO.ipTCCellDoorClosed, 
+								bSimu:=TRUE,  
+								iBackDoor:=stTCLevelBIO.ipTCCellDoorClosed );
+								
+stTCLevelVIO.ipCellFluidLeakage:=fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , 
+								bActual:=stTCLevelDIO.ipCellFluidLeakage, 
+								bSimu:=TRUE,  
+								iBackDoor:=stTCLevelBIO.ipCellFluidLeakage );
+								
+stTCLevelVIO.ipShuttleFluidLeakage:=fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , 
+								bActual:=stTCLevelDIO.ipShuttleFluidLeakage, 
+								bSimu:=TRUE,  
+								iBackDoor:=stTCLevelBIO.ipShuttleFluidLeakage );
+								
+stTCLevelVIO.ipTesterLatchesClosed:=fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , 
+								bActual:=stTCLevelDIO.ipTesterLatchesClosed, 
+								bSimu:=TRUE,  
+								iBackDoor:=stTCLevelBIO.ipTesterLatchesClosed );
+								
+stTCLevelVIO.ipButtonLockDoor:=fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , 
+								bActual:=stTCLevelDIO.ipButtonLockDoor, 
+								bSimu:=TRUE,  
+								iBackDoor:=stTCLevelBIO.ipButtonLockDoor );
+								
+
+//output (no need backdoor)	
+IF bDiagnosticMode=FALSE THEN	
+stTCLevelDIO.opCellDrawerExtendUp			:=stTCLevelVIO.opCellDrawerExtendUp			:= fbTCDrawerUp.P_opExtend; 
+stTCLevelDIO.opCellDrawerRetractDown		:=stTCLevelVIO.opCellDrawerRetractDown		:= fbTCDrawerUp.P_opRetract; 
+
+//motor
+stTCLevelDIO.opMotor_Enable					:=stTCLevelVIO.opMotor_Enable; 
+stTCLevelDIO.opMotor_Homing					:=stTCLevelVIO.opMotor_Homing; 
+stTCLevelDIO.opMotor_Index0					:=stTCLevelVIO.opMotor_Index0; 
+stTCLevelDIO.opMotor_Index1					:=stTCLevelVIO.opMotor_Index1; 
+stTCLevelDIO.opMotor_Reset_Errors			:=stTCLevelVIO.opMotor_Reset_Errors; 
+stTCLevelDIO.opMotor_Start_Position			:=stTCLevelVIO.opMotor_Start_Position; 
+
+stTCLevelDIO.opMain_Incoming_Air_Valve := TRUE;
+END_IF
+								
+								
+
+StartPbDly(in:=(stTCLevelDIO.ipButtonTesterInOut),pt:=T#200MS);
+DoorLockPbDly(in:=(stTCLevelDIO.ipButtonLockDoor),pt:=T#200MS);
+
+rtStartTrig(Clk:=StartPbDly.Q);
+rtDoorLockTrig(Clk:=DoorLockPbDly.Q);
+
+IF rtStartTrig.Q THEN
+	bMoveShuttle := TRUE;
+	stTCLevelDIO.opTesterInOut := stTCLevelDIO.ipTCDrawerRetractedinCell;
+
+	StartPbDly(IN:=FALSE);
+ELSIF DoorLockPbDly.Q THEN
+	DoorLockPbDly(IN:=FALSE);
+	IF stTCLevelDIO.ipTCCellDoorLock THEN
+		//IF stTCLevelDIO.ipTCDrawerRetractedinCell THEN
+			stTCLevelDIO.opDoorLock :=FALSE;
+			stTCLevelDIO.opDoorOpenReq := TRUE;
+		//END_IF
+	ELSE
+		stTCLevelDIO.opDoorLock :=TRUE;
+		stTCLevelDIO.opDoorOpenReq := FALSE;
+	END_IF
+END_IF		
+
+
+					
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_nCmptUpDown" Id="{41353775-8209-453c-b4df-999ad969e15d}">
+      <Declaration><![CDATA[METHOD M_nCmptUpDown : UDINT
+VAR_INPUT
+	bExtend: BOOL;
+	
+END_VAR
+
+VAR
+	
+END_VAR
+
+VAR_IN_OUT
+	sErrorMsg : STRING;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[	
+	
+
+	IF bExtend THEN
+		iLibrySts[1]:=inTCDrawerUp.M_nExtend(bExecute:= TRUE);
+	ELSE
+		iLibrySts[1]:=inTCDrawerUp.M_nRetract(bExecute:= TRUE);
+	END_IF
+	
+	IF iLibrySts[1]=10 THEN
+		inTCDrawerUp.M_nOff();
+		M_nCmptUpDown:=10;
+	ELSIF inTCDrawerUp.P_bError THEN
+		sErrorMsg:=CONCAT(sMessage,fbTCDrawerUp.P_sMessage);
+		M_nCmptUpDown:=99;
+	END_IF	
+
+
+	
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_nCyclic" Id="{06fbe7a6-299b-476d-93fc-9e5eb04cf018}">
+      <Declaration><![CDATA[METHOD M_nCyclic : UDINT
+VAR_INPUT
+END_VAR
+
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[//M_nCompCylinder(bExtend:=TRUE, fbTCDrawerUp, sMsg);
+//M_IOMapping();
+M_IOMapping();
+
+rtError(CLK:=_bError, Q=> );
+
+	fbTCDrawerIn.M_nReset(bExecute:=_bReset OR rtError.Q );
+	fbTCDrawerUp.M_nReset(bExecute:=_bReset OR rtError.Q );
+	fbMotor_Ready.M_nReset(bExecute:=_bReset OR rtError.Q );
+	fbMotor_Home_Position.M_nReset(bExecute:=_bReset OR rtError.Q );	
+	fbMotor_Position_Reached.M_nReset(bExecute:=_bReset OR rtError.Q );	
+	fbMotor_Ps_Table_Active.M_nReset(bExecute:=_bReset OR rtError.Q );
+	fbMotor_Error.M_nReset(bExecute:=_bReset OR rtError.Q );	
+	stTCLevelVIO.opMotor_Reset_Errors := _bReset OR rtError.Q ;
+		
+IF _bReset OR bStepDone OR rtError.Q THEN
+	inTCDrawerIn.M_nOff();
+	inTCDrawerUp.M_nOff();
+	
+	//sensor
+	fbMotor_Ready.M_nControl(bExecute:=FALSE , bSensor:=FALSE );
+	fbMotor_Home_Position.M_nControl(bExecute:=FALSE , bSensor:=FALSE );
+	fbMotor_Position_Reached.M_nControl(bExecute:=FALSE , bSensor:=FALSE );
+	fbMotor_Ps_Table_Active.M_nControl(bExecute:=FALSE , bSensor:=FALSE );
+	fbMotor_Error.M_nControl(bExecute:=FALSE , bSensor:=FALSE );
+	
+	stTCLevelVIO.opMotor_Start_Position := 0; //reset after move done
+	stTCLevelVIO.opMotor_Index0 := 0; 
+	stTCLevelVIO.opMotor_Index1 := 0; 
+	FOR nI:=1 TO 20 DO 
+		iLibrySts[1] := 0;
+	END_FOR
+	
+	bStepDone:=FALSE; 
+END_IF
+
+fbMotor_Home_Position.P_SensorDelay:=FB_M_nCyclic_tSensorDelay;
+fbMotor_Ready.P_SensorDelay:=FB_M_nCyclic_tSensorDelay;
+fbMotor_Position_Reached.P_SensorDelay:= FB_M_nCyclic_tSensorDelay;
+
+inTCDrawerIn.P_SensorDelay:= FB_M_nCyclic_tSensorDelay;
+inTCDrawerUp.P_SensorDelay:= FB_M_nCyclic_tSensorDelay;
+
+
+IF _bReset THEN
+	iSeqStep:=0;
+	iStkSeqCase:=0;
+	bStepDone:=FALSE;
+	sMessage:='';
+	_bError:=FALSE;
+	_nErrorID:=0;
+ELSIF bErrClear THEN
+	_bError:=FALSE;
+	_nErrorID:=0;
+	//bErrClear:=FALSE;
+END_IF
+
+bPause:=_bReset OR _bError OR bErrClear;
+
+//M_StkSingStackUp state
+IF _bError THEN
+	iStkSingStackUp:=99;
+ELSIF _bReset THEN
+	iStkSingStackUp:=0;
+ELSIF iStkSeqCase=E_SeqSts.eDone THEN
+	iStkSingStackUp:=10;
+ELSIF NOT bPause THEN
+	iStkSingStackUp:=3;
+END_IF
+
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_nShuttleMoveInOut" Id="{a0d31de7-2e81-468f-868b-98729d59623b}">
+      <Declaration><![CDATA[METHOD M_nShuttleMoveInOut : INT
+VAR_INPUT
+//	bExecute: BOOL;
+//	sModuleID : STRING;
+
+END_VAR
+
+VAR
+	//sDebugSource : STRING := 'MoveShuttle';
+	sDebugLog : STRING; 
+	lrPosition: LREAL;
+	//bSafeExecute: BOOL;
+	i: INT; //for loop
+END_VAR
+
+VAR_IN_OUT
+	//bCommand: BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[M_nShuttleMoveInOut:=iStkSingStackUp;
+
+IF bPause AND NOT stTCSeqParam.bCancel THEN
+	RETURN;
+END_IF
+
+IF iSeqStep>0 THEN
+	;//Do nothing;
+ELSIF stTCSeqParam.bCancel THEN 
+	iStkSeqCase := 0; //reset to init step, then do recovery
+	arrSeqStep[0]:=E_SeqSts.eInit;			//Init
+	arrSeqStep[1]:=E_SeqSts.eSanityCheck;	//Sanity check	
+	arrSeqStep[2]:=E_SeqSts.eMoveDrawerUp;	//Move drawer up
+	arrSeqStep[3]:=E_SeqSts.eMoveDrawerIn;	//Move drawer In
+	arrSeqStep[4]:=E_SeqSts.eDone;			//done
+	
+ELSIF stTCSeqParam.bShuttleMoveOut THEN
+	arrSeqStep[0]:=E_SeqSts.eInit;			//Init
+	arrSeqStep[1]:=E_SeqSts.eSanityCheck;	//Sanity check
+	arrSeqStep[2]:=E_SeqSts.eMoveDrawerUp;	//Move drawer up
+	arrSeqStep[3]:=E_SeqSts.eMoveDrawerOut;	//Move drawer out*)
+	//arrSeqStep[2]:=E_SeqSts.eMoveDrawerOut;	//Move drawer out
+	arrSeqStep[4]:=E_SeqSts.eDone;			//done
+ELSIF stTCSeqParam.bShuttleMoveIn THEN
+	arrSeqStep[0]:=E_SeqSts.eInit;			//Init
+	arrSeqStep[1]:=E_SeqSts.eSanityCheck;	//Sanity check
+	arrSeqStep[2]:=E_SeqSts.eMoveDrawerIn;	//Move drawer In
+	arrSeqStep[3]:=E_SeqSts.eMoveDrawerDown;	//Move drawer down
+	arrSeqStep[4]:=E_SeqSts.eDone;			//done
+END_IF
+
+//Sequence start
+iStkSeqCase:=arrSeqStep[iSeqStep];
+
+// State machine
+CASE iStkSeqCase OF
+E_SeqSts.eInit: //Init
+	
+	TDelay(IN:=FALSE);
+	sMessage:='Start Executing';
+	
+	IF stTCSeqParam.bInitialise THEN
+		sMessage:='Enable Motor';
+		stTCLevelVIO.opMotor_Enable := 1;
+		stTCLevelVIO.opMotor_Reset_Errors := 1;
+		stTCLevelVIO.opMotor_Homing := 1;
+	END_IF
+	bStepDone:=TRUE;
+	
+E_SeqSts.eSanityCheck: //Sanity sheck
+	 sMessage:='Sanity Check ';
+	
+	IF stTCSeqParam.bLevel1=FALSE THEN
+		iLibrySts[1]:=fbMotor_Ready.M_nControl(bExecute:=TRUE , bSensor:=stTCLevelVIO.ipMotor_Ready );
+		iLibrySts[2]:=fbMotor_Home_Position.M_nControl(bExecute:=TRUE , bSensor:=stTCLevelVIO.ipMotor_Home_Position );
+			
+		IF iLibrySts[1]=10 AND iLibrySts[2]=10 THEN
+			IF stTCSeqParam.bInitialise THEN
+				stTCLevelVIO.opMotor_Reset_Errors := 0;
+				stTCLevelVIO.opMotor_Homing := 0;
+			END_IF 
+			bStepDone:=TRUE;
+		ELSIF fbMotor_Ready.P_bError THEN
+			sMessage:=CONCAT(sMessage,fbMotor_Ready.P_sMessage);
+			_bError:=TRUE;
+		ELSIF fbMotor_Home_Position.P_bError THEN
+			sMessage:=CONCAT(sMessage,fbMotor_Home_Position.P_sMessage);
+			_bError:=TRUE;
+		END_IF
+	ELSE
+		bStepDone:=TRUE;
+		(*IF iLibrySts[1]=10 THEN
+			IF stTCSeqParam.bInitialise THEN
+				stTCLevelVIO.opMotor_Reset_Errors := 0;
+				stTCLevelVIO.opMotor_Homing := 0;
+			END_IF 
+			bStepDone:=TRUE;
+		ELSIF fbMotor_Ready.P_bError THEN
+			sMessage:=CONCAT(sMessage,fbMotor_Ready.P_sMessage);
+			_bError:=TRUE;
+		END_IF*)
+	END_IF
+	
+	
+	
+
+	
+E_SeqSts.eMoveDrawerUp,E_SeqSts.eMoveDrawerDown: //drawer up, drawer down
+	sMessage:=SEL(iStkSeqCase=E_SeqSts.eMoveDrawerUp,' Drawer Down ',' Drawer Up ');
+//	inTCDrawerUp.P_opExtend	:=iStkSeqCase=E_SeqSts.eMoveDrawerUp;
+//	inTCDrawerUp.P_opRetract	:=iStkSeqCase=E_SeqSts.eMoveDrawerDown;
+	
+	iLibrySts[1]:=M_nCmptUpDown(bExtend:=iStkSeqCase=E_SeqSts.eMoveDrawerUp,  sErrorMSg:=sMsg);
+	
+	IF iLibrySts[1]=10 THEN
+		bStepDone:=TRUE;
+	ELSIF iLibrySts[1]=99 THEN
+		sMessage:=CONCAT(sMessage,sMsg);
+		_bError:=TRUE;
+	END_IF
+	
+
+E_SeqSts.eMoveDrawerIn,E_SeqSts.eMoveDrawerOut: //drawer in, drawer out
+	sMessage:=SEL(iStkSeqCase=E_SeqSts.eMoveDrawerIn,' Drawer Out ',' Drawer In ');
+	
+	//IF stTCSeqParam.bLevel1=FALSE THEN //level2
+		sMessage:=Concat(sMessage, ' (motion) ' ); 
+		stTCLevelVIO.opMotor_Index0 := iStkSeqCase=E_SeqSts.eMoveDrawerOut; //Index0=1 is moveout
+		stTCLevelVIO.opMotor_Start_Position := 1; 
+		//TDelay(IN:=TRUE,PT:=FB_M_nCyclic_tDelay);//after startpos, posreach=off. after reach pos, posreach=on
+		
+		//IF TDelay.Q THEN
+			iLibrySts[1]:=fbMotor_Position_Reached.M_nControl(bExecute:=TRUE , bSensor:=stTCLevelVIO.ipMotor_Position_Reached );
+		//END_IF
+		
+		iLibrySts[2]:=fbMotor_Error.M_nControl(bExecute:=TRUE , bSensor:=NOT stTCLevelVIO.ipMotor_Error );
+		IF iLibrySts[1]=10 AND iLibrySts[2]=10 THEN
+			bStepDone:=TRUE;
+		ELSIF fbMotor_Position_Reached.P_bError THEN
+			sMessage:=CONCAT(sMessage,fbMotor_Position_Reached.P_sMessage);
+			_bError:=TRUE;
+		ELSIF fbMotor_Error.P_bError THEN
+			sMessage:=CONCAT(sMessage,fbMotor_Error.P_sMessage);
+			_bError:=TRUE;
+		END_IF	
+	//END_IF
+	(*ELSE //level1
+		(*ethercat
+		sMessage:=Concat(sMessage, ' (pneumatic) ' );
+		stTCLevelVIO.opMotor_Index0 := iStkSeqCase=E_SeqSts.eMoveDrawerIn; 
+		stTCLevelVIO.opMotor_Index1 := iStkSeqCase=E_SeqSts.eMoveDrawerOut;//Index1=1 is moveout
+		
+		//TDelay(IN:=TRUE,PT:=FB_M_nCyclic_tDelay);//after startpos, posreach=off. after reach pos, porreach=on
+		//IF TDelay.Q THEN
+			IF iStkSeqCase=E_SeqSts.eMoveDrawerIn THEN
+				iLibrySts[1]:=fbMotor_Ps_Table_Active.M_nControl(bExecute:=TRUE , bSensor:=stTCLevelVIO.ipMotor_Home_Position );
+			ELSE
+				iLibrySts[1]:=fbMotor_Position_Reached.M_nControl(bExecute:=TRUE , bSensor:=stTCLevelVIO.ipMotor_Position_Reached );
+			END_IF	
+		//END_IF
+		
+		iLibrySts[2]:=fbMotor_Error.M_nControl(bExecute:=TRUE , bSensor:=NOT stTCLevelVIO.ipMotor_Error );
+		IF iLibrySts[1]=10 AND iLibrySts[2]=10 THEN
+			bStepDone:=TRUE;
+		ELSIF fbMotor_Error.P_bError THEN
+			sMessage:=CONCAT(sMessage,fbMotor_Error.P_sMessage);
+			_bError:=TRUE;
+		END_IF	*)
+		
+		iLibrySts[1]:=M_nCmptInOut(bExtend:=iStkSeqCase=E_SeqSts.eMoveDrawerOut,  sErrorMSg:=sMsg);
+	
+		IF iLibrySts[1]=10 THEN
+			bStepDone:=TRUE;
+		ELSIF iLibrySts[1]=99 THEN
+			sMessage:=CONCAT(sMessage,sMsg);
+			_bError:=TRUE;
+		END_IF
+		 
+	END_IF*)
+	
+	
+
+E_SeqSts.eDone:	// Done
+	sMessage:='Done';
+	//bCommand:=FALSE;
+	M_nShuttleMoveInOut:=10;
+END_CASE	
+
+(*IF _nErrorID>0 OR _bError THEN
+	_bError:=TRUE;
+ELS*)
+IF (bStep OR bBypassSingleMove OR iStkSeqCase<=E_SeqSts.eSanityCheck) 
+AND iStkSeqCase<E_SeqSts.eDone AND bStepDone THEN
+	iSeqStep:=iSeqStep+1;
+END_IF
+
+rtStep(CLK:=bStep AND NOT bBypassSingleMove, Q=>bStep );]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_nSystemReset" Id="{f677288b-5eab-4b1c-ad1e-370618176fdd}">
+      <Declaration><![CDATA[METHOD M_nSystemReset : INT
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[M_nSystemReset:=iStkSingStackUp;
+
+IF bPause THEN
+	RETURN;
+END_IF
+
+IF iSeqStep>0 THEN
+	;//Do nothing;
+ELSIF stTCSeqParam.bInitialise THEN
+	arrSeqStep[0]:=E_SeqSts.eInit;			//Init
+	arrSeqStep[1]:=E_SeqSts.eSanityCheck;	//Sanity check
+	arrSeqStep[2]:=E_SeqSts.eDone;			//done
+END_IF
+
+
+//Sequence start
+iStkSeqCase:=arrSeqStep[iSeqStep];
+
+// State machine
+CASE iStkSeqCase OF
+E_SeqSts.eInit: //Init
+	
+	//TDelay(IN:=FALSE);
+	sMessage:='Start Executing';
+	
+	sMessage:='Enable Motor';
+	stTCLevelVIO.opMotor_Enable := 1;
+	stTCLevelVIO.opMotor_Reset_Errors := 1;
+	stTCLevelVIO.opMotor_Homing := 1;
+	bStepDone:=TRUE;
+	
+E_SeqSts.eSanityCheck: //Sanity sheck
+	 sMessage:='Sanity Check ';
+	
+	iLibrySts[1]:=fbMotor_Ready.M_nControl(bExecute:=TRUE , bSensor:=stTCLevelVIO.ipMotor_Ready );
+	
+	IF stTCSeqParam.bLevel1=FALSE THEN
+		iLibrySts[2]:=fbMotor_Home_Position.M_nControl(bExecute:=TRUE , bSensor:=stTCLevelVIO.ipMotor_Home_Position );
+		
+		IF iLibrySts[1]=10 AND iLibrySts[2]=10 THEN
+			stTCLevelVIO.opMotor_Reset_Errors := 0;
+			stTCLevelVIO.opMotor_Homing := 0;
+			bStepDone:=TRUE;
+		ELSIF fbMotor_Ready.P_bError THEN
+			sMessage:=CONCAT(sMessage,fbMotor_Ready.P_sMessage);
+			_bError:=TRUE;
+		ELSIF fbMotor_Home_Position.P_bError THEN
+			sMessage:=CONCAT(sMessage,fbMotor_Home_Position.P_sMessage);
+			_bError:=TRUE;
+		END_IF
+	ELSE
+		IF iLibrySts[1]=10 THEN
+			stTCLevelVIO.opMotor_Reset_Errors := 0;
+			stTCLevelVIO.opMotor_Homing := 0;
+			bStepDone:=TRUE;
+		ELSIF fbMotor_Ready.P_bError THEN
+			sMessage:=CONCAT(sMessage,fbMotor_Ready.P_sMessage);
+			_bError:=TRUE;
+		END_IF
+	END_IF
+	
+	
+E_SeqSts.eDone:	// Done
+	sMessage:='Done';
+	M_nSystemReset:=10;
+END_CASE	
+
+(*IF _nErrorID>0 OR _bError THEN
+	_bError:=TRUE;
+ELS*)
+IF (bStep OR bBypassSingleMove OR iStkSeqCase<=E_SeqSts.eSanityCheck) 
+AND iStkSeqCase<E_SeqSts.eDone AND bStepDone THEN
+	iSeqStep:=iSeqStep+1;
+END_IF
+
+rtStep(CLK:=bStep AND NOT bBypassSingleMove, Q=>bStep );]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="P_ErrClear" Id="{3ff7c708-3da9-431e-b779-e3aecdeef362}">
+      <Declaration><![CDATA[PROPERTY P_ErrClear : BOOL]]></Declaration>
+      <Get Name="Get" Id="{86857a89-402e-4452-8f34-2fa266633100}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{ad5dbf92-b6c8-4ace-98be-476ea489fbc9}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[bErrClear := P_ErrClear;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="P_sMessage" Id="{0a8ead84-d054-4367-ae09-a42603ee7216}">
+      <Declaration><![CDATA[PROPERTY P_sMessage : string]]></Declaration>
+      <Get Name="Get" Id="{ec09fcad-414a-49a7-8ff6-1d6040b24e5f}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[P_sMessage := sMessage;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="P_stParam" Id="{650f272a-12db-4fe8-957c-b38d340acce1}">
+      <Declaration><![CDATA[PROPERTY PUBLIC P_stParam : ST_TCSeqParam]]></Declaration>
+      <Get Name="Get" Id="{bf38d049-25e8-41b0-9ada-fccac4ac8c7c}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[P_stParam := stTCSeqParam;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{05387a18-93b3-4550-b60b-26c4ad6a86ca}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[stTCSeqParam := P_stParam;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="P_stTCLevelVIO" Id="{17a61c3d-af0b-4ecf-9b59-0ac147f76bcd}">
+      <Declaration><![CDATA[PROPERTY PUBLIC P_stTCLevelVIO : ST_TCLevel_VIO]]></Declaration>
+      <Get Name="Get" Id="{0cf109a0-830e-47be-a708-6b88753d2240}">
+        <Declaration><![CDATA[PUBLIC 
+VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[P_stTCLevelVIO := stTCLevelVIO;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{d3805ece-b3b8-4943-9372-9d974d537447}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[stTCLevelVIO := P_stTCLevelVIO;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <LineIds Name="FB_TCLevelSeq">
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TCLevelSeq.M_IOMapping">
+      <LineId Id="316" Count="27" />
+      <LineId Id="313" Count="2" />
+      <LineId Id="203" Count="11" />
+      <LineId Id="394" Count="2" />
+      <LineId Id="215" Count="0" />
+      <LineId Id="402" Count="0" />
+      <LineId Id="398" Count="2" />
+      <LineId Id="397" Count="0" />
+      <LineId Id="401" Count="0" />
+      <LineId Id="216" Count="44" />
+      <LineId Id="377" Count="3" />
+      <LineId Id="261" Count="0" />
+      <LineId Id="381" Count="0" />
+      <LineId Id="262" Count="24" />
+      <LineId Id="413" Count="0" />
+      <LineId Id="294" Count="13" />
+      <LineId Id="288" Count="2" />
+      <LineId Id="349" Count="8" />
+      <LineId Id="392" Count="1" />
+      <LineId Id="358" Count="0" />
+      <LineId Id="375" Count="0" />
+      <LineId Id="388" Count="0" />
+      <LineId Id="376" Count="0" />
+      <LineId Id="382" Count="0" />
+      <LineId Id="384" Count="0" />
+      <LineId Id="389" Count="0" />
+      <LineId Id="385" Count="2" />
+      <LineId Id="390" Count="0" />
+      <LineId Id="383" Count="0" />
+      <LineId Id="408" Count="4" />
+      <LineId Id="291" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TCLevelSeq.M_nCmptUpDown">
+      <LineId Id="695" Count="0" />
+      <LineId Id="722" Count="1" />
+      <LineId Id="721" Count="0" />
+      <LineId Id="696" Count="5" />
+      <LineId Id="724" Count="0" />
+      <LineId Id="702" Count="0" />
+      <LineId Id="704" Count="2" />
+      <LineId Id="693" Count="1" />
+      <LineId Id="636" Count="0" />
+      <LineId Id="648" Count="0" />
+      <LineId Id="231" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TCLevelSeq.M_nCyclic">
+      <LineId Id="136" Count="1" />
+      <LineId Id="159" Count="0" />
+      <LineId Id="181" Count="0" />
+      <LineId Id="9" Count="3" />
+      <LineId Id="114" Count="0" />
+      <LineId Id="117" Count="0" />
+      <LineId Id="115" Count="1" />
+      <LineId Id="118" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="146" Count="0" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="125" Count="0" />
+      <LineId Id="142" Count="0" />
+      <LineId Id="130" Count="0" />
+      <LineId Id="143" Count="0" />
+      <LineId Id="119" Count="4" />
+      <LineId Id="153" Count="0" />
+      <LineId Id="156" Count="0" />
+      <LineId Id="160" Count="1" />
+      <LineId Id="157" Count="0" />
+      <LineId Id="154" Count="0" />
+      <LineId Id="158" Count="0" />
+      <LineId Id="155" Count="0" />
+      <LineId Id="99" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="173" Count="1" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="171" Count="0" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="92" Count="1" />
+      <LineId Id="48" Count="0" />
+      <LineId Id="66" Count="9" />
+      <LineId Id="163" Count="0" />
+      <LineId Id="162" Count="0" />
+      <LineId Id="77" Count="1" />
+      <LineId Id="98" Count="0" />
+      <LineId Id="80" Count="11" />
+      <LineId Id="18" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TCLevelSeq.M_nShuttleMoveInOut">
+      <LineId Id="973" Count="1" />
+      <LineId Id="1145" Count="26" />
+      <LineId Id="998" Count="95" />
+      <LineId Id="1144" Count="0" />
+      <LineId Id="1094" Count="49" />
+      <LineId Id="231" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TCLevelSeq.M_nSystemReset">
+      <LineId Id="6" Count="7" />
+      <LineId Id="35" Count="17" />
+      <LineId Id="54" Count="3" />
+      <LineId Id="59" Count="10" />
+      <LineId Id="71" Count="1" />
+      <LineId Id="74" Count="9" />
+      <LineId Id="85" Count="1" />
+      <LineId Id="88" Count="7" />
+      <LineId Id="163" Count="0" />
+      <LineId Id="165" Count="10" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TCLevelSeq.P_ErrClear.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TCLevelSeq.P_ErrClear.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TCLevelSeq.P_sMessage.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TCLevelSeq.P_stParam.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TCLevelSeq.P_stParam.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TCLevelSeq.P_stTCLevelVIO.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TCLevelSeq.P_stTCLevelVIO.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

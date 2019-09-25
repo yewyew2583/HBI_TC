@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
+  <DUT Name="ST_LPTTS_EPT" Id="{0e6c0576-7536-4797-bb01-5749d4bc763b}">
+    <Declaration><![CDATA[TYPE ST_LPTTS_EPT :
+STRUCT
+	// LoadPort module state , 2 LPs
+	//arrLoadPort: ARRAY [1..(.NO_OF_LPS)] OF ST_LP_EPT;
+	// TTS moduel state
+	stTTS: ST_TTS_EPT;
+		
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

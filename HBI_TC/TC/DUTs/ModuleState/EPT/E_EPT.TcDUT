@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
+  <DUT Name="E_EPT" Id="{b182f51e-d1ce-408a-90e1-2ef0dc5a69eb}">
+    <Declaration><![CDATA[TYPE E_EPT :
+(
+	// Unknown, Alarm, Paused, Aborting, Claibration, Manual
+	eBlocked :=0,
+	// Idle
+	eIdle,
+	// Initialize, SettingUp, Ready, Executing, Checking
+	eBusy 
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

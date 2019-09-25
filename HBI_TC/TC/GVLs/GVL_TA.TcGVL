@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <GVL Name="GVL_TA" Id="{c20cb945-d03a-400e-a624-5384665b8da4}">
+    <Declaration><![CDATA[VAR_GLOBAL
+	// 1 = Production mode, 0 = Engineering mode 
+	// Engineering mode can have IO's from either of one, Actual HW , Backdoor or Simualted
+	bProductionMode										: BOOL	:= TRUE; 
+	bEnableTIIAlarm										: BOOL	:= FALSE;
+	
+	// TA Heartbeat signal 
+	bTAHeartBeat										: BOOL; (* ~ (OPC : 1 : available for OPC-Clients) 
+										  						(OPC_PROP[0005] : 3 : OPC_PROP_RIGHTS, here Read Write*)
+								
+	// PLC Heartbeat signal 
+	bTCSHeartBeat										: BOOL; 		
+	// False: aTCS reading in progress , clear array  and toggle to true once done. TA stop sending commands
+	// True: TCS Ready to receive cmd data. TA: Sending commands and toggle to false once done
+	arrTCSCommandReady									: BOOL; //arrTCSReady
+	iTCSReady											: INT; 	//-	IntAlignmentWithTBotPNB 1/Nov/18	
+	
+	// Receive commands from TA 
+	arrTACommands										: ST_TACommands ;
+	// False: TCS updating events and toggelr to true once done, TA stop reading events  
+	// True: TCS stop updating events, TA start copy events and clear, toggle to false once done.
+	arrTCSEventTriggered								: BOOL;
+	iTCSEventTriggered									: INT;	//-	IntAlignmentWithTBotPNB 1/Nov/18	
+							
+	// Event send back from TCS to TA
+	arrTCSEvents:  ST_TAEvents;
+																	
+	bDiagnosticMode 									: BOOL;
+	bColIODiagnosticsMode								: BOOL;
+	arrIODiagnosticsMode								: ARRAY [1..(.NO_OF_LEVEL)] OF BOOL	:= [(.NO_OF_LEVEL)(FALSE)];
+	
+	// TC: Enable /Disable State
+	//arrTCLevelState: ARRAY [1..(.NO_OF_LEVEL)] OF E_State :=[(NO_OF_LEVEL)(E_State.eEnabled)];
+	TC_ModuleState										: ARRAY[1..NO_OF_LEVEL] OF ST_TCSubModuleState;
+	
+	// TC: EPT States(Blocked, idle, busy)
+	//arrTCMLevelEpt:ARRAY[1..NO_OF_LEVEL] OF E_EPT;	
+	TC_EPT 												: ARRAY [1..NO_OF_LEVEL] OF ST_TCSubModuleEPT;
+	//ALMTC: ST_AlarmSubmodules;
+	ALMTC												: ST_AlarmModules;
+	
+//<DC COLUMN>
+	ALM_DBSTN											: ST_AlarmTags;
+	ALM_DCCOL											: ST_AlarmTags;
+//</DC COLUMN>
+	
+	arrStepMode											: ARRAY[1..NO_OF_LEVEL] OF ST_StepMode;
+	
+	bMainAirValve										: BOOL	:= TRUE;
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

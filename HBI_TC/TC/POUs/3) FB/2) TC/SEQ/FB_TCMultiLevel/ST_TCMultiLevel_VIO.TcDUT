@@ -1,0 +1,161 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <DUT Name="ST_TCMultiLevel_VIO" Id="{0c3f1c26-11e6-4069-810e-ac83802d8ddd}">
+    <Declaration><![CDATA[TYPE ST_TCMultiLevel_VIO : //only write by internal sequence
+STRUCT
+//
+	//Status	
+	iAlarmButtonLEDStatusFlag				: INT;
+	iMaintenanceButtonLEDStatusFlag     	: INT;
+	iAbortButtonLEDStatusFlag           	: INT;
+	iDoorLockButtonLEDStatusFlag        	: INT;
+	bTCCSessionActiveStatusFlag         	: BOOL;
+	bTIUInOutStatusFlag                 	: BOOL;	
+	bTIUUpDownStatusFlag                	: BOOL;	
+	
+	//TBotEAP
+	TBOT_TC_ACPower_Signal					: BOOL;  //1: Normal, 0: OFF AC Powers
+	
+	//opCellFrontDoorClosedStatus			:BOOL;
+	//ipTCCellFrontDoorLockedStatus		:BOOL;
+	
+	bCellFrontDoorLockedStatus				: BOOL;
+    bCellFrontDoorClosedStatus 				: BOOL;
+	
+	//LED_State,Freq
+	bMtnBtnLEDState							: BOOL;
+	iMtnBtnLEDBlinkFreq						: DINT;	
+	bAbtBtnLEDState							: BOOL;
+	iAbtBtnLEDBlinkFreq						: DINT;
+	bDoorUnlockBtnLEDState					: BOOL;
+	iDoorUnlockBtnLEDBlinkFreq				: DINT;
+	
+//<Input>
+	ipAPPresentSensor						: BOOL;	//AP //BM loopback signal
+	ipAPPowerOn	 							: BOOL;	//AP //24V loop back - TCC Connected & Booting, PLC boot up timer check on AP Ready signal
+	ipAPReady								: BOOL;	//AP //TCC Communicating, toggles to Normal state once TCC FW is booted up. Intel to provide estimated boot up duration for TCC3.0. Alarm when exceeded boot time
+	ipHandlerSafeToEnterPLC					: BOOL;	//AP //Soft line to indicate AP is fully deactuated. All heads are UP. Safe to move
+	ipHandlerSafeToEnterHwr					: BOOL;	//AP //TE deactuated hardware interlock (heads AND)
+	//Spare
+	//Spare
+	//Spare
+	//Spare
+	ipCellFluidLeakage1						: BOOL;	//Cell Facility
+	ipCellFluidLeakage2						: BOOL;	//Cell Facility
+	ipCellGroundFault 						: BOOL;	//Cell Facility
+	//Spare
+	//Spare
+	//Spare
+	//Spare
+	ipTesterPresent							: BOOL;	//Tester   
+	ipTesterPowerOn							: BOOL;	//Tester   
+	ipTesterReady							: BOOL;	//Tester   
+	//Spare
+	//Spare
+	ipTCDrawerCylExtendRS					: BOOL;	//RS
+	ipTCDrawerCylRetractRS					: BOOL;	//RS
+	ipTCDrawerCylUpRS						: BOOL;	//RS
+	ipTCDrawerCylDownRS						: BOOL;	//RS
+	ipTCCellDoorClosed						: BOOL;	//?? Door
+	ipTCCellDoorOpenCloseStatus				: BOOL;	// Door close status, 0: Opened, 1: Closed
+	ipTesterLatchesClosed					: BOOL;	//Tester
+	ipTCCellAbortFlowBtn					: BOOL;	//Btn, To put the slot into a safe state for removing the AP and Tester
+	ipTCCellDoorOpenReqBtn					: BOOL;	//Btn, Door Open Request
+	ipTIUPresent							: BOOL;	//
+	ipDrawerMaintenanceModeBtn				: BOOL;	//Btn, switch off 6-bar solenoid valve in cell for Tester and Drawer
+	
+	ipTCCellTbotSideDoorOpenCloseStatus01	: BOOL;
+	ipTCCellTbotSideDoorOpenCloseStatus02	: BOOL;
+	ipTCCellTbotSideDoorLocked01			: BOOL;
+	ipTCCellTbotSideDoorLocked02			: BOOL;
+	
+//</Input>
+//<Output>	
+	opAP240ACPwrEnable  					: BOOL;     //AP Power                                              
+	//Spare
+	//Spare
+	//Spare
+	opDoorOpenReqLED						: BOOL;     //PB LED                                                    
+	opAlarmLED 								: BOOL;     //Alarm LED                                                    
+	//Spare
+	//Spare
+	opTCCellAbortFlowBtnLED					: BOOL;	    //PB LED                                               
+	opDrawerMaintenanceModeBtnLED   		: BOOL;     //PB LED	switch off 6-bar solenoid valve in cell
+	opAPSafeToEngage           				: BOOL;     //Input to TCC (safe to Actuate/De-actuate)     
+	opAPTCCReset							: BOOL;	    //***                                                           
+	//Spare
+	//Spare
+	//Spare
+	opCellLTIMValve							: BOOL;	    //***                                                         
+	opCellDrawerCylExtend 					: BOOL;	    //Cyl Ext                                                
+	opCellDrawerCylRetract 					: BOOL;     //Cyl Ret                                             
+	opCellDrawerCylUp 						: BOOL;     //Cyl Up                                                  
+	opCellDrawerCylDown 					: BOOL;	    //Cyl Dn                                                   
+	opTst240VACPwrEnable 					: BOOL;  	//Tester Power                                         
+	//Spare
+	//Spare
+	opCellPCWValve  						: BOOL; 	//???                                                        
+	opTIUSktAirSol_1 						: BOOL; 	//                                                          
+	opTIUSktAirSol_2						: BOOL; 	//                                                                 
+	opAPAirSupplySol						: BOOL; 	//AP Main Supply (10bar) solenoid valve                     
+    opTesterDrawerAirSupplySol				: BOOL; 	//Drawer and Tester (6bar) solenoid valve            
+    opCell24VPowerEnable					: BOOL; 	//Turn On/Off TCC 24V Secondary Power Supply**//         
+    opCellTBOtSideDoorClosed1				: BOOL;
+	opCellTBOtSideDoorClosed2				: BOOL;
+	opCellDoorClosed						: BOOL; 	//DoorLock  
+	bOffBtnLEDs								: ARRAY [0..2] OF BOOL;                                            
+//</Output>
+//<Control Bits>
+	bEnableSKTAirSupOnInit					: BOOL;	//Set From En_Pwr()
+	bEnableAPPwrSupOnInit					: BOOL;
+    bEnableAPAirSupOnInit					: BOOL;		//Set From En_Pwr()
+	bEnableTstPwrSupOnInit					: BOOL;
+    bEnableDwrAirSupOnInit					: BOOL;	//Set From En_Pwr()
+	
+    bDPSPowerOnOff							: BOOL;
+	bAP240ACPowerOnOff						: BOOL;
+	eAPAirSupCmd							: E_Pwr; 
+	eTstAirSupCmd							: E_Pwr; 
+	eTIUSktAir1Cmd							: E_Pwr; 
+	eTIUSktAir2Cmd							: E_Pwr; 
+	bTIITesterOnError						: BOOL;	//TesterOnErrorToPassThroughModules 
+	bTIIAP240OnError						: BOOL;	//TesterOnErrorToPassThroughModules
+	bTIITstPrstError						: BOOL;
+	bTIIAPPrstError							: BOOL;
+	bTIITesterLatchClosedError				: BOOL;
+	bChkTesterOn							: BOOL;			//TesterOnChecking Bit After 20s Delay
+	bChkAP240On								: BOOL;			//AP240OnChecking Bit After 20s Delay
+	sAlarmMessage							: STRING;
+	iAlarmCode								: UDINT;
+	isTIIError								: BOOL;
+	iUnBlock								: DINT; 
+	bAlarmBlock								: BOOL;
+	TIIAlarmLED							: BOOL;
+	TIIAlarmEPT							: BOOL;
+	iSysUnBlockAlm							: DINT;
+	isSysError								: BOOL; 
+	bTstDelInt								: BOOL;		//Int for 20 Sec
+	bBypassSingleMove						: BOOL	:= TRUE;
+	bStep									: BOOL;
+	bDiagnosticMode							: BOOL;
+//</Control Bits>
+//<For Sim RS Default State>
+	bPLCRebootStatusForUpDownRs 			: BOOL	:= TRUE;
+	bPLCRebootStatusForExtRetRs 			: BOOL	:= TRUE;
+//</For Sim RS Default State>	
+	
+	//==============================================================//
+	//input
+	//ipStartPB : BOOL;
+	//ipStopPB  : BOOL;
+	//ipL1_TC_Drawer_Extended_Out_Cell :		BOOL;
+	//ipL1_TC_Drawer_Retracted_In_Cell :		BOOL;
+	//ipPressure_Switch_Error			 : 		BOOL;	
+	//output
+	//opMain_Incoming_Air_Valve	: BOOL;
+	//==============================================================//
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

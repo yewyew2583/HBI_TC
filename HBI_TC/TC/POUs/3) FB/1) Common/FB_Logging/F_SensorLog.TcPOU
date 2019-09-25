@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <POU Name="F_SensorLog" Id="{b505390a-e997-43b2-a731-7ed5f7b4f3bd}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION F_SensorLog : BOOL
+VAR_INPUT
+	iLevel: INT;
+	sName : STRING;
+	bNew  : BOOL;
+END_VAR
+VAR
+	
+END_VAR
+VAR_IN_OUT
+	bOld : BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF (bOld <> bNew) THEN
+	Logging.fbSensorLog.P_sModule := 'IO Toggled';
+	Logging.fbSensorLog.M_nLogger(iLogLevel:= Logging.fbDebugLog.P_iLogVerbosity, 
+								sSource:= sName , sMessage:=  F_Concat3(BOOL_TO_STRING(bOld),'->',BOOL_TO_STRING(bNew)));
+							// sMessage:=  F_Concat5(sName, ',', BOOL_TO_STRING(bOld),'->',BOOL_TO_STRING(bNew)));
+	bOld := bNew;
+END_IF
+]]></ST>
+    </Implementation>
+    <LineIds Name="F_SensorLog">
+      <LineId Id="3" Count="0" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="19" Count="1" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="6" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

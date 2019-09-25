@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <DUT Name="ST_TCMultiLevelSeqParam" Id="{81cb8b31-8a38-46c9-85f4-4a0c50790a15}">
+    <Declaration><![CDATA[TYPE ST_TCMultiLevelSeqParam : //only read by internal sequence
+STRUCT
+	
+//<EAP>
+	bTCDwrSafeToMoveEAP						: BOOL;
+	bTBotAntiCollisionTriggered				: BOOL;
+	bTCCellACPwrOff							: BOOL;
+
+//</EAP>
+
+//<EAPTeach>
+	bTBotbShuttleMoveInReq					: BOOL;
+	bTBotbShuttleMoveOutReq 				: BOOL;
+	
+	bEnableTeaching 						: BOOL;
+	bDrawerInReq							: BOOL;
+	bDrawerOutReq							: BOOL;
+	
+	iDrawerErrorStatus						: INT;
+	bDrawerDoneStatus						: BOOL;
+//</EAPTeach>
+		
+//<TstPwr>
+	stTATstPwrCommand						: ST_Command; 	//
+	bTstPwrAlm 								: BOOL;
+	iTstPwrCmd								: INT;
+	bTstAlmClear							: BOOL;
+//</TstPwr>
+
+	stTACommand 							: ST_Command;
+	bShuttleMoveOut							: BOOL;
+	bShuttleMoveIn							: BOOL;
+	//bTIUSlideOutCancel:BOOL;
+	
+	bPwrOn_OnInit							: BOOL; //
+	bDSPPowerOff							: BOOL;
+	bDSPPowerOn								: BOOL;
+	bDSPPowerAuto							: BOOL;
+	
+	bAP240ACPowerOff						: BOOL;
+	bAP240ACPowerOn							: BOOL;
+	bAP240ACPowerAuto						: BOOL;
+	
+	bAlarmClear								: BOOL;
+	bAlarmOccur								: BOOL;
+	bInitialise								: BOOL;
+	bCancel									: BOOL;
+	bBufClear								: BOOL;
+	bInternalCancel							: BOOL;
+	bResume									: BOOL;
+	
+	
+	bDrawerUp								: BOOL;
+	bDrawerDown								: BOOL;
+	
+	bDrawerUpBefFrtDoorOpen					: BOOL;
+	
+	bDoorClose								: BOOL;	//
+	bDoorOpen								: BOOL;	//
+	bDoorRecoveryStarted					: BOOL;
+	bDoorRecovery							: BOOL;
+	bDoorRecoveryCompleted					: BOOL;
+	bDoorRecoveryFailed						: BOOL;
+	
+	//bTCCSessionReq :BOOL;	//
+	bLevel1									: BOOL;
+	iProcessState 							: E_ProcessState :=0;
+	iTstPwrProcessState 					: E_ProcessState :=0;
+	sFailReason								: STRING;
+	iAlarmID								: UDINT;
+	bAlarmReset								: BOOL;
+	iAlmIDToRset							: DINT;
+	
+	bInitialised							: BOOL;
+	//bDPSPowerOnOff :BOOL;
+	
+	stDoorRecovEvnt							: ST_Event;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
+  <DUT Name="ST_TCSiteState" Id="{d8033e62-30c4-461e-84e2-1bfe8c563b21}">
+    <Declaration><![CDATA[TYPE ST_TCSiteState :
+STRUCT
+	TCU						: E_State	:= E_State.eEnabled;
+	TIERII					: E_State	:= E_State.eEnabled;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

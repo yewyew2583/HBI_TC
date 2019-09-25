@@ -1,0 +1,241 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <POU Name="DFB_AIN" Id="{9321bbd5-897f-4117-b206-09a752ae25fa}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK DFB_AIN
+VAR_INPUT
+	AIN_ID					: STRING; // AIN name for logging
+	Simulate				: BOOL;
+	RAW						: INT; // Raw value
+	Hi_RAW					: INT; // Raw value high limit
+	Lo_RAW					: INT; // Raw value low limit
+	Hi_PV					: LREAL; // PV high limit
+	Lo_PV					: LREAL; // PV low limit
+	AHH_Enable				: BOOL; // Enable high high alarm
+	AHH_SP					: LREAL; // High high alarm set point
+	AH_Enable				: BOOL; // Enable high alarm
+	AH_SP					: LREAL; // High alarm set point
+	AL_Enable				: BOOL; // Enable low alarm
+	AL_SP					: LREAL; // Low alarm set point
+	ALL_Enable				: BOOL; // Enable low low alarm
+	ALL_SP					: LREAL; // Low low alarm set point
+	DB						: LREAL;
+END_VAR
+
+VAR_OUTPUT
+	HTY						: BOOL;
+	PV						: LREAL;
+	AHH						: BOOL;
+	AH						: BOOL;
+	AL						: BOOL;
+	ALL						: BOOL;
+END_VAR
+
+VAR_IN_OUT
+	DUT						: DUT_AIN;
+END_VAR
+
+VAR
+	_First_Start			: BOOL;
+	
+	_AHH_RE					: R_TRIG;
+	_AH_RE					: R_TRIG;
+	_AL_RE					: R_TRIG;
+	_ALL_RE					: R_TRIG;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//	First Start
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+IF (NOT _First_Start) THEN
+	IF DUT.AHH_SP = 0 THEN
+		DUT.AHH_SP								:= ((Hi_PV - Lo_PV) * (85.0 / 100.0)) + Lo_PV;
+	END_IF
+	
+	IF DUT.AH_SP = 0 THEN
+		DUT.AH_SP								:= ((Hi_PV - Lo_PV) * (75.0 / 100.0)) + Lo_PV;
+	END_IF
+	
+	IF DUT.AL_SP = 0 THEN
+		DUT.AL_SP								:= ((Hi_PV - Lo_PV) * (25.0 / 100.0)) + Lo_PV;
+	END_IF
+	
+	IF DUT.ALL_SP = 0 THEN
+		DUT.ALL_SP								:= ((Hi_PV - Lo_PV) * (15.0 / 100.0)) + Lo_PV;
+	END_IF
+	
+	_First_Start								:= TRUE;
+END_IF
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//	AIN healthy
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+IF (NOT Simulate) THEN
+	IF RAW < Lo_RAW OR RAW > Hi_RAW THEN
+		HTY										:= FALSE;
+	ELSE
+		HTY										:= TRUE;
+	END_IF
+ELSE
+	HTY											:= TRUE;
+END_IF
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//	Process Value
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+IF Simulate THEN
+	PV											:= DUT.PV;
+ELSE
+	IF HTY THEN
+		PV										:= ((RAW - Lo_RAW) * (Hi_PV - Lo_PV) / (Hi_RAW - Lo_RAW)) + Lo_PV;
+	ELSE
+		PV										:= PV;
+	END_IF
+END_IF
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//	Alarm
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// High high alarm
+IF AHH_Enable THEN
+	IF PV >= AHH_SP THEN
+		AHH										:= TRUE;
+	ELSIF PV < AHH_SP - DB THEN
+		AHH										:= FALSE;
+	END_IF
+ELSE
+	AHH											:= FALSE;
+END_IF
+
+// High alarm
+IF AH_Enable THEN
+	IF PV >= AH_SP THEN
+		AH										:= TRUE;
+	ELSIF PV < AH_SP - DB THEN
+		AH										:= FALSE;
+	END_IF
+ELSE
+	AH											:= FALSE;
+END_IF
+
+// Low alarm
+IF AL_Enable THEN
+	IF PV <= AL_SP THEN
+		AL										:= TRUE;
+	ELSIF PV > AL_SP + DB THEN
+		AL										:= FALSE;
+	END_IF
+ELSE
+	AL											:= FALSE;
+END_IF
+
+// Low low alarm
+IF ALL_Enable THEN
+	IF PV <= ALL_SP THEN
+		ALL										:= TRUE;
+	ELSIF PV > ALL_SP + DB THEN
+		ALL										:= FALSE;
+	END_IF
+ELSE
+	ALL											:= FALSE;
+END_IF
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//	Set point clamp
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// High alarm setpoint
+IF DUT.AH_SP > DUT.AHH_SP THEN
+	DUT.AH_SP									:= DUT.AHH_SP;
+END_IF
+
+// Low alarm setpoint
+IF DUT.AL_SP < DUT.ALL_SP THEN
+	DUT.AL_SP									:= DUT.ALL_SP;
+END_IF
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//	Logging
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+_AHH_RE(CLK:= AHH);
+_AH_RE(CLK:= AH);
+_AL_RE(CLK:= AL);
+_ALL_RE(CLK:= ALL);
+
+IF _AHH_RE.Q THEN
+	Logging.fbDebugLog.M_nLogger(iLogLevel:= iLogVerbosity, sSource:= 'AIN Log', 
+		sMessage								:= CONCAT(CONCAT('AIN ID: ', AIN_ID),
+														 CONCAT(' - ', 'high high alarm triggered'))); 
+END_IF
+
+IF _AH_RE.Q THEN
+	Logging.fbDebugLog.M_nLogger(iLogLevel:= iLogVerbosity, sSource:= 'AIN Log', 
+		sMessage								:= CONCAT(CONCAT('AIN ID: ', AIN_ID),
+														 CONCAT(' - ', 'high alarm triggered'))); 
+END_IF
+
+IF _AL_RE.Q THEN
+	Logging.fbDebugLog.M_nLogger(iLogLevel:= iLogVerbosity, sSource:= 'AIN Log', 
+		sMessage								:= CONCAT(CONCAT('AIN ID: ', AIN_ID),
+														 CONCAT(' - ', 'low alarm triggered'))); 
+END_IF
+
+IF _ALL_RE.Q THEN
+	Logging.fbDebugLog.M_nLogger(iLogLevel:= iLogVerbosity, sSource:= 'AIN Log', 
+		sMessage								:= CONCAT(CONCAT('AIN ID: ', AIN_ID),
+														 CONCAT(' - ', 'low low alarm triggered'))); 
+END_IF
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//	Mapping
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Mapping();
+]]></ST>
+    </Implementation>
+    <Action Name="Mapping" Id="{59ea9f6b-b436-406a-b645-2a16008b5030}">
+      <Implementation>
+        <ST><![CDATA[DUT.AIN_ID										:= AIN_ID;
+DUT.Simulate									:= DUT.Simulate;
+DUT.PV											:= PV;
+
+DUT.AHH_Enable									:= DUT.AHH_Enable;
+DUT.AHH											:= AHH;
+DUT.AH_Enable									:= DUT.AH_Enable;
+DUT.AH											:= AH;
+DUT.AL_Enable									:= DUT.AL_Enable;
+DUT.AL											:= AL;
+DUT.ALL_Enable									:= DUT.ALL_Enable;
+DUT.ALL											:= ALL;]]></ST>
+      </Implementation>
+    </Action>
+    <LineIds Name="DFB_AIN">
+      <LineId Id="1004" Count="157" />
+      <LineId Id="192" Count="0" />
+    </LineIds>
+    <LineIds Name="DFB_AIN.Mapping">
+      <LineId Id="6" Count="1" />
+      <LineId Id="1" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="3" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="4" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

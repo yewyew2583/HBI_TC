@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
+  <DUT Name="E_SeqSts_1" Id="{beb68730-2304-405d-ab19-a03a024876c7}">
+    <Declaration><![CDATA[TYPE E_SeqSts_1 :
+(
+	eNull := -1,
+	eInit := 0,
+	ePreSanityCheck,
+	eSanityCheck,
+	eSanityCheck2,
+	eTrayCount,
+
+	//hw trigger
+	eMotorZVelMove,	//Velosity move
+	eMotorZVelMoveTeach,
+	eMotorXVelMove,
+	eMotorYVelMove,
+	eMotorZHalt,
+	eMotorXHalt,
+	eMotorYHalt,
+	eMotorCnyMove,
+	eMotorCnyMoveSlow,
+	eMotorCnyHalt,
+	
+// ^^^^Skip seq step till eMotorCnyHalt^^^^
+
+	eMotorZAbsMove,	//Absolute move
+	eMotorXAbsMove,
+	eMotorYAbsMove,
+	eMotorZRelMove,	//Relative move
+	eMotorXRelMove,
+	eMotorYRelMove,
+	eClamp,
+	eUnclamp,
+	eLatch,
+	eUnlatch,
+	eEportLatch,
+	eEportUnlatch,
+	eStopperUp,
+	eStopperDwn,
+	eShutterOpen,
+	eShutterClose,
+	
+	eMotorXReset,
+	eMotorYReset,
+	eMotorZReset,
+	
+	eMotorXPowerOn,
+	eMotorYPowerOn,
+	eMotorZPowerOn,
+	
+	eMotorXHome,
+	eMotorYHome,
+	eMotorZHome,
+	
+	eMotorConyReset,
+	eMotorConyPowerOn,
+	eMotorConyHome,
+	
+	eMotorZAbsMoveSbyPos,
+	eMotorZAbsMoveLatchPos,
+	eMotorZAbsMoveLiftPos,
+	eMotorZAbsMoveTopPos,
+	eMotorZAbsMoveCountSensorPos,
+	eMotorZAbsMoveEportTopPos,
+	eAutoTeachCalc,
+		
+	
+	
+	eCylJackUp,
+	eCylJackDown,
+	
+	eHomeStacker,
+	eHomeConveyer,
+	eHomeUport,
+	
+	eReset,
+	eExecute,
+	eAlarmed,
+	
+	eDone :=100
+	
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <POU Name="F_ArrayStr" Id="{e6a20e00-302a-4e85-bce9-2258f07541d2}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION F_ArrayStr : ARRAY [1..NO_OF_STRING_PARAM] OF STRING
+VAR_INPUT
+	sParam		: ARRAY [1..NO_OF_STRING_PARAM] OF STRING;
+	sParam1		: STRING;
+	//sParam		: ARRAY [1..NO_OF_STRING_PARAM] OF STRING;
+	//bParam		: ARRAY [1..NO_OF_BOOL_PARAM] OF BOOL;
+	//dParam		: ARRAY [1..NO_OF_LREAL_PARAM] OF LREAL;
+END_VAR
+
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[	F_ArrayStr := sParam;
+	F_ArrayStr[1] := sParam1;]]></ST>
+    </Implementation>
+    <LineIds Name="F_ArrayStr">
+      <LineId Id="8" Count="0" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <POU Name="CmdAndEventProcess" Id="{21c23969-00c9-4fcf-b00f-53cc117b39fc}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM CmdAndEventProcess
+VAR
+	fbCmdAndEventUpdate 			: FB_CmdAndEventUpdate;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//bTAHeartBeat := bTCSHeartBeat;
+bTCSHeartBeat						:= bTAHeartBeat;
+
+fbCmdAndEventUpdate(
+	bRCMDStart						:= arrTCSCommandReady, 
+	bEventsStart					:= arrTCSEventTriggered,  
+	bEventsUpdating					:= arrEventUpdating, 
+	arrTA_RCMD						:= arrTACommands.arrTACommands, 
+	arrLocalRCMD					:= arrCommands.arrTACommands, 
+	arrTA_Events					:= arrTCSEvents.arrTAEvents, 
+	arrLocalEvent					:= arrEvents.arrTAEvents);
+]]></ST>
+    </Implementation>
+    <LineIds Name="CmdAndEventProcess">
+      <LineId Id="5" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="8" Count="2" />
+      <LineId Id="12" Count="4" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="18" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

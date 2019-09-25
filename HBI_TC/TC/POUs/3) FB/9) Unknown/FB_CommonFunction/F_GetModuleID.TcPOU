@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <POU Name="F_GetModuleID" Id="{313e9912-48d9-4421-965d-466552ce6d77}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION F_GetModuleID : UINT
+VAR_INPUT
+	eColumnID:E_ModuleID:=E_ModuleID.COLUMN_LA;
+END_VAR
+VAR
+END_VAR
+VAR_OUTPUT
+	lvlModID : ARRAY [1..NO_OF_LEVEL] OF E_ModuleID;
+	sColName:STRING;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[CASE eColumnID OF
+	//E_ModuleID.IOLP: F_GetColumnID:=1;RETURN;
+	//(*
+	E_ModuleID.COLUMN_LA: F_GetModuleID:=1;sColName:='COLUMN_LA';LevelModuleID:=LA_LEVEL_MODULE_ID; RETURN;
+	E_ModuleID.COLUMN_LB: F_GetModuleID:=2;sColName:='COLUMN_LB';LevelModuleID:=LB_LEVEL_MODULE_ID; RETURN;
+	E_ModuleID.COLUMN_LC: F_GetModuleID:=3;sColName:='COLUMN_LC';LevelModuleID:=LC_LEVEL_MODULE_ID; RETURN;
+	E_ModuleID.COLUMN_RA: F_GetModuleID:=4;sColName:='COLUMN_RA';LevelModuleID:=RA_LEVEL_MODULE_ID; RETURN;
+	E_ModuleID.COLUMN_RB: F_GetModuleID:=5;sColName:='COLUMN_RB';LevelModuleID:=RB_LEVEL_MODULE_ID; RETURN;
+	E_ModuleID.COLUMN_RC: F_GetModuleID:=6;sColName:='COLUMN_RC';LevelModuleID:=RC_LEVEL_MODULE_ID; RETURN;
+	//*)
+	
+ELSE
+	Logging.fbDebugLog.P_sModule:= CONCAT('TC L','DA DA!');
+	Logging.fbDebugLog.M_nLogger(iLogLevel:= 1, sSource:= 'F_GetColumnID', sMessage:= 'Invalid Column Module ID');
+	F_GetModuleID:=0;
+END_CASE]]></ST>
+    </Implementation>
+    <LineIds Name="F_GetModuleID">
+      <LineId Id="38" Count="14" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

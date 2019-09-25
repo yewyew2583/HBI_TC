@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <DUT Name="E_ColAlarm" Id="{2cd3c3ff-8d93-4b88-b1a2-3dd28fc2786b}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE E_ColAlarm :
+(
+	ipColumnFluid_PCW_Leakage :=1,
+    ipAllTCDrawerRetractedinCell,
+	ipTbotDoorClosedSignal	
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

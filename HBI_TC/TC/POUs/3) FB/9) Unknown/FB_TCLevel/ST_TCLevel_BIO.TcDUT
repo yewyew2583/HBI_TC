@@ -1,0 +1,89 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <DUT Name="ST_TCLevel_BIO" Id="{7ed33f7d-f7b8-4211-acc8-7c6530b875b1}">
+    <Declaration><![CDATA[TYPE ST_TCLevel_BIO :
+STRUCT
+		//input
+	ipColumnFluid_PCW_Leakage : E_BackdoorState;
+	ipPressure_Switch_Error : E_BackdoorState;
+	
+	ipCellGroundFault 	: E_BackdoorState;
+	ipExhaustFanOk 		: E_BackdoorState;
+	
+	ipAPPresentSensor		: E_BackdoorState;
+	ipAPPowerOn	 			: E_BackdoorState;
+	ipAPReady				: E_BackdoorState;
+	ipAPDeactuatedPLC		: E_BackdoorState;
+	ipAPDeactuatedHwr		: E_BackdoorState;
+	ipAPActuatedPLC		: E_BackdoorState;
+
+	ipAP_DIO_1			: E_BackdoorState;
+	ipAP_DIO_2			: E_BackdoorState;
+	ipAP_DIO_3			: E_BackdoorState;
+	ipAP_DIO_4			: E_BackdoorState;
+	ipAP_DIO_5			: E_BackdoorState;
+	
+	ipTesterPresent		: E_BackdoorState;
+	ipTesterPowerOn		: E_BackdoorState;
+	ipTesterReady		: E_BackdoorState;
+	ipTesterSpareOut1		: E_BackdoorState;
+	ipTesterSpareOut2		: E_BackdoorState;
+	
+	ipMotor_Ready 						: E_BackdoorState;
+	ipMotor_Home_Position 				: E_BackdoorState;
+	ipMotor_Position_Reached 			: E_BackdoorState;
+	ipMotor_Ps_Table_Active 			: E_BackdoorState;
+	ipMotor_Error 						: E_BackdoorState;
+	
+	ipTCDrawerExtendedoutCell		: E_BackdoorState;
+	ipTCDrawerRetractedinCell		: E_BackdoorState;
+	ipTCDrawerExtendedupCell		: E_BackdoorState;
+	ipTCDrawerRetracteddownCell		: E_BackdoorState;
+	
+	ipTCCellDoorLock : E_BackdoorState;
+	ipTCCellDoorClosed		: E_BackdoorState;
+	ipTesterLatchesClosed		: E_BackdoorState;
+	ipCellFluidLeakage		: E_BackdoorState;
+	ipShuttleFluidLeakage		: E_BackdoorState;
+	ipButtonLockDoor		: E_BackdoorState;
+	ipButtonTesterInOut			: E_BackdoorState;
+	
+	//output
+	(*opHotAirExhaustFan : E_BackdoorState;
+	opHBI_Tst_CellPCWValve  : E_BackdoorState;
+	opMain_Incoming_Air_Valve : E_BackdoorState;
+	
+	opAP24VDCPwr  : E_BackdoorState;
+	opAP_240AC_Pwr  : E_BackdoorState; 
+	opHBI_APCellPCWValve : E_BackdoorState;
+	opAP_TIU_Skt_Air : E_BackdoorState;
+	
+	opAP_DIO_1 : E_BackdoorState;
+	opAP_DIO_2 : E_BackdoorState;
+	opAP_DIO_3 : E_BackdoorState;
+	opAP_DIO_4 : E_BackdoorState;
+	opAP_DIO_5 : E_BackdoorState;
+	
+	opCellDrawerExtend : E_BackdoorState;
+	opCellDrawerRetract : E_BackdoorState;
+	opCellDrawerExtendUp : E_BackdoorState;
+	opCellDrawerRetractDown : E_BackdoorState;
+	
+	opMotor_Enable						: E_BackdoorState;
+	opMotor_Reset_Errors				: E_BackdoorState;
+	opMotor_Homing						: E_BackdoorState;
+	opMotor_Index0						: E_BackdoorState;
+	opMotor_Index1						: E_BackdoorState;
+	opMotor_Start_Position				: E_BackdoorState;
+	
+	opTst_240VAC_Pwr : E_BackdoorState;
+	
+	opSocketCleaning : E_BackdoorState;
+	opSocketPurging : E_BackdoorState;*)
+	
+	
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

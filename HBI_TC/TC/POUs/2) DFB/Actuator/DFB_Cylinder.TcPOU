@@ -1,0 +1,552 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <POU Name="DFB_Cylinder" Id="{d48d630f-3ffe-4d0a-a1ab-d31f442126fc}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK DFB_Cylinder
+VAR_INPUT
+	Sec_P								: BOOL; // One second pulse
+	ID									: STRING; // Name that used to logging
+	Simulate							: BOOL; // 0: Production mode, 1: Simulation mode
+	Permissive							: WORD;
+	ShutDown							: WORD;
+	AutoInp								: BOOL; // Input command to control cylinder during Auto mode
+	Command								: WORD; // Cylinder Command, 1: Retract, 2: Extend, 4: Auto
+	IExtend								: BOOL; // Extend feedback signal
+	IRetract							: BOOL; // Retract feedback signal
+	Travel_Time							: UDINT; // Travel time for cylinder receive extend or retract command
+	SetOutput_Pulse						: BOOL;
+	FailedHoldLast						: BOOL; // Hold last output command when failed, 0: Not hold, 1: Hold
+END_VAR
+
+VAR_OUTPUT
+	OExtend								: BOOL; // Extend output signal
+	ORetract							: BOOL; // Retract output signal
+END_VAR
+
+VAR_IN_OUT
+	DUT									: DUT_Cylinder;
+END_VAR
+
+VAR
+	_Start_up							: BOOL;
+	_State_Changed						: BOOL;
+	_IExtend							: BOOL;
+	_IRetract							: BOOL;
+	
+	_State								: INT;
+	_Last_State							: INT;
+	_TLast_State						: INT;
+	
+	_State_Timer						: UDINT;
+	
+	_Message							: STRING;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//*********************************************************************************************************************************************************************************************//
+// Method Name			: DFB_Cylinder
+// Last Modified date	: 25 Feb 2019
+// Functionality		: - Handle shut down condition
+//						  - Handle reset
+//						  - Handle home sensor under simulation mode
+//						  - Handle motor condiiton
+//						  - Handle motor enable state and EPT
+//						  - update target position if not busy
+//*********************************************************************************************************************************************************************************************//
+// 		Version			Date				Description
+//		0.01		21 Feb 2019				Created
+//*********************************************************************************************************************************************************************************************//
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Start up
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+IF (NOT _Start_up) THEN
+	DUT.Enable												:= TRUE;
+	_Start_up												:= TRUE;
+END_IF
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Last Shut Down
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+IF ShutDown <> 0 THEN
+	DUT.Last_SD													:= ShutDown;
+	DUT.Message													:= F_Concat5(
+																	sString1:= CONCAT('Cylinder ID: ', ID), 
+																	sString2:= CONCAT(' Shutdown condition triggered: ', WORD_TO_STRING(DUT.Last_SD)), 
+																	sString3:= CONCAT('', ''), 
+																	sString4:= CONCAT('', ''), 
+																	sString5:= CONCAT('', ''));
+	Logging.fbDebugLog.M_nLogger(iLogLevel:= iLogVerbosity, sSource:= ' Motor Log ', 
+		sMessage												:= DUT.Message);
+END_IF
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Simulate
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+IF (NOT Simulate) THEN
+	_IExtend													:= IExtend;
+	_IRetract													:= IRetract;
+END_IF
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Reset
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+IF DUT.Reset THEN
+	DUT.Message													:= '';
+	DUT.Failed													:= FALSE;
+	DUT.Failed_To_Extend										:= FALSE;
+	DUT.Failed_To_Retract										:= FALSE;
+	DUT.Reset													:= FALSE;
+	_Message													:= F_Concat5(
+																	sString1:= CONCAT('Cylinder ID: ', ID), 
+																	sString2:= CONCAT(' reset command received: ', ''), 
+																	sString3:= CONCAT('', ''), 
+																	sString4:= CONCAT('', ''), 
+																	sString5:= CONCAT('', ''));
+	Logging.fbDebugLog.M_nLogger(iLogLevel:= iLogVerbosity, sSource:= ' Motor Log ', 
+		sMessage												:= _Message);
+END_IF
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Status
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Enable state
+IF DUT.Enable THEN
+	DUT.EnbState												:= Enum_ModuleEnableState.eEnabled;
+ELSE
+	DUT.EnbState												:= Enum_ModuleEnableState.eDisabled;
+END_IF
+
+// EPT 
+IF DUT.Failed OR DUT.CMD <> 4 OR (NOT DUT.Enable) OR DUT.Callibration_Mode THEN
+	DUT.EPT														:= Enum_EPT.eBlocked;
+ELSIF _State = 10 OR _State = 20 THEN
+	DUT.EPT														:= Enum_EPT.eBusy;
+ELSE
+	DUT.EPT														:= Enum_EPT.eIdle;
+END_IF
+
+// Status
+IF DUT.Failed THEN
+	DUT.Status													:= 99;
+ELSIF _IRetract THEN
+	DUT.Status													:= 1;
+ELSIF _IExtend THEN
+	DUT.Status													:= 2;
+END_IF
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Cyclic call
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+SEQ();
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Mapping
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+DUT.Failed														:= DUT.Failed_To_Extend OR DUT.Failed_To_Retract OR DUT.Failed;
+DUT.CylinderID													:= ID;
+DUT.Simulate													:= Simulate;
+DUT.Enable														:= DUT.Enable;
+
+DUT.Extended													:= IExtend;
+DUT.Retracted													:= IRetract;]]></ST>
+    </Implementation>
+    <Action Name="SEQ" Id="{26e7a909-86c7-4852-9018-cb8b44a72c81}">
+      <Implementation>
+        <ST><![CDATA[//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// State timer
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+_State_Changed													:= _TLast_State <> _State;
+_TLast_State													:= _State;
+
+IF _State_Changed THEN
+	_State_Timer												:= 0;
+	_Message													:= F_Concat5(
+																	sString1:= CONCAT('Cylinder ID: ', ID), 
+																	sString2:= CONCAT(', Current state: ', INT_TO_STRING(_State)), 
+																	sString3:= CONCAT('', ''), 
+																	sString4:= CONCAT('', ''), 
+																	sString5:= CONCAT('', ''));
+	Logging.fbDebugLog.M_nLogger(iLogLevel:= iLogVerbosity, sSource:= ' DFB_Cylinder.SEQ ', 
+		sMessage												:= _Message);
+ELSE
+	IF Sec_P THEN
+		_State_Timer											:= _State_Timer + 1;
+	END_IF
+END_IF
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// State machine
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+CASE _State OF
+	0: (*Idle*)
+		
+		(*Action*)
+		OExtend													:= FALSE;
+		ORetract												:= FALSE;
+		
+		(*Transition*)
+		IF Permissive = 16#FFFF THEN
+			_State												:= 1; // Ready
+		ELSIF DUT.CMD = 1 OR DUT.CMD = 2 OR (DUT.CMD = 4 AND AutoInp) THEN
+			DUT.Message											:= F_Concat5(
+																	sString1:= CONCAT('Cylinder ID: ', ID), 
+																	sString2:= CONCAT(' permissive not fulfill - ', WORD_TO_STRING(Permissive)), 
+																	sString3:= CONCAT('', ''), 
+																	sString4:= CONCAT('', ''), 
+																	sString5:= CONCAT('', ''));
+			DUT.Failed											:= TRUE;
+			_State												:= 99; // Error
+		END_IF
+		
+	1: (*Ready*)
+		_Last_State												:= 1;
+	
+		(*Action*)
+		
+		(*Transition*)
+		IF (DUT.CMD = 2 OR (DUT.CMD = 4 AND AutoInp)) AND ((NOT IExtend) OR (NOT OExtend AND (NOT SetOutput_Pulse))) THEN
+			_State												:= 10; // Extending
+		ELSIF (DUT.CMD = 1 OR (DUT.CMD = 4 AND (NOT AutoInp))) AND ((NOT IRetract) OR (NOT ORetract AND (NOT SetOutput_Pulse))) THEN
+			_State												:= 20; // Retracting
+		END_IF
+	
+	10: (*Extending*)
+		_Last_State												:= 10;
+	
+		(*Action*)
+		OExtend													:= TRUE;
+		ORetract												:= FALSE;
+		
+		IF Simulate THEN
+			_IExtend											:= TRUE;
+			_IRetract											:= FALSE;
+		END_IF
+		
+		(*Transition*)
+		IF ShutDown = 0 THEN
+			IF DUT.CMD = 1 OR (DUT.CMD = 4 AND (NOT AutoInp)) THEN
+				_State											:= 20; // Retracting
+			ELSIF _State_Timer > 1 THEN
+				IF _IExtend THEN
+					_State										:= 11; // Extended
+				ELSIF _State_Timer > Travel_Time THEN
+					DUT.Failed_To_Extend						:= TRUE;
+					DUT.Message									:= F_Concat5(
+																	sString1:= CONCAT('Cylinder ID: ', ID), 
+																	sString2:= CONCAT(' failed to receive extend feedback signal', ''), 
+																	sString3:= CONCAT('', ''), 
+																	sString4:= CONCAT('', ''), 
+																	sString5:= CONCAT('', ''));
+					Logging.fbDebugLog.M_nLogger(iLogLevel:= iLogVerbosity, sSource:= ' Motor Log ', 
+						sMessage								:= DUT.Message);
+					_State										:= 99; // Error
+				END_IF
+			END_IF
+		ELSE
+			DUT.Failed											:= TRUE;
+			_State												:= 99; // Error
+		END_IF
+		
+	
+	11: (*Extended*)
+		_Last_State												:= 11;
+	
+		(*Action*)
+		IF SetOutput_Pulse THEN
+			OExtend												:= FALSE;
+			ORetract											:= FALSE;
+		ELSE
+			OExtend												:= TRUE;
+			ORetract											:= FALSE;
+		END_IF
+		
+		(*Transition*)
+		IF ShutDown = 0 THEN
+			IF DUT.CMD = 1 OR (DUT.CMD = 4 AND (NOT AutoInp)) THEN
+				_State											:= 20; // Retracting
+			ELSIF (NOT _IExtend) THEN
+				DUT.Failed_To_Extend							:= TRUE;
+				_State											:= 99;
+			END_IF
+		ELSE
+			DUT.Failed											:= TRUE;
+			_State												:= 99; // Error
+		END_IF
+	
+	20: (*Retracting*)
+		_Last_State												:= 20;
+	
+		(*Action*)
+		OExtend													:= FALSE;
+		ORetract												:= TRUE;
+		
+		IF Simulate THEN
+			_IExtend											:= FALSE;
+			_IRetract											:= TRUE;
+		END_IF
+		
+		(*Transition*)
+		IF ShutDown = 0 THEN
+			IF DUT.CMD = 2 OR (DUT.CMD = 4 AND AutoInp) THEN
+				_State											:= 10; // Retracting
+			ELSIF _State_Timer > 1 THEN
+				IF _IRetract THEN
+					_State										:= 21; // Retracted
+				ELSIF _State_Timer > Travel_Time THEN
+					DUT.Failed_To_Retract						:= TRUE;
+					DUT.Message									:= F_Concat5(
+																	sString1:= CONCAT('Cylinder ID: ', ID), 
+																	sString2:= CONCAT(' failed to receive retract feedback signal', ''), 
+																	sString3:= CONCAT('', ''), 
+																	sString4:= CONCAT('', ''), 
+																	sString5:= CONCAT('', ''));
+					Logging.fbDebugLog.M_nLogger(iLogLevel:= iLogVerbosity, sSource:= ' Motor Log ', 
+						sMessage								:= DUT.Message);
+					_State										:= 99; // Error
+				END_IF
+			END_IF
+		ELSE
+			DUT.Failed											:= TRUE;
+			_State												:= 99; // Error
+		END_IF
+	
+	21: (*Retracted*)
+		_Last_State												:= 21;
+	
+		(*Action*)
+		IF SetOutput_Pulse THEN
+			OExtend												:= FALSE;
+			ORetract											:= FALSE;
+		ELSE
+			OExtend												:= FALSE;
+			ORetract											:= TRUE;
+		END_IF
+		
+		(*Transition*)
+		IF ShutDown = 0 THEN
+			IF DUT.CMD = 2 OR (DUT.CMD = 4 AND AutoInp) THEN
+				_State											:= 10; // Retracting
+			ELSIF (NOT _IRetract) THEN
+				DUT.Failed_To_Retract							:= TRUE;
+				_State											:= 99; 
+			END_IF
+		ELSE
+			DUT.Failed											:= TRUE;
+			_State												:= 99; // Error
+		END_IF
+		
+	99: (*Error*)
+	
+		(*Action*)
+		IF FailedHoldLast THEN
+			OExtend												:= OExtend;
+			ORetract											:= ORetract;
+		ELSE	
+			OExtend												:= FALSE;
+			ORetract											:= FALSE;
+		END_IF
+	
+		(*Transition*)
+		IF (NOT DUT.Failed) THEN
+			_State												:= 0; // Idle
+		END_IF
+END_CASE]]></ST>
+      </Implementation>
+    </Action>
+    <LineIds Name="DFB_Cylinder">
+      <LineId Id="12" Count="11" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="431" Count="8" />
+      <LineId Id="264" Count="0" />
+      <LineId Id="261" Count="2" />
+      <LineId Id="49" Count="0" />
+      <LineId Id="48" Count="0" />
+      <LineId Id="50" Count="1" />
+      <LineId Id="62" Count="4" />
+      <LineId Id="54" Count="2" />
+      <LineId Id="265" Count="4" />
+      <LineId Id="52" Count="0" />
+      <LineId Id="140" Count="0" />
+      <LineId Id="152" Count="2" />
+      <LineId Id="270" Count="4" />
+      <LineId Id="67" Count="0" />
+      <LineId Id="275" Count="0" />
+      <LineId Id="69" Count="0" />
+      <LineId Id="73" Count="1" />
+      <LineId Id="220" Count="1" />
+      <LineId Id="75" Count="0" />
+      <LineId Id="213" Count="6" />
+      <LineId Id="212" Count="0" />
+      <LineId Id="276" Count="4" />
+      <LineId Id="71" Count="0" />
+      <LineId Id="157" Count="0" />
+      <LineId Id="156" Count="0" />
+      <LineId Id="160" Count="1" />
+      <LineId Id="163" Count="1" />
+      <LineId Id="281" Count="0" />
+      <LineId Id="303" Count="0" />
+      <LineId Id="302" Count="0" />
+      <LineId Id="304" Count="1" />
+      <LineId Id="307" Count="3" />
+      <LineId Id="306" Count="0" />
+      <LineId Id="293" Count="0" />
+      <LineId Id="292" Count="0" />
+      <LineId Id="294" Count="0" />
+      <LineId Id="296" Count="0" />
+      <LineId Id="298" Count="3" />
+      <LineId Id="313" Count="0" />
+      <LineId Id="282" Count="3" />
+      <LineId Id="162" Count="0" />
+      <LineId Id="105" Count="0" />
+      <LineId Id="286" Count="4" />
+      <LineId Id="107" Count="0" />
+      <LineId Id="57" Count="0" />
+      <LineId Id="173" Count="0" />
+      <LineId Id="351" Count="2" />
+      <LineId Id="392" Count="0" />
+      <LineId Id="391" Count="0" />
+      <LineId Id="393" Count="0" />
+    </LineIds>
+    <LineIds Name="DFB_Cylinder.SEQ">
+      <LineId Id="203" Count="1" />
+      <LineId Id="201" Count="0" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="2" />
+      <LineId Id="3" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="189" Count="0" />
+      <LineId Id="197" Count="3" />
+      <LineId Id="194" Count="1" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="10" Count="3" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="205" Count="3" />
+      <LineId Id="4" Count="0" />
+      <LineId Id="1" Count="0" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="87" Count="1" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="98" Count="3" />
+      <LineId Id="158" Count="0" />
+      <LineId Id="162" Count="4" />
+      <LineId Id="159" Count="0" />
+      <LineId Id="161" Count="0" />
+      <LineId Id="160" Count="0" />
+      <LineId Id="102" Count="0" />
+      <LineId Id="92" Count="0" />
+      <LineId Id="94" Count="0" />
+      <LineId Id="183" Count="0" />
+      <LineId Id="95" Count="0" />
+      <LineId Id="93" Count="0" />
+      <LineId Id="30" Count="1" />
+      <LineId Id="103" Count="1" />
+      <LineId Id="223" Count="1" />
+      <LineId Id="91" Count="0" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="184" Count="0" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="44" Count="0" />
+      <LineId Id="66" Count="1" />
+      <LineId Id="209" Count="2" />
+      <LineId Id="213" Count="0" />
+      <LineId Id="212" Count="0" />
+      <LineId Id="45" Count="0" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="105" Count="0" />
+      <LineId Id="152" Count="0" />
+      <LineId Id="220" Count="0" />
+      <LineId Id="219" Count="0" />
+      <LineId Id="106" Count="0" />
+      <LineId Id="139" Count="0" />
+      <LineId Id="141" Count="0" />
+      <LineId Id="143" Count="0" />
+      <LineId Id="168" Count="6" />
+      <LineId Id="167" Count="0" />
+      <LineId Id="142" Count="0" />
+      <LineId Id="140" Count="0" />
+      <LineId Id="153" Count="0" />
+      <LineId Id="108" Count="0" />
+      <LineId Id="110" Count="0" />
+      <LineId Id="109" Count="0" />
+      <LineId Id="107" Count="0" />
+      <LineId Id="84" Count="0" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="58" Count="0" />
+      <LineId Id="185" Count="0" />
+      <LineId Id="59" Count="0" />
+      <LineId Id="62" Count="0" />
+      <LineId Id="74" Count="1" />
+      <LineId Id="70" Count="0" />
+      <LineId Id="76" Count="0" />
+      <LineId Id="71" Count="0" />
+      <LineId Id="73" Count="0" />
+      <LineId Id="72" Count="0" />
+      <LineId Id="63" Count="0" />
+      <LineId Id="111" Count="2" />
+      <LineId Id="150" Count="0" />
+      <LineId Id="232" Count="2" />
+      <LineId Id="151" Count="0" />
+      <LineId Id="114" Count="2" />
+      <LineId Id="34" Count="1" />
+      <LineId Id="52" Count="0" />
+      <LineId Id="186" Count="0" />
+      <LineId Id="53" Count="0" />
+      <LineId Id="68" Count="1" />
+      <LineId Id="214" Count="4" />
+      <LineId Id="56" Count="1" />
+      <LineId Id="123" Count="0" />
+      <LineId Id="144" Count="0" />
+      <LineId Id="154" Count="0" />
+      <LineId Id="222" Count="0" />
+      <LineId Id="221" Count="0" />
+      <LineId Id="145" Count="2" />
+      <LineId Id="175" Count="7" />
+      <LineId Id="148" Count="1" />
+      <LineId Id="124" Count="0" />
+      <LineId Id="155" Count="0" />
+      <LineId Id="126" Count="2" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="46" Count="0" />
+      <LineId Id="187" Count="0" />
+      <LineId Id="47" Count="0" />
+      <LineId Id="77" Count="6" />
+      <LineId Id="50" Count="1" />
+      <LineId Id="117" Count="1" />
+      <LineId Id="156" Count="1" />
+      <LineId Id="236" Count="2" />
+      <LineId Id="119" Count="3" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="64" Count="1" />
+      <LineId Id="133" Count="0" />
+      <LineId Id="136" Count="0" />
+      <LineId Id="230" Count="1" />
+      <LineId Id="225" Count="0" />
+      <LineId Id="228" Count="1" />
+      <LineId Id="226" Count="1" />
+      <LineId Id="129" Count="0" />
+      <LineId Id="137" Count="0" />
+      <LineId Id="130" Count="2" />
+      <LineId Id="24" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,179 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
+  <DUT Name="E_ModuleID_1" Id="{b8925a65-8f23-4fe3-8b80-06bd43392e51}">
+    <Declaration><![CDATA[TYPE E_ModuleID_1 :
+(
+	eNull := 0,
+
+//Uport
+	eUport1,
+	eUport2,
+	eUport1Stk,
+	eUport2Stk,
+
+//Uport shuttle
+	eUShuttle1,
+	eUShuttle2,
+	eUShuttle1Cny,
+	eUShuttle2Cny,
+	eUShuttle1Prk,
+	eUShuttle2Prk,
+
+//LP Lane	
+	eLP1,
+	eLP2,
+	eLP3,
+	eLP4,
+	eLP5,
+	eLP6,
+	eLP7,
+	eLP8,
+	
+	eLP1Stk1,
+	eLP2Stk1,
+	eLP3Stk1,
+	eLP4Stk1,
+	eLP5Stk1,
+	eLP6Stk1,
+	eLP7Stk1,
+	eLP8Stk1,
+
+	eLP1Stk2,
+	eLP2Stk2,
+	eLP3Stk2,
+	eLP4Stk2,
+	eLP5Stk2,
+	eLP6Stk2,
+	eLP7Stk2,
+	eLP8Stk2,
+	
+		eLP1Stk1Lift,
+		eLP2Stk1Lift,
+		eLP3Stk1Lift,
+		eLP4Stk1Lift,
+		eLP5Stk1Lift,
+		eLP6Stk1Lift,
+		eLP7Stk1Lift,
+		eLP8Stk1Lift,
+	
+		eLP1Stk2Lift,
+		eLP2Stk2Lift,
+		eLP3Stk2Lift,
+		eLP4Stk2Lift,
+		eLP5Stk2Lift,
+		eLP6Stk2Lift,
+		eLP7Stk2Lift,
+		eLP8Stk2Lift,
+
+		eLP1Stk1Cny,
+		eLP2Stk1Cny,
+		eLP3Stk1Cny,
+		eLP4Stk1Cny,
+		eLP5Stk1Cny,
+		eLP6Stk1Cny,
+		eLP7Stk1Cny,
+		eLP8Stk1Cny,
+	
+		eLP1Stk2Cny,
+		eLP2Stk2Cny,
+		eLP3Stk2Cny,
+		eLP4Stk2Cny,
+		eLP5Stk2Cny,
+		eLP6Stk2Cny,
+		eLP7Stk2Cny,
+		eLP8Stk2Cny,
+
+	eLP1Eport,
+	eLP2Eport,
+	eLP3Eport,
+	eLP4Eport,
+	eLP5Eport,
+	eLP6Eport,
+	eLP7Eport,
+	eLP8Eport,	
+
+		eLP1EportStk,
+		eLP2EportStk,
+		eLP3EportStk,
+		eLP4EportStk,
+		eLP5EportStk,
+		eLP6EportStk,
+		eLP7EportStk,
+		eLP8EportStk,
+	
+		eLP1EportCny,
+		eLP2EportCny,
+		eLP3EportCny,
+		eLP4EportCny,
+		eLP5EportCny,
+		eLP6EportCny,
+		eLP7EportCny,
+		eLP8EportCny,
+		
+		eLP1EportGrip,
+		eLP2EportGrip,
+		eLP3EportGrip,
+		eLP4EportGrip,
+		eLP5EportGrip,
+		eLP6EportGrip,
+		eLP7EportGrip,
+		eLP8EportGrip,		
+		
+	eLP1Shuttle,
+	eLP2Shuttle,
+	eLP3Shuttle,
+	eLP4Shuttle,
+	eLP5Shuttle,
+	eLP6Shuttle,
+	eLP7Shuttle,
+	eLP8Shuttle,
+
+//TTS
+	eTTS1,
+	eTTS2,
+
+	eTTS1Prk,
+	eTTS2Prk,
+
+//Vision
+	eVision1,
+	eVision2,
+	
+	eVision1Prk,
+	eVision2Prk,
+	
+//**********************
+	eUport,
+	eUportStk,
+	
+	eUShuttle,
+	eUShuttleCny,
+	eUShuttlePrk,
+
+	eLP,
+	eLPStk,
+	eLPStk1,
+	eLPStk2,
+	eLPStkCny,
+	eLPStkLift,
+	eLPEport,
+	
+	eTTS,
+	eTTSPrk,
+	
+	eVision,
+	eVisionPrk,
+	
+	eLPEportLatch,
+	eLPEportTTS,
+	
+	ePNBLatch,
+	ePNBSby,
+	ePNB
+	
+	
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

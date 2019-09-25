@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{5a865ed2-77cd-427a-91b5-7764bcb9e133}</ProjectGuid>
+    <AssemblyName>PCWLowFlowMeasurement</AssemblyName>
+    <Name>PCWLowFlowMeasurement</Name>
+    <RootNamespace>PCWLowFlowMeasurement</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="Scope YT Project.tcscope">
+      <SubType>Content</SubType>
+    </Content>
+  </ItemGroup>
+</Project>

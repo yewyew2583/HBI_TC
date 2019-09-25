@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <DUT Name="E_SeqSts" Id="{6de05486-bafc-4ab9-970c-6b6eb5fdb8a8}">
+    <Declaration><![CDATA[TYPE E_SeqSts :
+(
+	eNull := -1,
+	eInit := 0,
+	eSanityCheck,
+	eTBotEAPSanityCheck,
+	eFrontDoorOpenConditionCheck,
+	
+	eSanityCheckForDPSPwr,
+	eSanityCheckForAPPwr,
+	
+	eSanityCheckBeforeUp,
+	eSanityCheckBeforeDown,
+	eSanityCheckBeforeOut,
+	eSanityCheckBeforeIn,
+	
+	eOnDrawerOutputOnly,
+	//hw trigger
+	eMoveDrawerUp,
+	eMoveDrawerOut,
+	eMoveDrawerIn,
+	eMoveDrawerDown,
+	
+	eTurnOnAPAirValve,
+	eTurnOffAPAirValve,
+	eTurnOnTesterAirValve,
+	eTurnOffTesterAirValve,
+
+	eReset,
+	eExecute,
+	eAlarmed,
+	eDPSPwrOnOff,
+	ePwrOn,
+	eChkTIUUpDown,
+	eChkTIUExtRet,
+	eChkTIUPosition,
+	eDoorLock,
+	eCheckDoorLock,
+	eAP240ACPwrOnOff,
+	
+	eDone :=100
+	
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <DUT Name="ST_DebugStation_VIO" Id="{96b300da-3090-4882-b26d-52697160546d}">
+    <Declaration><![CDATA[TYPE ST_DebugStation_VIO :
+STRUCT
+//<CtrlBit>
+	bDiagnosticMode						: BOOL;
+//</CtrlBit>
+
+//<DIO>
+	// Actuate pan
+	ipDBStnAPPresentSensor				: BOOL; // Actuate pan present signal, 0: Not present, 1: Present
+	ipDBStnAPPowerOn                	: BOOL; // Actuate pan power on signal, 0: Power off, 1: Power on
+	ipDBStnAPReady                  	: BOOL; // Actuate pan ready signal, 0: Not ready, 1: Ready
+	
+	ipDBStnHandlerSafeToEnterPLC		: BOOL;
+	ipDBStnHandlerSafeToEnterHwr		: BOOL;
+	ipDBStnCellGroundFault				: BOOL;
+	                                
+	opDBStnAP240ACPwrEnable				: BOOL;
+	opAP_DIO_1							: BOOL;
+	opAP_DIO_2							: BOOL;
+	opAP_DIO_3							: BOOL;
+	opDBStnPCWValve                 	: BOOL;
+	opDBStnPCWFlowBypassValve			: BOOL;
+	opDBStnBypassAPAirSupplySol			: BOOL;
+	//opDBStnBypassAPAirSupplySol		:BOOL;
+	opDBStn24VPowerEnable				: BOOL;
+	opDBStnLeakFlowPCWValve         	: BOOL;
+	opDBStnLowFlowPCWValve				: BOOL;
+	opDBStnAPSafeToEngage				: BOOL;
+	opDBStnAPTCCReset					: BOOL;
+
+//</DIO>
+
+//<CIO>
+	ipDBStnTstAirLeakFlowSensor			: REAL; 
+	ipDBStnAPAirLeakFlowSensor			: REAL;
+	ipDBStnPCWLeakFlowSensor			: REAL;
+	ipDBStnPCWLowFlowSensor				: REAL;
+//</CIO>
+
+//<CtrlIO>
+	bAP240ACPowerOnOff					: BOOL;
+	bChkAP240On							: BOOL;
+	bTstDelInt							: BOOL;
+	bTIIAP240OnError					: BOOL;
+	bTIIAPPrstError						: BOOL;
+	bEnableAPPwrSupOnInit				: BOOL;
+	
+	sAlarmMessage						: STRING;
+	iAlarmCode : UDINT;
+	isTIIError : BOOL; 
+	isSysError : BOOL;
+//</CtrlIO>
+
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

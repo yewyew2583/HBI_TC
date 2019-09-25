@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <DUT Name="ST_TCColumn_DIO" Id="{1dd67934-b924-4227-bd25-6889de0c81b6}">
+    <Declaration><![CDATA[TYPE ST_TCColumn_DIO :
+STRUCT
+	ipColumnFluid_PCW_Leakage 	 			AT %I*: BOOL; // PCW leakage sensor, 0: Leak, 1: No leak
+	ipAllTCDrawerRetractedinCell 			AT %I*: BOOL; // All Drawer retracted
+	ipTbotDoorClosedSignal 					AT %I*: BOOL; // (NC) Tbot Door closed. 1: Closed, 0: Opened.
+
+	opHotAirExhaustFan 						AT %Q*: BOOL; // Exhaust fan
+	
+	//Debug EAP Status ---------------------------------------//
+	eapDColumnPCWLeakage					AT %I* :BOOL;
+	eapDColumnPCWSupplyLeakage    			AT %I* :BOOL;
+	eapDColumnPCWReturnLeakage    			AT %I* :BOOL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

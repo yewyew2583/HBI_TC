@@ -1,0 +1,238 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <POU Name="DFB_FacilityAlarm" Id="{b8b02350-2da1-4747-bfe1-a76fdd5c319f}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK DFB_FacilityAlarm
+VAR_INPUT
+	Sec_P					: BOOL; // Second pulse
+	PV						: LREAL; // Process Value
+	WarningTimer			: UDINT;
+	AlarmTimer				: UDINT;
+	AbortTimer				: UDINT;
+	DB						: LREAL	:= 0.2; // Deadband
+	LogName					: STRING;
+	ModuleID				: E_ModuleID;
+	EventName				: E_EventName;
+END_VAR
+
+VAR_OUTPUT
+	Warning					: BOOL;
+	Alarm					: BOOL;
+	Abort					: BOOL;
+END_VAR
+
+VAR_IN_OUT
+	LowSP					: LREAL; // Low Alarm Set Point
+	LowLowSP				: LREAL; // Low Low Alarm Set Point
+END_VAR
+
+VAR
+	_State_Changed			: BOOL;
+	
+	_State					: INT;
+	_Last_State				: INT;
+	_TLast_State			: INT;
+	
+	_State_Timer			: UDINT;
+	
+	
+	_EmptyEvent				: ST_Event;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//	State timer
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+_State_Changed									:= _State <> _TLast_State;
+_TLast_State									:= _State;
+
+IF _State_Changed THEN
+	_State_Timer								:= 0;
+	Logging.fbDebugLog.M_nLogger(iLogLevel:= iLogVerbosity, sSource:= 'AIN Log', 
+		sMessage								:= CONCAT(CONCAT(LogName, 'current state['),
+														 CONCAT(INT_TO_STRING(_State), ']'))); 
+	
+ELSE
+	IF Sec_P THEN
+		_State_Timer							:= _State_Timer + 1;
+	END_IF
+END_IF
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//	Safety clamp
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+IF LowSP < LowLowSP THEN
+	LowSP										:= LowLowSP;
+END_IF
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//	State case
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+CASE _State OF
+	0: (*Idle*)
+	
+		(*Action*)
+		Warning									:= FALSE;
+		Alarm									:= FALSE;
+		Abort									:= FALSE;
+		
+		(*Transition*)
+		IF PV < LowLowSP THEN
+			_State								:= 21; // Low Low Alarm - Delay
+		ELSIF PV < LowSP THEN
+			_State								:= 11; // Low Alarm - Delay
+		END_IF
+		
+	11: (*Low Alarm - Delay*)
+		_Last_State								:= 11;
+		
+		(*Action*)
+		Warning									:= TRUE;
+		Alarm									:= FALSE;
+		Abort									:= FALSE;
+		
+		(*Transition*)
+		IF PV >= LowSP + DB THEN
+			_State								:= 0; // Idle
+		ELSIF PV < LowLowSP THEN
+			_State								:= 21; // Low Low Alarm - Delay
+		ELSIF _State_Timer >= WarningTimer THEN
+			_State								:= 21; // Low Low Alarm - Delay
+		END_IF
+	
+	21: (*Low Low Alarm - Delay*)
+		_Last_State								:= 21;
+		
+		(*Action*)
+		Warning									:= TRUE;
+		Alarm									:= TRUE;
+		Abort									:= FALSE;
+		
+		(*Transition*)
+		IF PV >= LowSP + DB THEN
+			_State								:= 0; // Idle
+		ELSIF _State_Timer >= AlarmTimer THEN
+			_State								:= 22; // Low Low Alarm - Send Event
+		END_IF
+		
+	22: (*Low Low Alarm - Send Event*)
+		_Last_State								:= 22;
+		
+		(*Action*)
+		Warning									:= TRUE;
+		Alarm									:= TRUE;
+		Abort									:= FALSE;
+		
+		// Event - AbortInProgress
+		CmdAndEventProcess.fbCmdAndEventUpdate.M_AddEvent(
+			sLogName							:= LogName, 
+			eEventName							:= EventName, 
+			eModuleID							:= ModuleID, 
+			iParam								:= _EmptyEvent.iParam,
+			sParam								:= _EmptyEvent.sParam, 
+			bParam								:= _EmptyEvent.bParam, 
+			dParam								:= _EmptyEvent.dParam,
+			sFailReason							:= '');
+		
+		(*Transition*)
+		_State									:= 23; // Low Low Alarm - Check abort time
+		
+	23: (*Low Low Alarm - Check abort time*)
+		_Last_State								:= 23;
+		
+		(*Action*)
+		Warning									:= TRUE;
+		Alarm									:= TRUE;
+		Abort									:= FALSE;
+		
+		(*Transition*)
+		IF _State_Timer >= AbortTimer THEN
+			_State								:= 29; // Abort
+		END_IF
+		
+	29: (*Abort*)
+		_Last_State								:= 29;
+		
+		(*Action*)
+		Warning									:= TRUE;
+		Alarm									:= TRUE;
+		Abort									:= TRUE;
+		
+		(*Transition*)
+		IF PV >= LowSP + DB THEN
+			_State								:= 0; // Idle
+		END_IF
+END_CASE]]></ST>
+    </Implementation>
+    <LineIds Name="DFB_FacilityAlarm">
+      <LineId Id="9" Count="0" />
+      <LineId Id="26" Count="1" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="177" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="179" Count="1" />
+      <LineId Id="178" Count="0" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="34" Count="3" />
+      <LineId Id="163" Count="0" />
+      <LineId Id="167" Count="0" />
+      <LineId Id="164" Count="2" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="174" Count="0" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="175" Count="1" />
+      <LineId Id="41" Count="2" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="45" Count="0" />
+      <LineId Id="44" Count="0" />
+      <LineId Id="46" Count="0" />
+      <LineId Id="48" Count="1" />
+      <LineId Id="53" Count="1" />
+      <LineId Id="99" Count="0" />
+      <LineId Id="50" Count="1" />
+      <LineId Id="55" Count="1" />
+      <LineId Id="58" Count="1" />
+      <LineId Id="57" Count="0" />
+      <LineId Id="52" Count="0" />
+      <LineId Id="60" Count="0" />
+      <LineId Id="67" Count="1" />
+      <LineId Id="72" Count="1" />
+      <LineId Id="69" Count="0" />
+      <LineId Id="100" Count="0" />
+      <LineId Id="70" Count="1" />
+      <LineId Id="75" Count="3" />
+      <LineId Id="80" Count="0" />
+      <LineId Id="82" Count="0" />
+      <LineId Id="74" Count="0" />
+      <LineId Id="66" Count="0" />
+      <LineId Id="84" Count="5" />
+      <LineId Id="101" Count="0" />
+      <LineId Id="90" Count="2" />
+      <LineId Id="95" Count="2" />
+      <LineId Id="83" Count="0" />
+      <LineId Id="102" Count="0" />
+      <LineId Id="105" Count="5" />
+      <LineId Id="103" Count="0" />
+      <LineId Id="139" Count="1" />
+      <LineId Id="150" Count="7" />
+      <LineId Id="149" Count="0" />
+      <LineId Id="111" Count="0" />
+      <LineId Id="113" Count="1" />
+      <LineId Id="116" Count="1" />
+      <LineId Id="119" Count="4" />
+      <LineId Id="118" Count="0" />
+      <LineId Id="124" Count="5" />
+      <LineId Id="131" Count="5" />
+      <LineId Id="130" Count="0" />
+      <LineId Id="137" Count="1" />
+      <LineId Id="145" Count="2" />
+      <LineId Id="47" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

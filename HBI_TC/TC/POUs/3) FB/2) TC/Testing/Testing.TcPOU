@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <POU Name="Testing" Id="{38d76ad7-566f-46a0-be14-39ae3ed16ac1}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK Testing
+VAR_INPUT
+END_VAR
+
+VAR_OUTPUT
+END_VAR
+
+VAR
+	_Input1							: BOOL;
+	_Input2							: BOOL;
+	_Input3							: BOOL;
+	_Input4							: BOOL;
+	
+	_Result							: INT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[_Result								:= arrTCMultiLevel[1].fbTCMultiLevelSeq.M_GetTIUStatus(
+										b0:= _Input1, 
+										b1:= _Input2, 
+										b2:= _Input3, 
+										b3:= _Input4);]]></ST>
+    </Implementation>
+    <LineIds Name="Testing">
+      <LineId Id="9" Count="0" />
+      <LineId Id="14" Count="2" />
+      <LineId Id="24" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

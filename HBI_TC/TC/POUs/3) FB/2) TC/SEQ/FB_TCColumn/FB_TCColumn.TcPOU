@@ -1,0 +1,219 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <POU Name="FB_TCColumn" Id="{c23451a0-ae5c-461d-bd9b-181781f70b88}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_TCColumn
+VAR_INPUT
+	iLevel:INT:=1;
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	stTCMLevelVIO:ST_TCMultiLevel_VIO;
+	isSysAlarm:ARRAY[1..NO_OF_LEVEL] OF BOOL;
+	DIFU : ARRAY[1..NO_OF_LEVEL] OF R_TRIG;
+	DIFD : ARRAY[1..NO_OF_LEVEL] OF F_TRIG;
+
+	fbBD_ipBdoor : Tc3_HBI_Utilities.FB_BackDoor_Digital;
+	stTCColumnDIO : ST_TCColumn_DIO;
+	stOldTCColumnVIO : ST_TCColumn_VIO;
+	stTCColumnVIO : ST_TCColumn_VIO;
+	stTCColumnBIO : ST_TCColumn_BIO;
+	fbColAlarm : FB_ColAlarm;
+	SysAlmCleared:BOOL;
+	stTCColumnVIOTemp:ST_TCColumn_VIO;
+	rTrig:R_TRIG;
+	tim:TON;
+	iSysUnBlockAlm:ARRAY [1..NO_OF_LEVEL] OF DINT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//FB_TCMain(vio,noOfAlm,subMod,stALMTC,out isMainErr, isToAlmRset, almIDToRset);
+M_IOMapping();
+tim(IN:=TRUE,PT:=T#500MS);
+//Uncomment if AlarmUpdateCyclicTaskProgram is not used//
+//<SysAlarmUpdate>
+	IF NOT bSimulation AND tim.Q THEN
+		fbColAlarm(vIO:=fbTCColumn.P_stTCColumnVIO,
+										isRsetAll:=bHMIResetAllAlarm,
+										(*stAlmMod:= ALMTC,*)
+										isColError=>isSysAlarm[iLevel], 
+										iSysUnBlockAlm =>iSysUnBlockAlm[iLevel],
+										SysAlmCleared:=SysAlmCleared);
+		
+		stTCMLevelVIO:=arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO;
+		IF stTCMLevelVIO.iSysUnBlockAlm<>iSysUnBlockAlm[iLevel] THEN
+			stTCMLevelVIO.iSysUnBlockAlm:=iSysUnBlockAlm[iLevel];
+			arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO:=stTCMLevelVIO;
+		END_IF
+														
+		IF SysAlmCleared THEN
+			stTCColumnVIOTemp:=fbTCColumn.P_stTCColumnVIO;
+			stTCColumnVIOTemp.bColumnErrClear:=FALSE;
+			fbTCColumn.P_stTCColumnVIO:=stTCColumnVIOTemp;
+			SysAlmCleared:=FALSE;
+		END_IF
+	END_IF
+//</SysAlarmUpdate>
+
+
+
+//AlmReset()
+]]></ST>
+    </Implementation>
+    <Method Name="M_IOMapping" Id="{fda6cb6e-25dd-48ae-8e41-3c0428db5c3a}">
+      <Declaration><![CDATA[METHOD M_IOMapping : BOOL
+VAR_INPUT
+END_VAR
+
+VAR
+	i:INT;
+	bColSenSimArray:ARRAY[1..NO_OF_COMMON_SENSOR] OF BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[	IF bHMIEnTIISenSimulation THEN
+		//bTIISenSimArray:= stHMITIISenSimArray[iLevel].bHMITIIByPassArray;
+		FOR i:=1 TO NO_OF_COMMON_SENSOR DO
+			bColSenSimArray[i]:= NOT bHMIColSenSimArray[i];
+		END_FOR
+	ELSE
+		FOR i:=1 TO NO_OF_COMMON_SENSOR DO
+			bColSenSimArray[i]:=TRUE;
+		END_FOR
+	END_IF
+
+stTCColumnVIO.opHotAirExhaustFan:=FunONOFF;
+
+IF bDebugCart THEN
+	stTCColumnVIO.ipColumnFluid_PCW_Leakage 		:=  stTCColumnDIO.eapDColumnPCWLeakage OR  stTCColumnDIO.eapDColumnPCWSupplyLeakage OR  stTCColumnDIO.eapDColumnPCWReturnLeakage; 									
+	stTCColumnVIO.ipAllTCDrawerRetractedinCell 		:= FALSE;  //No Alarm if debug cart
+	stTCColumnVIO.ipTbotDoorClosedSignal	 		:= FALSE;  //No Alarm if debug cart
+ELSE
+	stTCColumnVIO.ipColumnFluid_PCW_Leakage 		:= NOT fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode AND bColSenSimArray[1] , 
+																						bActual:= (*NOT*) stTCColumnDIO.ipColumnFluid_PCW_Leakage , 
+	   																					  bSimu:=FALSE, 
+																					  iBackDoor:= stTCColumnBIO.ipColumnFluid_PCW_Leakage );
+											
+	stTCColumnVIO.ipAllTCDrawerRetractedinCell 		:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode AND bColSenSimArray[2] , 
+																						bActual:=stTCColumnDIO.ipAllTCDrawerRetractedinCell , 
+	   																					  bSimu:=FALSE, 
+																					  iBackDoor:=stTCColumnBIO.ipAllTCDrawerRetractedinCell );
+	
+	stTCColumnVIO.ipTbotDoorClosedSignal 			:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode AND bColSenSimArray[3], 
+																						bActual:=stTCColumnDIO.ipTbotDoorClosedSignal , 
+	   																					  bSimu:=FALSE, 
+																					  iBackDoor:=stTCColumnBIO.ipTbotDoorClosedSignal );																		  
+END_IF
+																				  
+IF NOT bColIODiagnosticsMode THEN
+	stTCColumnDIO.opHotAirExhaustFan				:= stTCColumnVIO.opHotAirExhaustFan	;																						  
+END_IF
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_UpdateSysAlarmFlag" Id="{0e8087c4-4888-4729-952d-608575731e09}">
+      <Declaration><![CDATA[METHOD M_UpdateSysAlarmFlag : BOOL
+VAR_INPUT
+	iLevel:INT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF iLevel<>0 THEN
+	DIFU[iLevel](CLK:=isSysAlarm[iLevel]);
+	IF DIFU[iLevel].Q THEN 
+		stTCMLevelVIO:=arrTCMultiLevelVIO[iLevel];
+		stTCMLevelVIO.isSysError:=TRUE;
+		arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO:=stTCMLevelVIO;
+	END_IF
+	DIFD[iLevel](CLK:=isSysAlarm[iLevel]);
+	IF DIFD[iLevel].Q THEN 
+		stTCMLevelVIO:=arrTCMultiLevelVIO[iLevel];
+		stTCMLevelVIO.isSysError:=FALSE;
+		arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO:=stTCMLevelVIO;
+	END_IF
+END_IF	]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="P_stTCColumnVIO" Id="{40169b9d-e9fb-4602-b1c8-9c79b451d632}">
+      <Declaration><![CDATA[PROPERTY P_stTCColumnVIO : ST_TCColumn_VIO]]></Declaration>
+      <Get Name="Get" Id="{40e1d362-7a1b-4295-8255-7082656974f8}">
+        <Declaration><![CDATA[PUBLIC VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[
+	P_stTCColumnVIO:=stTCColumnVIO;
+]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{1f8b19ff-5b2a-4ffd-983a-c87f3f08e257}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[stTCColumnVIO:=P_stTCColumnVIO;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <LineIds Name="FB_TCColumn">
+      <LineId Id="32" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="224" Count="0" />
+      <LineId Id="192" Count="0" />
+      <LineId Id="190" Count="0" />
+      <LineId Id="221" Count="0" />
+      <LineId Id="112" Count="0" />
+      <LineId Id="127" Count="0" />
+      <LineId Id="114" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="249" Count="1" />
+      <LineId Id="280" Count="1" />
+      <LineId Id="253" Count="2" />
+      <LineId Id="163" Count="0" />
+      <LineId Id="252" Count="0" />
+      <LineId Id="142" Count="1" />
+      <LineId Id="146" Count="2" />
+      <LineId Id="144" Count="0" />
+      <LineId Id="222" Count="0" />
+      <LineId Id="191" Count="0" />
+      <LineId Id="193" Count="0" />
+      <LineId Id="195" Count="0" />
+      <LineId Id="194" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="23" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TCColumn.M_IOMapping">
+      <LineId Id="95" Count="8" />
+      <LineId Id="93" Count="1" />
+      <LineId Id="86" Count="0" />
+      <LineId Id="121" Count="0" />
+      <LineId Id="87" Count="0" />
+      <LineId Id="153" Count="0" />
+      <LineId Id="138" Count="0" />
+      <LineId Id="143" Count="0" />
+      <LineId Id="122" Count="0" />
+      <LineId Id="154" Count="1" />
+      <LineId Id="69" Count="11" />
+      <LineId Id="111" Count="0" />
+      <LineId Id="126" Count="0" />
+      <LineId Id="112" Count="0" />
+      <LineId Id="65" Count="1" />
+      <LineId Id="63" Count="0" />
+      <LineId Id="38" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TCColumn.M_UpdateSysAlarmFlag">
+      <LineId Id="8" Count="4" />
+      <LineId Id="14" Count="5" />
+      <LineId Id="21" Count="1" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TCColumn.P_stTCColumnVIO.Get">
+      <LineId Id="6" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TCColumn.P_stTCColumnVIO.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

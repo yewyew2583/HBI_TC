@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
+  <DUT Name="ST_AlarmTags" Id="{ac2cb686-f98a-46dd-8842-64254e4b96c0}">
+    <Declaration><![CDATA[TYPE ST_AlarmTags :
+STRUCT
+	AlarmID: ARRAY [1..NO_OF_ALARM_TAG] OF BOOL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

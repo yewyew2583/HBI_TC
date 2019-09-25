@@ -1,0 +1,567 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <POU Name="FB_TCMLTesterPower_Process" Id="{b4912c86-47c5-457d-b4a8-7c88058ab11f}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_TCMLTesterPower_Process
+VAR_INPUT
+	iLevel : UINT;
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	bCanStart :BOOL;
+	bPCWCutOff  :BOOL;
+	tstPwrStep	: INT:=1;
+	logMsg		:STRING	;		//LogMessage
+	t		    :UINT; 			//*Not Use AnyWhere, Just to Call SEL(1,2)
+	sMessage	: STRING;
+	isErr		: BOOL;
+	iSendEvent 	:INT;
+	sLogName	: STRING;		//TempStorageFor__" M_nCmdtoEvent() " Call
+	iEventName : E_EventName;	//TempStorageFor__" M_nCmdtoEvent() " Call
+	sFailReason: STRING;		//TempStorageFor__" M_AddEvent() " Call
+	CmdEmpty: ST_Command;
+	
+	stVIO: ST_TCMultiLevel_VIO;
+	tim:TON;
+	t5sec	:TIME:=T#5S;
+	t20sec 	:TIME:=T#20S;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//(TesterPowerI)
+	(*
+		eTstPwrAction==1,2 => 	Ltch? 	=>Err	=>Rep
+								Prst? 	=>Err	=>Rep
+								eTstPwrAction==2  => 	
+								(fb)OutputOn?				|
+								OFF_PWR_FOR_CYL				v
+								WAIT_5				ON_PWR
+													WAIT_20
+													fb? 				=>	OFF_PWR_FOR_ERR
+													ON_PCW					Err	=>Rep
+													isTstCycPolling:=T
+													
+												Rep:
+													isInitPwrOn?		=> 	REPLY_COMP_FAIL
+													isInitPwrOn:=FALSE;		ResetStep,eTstPwrAction:=-1;
+		eTstPwrAction==0
+		OFF_OUTPUT	
+		isInitPwrOn:=FALSE
+		Rep									
+	*)
+//(TesterPowerI)
+
+//(TesterPowerII)
+	(*
+		//0:OFF,1:ON,2:AUTO, ***-1:SELFLOOP,99:ALARMOCCURED
+		TstPwrAction: 1: ,2: 
+		INIT <CanStart?>   -->	CheckPCWState    	-->	PCWAlm and GoBkTo CanStart
+		eTstPwrAction==1,2 --> 	eTstPwrAction==2?	--> 	
+			 (1:ON,2:Auto)		(fb)OutputOn?    	-->   |
+								OFF_PWR_FOR_CYL		      v
+								WAIT_5 --------------->	ON_PWR
+														WAIT_20
+														fbOn? 				=>	OFF_PWR_FOR_ERR
+														ON_PCW					Err	=>Rep
+														isTstCycPolling:=T
+														
+													Rep:
+														isInitPwrOn?		=> 	REPLY_COMP_FAIL
+														isInitPwrOn:=FALSE;		ResetStep,eTstPwrAction:=-1; ResetToSelfLoop(-1)
+		eTstPwrAction==0 (0:OFF)
+		OFF_OUTPUT	
+		isInitPwrOn:=FALSE
+		Rep(GotoStartAgain)									
+	*)
+//(TesterPowerII)
+
+//(TesterPowerIII)
+		(*
+		//0:OFF,1:ON,2:AUTO, ***-1:SELFLOOP,99:ALARMOCCURED
+		TstPwrAction: 1: ,2: 
+		INIT <CanStart?>   -->	CheckPCWState    	-->	PCWAlm and GoBkTo CanStart
+		eTstPwrAction==1,2 --> 	eTstPwrAction==2?	--> 	
+			 (1:ON,2:Auto)		(fb)OutputOn?    	------|
+								OFF_PWR_FOR_CYL		      v
+								WAIT_5 --------------->	ON_PWR
+														WAIT_20
+														fbOn? 				-->		OFF_PWR_FOR_ERR
+														ON_PCW						Err	=>Reply
+														isTstCycPolling:=T
+														
+													Reply:
+														!isSelfProcess?	 	--> 	REPLY_COMP_FAIL
+														isSelfProcess:=FALSE;		ResetStep,eTstPwrAction:=-1; ResetToSelfLoop(-1)
+		eTstPwrAction==0 (0:OFF)
+		OFF_OUTPUT	
+		isInitPwrOn:=FALSE
+		Rep(GotoStartAgain)									
+		*)
+//(TesterPowerIII)
+
+//<GVLTC_TesterAlarm...>
+	arrTCMultiLevel[iLevel].stGblParam.bTstPwrAlm := IsAlarm();
+	//E_ProcessState.eALPAUSED, E_ProcessState.eAWAITGCMD, E_ProcessState.eLOADG
+//<GVLTC_TesterAlarm...>
+
+IF arrTCMultiLevel[iLevel].stGblParam.bBufClear then
+	tstPwrStep := NEXT(stp:=E_TstPwrStep.INIT, msg:=logMsg);
+	tim(IN:=FALSE);
+	//If (PweFBOff || PCWOFF) && Pwr On -> Off Pwr,OffPCW;
+	//arrTCMultiLevel[iLevel].stGblParam.iTstPwrCmd = -1;
+	RETURN; 
+END_IF
+
+CASE tstPwrStep OF
+	E_TstPwrStep.INIT			 :
+									tim(IN:=FALSE);
+									GetIO();
+									bCanStart:=CAN_START();
+									
+									IF bCanStart THEN 
+										NEXT(stp:=E_TstPwrStep.CheckCmd, msg:=logMsg);
+									ELSE
+										// IF IN pcw CUTOFF CONDITION, CUTOFF PCW
+										bPCWCutOff	:= GetPCWState();
+										IF bPCWCutOff THEN
+											NEXT(stp:=E_TstPwrStep.OFF_PCW, msg:=logMsg);
+										END_IF
+										
+									END_IF
+									
+									//RESET ALARM
+									IF (arrTCMultiLevel[iLevel].stGblParam.bTstAlmClear)
+									THEN
+										ResetAlarm(arrTCMultiLevel[iLevel].stGblParam.iAlmIDToRset);
+										arrTCMultiLevel[iLevel].stGblParam.bTstAlmClear:= FALSE;
+									END_IF
+									IF arrTCMultiLevel[iLevel].stGblParam.iTstPwrCmd = 99 
+										//AND NOT Power On Alarm bit1 
+										//AND NOT Power On Alarm bit2
+										//AND NOT Power On Alarm bit3
+																	THEN
+										arrTCMultiLevel[iLevel].stGblParam.iTstPwrCmd := 0;
+									END_IF
+									
+ 
+									//IF bCanStart THEN
+									//	NEXT(stp:=E_TstPwrStep.CheckCmd, msg:=logMsg);	// t = G? F:T
+									//END_IF
+	E_TstPwrStep.OFF_PCW 		 :   
+									GetIO();
+									stVIO.opCellPCWValve:=FALSE;
+									stVIO.opTst240VACPwrEnable:=FALSE;
+									SetIO();
+									
+									//IF NOT stVIO.ipTesterPowerOn THEN
+									//	isErr:=TRUE;
+									//	SetAlarm(E_TIIAlarm.ipERROR----);
+									//	sMessage:='Tester FB On,Tst Not Present , AP Not Present';
+									//END_IF
+									NEXT(stp:=E_TstPwrStep.SEND_EVENT, msg:=logMsg);
+
+	
+	E_TstPwrStep.CheckCmd 		 :   
+									//ON, AUTO
+									IF 0 < arrTCMultiLevel[iLevel].stGblParam.iTstPwrCmd AND arrTCMultiLevel[iLevel].stGblParam.iTstPwrCmd < 3 THEN
+										NEXT(stp:=E_TstPwrStep.CheckCycPwr, msg:=logMsg);
+									//OFF
+									ELSIF arrTCMultiLevel[iLevel].stGblParam.iTstPwrCmd = 0 THEN
+										NEXT(stp:=E_TstPwrStep.OFF_PWR, msg:=logMsg);
+									END_IF
+	
+	E_TstPwrStep.SanityCheck	 :  // Not In Use
+									GetIO();
+									IF NOT stVIO.ipTesterLatchesClosed THEN		//Ltch?
+										isErr:=TRUE;
+										sMessage:='Tester Latch Not Close';
+									ELSIF NOT stVIO.ipTesterPresent THEN		//Prst?
+										isErr:=TRUE;
+										sMessage:='Tester Not Present';
+									END_IF
+									
+									t:= SEL(isErr, 
+											NEXT(stp:=E_TstPwrStep.CheckCycPwr, msg:=logMsg),	
+											NEXT(stp:=E_TstPwrStep.SEND_EVENT, msg:=logMsg));	// t = G? F:T
+																		
+	E_TstPwrStep.CheckCycPwr     :
+									t:= SEL(arrTCMultiLevel[iLevel].stGblParam.iTstPwrCmd=2, 	
+											NEXT(stp:=E_TstPwrStep.ON_PWR, msg:=logMsg),	
+											NEXT(stp:=E_TstPwrStep.ChkPwrOutputOn, msg:=logMsg));	// t = G? F:T
+	
+	E_TstPwrStep.ChkPwrOutputOn  :	
+									GetIO();
+									t:= SEL(stVIO.ipTesterPowerOn,//stVIO.opTst240VACPwrEnable, // AND stVIO.ipTesterPowerOn, 	
+											NEXT(stp:=E_TstPwrStep.ON_PWR, msg:=logMsg),	
+											NEXT(stp:=E_TstPwrStep.OFF_PWR_FOR_CYC, msg:=logMsg));	// t = G? F:T
+	
+	E_TstPwrStep.OFF_PWR_FOR_CYC :
+									GetIO();
+									stVIO.opTst240VACPwrEnable:=FALSE;
+									SetIO();
+									NEXT(stp:=E_TstPwrStep.SanityCheck, msg:=logMsg);
+
+	E_TstPwrStep.WAIT_5          :	
+									tim(IN:=TRUE,PT:=t5sec);
+									IF tim.Q THEN
+										tim(IN:=FALSE);
+										NEXT(stp:=E_TstPwrStep.ON_PWR, msg:=logMsg);
+									END_IF								
+	
+	E_TstPwrStep.ON_PWR          :	
+									GetIO();
+									stVIO.opTst240VACPwrEnable:=TRUE;
+									SetIO();
+									NEXT(stp:=E_TstPwrStep.SEND_EVENT, msg:=logMsg);
+	
+	E_TstPwrStep.WAIT_20         :	
+									tim(IN:=TRUE,PT:=t20sec);
+									IF tim.Q  THEN
+										tim(IN:=FALSE);
+										NEXT(stp:=E_TstPwrStep.SetPwrOnTimeOutErr, msg:=logMsg);//NEXT(stp:=E_TstPwrStep.ChkPwrOnFeedBack, msg:=logMsg);
+									ELSE
+										IF stVIO.ipTesterPowerOn THEN 
+											NEXT(stp:=E_TstPwrStep.ON_PCW, msg:=logMsg); 
+										END_IF
+									END_IF
+
+	E_TstPwrStep.SetPwrOnTimeOutErr:
+									isErr:=TRUE;
+									sMessage:='Tester Power On Time Out Error';
+									//SetAlarm(E_TIIAlarm.ipERROR----);
+									//
+									NEXT(stp:=E_TstPwrStep.OFF_PWR_FOR_ERR, msg:=logMsg);
+	
+	E_TstPwrStep.ChkPwrOnFeedBack:	// Not In Use
+									GetIO();
+									IF NOT stVIO.ipTesterPowerOn THEN
+										isErr:=TRUE;
+										SetAlarm(E_TIIAlarm.ipTesterPowerOn);
+										sMessage:='Tester Power On Signal is not detected after 20 sec';
+									END_IF
+									
+									t:= SEL(isErr, 
+											NEXT(stp:=E_TstPwrStep.ON_PCW, msg:=logMsg),	
+											NEXT(stp:=E_TstPwrStep.OFF_PWR_FOR_ERR, msg:=logMsg));	// t = G? F:T
+	
+	E_TstPwrStep.ON_PCW          :
+									GetIO();
+									stVIO.opCellPCWValve:=TRUE;
+									SetIO();
+									NEXT(stp:=E_TstPwrStep.SEND_EVENT, msg:=logMsg);
+	
+	E_TstPwrStep.OFF_PWR_FOR_ERR :
+									GetIO();
+									stVIO.opTst240VACPwrEnable:=FALSE;
+									SetIO();
+									NEXT(stp:=E_TstPwrStep.SEND_EVENT, msg:=logMsg);
+	
+	E_TstPwrStep.OFF_PWR		 :	
+									GetIO();
+									stVIO.opTst240VACPwrEnable:=FALSE;
+									SetIO();
+									NEXT(stp:=E_TstPwrStep.SEND_EVENT, msg:=logMsg);
+	
+	E_TstPwrStep.SEND_EVENT      :
+									
+									IF isErr THEN
+										arrTCMultiLevel[iLevel].stGblParam.iTstPwrCmd := 99;  //ErrorStop
+									END_IF
+									
+									IF arrTCMultiLevel[iLevel].stGblParam.iTstPwrCmd <> -1 THEN //If Process by Cmd, Send Event
+										JMP iSendEvent;
+										arrTCMultiLevel[iLevel].stGblParam.iTstPwrCmd:=-1;
+									ELSE
+										NEXT(stp:=E_TstPwrStep.INIT, msg:=logMsg);
+										RETURN;
+									END_IF
+END_CASE
+
+iSendEvent :
+	iSendEvent := SEL(isErr, 1, 2);
+	isErr:=FALSE;
+	IF iSendEvent<>0 THEN
+		CmdAndEventProcess.fbCmdAndEventUpdate.M_nCmdtoEvent(eCmd2Event_TaskName:=arrTCMultiLevel[iLevel].stGblParam.stTACommand.eTaskName , iCmd2Event_Result:=iSendEvent , eCmd2Event_EventName:=iEventName , sCmd2Event_EventName:=sLogName );
+		sFailReason := arrTCMultiLevel[iLevel].stGblParam.sFailReason;
+		
+		CmdAndEventProcess.fbCmdAndEventUpdate.M_AddEvent(  sLogName:= sLogName, 
+															eEventName:= iEventName, 
+															eModuleID:= arrTCMultiLevel[iLevel].stGblParam.stTATstPwrCommand.eModuleID, 
+															iParam	 := arrTCMultiLevel[iLevel].stGblParam.stTATstPwrCommand.iParam,
+															sParam	 := arrTCMultiLevel[iLevel].stGblParam.stTATstPwrCommand.sParam, 
+															bParam	 := arrTCMultiLevel[iLevel].stGblParam.stTATstPwrCommand.bParam, 
+															dParam	 := arrTCMultiLevel[iLevel].stGblParam.stTATstPwrCommand.dParam,
+															sFailReason:= sFailReason);
+		IF iSendEvent=1 THEN arrTCMultiLevel[iLevel].stGblParam.stTATstPwrCommand := CmdEmpty; END_IF
+	END_IF;
+	IF iSendEvent=1 THEN
+		//arrTCMultiLevel[iLevel].stGblParam.bAP240ACPowerOff 	:=			//AP240AC
+		//arrTCMultiLevel[iLevel].stGblParam.bAP240ACPowerOn 	:=			//AP240AC
+		//arrTCMultiLevel[iLevel].stGblParam.bAP240ACPowerAuto 	:=			//AP240AC
+ 		//arrTCMultiLevel[iLevel].stGblParam.bDSPPowerOff 		:=			//  DSPPower
+		//arrTCMultiLevel[iLevel].stGblParam.bDSPPowerOn 		:=			//  DSPPower
+		//arrTCMultiLevel[iLevel].stGblParam.bDSPPowerAuto 		:= FALSE;	//  DSPPower
+		
+		arrTCMultiLevel[iLevel].stGblParam.iTstPwrProcessState :=E_ProcessState.eAWAITGCMD;
+	END_IF
+		iSendEvent :=0;
+
+]]></ST>
+    </Implementation>
+    <Method Name="CAN_START" Id="{f8bfe083-46c6-4e96-8308-f9611cfc0459}">
+      <Declaration><![CDATA[METHOD CAN_START : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// present, latch, ! FeedBack,  localCmd = ON,AUTO,SELFLOOP)
+// present, latch,   FeedBack,  localCmd = OFF
+// present, latch, ! FeedBack,  (localCmd = Error cmd != execute)
+// present, latch, ! FeedBack,  (localCmd = Error cmd != execute)
+// ERROR,NOTEXECUTE
+
+IF stVIO.ipTesterPresent AND stVIO.ipTesterLatchesClosed 	THEN
+	
+	IF 	(		stVIO.ipTesterPowerOn 	AND  arrTCMultiLevel[iLevel].stGblParam.iTstPwrCmd = 0) OR	
+		( NOT 	stVIO.ipTesterPowerOn 	AND	(arrTCMultiLevel[iLevel].stGblParam.iTstPwrCmd =-1 	(*AND Not Error*)OR  	//SelfLoop 
+									 		 arrTCMultiLevel[iLevel].stGblParam.iTstPwrCmd = 1 	OR 		//On
+									 		 arrTCMultiLevel[iLevel].stGblParam.iTstPwrCmd = 2) )  		//Auto
+									 															THEN
+				CAN_START :=TRUE;	
+	END_IF																										
+END_IF
+
+//ERROR,NOTEXE =>	CAN_START :=FALSE;	
+//stVIO.opTst240VACPwrEnable
+
+
+// After On,Auto Cmd processing finished -> status changed to self loop.
+
+
+//If PowerOffCmd is sent when Test is On --> Preceed to next step and continue execution.
+//If in SelfLoop State and Teste is On -->   Reply Tester On finish.
+// ]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetIO" Id="{bf575e4e-03cc-4bcd-a1e2-364810bf3449}">
+      <Declaration><![CDATA[METHOD GetIO : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[stVIO:=arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetPCWState" Id="{dfaf49fa-4309-4d86-adb8-3134a1594561}">
+      <Declaration><![CDATA[METHOD GetPCWState : BOOL
+VAR_INPUT
+	
+END_VAR
+VAR
+	A:BOOL;
+	B:BOOL;
+	C:BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+//"TstOn"	"TstPrs"	"APPrs"	
+A:= stVIO.ipTesterPowerOn;	B:=stVIO.ipTesterPresent AND stVIO.ipTesterLatchesClosed; C:= stVIO.ipAPPresentSensor;
+GetPCWState := (A AND B) OR (NOT B AND C);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="IsAlarm" Id="{306a0313-074c-4f08-9566-2548250477ef}">
+      <Declaration><![CDATA[METHOD IsAlarm : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IsAlarm := ALMTC.Level[ilevel].AlarmID[E_TIIAlarm.ipTesterPowerOn] ;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="NEXT" Id="{964eeb29-cc6e-4b8e-8685-76f01aef1165}">
+      <Declaration><![CDATA[METHOD NEXT : UINT
+VAR_INPUT
+	stp:INT;
+	msg:STRING:='';
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[tstPwrStep:=stp;
+IF msg<>'' THEN
+	;//Logging
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ResetAlarm" Id="{f85679b4-7ad1-49e6-b281-dc21c1f549a6}">
+      <Declaration><![CDATA[METHOD ResetAlarm : BOOL
+VAR_INPUT
+	AlmID :UINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[ALMTC.Level[ilevel].AlarmID[almID] := False;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SetAlarm" Id="{605bf659-6ad5-41a2-ac5d-f1255cfff81b}">
+      <Declaration><![CDATA[METHOD SetAlarm : BOOL
+VAR_INPUT
+	almID:INT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[ALMTC.Level[ilevel].AlarmID[almID] := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SetIO" Id="{83353d1b-14cd-4e4f-8e9e-03e697e90ae5}">
+      <Declaration><![CDATA[METHOD SetIO : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO := stVIO;]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_TCMLTesterPower_Process">
+      <LineId Id="328" Count="21" />
+      <LineId Id="598" Count="2" />
+      <LineId Id="659" Count="0" />
+      <LineId Id="657" Count="0" />
+      <LineId Id="629" Count="0" />
+      <LineId Id="601" Count="0" />
+      <LineId Id="604" Count="0" />
+      <LineId Id="660" Count="0" />
+      <LineId Id="606" Count="13" />
+      <LineId Id="597" Count="0" />
+      <LineId Id="662" Count="22" />
+      <LineId Id="539" Count="0" />
+      <LineId Id="685" Count="0" />
+      <LineId Id="540" Count="2" />
+      <LineId Id="538" Count="0" />
+      <LineId Id="758" Count="0" />
+      <LineId Id="757" Count="0" />
+      <LineId Id="759" Count="0" />
+      <LineId Id="762" Count="1" />
+      <LineId Id="765" Count="1" />
+      <LineId Id="760" Count="0" />
+      <LineId Id="350" Count="2" />
+      <LineId Id="491" Count="0" />
+      <LineId Id="353" Count="0" />
+      <LineId Id="577" Count="0" />
+      <LineId Id="628" Count="0" />
+      <LineId Id="565" Count="1" />
+      <LineId Id="568" Count="0" />
+      <LineId Id="627" Count="0" />
+      <LineId Id="569" Count="0" />
+      <LineId Id="572" Count="0" />
+      <LineId Id="576" Count="0" />
+      <LineId Id="571" Count="0" />
+      <LineId Id="574" Count="0" />
+      <LineId Id="567" Count="0" />
+      <LineId Id="625" Count="1" />
+      <LineId Id="595" Count="0" />
+      <LineId Id="620" Count="0" />
+      <LineId Id="594" Count="0" />
+      <LineId Id="729" Count="0" />
+      <LineId Id="621" Count="0" />
+      <LineId Id="693" Count="0" />
+      <LineId Id="696" Count="0" />
+      <LineId Id="700" Count="1" />
+      <LineId Id="703" Count="0" />
+      <LineId Id="702" Count="0" />
+      <LineId Id="697" Count="0" />
+      <LineId Id="695" Count="0" />
+      <LineId Id="694" Count="0" />
+      <LineId Id="355" Count="0" />
+      <LineId Id="357" Count="0" />
+      <LineId Id="561" Count="0" />
+      <LineId Id="553" Count="0" />
+      <LineId Id="579" Count="1" />
+      <LineId Id="586" Count="1" />
+      <LineId Id="589" Count="4" />
+      <LineId Id="588" Count="0" />
+      <LineId Id="578" Count="0" />
+      <LineId Id="544" Count="0" />
+      <LineId Id="358" Count="1" />
+      <LineId Id="630" Count="0" />
+      <LineId Id="360" Count="1" />
+      <LineId Id="631" Count="0" />
+      <LineId Id="362" Count="4" />
+      <LineId Id="368" Count="23" />
+      <LineId Id="393" Count="4" />
+      <LineId Id="399" Count="16" />
+      <LineId Id="509" Count="0" />
+      <LineId Id="417" Count="0" />
+      <LineId Id="500" Count="2" />
+      <LineId Id="504" Count="0" />
+      <LineId Id="418" Count="0" />
+      <LineId Id="494" Count="0" />
+      <LineId Id="498" Count="0" />
+      <LineId Id="505" Count="0" />
+      <LineId Id="510" Count="0" />
+      <LineId Id="730" Count="1" />
+      <LineId Id="507" Count="0" />
+      <LineId Id="419" Count="4" />
+      <LineId Id="525" Count="0" />
+      <LineId Id="424" Count="5" />
+      <LineId Id="432" Count="19" />
+      <LineId Id="688" Count="2" />
+      <LineId Id="687" Count="0" />
+      <LineId Id="692" Count="0" />
+      <LineId Id="454" Count="1" />
+      <LineId Id="492" Count="0" />
+      <LineId Id="530" Count="0" />
+      <LineId Id="686" Count="0" />
+      <LineId Id="533" Count="0" />
+      <LineId Id="537" Count="0" />
+      <LineId Id="458" Count="30" />
+      <LineId Id="34" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TCMLTesterPower_Process.CAN_START">
+      <LineId Id="20" Count="1" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="6" Count="1" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="38" Count="1" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="44" Count="1" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="46" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="56" Count="1" />
+      <LineId Id="51" Count="0" />
+      <LineId Id="55" Count="0" />
+      <LineId Id="52" Count="0" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="53" Count="1" />
+    </LineIds>
+    <LineIds Name="FB_TCMLTesterPower_Process.GetIO">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TCMLTesterPower_Process.GetPCWState">
+      <LineId Id="24" Count="2" />
+      <LineId Id="23" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TCMLTesterPower_Process.IsAlarm">
+      <LineId Id="5" Count="1" />
+    </LineIds>
+    <LineIds Name="FB_TCMLTesterPower_Process.NEXT">
+      <LineId Id="5" Count="0" />
+      <LineId Id="8" Count="2" />
+    </LineIds>
+    <LineIds Name="FB_TCMLTesterPower_Process.ResetAlarm">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TCMLTesterPower_Process.SetAlarm">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TCMLTesterPower_Process.SetIO">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

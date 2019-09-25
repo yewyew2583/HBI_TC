@@ -1,0 +1,161 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <GVL Name="GVL_TC" Id="{a0b14876-7c5e-4b7e-b4d4-508d80e77aee}">
+    <Declaration><![CDATA[VAR_GLOBAL
+	COLUMN_NAME 							: E_ModuleID	:= E_ModuleID.COLUMN_LC;
+	bGetAMSNetID							: BOOL;
+	IsNetIDReadOK							: BOOL	:= FALSE;
+	LevelModuleID							: ARRAY [1..NO_OF_LEVEL] OF E_ModuleID;
+	
+//<Optional Flag>
+	bDebugStation							: BOOL := FALSE; // T : Do Debug Station Action
+	bDebugCart								: BOOL := FALSE;	// T : Do Debug Cart Action
+	bAnalogIOSim 							: BOOL := FALSE;
+	bAlwaysOnAPPwrOnInit  					: BOOL; // F : if(!present)skip pwrOnStep, T : Doesn't depends on present signal. 
+	bAlwaysOnTstPwrOn 						: BOOL;
+	bSLTC									: BOOL; // T : SLTC
+	bEnableManualCommandTest1 				: BOOL := FALSE; // Manual Command Test from PLC level (recommanded only for trained person)
+	bEnableManualCommandTest2 				: BOOL := FALSE;
+//</Optional Flag>
+	
+//<DefaultValueContainer>	
+	BtnSetTstPwrOnChkDelay 					: BOOL	:= FALSE;
+	BtnSetAPPwrOnChkDelay 					: BOOL	:= FALSE;
+	iTstPwrOnChkDelay						: INT	:= 0;
+	iAPPwrOnChkDelay						: INT	:= 0;
+	TstPwrOnChkDelay						: TIME	:= T#20S;
+	APPwrOnChkDelay							: TIME	:= T#1S;
+	TstPrstChkDelay							: TIME	:= T#1S;
+	APPrstChkDelay							: TIME	:= T#1S;
+	DispTstPwrOnChkDelay					: INT;
+	DispAPPwrOnChkDelay						: INT;
+	
+	BtnSetTstReadyCheckDelay 				: BOOL	:= FALSE;
+	BtnSetAPReadyCheckDelay 				: BOOL	:= FALSE;
+	iTstReadyCheckDelay						: INT	:= 0;
+	iAPReadyCheckDelay						: INT	:= 0;
+	TstReadyCheckDelay						: TIME	:= T#20S;
+	APReadyCheckDelay						: TIME	:= T#1S;
+	DispTstReadyCheckDelay					: INT;
+	DispAPReadyCheckDelay					: INT;
+	
+	
+	tDwrCylExtRetSensorDelay				: TIME	:= T#200MS;
+	tDwrCylUpDownSensorDelay				: TIME	:= T#200MS;
+	tDwrCylExtRetTimeOut					: TIME	:= T#7000MS;
+	tDwrCylUpDownTimeOut					: TIME	:= T#4000MS;
+//<DefaultValueContainer>
+
+	iTCColumnID								: UINT:=1;
+	//iPOC_ML_Selection:INT:=2; 	//1:POC: 2:Multilevel
+	//IsTIIAlarms  :ARRAY[1..NO_OF_LEVEL] OF BOOL;
+	//IsSysAlarm : BOOL;
+
+	arrTCShuttlePOC 						: ARRAY [1..NO_OF_LEVEL] OF ST_TCShuttlePOC;
+	arrTCVIO 								: ARRAY [1..2] OF ST_TCShuttlePOC_VIO;
+	
+	arrTCLevel 								: ARRAY [1..1] OF ST_TCLevel; //for SLTC only
+	arrTCLevelVIO 							: ARRAY [1..NO_OF_LEVEL] OF ST_TCLevel_VIO;
+	//arrDPSPower: ARRAY [1..NO_OF_LEVEL] OF BOOL; //for SLTC only
+	
+	arrTCMultiLevel 						: ARRAY [1..NO_OF_LEVEL] OF ST_TCMultilevel; //for MLTC only
+	arrTCMultiLevelVIO 						: ARRAY [1..NO_OF_LEVEL] OF ST_TCMultiLevel_VIO;
+	
+	stGblDbStnVIO 							: ST_DebugStation_VIO;
+	
+	//TIIAlmText : ARRAY[1..NO_OF_TII_SENSOR] OF STRING;
+	//SysAlmText : ARRAY[1..NO_OF_COMMON_SENSOR] OF STRING;
+	
+	stDebugStation 							: ST_DebugStation;//FB_DebugStation
+	fbDebugColumn  							: FB_DebugColumn;
+	fbDbStnTIIAlarm 						: FB_TIIAlarmDbStn;
+	
+	//ModuleType : E_TCModuleType //ALPHA_TC,DEBUG_CART,SLTC,SLTC_POC,SLTC_CX16,
+	//EnableColumnSensorCheck for //SLTC TC(s) and DebugCarts
+	//EnableSideDoors //for DebugCarts
+	//En/Dis Some TII for SLTC(s)
+	//En/Dis Some TII for DC
+	
+	fbTCColumn								: FB_TCColumn; //for MLTC only
+	arrTIIAlarm 							: ARRAY [1..NO_OF_LEVEL] OF FB_TIIAlarm;
+	
+	fbSLTCExtra 							: FB_SLTC_EXTA;
+	
+	
+	iLogVerbosity 							: INT	:= LOG_LEVEL_DEBUG;
+	
+	
+	//REMOTE COMMAND and Events
+	// Receive commands from TA  are just copied in this array and then from here further divided
+	// based on level
+	arrCommands								: (*ARRAY [1..(.NO_OF_LEVEL)] OF*) ST_TACommands;
+	//Empty structure of command
+	stEmptyCommand							: ST_Command;
+	// Event send back to TA are just copied in this array and then from here further divided
+	// based on level
+	
+	
+	//ArrAlarmCode: ARRAY [1..4] OF ST_AlarmFault;
+	//
+	arrEvents								: (*ARRAY [1..(.NO_OF_LEVEL)] OF*) ST_TAEvents;
+	// To store alarm and other asynchronous events that require busy state
+	arrPendingEventsQueue					: (*ARRAY [1..(.NO_OF_LEVEL)] OF*) ST_EventQueue;
+	//Empty event structure
+	stEmptyEvents							: ST_Event;
+	
+	//Once TCS recieves Connect command this turns true: else false
+	//When true TCS starts follwoing heart beat signal from TA
+	bTAConnected							: BOOL	:= FALSE;
+	bAlarmEnabled							: BOOL	:= FALSE;
+
+	// If event updation ongoing
+	arrEventUpdating						: BOOL;
+	
+	aiXConverted							: ARRAY [1..NO_OF_LEVEL] OF REAL;
+	aiYConverted							: ARRAY [1..NO_OF_LEVEL] OF REAL;
+	aiY1Converted							: ARRAY [1..NO_OF_LEVEL] OF REAL;
+	aiZConverted							: ARRAY [1..NO_OF_LEVEL] OF REAL;
+
+	aiXConvertedRet							: ARRAY [1..NO_OF_LEVEL] OF REAL;
+	aiYConvertedRet							: ARRAY [1..NO_OF_LEVEL] OF REAL;
+	aiZConvertedRet							: ARRAY [1..NO_OF_LEVEL] OF REAL;
+	
+	bMoveShuttle							: BOOL;	
+	fbFormat								: FB_FormatString;
+
+	//ArrAlmBitBefDelay : ARRAY[1..200] OF BOOL;
+	//ArrAlmBitAftDelay : ARRAY[1..200] OF BOOL;
+	//ArrAlarmKeepBit	:	ARRAY[1..200] OF BOOL;
+	//ArrDelayAlarm : 	ARRAY[1..200] OF FB_DelayAlarm;
+	//Arr_ms :			ARRAY[1..200] OF INT;
+	
+	
+//<HMI_Control>
+	bHMIRsetEvntTriggerOnProductionMode		: BOOL;
+	iHMIBtnType:int;
+	arrHMIBtnSolidOn_Condition				: ARRAY[1..NO_OF_LEVEL, 0..NO_OF_BTNLED - 1] OF BOOL;
+	
+
+	
+	bHMIBtnSimulation						: BOOL;	// Must be False on Actual RUN; For manual Button Simulation
+	stHMIBtnSimArray						: ARRAY [1..NO_OF_LEVEL] OF ST_BypassTII;
+	
+	bHMIEnTIISenSimulation					: BOOL;// Must be False on Actual RUN; System Alm Sen and TII Alm Sen
+	stHMITIISenSimArray						: ARRAY [1..NO_OF_LEVEL] OF ST_BypassTII;
+	bHMIColSenSimArray						: ARRAY [1..NO_OF_COMMON_SENSOR] OF BOOL;
+	
+	bHMITIIBypass							: BOOL	:= FALSE; // HMI TII Bypass Check Box.
+	stHMITIIByPassArray						: ARRAY[1..NO_OF_LEVEL] OF ST_BypassTII;
+	arrHMISysAlmByPass						: ARRAY[1..NO_OF_COMMON_SENSOR] OF BOOL;
+	
+	bHMIResetAllAlarm						: BOOL	:= FALSE;
+	iHMICbLevelSelection					: INT	:= 1;
+	iHMICbCmdSelection						: INT	:= 1;
+//</HMI_Control>
+	FunONOFF								: BOOL;
+	
+	bSimulation								: BOOL;
+	GetRand									: dRAND;
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

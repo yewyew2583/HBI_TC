@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <DUT Name="ST_TCShuttlePOC_BIO" Id="{c0dd2089-44e2-4a1d-b227-a3f7bffd18bf}">
+    <Declaration><![CDATA[TYPE ST_TCShuttlePOC_BIO :
+STRUCT
+	//input
+	ipStartPB : E_BackdoorState;
+	ipStopPB  : E_BackdoorState;
+	
+	ipL1_TC_Drawer_Extended_Out_Cell :		E_BackdoorState;
+	ipL1_TC_Drawer_Retracted_In_Cell :		E_BackdoorState;
+	ipMotor_Ready :						E_BackdoorState;
+	ipMotor_Home_Position :				E_BackdoorState;
+	ipMotor_Position_Reached :			E_BackdoorState;
+	ipMotor_Ps_Table_Active 	:		E_BackdoorState;
+	ipMotor_Error 				:		E_BackdoorState;
+	
+	//follow actual IO name
+	ipTCDrawerExtendedoutCell		:		E_BackdoorState;
+	ipTCDrawerRetractedinCell		:		E_BackdoorState;
+	ipTCDrawerExtendedupCell		:		E_BackdoorState;
+	ipTCDrawerRetracteddownCell		:		E_BackdoorState;
+	
+	
+	ipPressure_Switch_Error				:E_BackdoorState;
+	
+
+	//output
+	opL1_TC_Drawer_IN :E_BackdoorState;
+	opL1_TC_Drawer_OUT :E_BackdoorState;
+	opMotor_Enable						:E_BackdoorState;
+	opMotor_Reset_Errors				:E_BackdoorState;
+	opMotor_Homing						:E_BackdoorState;
+	opMotor_Index0						:E_BackdoorState;
+	opMotor_Index1						:E_BackdoorState;
+	opMotor_Start_Position				:E_BackdoorState;
+	opCellDrawerExtendUp					:E_BackdoorState;
+	opCellDrawerRetractDown					:E_BackdoorState;
+	opMain_Incoming_Air_Valve			:E_BackdoorState;
+
+	
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

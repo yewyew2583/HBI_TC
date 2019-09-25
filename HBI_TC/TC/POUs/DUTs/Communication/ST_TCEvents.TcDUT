@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.10">
+  <DUT Name="ST_TCEvents" Id="{401815fb-7821-4902-a63e-c14d0a0cf325}">
+    <Declaration><![CDATA[TYPE ST_TCEvents :
+STRUCT
+	arrTCEvents : ARRAY [1..10]  OF ST_Event;
+	
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

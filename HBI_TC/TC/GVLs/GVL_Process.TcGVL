@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <GVL Name="GVL_Process" Id="{d6f83580-a402-4276-9ef4-af47ecda53cd}">
+    <Declaration><![CDATA[//{attribute 'qualified_only'}
+VAR_GLOBAL
+	Sec_P						: BOOL;
+	DewPoint_Warning			: BOOL;
+	DewPoint_Alarm				: BOOL;
+	DewPoint_Abort				: BOOL;
+	OFA6Bar_Warning				: BOOL;
+	OFA6Bar_Alarm				: BOOL;
+	OFA6Bar_Abort				: BOOL;
+	
+	DewPoint_Warning_Timer		: UDINT	:= 10;
+	DewPoint_Alarm_Timer		: UDINT	:= 10;
+	DewPoint_Abort_Timer		: UDINT	:= 60;
+	OFA6Bar_Warning_Timer		: UDINT	:= 10;
+	OFA6Bar_Alarm_Timer			: UDINT	:= 10;
+	OFA6Bar_Abort_Timer			: UDINT	:= 60;
+	
+	DewPoint_LowSP				: LREAL	:= 2;
+	DewPoint_LowLowSP			: LREAL	:= 0;
+	OFA6Bar_LowSP				: LREAL	:= 550;
+	OFA6Bar_LowLowSP			: LREAL	:= 500;
+	
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	Ap240AcPowerMode			: INT; // 0: First start, 1: Off, 2: On
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

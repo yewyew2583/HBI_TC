@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.0.24">
+  <DUT Name="ST_DispatchQueue" Id="{0449a423-648d-4f6d-890c-6caaea5e40bb}">
+    <Declaration><![CDATA[TYPE ST_DispatchQueue :
+STRUCT
+	Queue : ARRAY [1..255] OF ST_TrayDispatch;	//255 queue buffers
+	Count : INT ;
+	Name  : STRING := '';
+END_STRUCT
+END_TYPE
+]]></Declaration>
+    <ObjectProperties />
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <DUT Name="Enum_EPT" Id="{bce93e29-b368-4bc3-8a18-e126a0b1370a}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE Enum_EPT :
+(
+	eBlocked := 0,
+	eIdle,
+	eBusy
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,337 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <POU Name="FB_DebugStationProcess" Id="{1e3041b5-8cf3-431f-8c7e-57cf6c8b5619}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_DebugStationProcess
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+
+	i:INT;
+	//For testing purpose only
+	//bShuttleMoveInOut: BOOL;
+	//bInitialize: BOOL;
+	//bAlarmClear : BOOL;
+	bLogEveryStep : BOOL:=TRUE;
+	
+	//*****************
+	rtTCShuttleStart: R_TRIG;
+	//stTCShuttleSeqParam : ST_FlyoverSeqParam;
+	iSeqCase: INT:=1;
+	iSeqStatus: INT; //To defind current status of subsequence 
+	bError: BOOL;
+	sMessage : STRING;
+	sAlarmID: STRING(40);
+	sModuleID: STRING(INT#40);
+	sDebugSource: STRING(INT#50);
+	bExecute: BOOL;
+	iErrorID: UDINT;
+	
+	fbFormat   : FB_FormatString;
+	sPrevMsg: STRING;
+	sCurrentMsg:STRING;
+	iPrevLevel:INT;
+	iEventName : E_EventName;
+	sLogName : STRING;
+	iSendEvent :INT;
+	sFailReason: STRING;
+	DIFU:R_TRIG;
+	
+	CmdEmpty: ST_Command;
+	EmptyEvents: ST_Event; // to Clear the event array[n]
+	DoorRecEventName:E_EventName;
+	DoorRecLogName	:STRING;
+	iSendDoorRecoveryEvent:INT;
+	sOtherFailReason:STRING;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[stDebugStation.fbDBStnSeq.M_nCyclic();
+
+
+bExecute :=	
+			stDebugStation.stGblDBStnParam.bInitialise 			OR      //  SystemReset
+			stDebugStation.stGblDBStnParam.bCancel 				OR      //  SlideOutCancel
+			stDebugStation.stGblDBStnParam.bBufClear		 	OR      //  CancelW/O Module ID
+			stDebugStation.stGblDBStnParam.bAlarmClear 			OR      
+			stDebugStation.stGblDBStnParam.bAP240ACPowerOff 	OR      //AP240AC
+			stDebugStation.stGblDBStnParam.bAP240ACPowerOn 		OR      //AP240AC
+			stDebugStation.stGblDBStnParam.bAP240ACPowerAuto	;      //AP240AC
+rtTCShuttleStart(CLK:=bExecute , Q=> );
+IF rtTCShuttleStart.Q THEN
+	iSeqCase:=1;
+END_IF
+
+sCurrentMsg:='';
+sCurrentMsg :=CONCAT('Debug Station',stDebugStation.fbDBStnSeq.P_sMessage);
+//IF arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_sMessage <> sPrevMsg AND arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_sMessage<>'' THEN
+IF sCurrentMsg <> sPrevMsg AND stDebugStation.fbDBStnSeq.P_sMessage<>'' THEN
+	//sPrevMsg := arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_sMessage;
+	sPrevMsg := sCurrentMsg;
+	//iPrevLevel:=iLevel;
+	Logging.fbDebugLog.P_sModule:= 'Debug Station';
+	//Logging.fbDebugLog.M_nLogger(iLogLevel:= 1, sSource:= sDebugSource, sMessage:= arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_sMessage);
+	Logging.fbDebugLog.M_nLogger(iLogLevel:= 1, sSource:= sDebugSource, sMessage:= sCurrentMsg);
+END_IF
+
+IF NOT bExecute THEN
+	RETURN;
+END_IF
+
+//SlideOutRetry
+IF stDebugStation.stGblDBStnParam.bResume  THEN
+	iSeqCase:=E_ProcessStep.eDataInput;//iSeqCase:=3
+	stDebugStation.stGblDBStnParam.bResume:=FALSE;
+END_IF
+
+
+IF stDebugStation.stGblDBStnParam.bInitialise 	THEN
+	sDebugSource := 'Initialise';
+ELSIF stDebugStation.stGblDBStnParam.bCancel 		THEN
+	sDebugSource := 'Cancel';
+ELSIF stDebugStation.stGblDBStnParam.bAP240ACPowerOff  	THEN
+	sDebugSource := 'AP240ACPowerOff';
+ELSIF stDebugStation.stGblDBStnParam.bAP240ACPowerOn  	THEN
+	sDebugSource := 'AP240ACPowerOn';
+ELSIF stDebugStation.stGblDBStnParam.bAP240ACPowerAuto	THEN
+	sDebugSource := 'AP240ACPowerAuto';
+//ELSIF stDebugStation.stGblDBStnParam.bDoorRecovery 	THEN
+//	sDebugSource := 'DoorRecovery';
+END_IF
+
+sMessage := CONCAT(sDebugSource,stDebugStation.fbDBStnSeq.P_sMessage);
+
+CASE iSeqCase OF
+E_ProcessStep.eSeqReset://1: //Sequence Reset
+	stDebugStation.fbDBStnSeq.M_nReset(bExecute:=TRUE );
+	iSeqCase:=iSeqCase+1;
+
+E_ProcessStep.eDataInput://2: //Data input
+
+	stDebugStation.fbDBStnSeq.M_nReset(bExecute:=FALSE );
+	//arrTCShuttlePOC[iLevel].fbTCShuttlePOCSeq.P_ErrClear:=FALSE;
+	
+	stDebugStation.fbDBStnSeq.P_stParam := stDebugStation.stGblDBStnParam;
+	IF NOT stDebugStation.fbDBStnSeq.P_bReset THEN
+		iSeqCase:=E_ProcessStep.eExecuting;
+	END_IF
+	
+E_ProcessStep.eExecuting://3: //Start execute
+
+	IF stDebugStation.stGblDBStnParam.bBufClear=TRUE THEN							//BufferClear
+		iSeqStatus :=10;
+	
+	ELSIF stDebugStation.stGblDBStnParam.bAlarmClear=TRUE THEN						//Alarm Reset
+		iSeqCase:=E_ProcessStep.eSeqError;
+	
+	ELSIF stDebugStation.stGblDBStnParam.bInitialise THEN							//System Reset
+		stDebugStation.stGblDBStnParam.iProcessState :=E_ProcessState.eINIT;
+		iSeqStatus := stDebugStation.fbDBStnSeq.M_nSystemReset();
+		
+	ELSIF stDebugStation.stGblDBStnParam.bAP240ACPowerOff 	OR						
+		  stDebugStation.stGblDBStnParam.bAP240ACPowerOn 	OR
+		  stDebugStation.stGblDBStnParam.bAP240ACPowerAuto THEN							// AP Power
+		  
+			stDebugStation.stGblDBStnParam.iProcessState :=E_ProcessState.eLOADG;
+			iSeqStatus := stDebugStation.fbDBStnSeq.M_nDPSPowerOnOff();
+		
+	END_IF
+	
+	
+	// Error? or Comlpeted?
+	IF iSeqStatus=10 THEN
+		iSeqCase:=E_ProcessStep.eSeqCompleted;//iSeqCase:=4;
+	ELSIF iSeqStatus=99 AND NOT stDebugStation.stGblDBStnParam.bAlarmClear THEN //OR arrTCMultiLevelVIO[iLevel].isTIIError THEN	//OR TeirII Alarm OR Column Alarm
+
+		
+		//***GetAlarmBitForFBError***//
+		stDebugStation.stGblDBStnParam.iAlarmID := stGblDbStnVIO.iAlarmCode; //P_nErrorID => Motor Error
+		//***TriggerAlarmBitForFBError***//
+		IF stDebugStation.stGblDBStnParam.iAlarmID<100 AND stDebugStation.stGblDBStnParam.iAlarmID>20 THEN
+			ALM_DBSTN.AlarmID[stDebugStation.stGblDBStnParam.iAlarmID] :=TRUE;
+		END_IF
+		IF stDebugStation.fbDBStnSeq.P_nErrorID<100 AND stDebugStation.fbDBStnSeq.P_nErrorID>20 THEN
+			ALM_DBSTN.AlarmID[stDebugStation.fbDBStnSeq.P_nErrorID] :=TRUE;
+		END_IF
+		
+		//Seq Alm Fail Reason
+		stDebugStation.stGblDBStnParam.sFailReason := stDebugStation.fbDBStnSeq.P_sMessage;	
+		
+		stDebugStation.stGblDBStnParam.iProcessState :=E_ProcessState.eALPAUSED;
+		iSeqCase:=E_ProcessStep.eSeqError;//iSeqCase:=5;
+		stDebugStation.stGblDBStnParam.bAlarmOccur :=TRUE;
+		
+		iSendEvent :=2;
+		JMP iSendEvent;
+	
+	ELSIF iSeqStatus=20 THEN
+		
+		//***GetAlarmBitForFBError***//
+		stDebugStation.stGblDBStnParam.iAlarmID := stGblDbStnVIO.iAlarmCode; //P_nErrorID => Motor Error
+		//***TriggerAlarmBitForFBError***//
+		IF stDebugStation.stGblDBStnParam.iAlarmID<100 AND stDebugStation.stGblDBStnParam.iAlarmID>20 THEN
+			ALM_DBSTN.AlarmID[stDebugStation.stGblDBStnParam.iAlarmID] :=TRUE;
+		END_IF
+		
+		sOtherFailReason:='';
+		FOR i:=1 TO NO_OF_COMMON_SENSOR DO
+			IF ALMTC.Common.AlarmID[i]  THEN
+				IF sOtherFailReason='' THEN 
+					sOtherFailReason:=SysAlmText[i];	
+					CONTINUE;				
+				END_IF
+				sOtherFailReason:= CONCAT(CONCAT(sOtherFailReason,', '),SysAlmText[i]);
+			END_IF
+		END_FOR
+		FOR i:=1 TO NO_OF_TII_SENSOR DO
+			IF ALM_DBSTN.AlarmID[i] THEN
+				IF sOtherFailReason='' THEN 
+					sOtherFailReason:=TIIAlmText[i];	
+					CONTINUE;				
+				END_IF
+				sOtherFailReason:=CONCAT(CONCAT(sOtherFailReason,', '),TIIAlmText[i]);
+			END_IF
+		END_FOR
+		
+		stDebugStation.stGblDBStnParam.sFailReason := sOtherFailReason;	
+		stDebugStation.stGblDBStnParam.iProcessState :=E_ProcessState.eALPAUSED;
+		iSeqCase:=E_ProcessStep.eSeqError;//iSeqCase:=5;
+		//arrTCMultiLevel[iLevel].stGblParam.bAlarmOccur :=TRUE;
+		
+
+		iSendEvent :=2;
+		JMP iSendEvent;
+	END_IF
+
+E_ProcessStep.eSeqCompleted://4: //Done
+	stDebugStation.fbDBStnSeq.P_stParam := stDebugStation.stGblDBStnParam;
+	
+	stDebugStation.stGblDBStnParam.iAlarmID := 0;
+	stDebugStation.stGblDBStnParam.sFailReason := '';
+	stDebugStation.fbDBStnSeq.P_stParam := stDebugStation.stGblDBStnParam;
+
+	stDebugStation.stGblDBStnParam.iProcessState := E_ProcessState.eAWAITGCMD;
+	IF stDebugStation.stGblDBStnParam.bCancel THEN
+		stDebugStation.stGblDBStnParam.bCancel:= FALSE;
+	ELSE
+	
+    iSendEvent :=1;
+	JMP iSendEvent;
+	END_IF
+	
+E_ProcessStep.eSeqError://5: //Error
+	//AlmRset
+	IF stDebugStation.stGblDBStnParam.bAlarmClear THEN
+		stDebugStation.fbDBStnSeq.P_ErrClear:=TRUE;
+		//Logging.fbDebugLog.M_nLogger(iLogLevel:= 1, sSource:= sDebugSource, sMessage:= 'Clear Alarm');
+		
+		//***ResetAlarmBit***// =>(Reset At AlarmReset Function)
+		//arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.M_SeqAlmRset(subMod:=iLevel, almID:=arrTCMultiLevel[iLevel].stGblParam.iAlmIDToRset,isRsetAll:=FALSE);
+		
+		stDebugStation.stGblDBStnParam.bAlarmOccur 	:=FALSE;
+		stDebugStation.stGblDBStnParam.bAlarmClear	:=FALSE;
+		stDebugStation.stGblDBStnParam.iProcessState :=E_ProcessState.ePAUSE;
+		
+	//Cancel+Retry
+	ELSIF stDebugStation.stGblDBStnParam.iProcessState=E_ProcessState.ePAUSE THEN
+		stDebugStation.fbDBStnSeq.P_stParam := stDebugStation.stGblDBStnParam;//pass in init for init/doorrecovery, retry
+		
+		IF 	stDebugStation.stGblDBStnParam.bInitialise OR 
+			stDebugStation.stGblDBStnParam.bCancel OR
+			stDebugStation.stGblDBStnParam.bBufClear THEN
+			iSeqCase:=E_ProcessStep.eSeqReset;
+			//arrTCMultiLevel[iLevel].stGblParam.iProcessStep:=E_ProcessStep.eSeqReset;
+		END_IF
+	END_IF	
+	
+	//Reset Non_RetryCmd if Error Occured
+	IF stDebugStation.stGblDBStnParam.bInitialise 		THEN stDebugStation.stGblDBStnParam.bInitialise				:= FALSE; END_IF	
+	IF stDebugStation.stGblDBStnParam.bAP240ACPowerOn 	THEN stDebugStation.stGblDBStnParam.bAP240ACPowerOn 	 	:= FALSE; END_IF
+	IF stDebugStation.stGblDBStnParam.bAP240ACPowerOff 	THEN stDebugStation.stGblDBStnParam.bAP240ACPowerOff 	 	:= FALSE; END_IF
+	IF stDebugStation.stGblDBStnParam.bAP240ACPowerAuto THEN stDebugStation.stGblDBStnParam.bAP240ACPowerAuto 		:= FALSE; END_IF
+
+
+	
+(*
+	//SlideOutRetry	
+	ELSIF arrTCMultiLevel[iLevel].stGblParam.bResume THEN
+		iSeqCase:=E_ProcessStep.eDataInput;//iSeqCase:=3;
+		arrTCMultiLevel[iLevel].stGblParam.bResume:=FALSE;
+		
+	//Cancel+Initialise	
+	ELSIF arrTCMultiLevel[iLevel].stGblParam.bCancel OR arrTCMultiLevel[iLevel].stGblParam.bInitialise THEN
+		arrTCMultiLevel[iLevel].stGblParam.bShuttleMoveIn:= 
+		arrTCMultiLevel[iLevel].stGblParam.bShuttleMoveOut:= 
+		arrTCMultiLevel[iLevel].stGblParam.bDoorRecovery:=		(*Door Recovery Bit*)
+		arrTCMultiLevel[iLevel].stGblParam.bInitialise:= FALSE;
+		arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_stParam := arrTCMultiLevel[iLevel].stGblParam;
+		arrTCMultiLevel[iLevel].stGblParam.bCancel :=FALSE;
+		iSeqCase:=E_ProcessStep.eDataInput;//iSeqCase:=3;
+	END_IF
+*)
+
+END_CASE
+
+//send event to TA
+iSendEvent :
+	IF iSendEvent<>0 (* AND bInitialise*)THEN
+		
+		 IF (NOT stDebugStation.stGblDBStnParam.bCancel AND  NOT stDebugStation.stGblDBStnParam.bBufClear ) THEN 
+		CmdAndEventProcess.fbCmdAndEventUpdate.M_nCmdtoEvent(eCmd2Event_TaskName:=stDebugStation.stGblDBStnParam.stTACommand.eTaskName , iCmd2Event_Result:=iSendEvent , eCmd2Event_EventName:=iEventName , sCmd2Event_EventName:=sLogName );
+		sFailReason := stDebugStation.stGblDBStnParam.sFailReason;                
+		
+		CmdAndEventProcess.fbCmdAndEventUpdate.M_AddEvent(
+			sLogName:= sLogName, 
+			eEventName:= iEventName, 
+			eModuleID:= stDebugStation.stGblDBStnParam.stTACommand.eModuleID, 
+			iParam:= stDebugStation.stGblDBStnParam.stTACommand.iParam,
+			sParam:= stDebugStation.stGblDBStnParam.stTACommand.sParam, 
+			bParam:= stDebugStation.stGblDBStnParam.stTACommand.bParam, 
+			dParam:= stDebugStation.stGblDBStnParam.stTACommand.dParam,
+			sFailReason:= sFailReason);
+			
+			IF iSendEvent=1 THEN 	stDebugStation.stGblDBStnParam.stTACommand := CmdEmpty; 	END_IF
+		END_IF; 
+		stDebugStation.stGblDBStnParam.bInitialise:= FALSE;
+		IF iSendEvent=1 THEN
+			stDebugStation.stGblDBStnParam.bInitialise			:= 			//  SystemReset
+			stDebugStation.stGblDBStnParam.bCancel				:= 			//  SlideOutCancel
+			stDebugStation.stGblDBStnParam.bBufClear 			:=			//  CancelW/O Module ID
+			stDebugStation.stGblDBStnParam.bAP240ACPowerOff 	:=			//AP240AC
+			stDebugStation.stGblDBStnParam.bAP240ACPowerOn 		:=			//AP240AC
+			stDebugStation.stGblDBStnParam.bAP240ACPowerAuto 	:=	FALSE;		//AP240AC
+	
+			stDebugStation.stGblDBStnParam.iProcessState :=E_ProcessState.eAWAITGCMD;
+		END_IF
+	END_IF
+		iSendEvent :=0;
+]]></ST>
+    </Implementation>
+    <LineIds Name="FB_DebugStationProcess">
+      <LineId Id="22" Count="0" />
+      <LineId Id="40" Count="1" />
+      <LineId Id="45" Count="4" />
+      <LineId Id="51" Count="2" />
+      <LineId Id="58" Count="2" />
+      <LineId Id="67" Count="23" />
+      <LineId Id="98" Count="10" />
+      <LineId Id="115" Count="1" />
+      <LineId Id="118" Count="28" />
+      <LineId Id="151" Count="0" />
+      <LineId Id="156" Count="2" />
+      <LineId Id="162" Count="3" />
+      <LineId Id="177" Count="24" />
+      <LineId Id="480" Count="0" />
+      <LineId Id="213" Count="37" />
+      <LineId Id="260" Count="3" />
+      <LineId Id="291" Count="11" />
+      <LineId Id="314" Count="22" />
+      <LineId Id="338" Count="6" />
+      <LineId Id="347" Count="48" />
+      <LineId Id="400" Count="5" />
+      <LineId Id="410" Count="5" />
+      <LineId Id="17" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

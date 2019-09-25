@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.10">
+  <DUT Name="ST_TCShuttlePOC" Id="{69db336d-75da-453e-9df1-c2c81184775b}">
+    <Declaration><![CDATA[TYPE ST_TCShuttlePOC :
+STRUCT
+	
+		stGblParam: ST_TCSeqParam;
+		fbTCShuttlePOCSeq: FB_TCShuttlePOCSeq;
+
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

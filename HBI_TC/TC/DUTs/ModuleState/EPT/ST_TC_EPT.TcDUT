@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
+  <DUT Name="ST_TC_EPT" Id="{a149744b-c5d3-4cf4-9fa1-d281f23dba02}">
+    <Declaration><![CDATA[TYPE ST_TC_EPT :
+STRUCT
+	eTCEpt:E_EPT;
+	
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

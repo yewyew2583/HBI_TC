@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <DUT Name="ST_DebugStation" Id="{7f94506e-a20d-4429-a361-d46a6509b87b}">
+    <Declaration><![CDATA[TYPE ST_DebugStation :
+STRUCT
+		stGblDBStnParam		: ST_DebugStationSeqParam;
+		fbDBStnSeq			: FB_DebugStationSeq;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

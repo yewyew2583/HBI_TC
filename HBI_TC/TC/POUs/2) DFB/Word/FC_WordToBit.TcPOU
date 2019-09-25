@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <POU Name="FC_WordToBit" Id="{50a8ef98-583f-4b8c-aff2-230120b1cfb0}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION FC_WordToBit : UDINT
+VAR_INPUT
+	Input_Word					: WORD;
+END_VAR
+
+VAR_OUTPUT
+	BOOL_00						: BOOL;
+	BOOL_01						: BOOL;
+	BOOL_02						: BOOL;
+	BOOL_03						: BOOL;
+	BOOL_04						: BOOL;
+	BOOL_05						: BOOL;
+	BOOL_06						: BOOL;
+	BOOL_07						: BOOL;
+	BOOL_08						: BOOL;
+	BOOL_09						: BOOL;
+	BOOL_10						: BOOL;
+	BOOL_11						: BOOL;
+	BOOL_12						: BOOL;
+	BOOL_13						: BOOL;
+	BOOL_14						: BOOL;
+	BOOL_15						: BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[BOOL_00							:= Input_Word.0;
+BOOL_01							:= Input_Word.1;
+BOOL_02							:= Input_Word.2;
+BOOL_03							:= Input_Word.3;
+BOOL_04							:= Input_Word.4;
+BOOL_05							:= Input_Word.5;
+BOOL_06							:= Input_Word.6;
+BOOL_07							:= Input_Word.7;
+BOOL_08							:= Input_Word.8;
+BOOL_09							:= Input_Word.9;
+BOOL_10							:= Input_Word.10;
+BOOL_11							:= Input_Word.11;
+BOOL_12							:= Input_Word.12;
+BOOL_13							:= Input_Word.13;
+BOOL_14							:= Input_Word.14;
+BOOL_15							:= Input_Word.15;]]></ST>
+    </Implementation>
+    <LineIds Name="FC_WordToBit">
+      <LineId Id="29" Count="14" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

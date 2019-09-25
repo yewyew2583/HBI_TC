@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
+  <GVL Name="GVL_SEN_SPEC" Id="{b2fb5d38-e97d-4978-aaac-3e80f33a1d66}">
+    <Declaration><![CDATA[//{attribute 'qualified_only'}
+VAR_GLOBAL
+	
+sen1Spec :ST_SenSpec := (iMn :=0, iMx :=0, oMn :=0, oMx :=0, ofs :=0, b:=0);
+
+//	65535 			->  32768  	-> 	16384.
+//	a/5 = 13107 	-> 	6553.5 	-> 	3276.75
+// *0.6 = 7864.2 	->  3932.1  ->  1966.05
+
+spDBStnTstAirLeakFlowSensor 		:ST_SenSpec := (iMn :=0, 	iMx :=32768, oMn :=0 	 , oMx :=0.1 , ofs :=0		, b:=0.0); //0  - 	10V	|	0     - 0.1 l/min
+spDBStnAPAirLeakFlowSensor			:ST_SenSpec := (iMn :=0, 	iMx :=32768, oMn :=0 	 , oMx :=0.1 , ofs :=0		, b:=0.0); //0 	- 	10V	|	0     - 0.1 l/min
+spDBStnPCWLeakFlowSensor 			:ST_SenSpec := (iMn :=0, 	iMx :=32768, oMn :=0	 , oMx :=65	 , ofs :=0		, b:=0.0); //0 	- 	10V	|	0     - 65 	ml/min (Rabiah)
+spDBStnPCWLowFlowSensor 			:ST_SenSpec := (iMn :=3276, iMx :=16384, oMn :=0	 , oMx :=4	 , ofs :=0		, b:=0.0); //1 	- 	5V	| 	0     - 4  	l/min
+                                                                                         
+spDBColumnPCWRegularFlowSensor		:ST_SenSpec := (iMn :=3276, iMx :=16384, oMn :=0	 , oMx :=100 , ofs :=0		, b:=0.0); //1	-	5V	|	0     - 100 l/min
+spDBColumnPCWSupplyPressure       	:ST_SenSpec := (iMn :=3276, iMx :=16384, oMn :=0	 , oMx :=10	 , ofs :=0		, b:=0.0); //1	-	5V	|	0     - 1 MPa
+spDBColumnPCWReturnPressure       	:ST_SenSpec := (iMn :=3276, iMx :=16384, oMn :=0	 , oMx :=10	 , ofs :=0		, b:=0.0); //1	-	5V	|	0  	  - 1 MPa
+spDBColumnTstAirPressure          	:ST_SenSpec := (iMn :=1966, iMx :=16384, oMn :=-1	 , oMx :=10	 , ofs :=0		, b:=0.0); //0.6-	5V	|	-0.1  - 1MPa     1MPa = 10 bar
+spDBColumnAPAirPressure           	:ST_SenSpec := (iMn :=1966, iMx :=16384, oMn :=-1	 , oMx :=10	 , ofs :=0		, b:=0.0); //0.6-	5V	|	-0.1  - 1MPa
+spDBColumnDewPointSensor          	:ST_SenSpec := (iMn :=3276, iMx :=16384, oMn :=-40	 , oMx :=60	 , ofs :=0		, b:=0.0); //1	-	5V	|	-40   - 60 ˚C
+spDBColumnTempSensor	          	:ST_SenSpec := (iMn :=3276, iMx :=16384, oMn :=-40	 , oMx :=60	 , ofs :=0		, b:=0.0); //1	-	5V	|	-40   - 60 ˚C
+
+// Thermocouple
+spDBColumnPCWSupplyTemperature    	:ST_SenSpec := (iMn :=-400, iMx :=2500, oMn :=-40, oMx :=250, ofs :=0, b:=0.0); //	Ask Spec
+spDBColumnPCWReturnTemperature    	:ST_SenSpec := (iMn :=-400, iMx :=2500, oMn :=-40, oMx :=250, ofs :=0, b:=0.0); //
+
+//EL3314 Spec
+//Temperature range in the range defined in each case for the sensor (default setting: type K; -200…+1370 °C); voltage measurement: ±30 mV…±75 mV
+//Resolution:	0.1 °C per digit
+//Conversion time:	approx. 2.5 s up to 20 ms, depending on configuration and filter setting, default: approx. 250 ms
+
+lmtPCWSupplyHighTempWarning_Limit 			:REAL := 14 ;	//14
+lmt6BarLowOFAAirPressureWarning_Limit 		:REAL := 550 ;	//550
+lmt9BarLowOFAAirPressureWarning_limit 		:REAL := 850 ;	//850
+lmtExcessiveHeatLoadIntoPCWWarning_Limit 	:REAL := 14 ;	//14
+lmtCondensationWarning_Limit				:REAL := -2 ;	//-2
+lmtCriticalCondensationAlarm_Limit			:REAL := 0 ;	//0
+
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

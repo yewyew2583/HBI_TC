@@ -1,0 +1,176 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <POU Name="FB_ColAlarm" Id="{288f9db0-7522-4a39-ba2c-8cb3e0accfe7}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_ColAlarm
+VAR_INPUT
+	vIO : ST_TCColumn_VIO;
+	isRsetAll : BOOL;
+END_VAR
+VAR_OUTPUT
+	isColError:BOOL;
+	iSysUnBlockAlm:DINT;
+END_VAR
+VAR
+	//iPrevSysUnBlockAlm:DINT;
+	i:INT;
+	bEnableSysAlarm:Array[1..NO_OF_COMMON_SENSOR] OF BOOL;
+	bitNo:INT;
+	almRset:BOOL;
+	
+	ArrAlmBitBefDelay : ARRAY[1..NO_OF_COMMON_SENSOR] OF BOOL;
+	ArrAlmBitAftDelay : ARRAY[1..NO_OF_COMMON_SENSOR] OF BOOL;
+	ArrAlarmKeepBit	:	ARRAY[1..NO_OF_COMMON_SENSOR] OF BOOL;
+	ArrDelayAlarm : 	ARRAY[1..NO_OF_COMMON_SENSOR] OF FB_Delay;
+	Arr_ms :			ARRAY[1..NO_OF_COMMON_SENSOR] OF INT;
+END_VAR
+VAR_IN_OUT
+	//bLibError : BOOL;
+	//stAlmSubMod:ST_AlarmSubmodules;
+	//stAlmMod:ST_AlarmModules;
+	SysAlmCleared:BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//<HMI_TII_Test>
+
+	IF bHMITIIBypass THEN
+		bEnableSysAlarm:= arrHMISysAlmByPass;
+		//FOR i:=1 TO NO_OF_COMMON_SENSOR DO
+		//	bEnableSysAlarm[i]:= NOT arrHMISysAlmByPass[i];
+		//END_FOR
+	ELSE
+		FOR i:=1 TO NO_OF_COMMON_SENSOR DO
+			bEnableSysAlarm[i]:=TRUE;
+		END_FOR
+	END_IF
+//</HMI_TII_Test>
+ AlarmUpdate(isRsetAll:=isRsetAll,bENs:=bEnableSysAlarm);
+ ]]></ST>
+    </Implementation>
+    <Method Name="AlarmUpdate" Id="{cb25fa2d-51f9-4ccc-9973-2f776c30b7df}">
+      <Declaration><![CDATA[METHOD AlarmUpdate : BOOL
+VAR
+	i:INT;
+	j:INT;
+	_bError: BOOL;
+	iSysAlarmID : INT;
+	e: E_ColAlarm;
+	//Condition
+	lockRet:BOOL;
+END_VAR
+
+VAR_INPUT
+	isRsetAll:BOOL;
+	bENs :ARRAY[1..NO_OF_COMMON_SENSOR] OF BOOL;
+END_VAR
+
+VAR_IN_OUT
+	//ArrAlarmKeepBit:ST_AlarmTags;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[FOR i:=1 TO NO_OF_COMMON_SENSOR DO	
+	CASE i OF
+		E_ColAlarm.ipColumnFluid_PCW_Leakage	: 
+						IF NOT bSLTC THEN
+							e:=E_ColAlarm.ipColumnFluid_PCW_Leakage; 	  ArrAlmBitBefDelay[e]:=vIO.ipColumnFluid_PCW_Leakage  		AND bENs[1]		; Arr_ms[e] := 500;  //SysAlmText[e]:= 'ColumnFluid_PCW_Leakage';
+						END_IF 
+		   
+	    E_ColAlarm.ipTbotDoorClosedSignal	: 
+						e:=E_ColAlarm.ipTbotDoorClosedSignal; 		ArrAlmBitBefDelay[e]:= (NOT vIO.ipTbotDoorClosedSignal) 		AND bENs[2]		; Arr_ms[e] := 500;  //SysAlmText[e]:= 'ipTbotDoorClosed';
+		
+
+		//E_ColAlarm.ipAllTCDrawerRetractedinCell	: e:=E_ColAlarm.ipAllTCDrawerRetractedinCell; ArrAlmBitBefDelay[e]:=vIO.ipAllTCDrawerRetractedinCell 	AND bENs[3]		; Arr_ms[e] := 500;  SysAlmText[e]:= 'AllTCDrawerRetractedinCell';  
+
+	END_CASE
+
+	ArrDelayAlarm[i](in:=ArrAlmBitBefDelay[i],out:=ArrAlmBitAftDelay[i],msec:=Arr_ms[i]);
+	
+	IF ArrAlmBitAftDelay[i] THEN
+		//stAlmMod.Common.AlarmID[i]:=TRUE;
+		ALMTC.Common.AlarmID[i]:=TRUE;
+				
+		CASE i OF
+			1 : iSysUnBlockAlm.1 :=ALMTC.Common.AlarmID[i];
+		    2 : iSysUnBlockAlm.2 :=ALMTC.Common.AlarmID[i]; 
+		    3 : iSysUnBlockAlm.3 :=ALMTC.Common.AlarmID[i];
+			4 : iSysUnBlockAlm.4 :=ALMTC.Common.AlarmID[i];
+			5 : iSysUnBlockAlm.5 :=ALMTC.Common.AlarmID[i];
+		END_CASE
+	ELSE
+		CASE i OF
+			1 : iSysUnBlockAlm.1 :=ALMTC.Common.AlarmID[i];
+		    2 : iSysUnBlockAlm.2 :=ALMTC.Common.AlarmID[i]; 
+		    3 : iSysUnBlockAlm.3 :=ALMTC.Common.AlarmID[i];
+			4 : iSysUnBlockAlm.4 :=ALMTC.Common.AlarmID[i];
+			5 : iSysUnBlockAlm.5 :=ALMTC.Common.AlarmID[i];
+		END_CASE
+		//SysAlmText[i]:=''; 
+	END_IF	
+
+		//_bError := _bError OR stAlmMod.Common.AlarmID[i];
+		_bError := _bError OR ALMTC.Common.AlarmID[i];
+	
+END_FOR
+isColError := _bError ; 
+
+IF vIO.bColumnErrClear THEN
+	IF isRsetAll THEN
+		FOR i:=1 TO NO_OF_COMMON_SENSOR DO
+			//stAlmMod.Common.AlarmID[i]:=FALSE;
+			ALMTC.Common.AlarmID[i]:=FALSE;
+		END_FOR
+	ELSE
+		//stAlmMod.Common.AlarmID[vIO.iAlmIDToRset]:=FALSE;
+		ALMTC.Common.AlarmID[vIO.iAlmIDToRset]:=FALSE;
+	END_IF
+	SysAlmCleared:=TRUE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_ColAlarm">
+      <LineId Id="53" Count="11" />
+      <LineId Id="52" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="27" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_ColAlarm.AlarmUpdate">
+      <LineId Id="269" Count="2" />
+      <LineId Id="434" Count="0" />
+      <LineId Id="433" Count="0" />
+      <LineId Id="435" Count="1" />
+      <LineId Id="273" Count="0" />
+      <LineId Id="438" Count="0" />
+      <LineId Id="437" Count="0" />
+      <LineId Id="520" Count="0" />
+      <LineId Id="519" Count="0" />
+      <LineId Id="274" Count="1" />
+      <LineId Id="277" Count="2" />
+      <LineId Id="281" Count="1" />
+      <LineId Id="387" Count="0" />
+      <LineId Id="463" Count="6" />
+      <LineId Id="462" Count="0" />
+      <LineId Id="362" Count="0" />
+      <LineId Id="494" Count="5" />
+      <LineId Id="493" Count="0" />
+      <LineId Id="364" Count="0" />
+      <LineId Id="283" Count="0" />
+      <LineId Id="492" Count="0" />
+      <LineId Id="284" Count="0" />
+      <LineId Id="388" Count="0" />
+      <LineId Id="288" Count="2" />
+      <LineId Id="389" Count="0" />
+      <LineId Id="310" Count="0" />
+      <LineId Id="312" Count="0" />
+      <LineId Id="315" Count="0" />
+      <LineId Id="319" Count="0" />
+      <LineId Id="386" Count="0" />
+      <LineId Id="320" Count="0" />
+      <LineId Id="317" Count="1" />
+      <LineId Id="385" Count="0" />
+      <LineId Id="316" Count="0" />
+      <LineId Id="341" Count="0" />
+      <LineId Id="313" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

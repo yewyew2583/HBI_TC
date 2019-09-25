@@ -1,0 +1,168 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <GVL Name="GVL_CONSTANTS" Id="{314985d8-4177-4998-ad5a-17cbf883858c}">
+    <Declaration><![CDATA[VAR_GLOBAL CONSTANT
+
+	// This function has been automatically generated from the project information.
+	stLibVersion_TC : ST_LibVersion := (iMajor := 0, iMinor := 0, iBuild := 0, iRevision := 0, sVersion := '1.0.13');
+
+	LA_LEVEL_MODULE_ID : ARRAY [1..NO_OF_LEVEL] OF E_ModuleID  := [	E_ModuleID.CELL_LA101_TESTER, E_ModuleID.CELL_LA201_TESTER, E_ModuleID.CELL_LA301_TESTER,
+																	E_ModuleID.CELL_LA401_TESTER, E_ModuleID.CELL_LA501_TESTER, E_ModuleID.CELL_LA601_TESTER];
+	LB_LEVEL_MODULE_ID : ARRAY [1..NO_OF_LEVEL] OF E_ModuleID  := [	E_ModuleID.CELL_LB101_TESTER, E_ModuleID.CELL_LB201_TESTER, E_ModuleID.CELL_LB301_TESTER,
+																	E_ModuleID.CELL_LB401_TESTER, E_ModuleID.CELL_LB501_TESTER, E_ModuleID.CELL_LB601_TESTER];
+	LC_LEVEL_MODULE_ID : ARRAY [1..NO_OF_LEVEL] OF E_ModuleID  := [	E_ModuleID.CELL_LC101_TESTER, E_ModuleID.CELL_LC201_TESTER, E_ModuleID.CELL_LC301_TESTER,
+																	E_ModuleID.CELL_LC401_TESTER, E_ModuleID.CELL_LC501_TESTER, E_ModuleID.CELL_LC601_TESTER];
+	RA_LEVEL_MODULE_ID : ARRAY [1..NO_OF_LEVEL] OF E_ModuleID  := [	E_ModuleID.CELL_RA101_TESTER, E_ModuleID.CELL_RA201_TESTER, E_ModuleID.CELL_RA301_TESTER,
+																	E_ModuleID.CELL_RA401_TESTER, E_ModuleID.CELL_RA501_TESTER, E_ModuleID.CELL_RA601_TESTER];
+	RB_LEVEL_MODULE_ID : ARRAY [1..NO_OF_LEVEL] OF E_ModuleID  := [	E_ModuleID.CELL_RB101_TESTER, E_ModuleID.CELL_RB201_TESTER, E_ModuleID.CELL_RB301_TESTER,
+																	E_ModuleID.CELL_RB401_TESTER, E_ModuleID.CELL_RB501_TESTER, E_ModuleID.CELL_RB601_TESTER];
+	RC_LEVEL_MODULE_ID : ARRAY [1..NO_OF_LEVEL] OF E_ModuleID  := [	E_ModuleID.CELL_RC101_TESTER, E_ModuleID.CELL_RC201_TESTER, E_ModuleID.CELL_RC301_TESTER,
+																	E_ModuleID.CELL_RC401_TESTER, E_ModuleID.CELL_RC501_TESTER, E_ModuleID.CELL_RC601_TESTER];	
+														
+	LA_FRONT_DOOR_MODULE_ID : ARRAY [1..2] OF E_ModuleID  := [E_ModuleID.CELL_LA101_TESTER_FRONT, E_ModuleID.CELL_LA201_TESTER_FRONT];	
+	
+//<ForEnDisMod>
+	ARR_LA_TST_MODULE_ID : ARRAY [1..6] OF E_ModuleID  := [E_ModuleID.CELL_LA101_TESTER, E_ModuleID.CELL_LA201_TESTER, E_ModuleID.CELL_LA201_TESTER, 
+														   E_ModuleID.CELL_LA401_TESTER, E_ModuleID.CELL_LA501_TESTER, E_ModuleID.CELL_LA601_TESTER];	
+	ARR_LB_TST_MODULE_ID : ARRAY [1..6] OF E_ModuleID  := [E_ModuleID.CELL_LB101_TESTER, E_ModuleID.CELL_LB201_TESTER, E_ModuleID.CELL_LB201_TESTER, 
+														   E_ModuleID.CELL_LB401_TESTER, E_ModuleID.CELL_LB501_TESTER, E_ModuleID.CELL_LB601_TESTER];	
+	ARR_LC_TST_MODULE_ID : ARRAY [1..6] OF E_ModuleID  := [E_ModuleID.CELL_LC101_TESTER, E_ModuleID.CELL_LC201_TESTER, E_ModuleID.CELL_LC201_TESTER, 
+														   E_ModuleID.CELL_LC401_TESTER, E_ModuleID.CELL_LC501_TESTER, E_ModuleID.CELL_LC601_TESTER];															   
+	ARR_RA_TST_MODULE_ID : ARRAY [1..6] OF E_ModuleID  := [E_ModuleID.CELL_RA101_TESTER, E_ModuleID.CELL_RA201_TESTER, E_ModuleID.CELL_RA201_TESTER, 
+													   	   E_ModuleID.CELL_RA401_TESTER, E_ModuleID.CELL_RA501_TESTER, E_ModuleID.CELL_RA601_TESTER];	
+	ARR_RB_TST_MODULE_ID : ARRAY [1..6] OF E_ModuleID  := [E_ModuleID.CELL_RB101_TESTER, E_ModuleID.CELL_RB201_TESTER, E_ModuleID.CELL_RB201_TESTER, 
+													       E_ModuleID.CELL_RB401_TESTER, E_ModuleID.CELL_RB501_TESTER, E_ModuleID.CELL_RB601_TESTER];	
+	ARR_RC_TST_MODULE_ID : ARRAY [1..6] OF E_ModuleID  := [E_ModuleID.CELL_RC101_TESTER, E_ModuleID.CELL_RC201_TESTER, E_ModuleID.CELL_RC201_TESTER, 
+														   E_ModuleID.CELL_RC401_TESTER, E_ModuleID.CELL_RC501_TESTER, E_ModuleID.CELL_RC601_TESTER];		
+														   
+	ARR_LA_TCU_MODULE_ID : ARRAY [1..6] OF E_ModuleID  := [E_ModuleID.CELL_LA101_AP, E_ModuleID.CELL_LA201_AP, E_ModuleID.CELL_LA201_AP, 
+														   E_ModuleID.CELL_LA401_AP, E_ModuleID.CELL_LA501_AP, E_ModuleID.CELL_LA601_AP];	
+	ARR_LB_TCU_MODULE_ID : ARRAY [1..6] OF E_ModuleID  := [E_ModuleID.CELL_LB101_AP, E_ModuleID.CELL_LB201_AP, E_ModuleID.CELL_LB201_AP, 
+														   E_ModuleID.CELL_LB401_AP, E_ModuleID.CELL_LB501_AP, E_ModuleID.CELL_LB601_AP];	
+	ARR_LC_TCU_MODULE_ID : ARRAY [1..6] OF E_ModuleID  := [E_ModuleID.CELL_LC101_AP, E_ModuleID.CELL_LC201_AP, E_ModuleID.CELL_LC201_AP, 
+														   E_ModuleID.CELL_LC401_AP, E_ModuleID.CELL_LC501_AP, E_ModuleID.CELL_LC601_AP];															   
+	ARR_RA_TCU_MODULE_ID : ARRAY [1..6] OF E_ModuleID  := [E_ModuleID.CELL_RA101_AP, E_ModuleID.CELL_RA201_AP, E_ModuleID.CELL_RA201_AP, 
+													   	   E_ModuleID.CELL_RA401_AP, E_ModuleID.CELL_RA501_AP, E_ModuleID.CELL_RA601_AP];	
+	ARR_RB_TCU_MODULE_ID : ARRAY [1..6] OF E_ModuleID  := [E_ModuleID.CELL_RB101_AP, E_ModuleID.CELL_RB201_AP, E_ModuleID.CELL_RB201_AP, 
+													       E_ModuleID.CELL_RB401_AP, E_ModuleID.CELL_RB501_AP, E_ModuleID.CELL_RB601_AP];	
+	ARR_RC_TCU_MODULE_ID : ARRAY [1..6] OF E_ModuleID  := [E_ModuleID.CELL_RC101_AP, E_ModuleID.CELL_RC201_AP, E_ModuleID.CELL_RC201_AP, 
+														   E_ModuleID.CELL_RC401_AP, E_ModuleID.CELL_RC501_AP, E_ModuleID.CELL_RC601_AP];		
+
+
+	ARR_LA_TII_MODULE_ID : ARRAY [1..6] OF E_ModuleID  := [E_ModuleID.CELL_LA101_TIERII, E_ModuleID.CELL_LA201_TIERII, E_ModuleID.CELL_LA201_TIERII, 
+														   E_ModuleID.CELL_LA401_TIERII, E_ModuleID.CELL_LA501_TIERII, E_ModuleID.CELL_LA601_TIERII];	
+	ARR_LB_TII_MODULE_ID : ARRAY [1..6] OF E_ModuleID  := [E_ModuleID.CELL_LB101_TIERII, E_ModuleID.CELL_LB201_TIERII, E_ModuleID.CELL_LB201_TIERII, 
+														   E_ModuleID.CELL_LB401_TIERII, E_ModuleID.CELL_LB501_TIERII, E_ModuleID.CELL_LB601_TIERII];	
+	ARR_LC_TII_MODULE_ID : ARRAY [1..6] OF E_ModuleID  := [E_ModuleID.CELL_LC101_TIERII, E_ModuleID.CELL_LC201_TIERII, E_ModuleID.CELL_LC201_TIERII, 
+														   E_ModuleID.CELL_LC401_TIERII, E_ModuleID.CELL_LC501_TIERII, E_ModuleID.CELL_LC601_TIERII];															   
+	ARR_RA_TII_MODULE_ID : ARRAY [1..6] OF E_ModuleID  := [E_ModuleID.CELL_RA101_TIERII, E_ModuleID.CELL_RA201_TIERII, E_ModuleID.CELL_RA201_TIERII, 
+													   	   E_ModuleID.CELL_RA401_TIERII, E_ModuleID.CELL_RA501_TIERII, E_ModuleID.CELL_RA601_TIERII];	
+	ARR_RB_TII_MODULE_ID : ARRAY [1..6] OF E_ModuleID  := [E_ModuleID.CELL_RB101_TIERII, E_ModuleID.CELL_RB201_TIERII, E_ModuleID.CELL_RB201_TIERII, 
+													       E_ModuleID.CELL_RB401_TIERII, E_ModuleID.CELL_RB501_TIERII, E_ModuleID.CELL_RB601_TIERII];	
+	ARR_RC_TII_MODULE_ID : ARRAY [1..6] OF E_ModuleID  := [E_ModuleID.CELL_RC101_TIERII, E_ModuleID.CELL_RC201_TIERII, E_ModuleID.CELL_RC201_TIERII, 
+														   E_ModuleID.CELL_RC401_TIERII, E_ModuleID.CELL_RC501_TIERII, E_ModuleID.CELL_RC601_TIERII];		
+														   
+//</ForEnDisMod>														  
+
+
+													
+	ARR_AMS_NET_ID : ARRAY [1..NO_OF_COLUMN] OF STRING := [	'192.168.1.4.1.1',
+															'192.168.1.5.1.1', 
+															'192.168.1.6.1.1',
+															'192.168.1.14.1.1',
+															'192.168.1.15.1.1', 
+															'192.168.1.16.1.1'];	
+		
+	ARR_COL_MOD_ID : ARRAY [1..NO_OF_COLUMN] OF E_ModuleID := [	E_ModuleID.COLUMN_LA,
+																E_ModuleID.COLUMN_LB,
+																E_ModuleID.COLUMN_LC,
+																E_ModuleID.COLUMN_RA,
+																E_ModuleID.COLUMN_RB,
+																E_ModuleID.COLUMN_RC];										
+	TIIAlmText : ARRAY[1..NO_OF_TII_SENSOR] OF STRING :=
+	[
+	 'AP_Not_Present'				,	
+	 'APPower_Noy_On'	    		,
+	 'AP_Not_Ready' 		    	,
+	 'APDeactuatedPLC_Not_On' 		,
+	 'APDeactuatedHwr_Not_On' 		,
+	 'CellFluid_Leakage1' 			,
+	 'CellFluid_Leakage2' 			,
+	 'Cell_GroundFault' 			,
+	 'Tester_Not_Present' 			,
+	 'TesterPower_Not_On' 			,
+	 'Tester_Not_Ready'       		,
+	 'TCCellDoor_Not_Closed'		,
+	 'TesterLatches_Not_Closed' 	,
+	 'TIU_Not_Present' 				,
+	 'TCDrawerCylExtendRS_Not_On' 	,
+	 'TCDrawerCylRetractRS_Not_On'	     	
+	];
+	
+	EAPAlmText : ARRAY[1..NO_OF_LEVEL,1..NO_OF_EAP_ALARM] OF STRING :=
+	[
+	 'TBOT EAP ALARM_1'				,	
+	 'TBOT EAP ALARM_2'				,
+	 'TBOT EAP ALARM_3'				,
+	 'TBOT EAP ALARM_4'				,
+	 'TBOT EAP ALARM_5'				,
+	 'TBOT EAP ALARM_6'				,
+	 'TBOT EAP ALARM_7'				,
+	 'TBOT EAP ALARM_8'				,
+	 'TBOT EAP ALARM_9'				,
+	 'TBOT EAP ALARM_10'			
+	];
+	 
+	SysAlmText : ARRAY[1..NO_OF_COMMON_SENSOR] OF STRING :=
+	[
+	 'Column_PCWLeakage',
+	 'AllTCDrawer_Not_In_Cell',       
+	 'ipTbotDoorClosedSignal'
+	];
+															
+	NO_OF_COMMON_SENSOR : UINT:=3;
+	NO_OF_TII_SENSOR : UINT:=20;
+	NO_OF_ALARM_TAG : UINT :=50;
+	NO_OF_DC_CELL_LEVEL:UINT:=2;
+	NO_OF_LEVEL : UINT :=6;
+	NO_OF_COLUMN : UINT :=6;
+	NO_OF_TC_SITE:UINT:=1;
+	NO_OF_SENSORS : UINT :=20;
+	NO_OF_BTNLED:INT:=3;
+	NO_OF_EAP_ALARM:INT:=10;
+	NO_OF_DBCOL_ALARM:INT:=10;
+	
+	//Path Setting
+	LOGFILEPATHTC1 :STRING(30) := 'D:/ControllerLog/Level1/';
+	LOGFILEPATHTC2 :STRING(30) := 'D:/ControllerLog/Level2/';
+	LOGFILEPATHTC3 :STRING(30) := 'D:/ControllerLog/Level3/';
+	LOGFILEPATHTC4 :STRING(30) := 'D:/ControllerLog/Level4/';
+	LOGFILEPATHTC5 :STRING(30) := 'D:/ControllerLog/Level5/';
+	
+	//Log verbosity
+	LOG_LEVEL_ERROR   : INT := 5;
+	LOG_LEVEL_WARNING : INT := 4;
+	LOG_LEVEL_MESSAGE : INT := 3;
+	LOG_LEVEL_INFO    : INT := 2;
+	LOG_LEVEL_DEBUG   : INT := 1;
+	
+	NO_OF_CMD_BUFFER : INT := 30;
+	NO_OF_EVENT_BUFFER : INT := 30;
+		
+	NO_OF_INT_PARAM : INT := 10;
+	NO_OF_STRING_PARAM :INT := 5;
+	NO_OF_BOOL_PARAM :INT := 32;
+	NO_OF_LREAL_PARAM :INT := 10;
+
+
+	MODULEID_ERROR : STRING := 'Module ID not correct';
+
+	NO_OF_LIB_ALARM:INT:=30;
+	NO_OF_TA_ALARM: INT:=100;
+	NO_OF_ALARM_PER_LEVEL : INT := 100;
+END_VAR
+VAR_GLOBAL
+	lrTest: REAL;
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <DUT Name="ST_TCShuttlePOC_DIO" Id="{b876f92a-e46e-4d9a-946c-52701167e1b8}">
+    <Declaration><![CDATA[TYPE ST_TCShuttlePOC_DIO :
+STRUCT
+	//input
+	ipStartPB AT %I*: BOOL;
+	ipStopPB AT %I*: BOOL;
+	ipL1_TC_Drawer_Extended_Out_Cell AT %I*: BOOL;
+	ipL1_TC_Drawer_Retracted_In_Cell AT %I*: BOOL;	
+	
+	ipMotor_Ready 						AT %I*: BOOL;
+	ipMotor_Home_Position 				AT %I*: BOOL;
+	ipMotor_Position_Reached 			AT %I*: BOOL;
+	ipMotor_Ps_Table_Active 			AT %I*: BOOL;
+	ipMotor_Error 						AT %I*: BOOL;
+	
+	//follow actual IO name
+	ipTCDrawerExtendedoutCell		AT %I*: BOOL;
+	ipTCDrawerRetractedinCell		AT %I*: BOOL;
+	ipTCDrawerExtendedupCell		AT %I*: BOOL;
+	ipTCDrawerRetracteddownCell		AT %I*: BOOL;
+	
+	ipPressure_Switch_Error				AT %I*: BOOL;
+	
+
+	//output
+	
+	opL1_TC_Drawer_IN AT %Q*: BOOL;
+	opL1_TC_Drawer_OUT AT %Q*: BOOL;
+	opMotor_Enable						AT %Q*: BOOL;
+	opMotor_Reset_Errors				AT %Q*: BOOL;
+	opMotor_Homing						AT %Q*: BOOL;
+	opMotor_Index0						AT %Q*: BOOL;
+	opMotor_Index1						AT %Q*: BOOL;
+	opMotor_Start_Position				AT %Q*: BOOL;
+	
+	//follow actual IO name
+	opCellDrawerExtendUp AT %Q*: BOOL;
+	opCellDrawerRetractDown AT %Q*: BOOL;
+	
+	opMain_Incoming_Air_Valve			AT %Q*: BOOL;
+
+
+	aiXAxis 						AT %I*: INT;
+	aiYAxis 						AT %I*: INT;
+	aiZAxis 						AT %I*: INT;
+	
+	mTIUInOutStatus : BOOL;
+
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

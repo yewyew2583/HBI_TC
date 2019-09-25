@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <POU Name="FUN_CmdToEvent" Id="{1e9d7deb-acc9-4915-9671-d8abca46c857}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION FUN_CmdToEvent : BOOL
+VAR_INPUT
+	eCmd2Event_TaskName : E_TaskName;
+	iCmd2Event_Result : INT;	//1:Completed, 2:Failed
+END_VAR
+VAR_IN_OUT
+	eCmd2Event_EventName : E_EventName;	
+	sCmd2Event_EventName : STRING(81);
+END_VAR
+VAR
+	fbCmdAndEventUpdate:FB_CmdAndEventUpdate;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[fbCmdAndEventUpdate.M_nCmdtoEvent(eCmd2Event_TaskName:=eCmd2Event_TaskName , iCmd2Event_Result:=iCmd2Event_Result,  
+eCmd2Event_EventName:=eCmd2Event_EventName , sCmd2Event_EventName:=sCmd2Event_EventName );]]></ST>
+    </Implementation>
+    <LineIds Name="FUN_CmdToEvent">
+      <LineId Id="7" Count="0" />
+      <LineId Id="35" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

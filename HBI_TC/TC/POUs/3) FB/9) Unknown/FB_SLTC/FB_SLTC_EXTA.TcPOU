@@ -1,0 +1,179 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <POU Name="FB_SLTC_EXTA" Id="{77db0e69-7f28-44ba-ba34-55a297738bf7}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_SLTC_EXTA
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	stBIO:ST_SLTC_EXTRA_BIO ;
+	stDIO:ST_SLTC_EXTRA_DIO ;
+	stVIO:ST_SLTC_EXTRA_VIO ;
+	
+	
+/////
+	//
+	mode:INT:=1;
+	isEnManStepping:BOOL;
+	isResetStepping:BOOL;
+	//TE
+	fbTEMStepping:FB_Man_Stepping;
+	noOfStepTE:INT:=10;
+	startPressureTE:REAL;
+	endPressureTE:REAL:=3.0;
+	StepDelayTE:INT:=250;
+	TEResult:REAL;
+	btnToggleTE:BOOL;
+	isStartSteppingTE:BOOL;
+	isSteppingDoneTE:BOOL;
+	btnStartDIFUTE:R_TRIG;
+	steppingDoneDIFDTE:F_TRIG;
+	//DE
+	fbDEMStepping:FB_Man_Stepping;
+	noOfStepDE:INT:=10;
+	startPressureDE:REAL;
+	endPressureDE:REAL:=3.0;
+	StepDelayDE:INT:=250;
+	DEResult:REAL;
+	btnToggleDE:BOOL;
+	isStartSteppingDE:BOOL;
+	isSteppingDoneDE:BOOL;
+	btnStartDIFUDE:R_TRIG;
+	steppingDoneDIFDDE:F_TRIG;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[M_IOMapping();
+//reset Result
+IF isResetStepping THEN
+	IF NOT isStartSteppingDE AND NOT isStartSteppingTE THEN
+		DEResult := 0.00;
+		TEResult := 0.00;
+	END_IF
+END_IF
+
+//TE
+btnStartDIFUTE(Clk:=btnToggleTE);
+IF btnStartDIFUTE.Q THEN 
+	isStartSteppingTE:=TRUE;
+END_IF
+IF isStartSteppingTE THEN 
+	fbTEMStepping(start:=isStartSteppingTE,
+				noOfStep:= noOfStepTE, 
+				startPressure:= startPressureTE, 
+				endPressure:= endPressureTE, 
+				StepDelay:= INT_TO_TIME(StepDelayTE), 
+				mode:= mode, 
+				result:= TEResult, 
+				Done:= isSteppingDoneTE);
+	IF isSteppingDoneTE THEN
+		isStartSteppingTE :=FALSE;
+	END_IF
+END_IF 
+IF isSteppingDoneTE THEN
+	btnToggleTE:=FALSE;
+	isSteppingDoneTE:=FALSE;
+END_IF
+
+//DE
+btnStartDIFUDE(Clk:=btnToggleDE);
+IF btnStartDIFUDE.Q THEN 
+	isStartSteppingDE:=TRUE;
+END_IF
+IF isStartSteppingDE THEN 
+	fbDEMStepping(start:=isStartSteppingDE,
+				noOfStep:= noOfStepDE, 
+				startPressure:= startPressureDE, 
+				endPressure:= endPressureDE, 
+				StepDelay:= INT_TO_TIME(StepDelayDE), 
+				mode:= mode, 
+				result:= DEResult, 
+				Done:= isSteppingDoneDE);
+	IF isSteppingDoneDE THEN
+		isStartSteppingDE :=FALSE;
+	END_IF
+END_IF 
+IF isSteppingDoneDE THEN
+	btnToggleDE:=FALSE;
+	isSteppingDoneDE:=FALSE;
+END_IF
+]]></ST>
+    </Implementation>
+    <Method Name="M_IOMapping" Id="{b84b1685-9fbb-4b42-9665-9c52efca1f8f}">
+      <Declaration><![CDATA[METHOD M_IOMapping : BOOL
+VAR_INPUT
+END_VAR
+
+VAR
+	rtdScaler:INT:=1;
+	htScaler:INT:=1;
+	apHtScaler:INT:=1;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[stVIO.ipRTD1				:= stDIO.ipRTD1	/rtdScaler;				
+stVIO.ipRTD2				:= stDIO.ipRTD2	/rtdScaler;				
+stVIO.ipHeaterCurrent1	 	:= stDIO.ipHeaterCurrent1/htScaler;	
+stVIO.ipHeaterCurrent2   	:= stDIO.ipHeaterCurrent2/htScaler;     
+stVIO.ipHeaterCurrent3   	:= stDIO.ipHeaterCurrent3/htScaler;     
+stVIO.ipHeaterCurrent4   	:= stDIO.ipHeaterCurrent4/htScaler;       
+stVIO.ipAPHeaterCurrent   	:= stDIO.ipAPHeaterCurrent/apHtScaler; 
+
+//stDIO.ipHeaterCurCtrl1	:= 0;
+//stDIO.ipHeaterCurCtrl2 := 0;
+//stDIO.ipHeaterCurCtrl3 := 0;
+//stDIO.ipHeaterCurCtrl4 := 0;
+//stDIO.ipAPHeaterCurCtrl:= 0;
+
+IF NOT isEnManStepping THEN
+	stDIO.opTEPressRegAOut:=REAL_TO_INT(( (stVIO.opTEPressRegAOut-0.0)/130.0)*16383.5);
+	stDIO.opDEPressRegAOut:=REAL_TO_INT(( (stVIO.opDEPressRegAOut-0.0)/130.0)*16383.5);
+ELSE
+	stDIO.opTEPressRegAOut:=REAL_TO_INT(( (TEResult-0.0)/130.0)*16383.5);
+	stDIO.opDEPressRegAOut:=REAL_TO_INT(( (DEResult-0.0)/130.0)*16383.5);
+END_IF
+
+
+IF TRUE THEN
+stVIO.ipTEPressRegFeedBack:=(((stDIO.ipTEPressRegFeedBack - 3276.7 )/13106.8)*130)+3;
+stVIO.ipDEPressRegFeedBack:=(((stDIO.ipDEPressRegFeedBack - 3276.7 )/13106.8)*130)+3;
+stVIO.ipDEPressureSensor:=(((stDIO.ipDEPressureSensor-3276.7 )/13106.8)*144.038)+0;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_SLTC_EXTA">
+      <LineId Id="755" Count="0" />
+      <LineId Id="889" Count="0" />
+      <LineId Id="891" Count="0" />
+      <LineId Id="895" Count="0" />
+      <LineId Id="899" Count="0" />
+      <LineId Id="898" Count="0" />
+      <LineId Id="894" Count="0" />
+      <LineId Id="893" Count="0" />
+      <LineId Id="890" Count="0" />
+      <LineId Id="756" Count="17" />
+      <LineId Id="775" Count="3" />
+      <LineId Id="825" Count="18" />
+      <LineId Id="845" Count="2" />
+      <LineId Id="824" Count="0" />
+      <LineId Id="21" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_SLTC_EXTA.M_IOMapping">
+      <LineId Id="5" Count="0" />
+      <LineId Id="12" Count="4" />
+      <LineId Id="57" Count="0" />
+      <LineId Id="70" Count="0" />
+      <LineId Id="68" Count="1" />
+      <LineId Id="67" Count="0" />
+      <LineId Id="66" Count="0" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="72" Count="0" />
+      <LineId Id="30" Count="2" />
+      <LineId Id="46" Count="2" />
+      <LineId Id="27" Count="2" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="35" Count="2" />
+      <LineId Id="24" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
+  <DUT Name="ST_TCSubModuleState" Id="{ed20a030-1649-46bc-b296-75c10d6f4430}">
+    <Declaration><![CDATA[TYPE ST_TCSubModuleState :
+STRUCT
+	Tester							: E_State := E_State.eEnabled;
+	TCSite							: ARRAY [1..(.NO_OF_TC_SITE)] OF ST_TCSiteState;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

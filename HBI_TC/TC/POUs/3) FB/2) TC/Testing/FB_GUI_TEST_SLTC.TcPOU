@@ -1,0 +1,240 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <POU Name="FB_GUI_TEST_SLTC" Id="{c0bbe826-02ff-4bbc-b823-b544adae766c}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_GUI_TEST_SLTC
+VAR_INPUT
+	iLevel :INT;
+END_VAR
+VAR
+	bInitialise : BOOL := FALSE;
+	bStartCycle : BOOL := FALSE;
+	tCaptureDelay: TIME:= T#1000MS;
+	tDelayNextStep: TIME:= T#2000MS;
+	tInterval: TIME:= T#200MS;
+	
+	bCylinderUp : BOOL;
+	//iLevel : UINT :=2; 
+	
+	nState : UINT :=0;
+	nCount: INT:=0;
+	nNoOfCycle:INT:=1;
+	TDelay : TON;
+	TDelay1 : TON;
+	bUp: BOOL;
+	sErr: STRING;
+	tempstr : ARRAY[1..4] OF STRING;
+	TDelay2 : TON;
+	i: INT :=1;
+	
+	bCylinderOutL1: BOOL;
+	bOutL1 : BOOL;
+	
+	bPBStart : BOOL;
+	
+	StartPbDly: TON;
+	rtStartTrig :F_Trig;
+	
+	sErrorMsg : STRING;
+END_VAR
+
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF bInitialise THEN
+	arrTCLevel[iLevel].stGblParam.bInitialise:=TRUE;
+	bInitialise:=FALSE;
+END_IF
+
+IF bCylinderUp THEN
+	IF (arrTCLevel[iLevel].fbTCLevelSeq.M_nCmptUpDown(bUp, sErr)=10) THEN
+		bCylinderUp :=FALSE;
+	END_IF
+END_IF
+
+IF bMoveShuttle THEN
+	sErrorMsg:='';
+	bMoveShuttle:=FALSE;
+	IF arrTCLevelVIO[iLevel].ipTCCellDoorClosed AND arrTCLevelVIO[iLevel].ipTCCellDoorLock THEN
+		IF arrTCLevelVIO[iLevel].ipTCDrawerRetractedinCell THEN
+			arrTCLevel[iLevel].stGblParam.bShuttleMoveOut := TRUE;
+		ELSE
+			arrTCLevel[iLevel].stGblParam.bShuttleMoveIn := TRUE;
+		END_IF
+	ELSE
+		sErrorMsg := 'Door is not lock';
+	END_IF
+END_IF
+
+
+(*IF bCylinderOutL1 THEN
+	IF (arrTCLevel[iLevel].fbTCLevelSeq.M_nCmptInOut(bOutL1, sErr)=10) THEN
+		bCylinderOutL1 :=FALSE;
+	END_IF
+END_IF*)
+
+(*StartPbDly(in:=(stIO[iLevel].ipStartPB),pt:=T#100MS);
+rtStartTrig(Clk:=StartPbDly.Q);
+IF rtStartTrig.Q THEN
+	bPBStart:=TRUE;
+END_IF *)
+
+//bPBStart := stIO[iLevel].ipStartPB;
+
+IF bStartCycle (*OR bPBStart*) THEN //cycle Up down, in out
+	CASE nState OF
+	 0: 	TDelay(IN:=FALSE);
+	 		TDelay1(IN:=FALSE);
+			TDelay2(IN:=FALSE);
+			i:=1;
+			arrTCLevel[iLevel].stGblParam.bShuttleMoveOut := TRUE;
+	 		nState := 1;
+						
+	 1: 	IF arrTCLevel[iLevel].stGblParam.bShuttleMoveOut =FALSE THEN
+		 
+		 	TDelay1(IN:=TRUE,PT:=tCaptureDelay);
+			IF TDelay1.Q THEN
+				TDelay2(IN:=TRUE,PT:=tInterval);
+				IF TDelay2.Q THEN
+										
+					TDelay2(IN:=FALSE);
+					tempstr[1] := F_concat3('X, ', REAL_TO_STRING(aiXConverted[iLevel]), ', ');
+					tempstr[2] := F_concat3('Y, ', REAL_TO_STRING(aiYConverted[iLevel]), ', ');
+					tempstr[3] := F_concat3('Z, ', REAL_TO_STRING(aiZConverted[iLevel]), ', ');
+					
+					tempstr[4] := F_concat3(tempstr[1], tempstr[2], tempstr[3]);
+					Logging.fbDebugLog.M_nLogger(1, sSource:='aisensor', F_concat3(INT_TO_STRING(i), ', ', tempstr[4]));
+					i := i+1;
+				END_IF
+				
+ 
+				//END_FOR
+			END_IF
+			
+			
+			TDelay(IN:=TRUE,PT:=tDelayNextStep);//after move out, delay before move in
+			IF TDelay.Q THEN
+				TDelay(IN:=FALSE);
+				nState := 2;
+			END_IF
+			END_IF
+			
+	 2:		arrTCLevel[iLevel].stGblParam.bShuttleMoveIn := TRUE;
+	 		nState := 3;
+			
+	 3: 	IF arrTCLevel[iLevel].stGblParam.bShuttleMoveIn=FALSE THEN
+			TDelay(IN:=TRUE,PT:=tDelayNextStep);//after move out, delay before move in
+			IF TDelay.Q THEN
+				TDelay(IN:=FALSE);
+				nState := 0;
+				nCount := nCount +1;
+			END_IF	 
+	 
+			END_IF
+	END_CASE
+	
+	IF nCount> nNoOfCycle(*AND nState =3*) THEN
+		bStartCycle := FALSE;
+		nCount:=1;
+		//bPBStart := FALSE;
+		
+	END_IF
+		
+END_IF
+
+
+
+
+
+
+	
+
+
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="FB_GUI_TEST_SLTC">
+      <LineId Id="196" Count="0" />
+      <LineId Id="194" Count="0" />
+      <LineId Id="198" Count="0" />
+      <LineId Id="197" Count="0" />
+      <LineId Id="295" Count="1" />
+      <LineId Id="298" Count="0" />
+      <LineId Id="306" Count="1" />
+      <LineId Id="299" Count="0" />
+      <LineId Id="672" Count="0" />
+      <LineId Id="491" Count="0" />
+      <LineId Id="692" Count="0" />
+      <LineId Id="730" Count="0" />
+      <LineId Id="685" Count="1" />
+      <LineId Id="673" Count="0" />
+      <LineId Id="676" Count="2" />
+      <LineId Id="687" Count="2" />
+      <LineId Id="674" Count="0" />
+      <LineId Id="681" Count="0" />
+      <LineId Id="679" Count="0" />
+      <LineId Id="492" Count="4" />
+      <LineId Id="627" Count="1" />
+      <LineId Id="195" Count="0" />
+      <LineId Id="632" Count="0" />
+      <LineId Id="297" Count="0" />
+      <LineId Id="633" Count="0" />
+      <LineId Id="636" Count="0" />
+      <LineId Id="593" Count="0" />
+      <LineId Id="637" Count="0" />
+      <LineId Id="151" Count="1" />
+      <LineId Id="154" Count="0" />
+      <LineId Id="452" Count="1" />
+      <LineId Id="456" Count="0" />
+      <LineId Id="266" Count="0" />
+      <LineId Id="222" Count="0" />
+      <LineId Id="171" Count="0" />
+      <LineId Id="214" Count="0" />
+      <LineId Id="433" Count="0" />
+      <LineId Id="440" Count="0" />
+      <LineId Id="442" Count="0" />
+      <LineId Id="434" Count="0" />
+      <LineId Id="432" Count="0" />
+      <LineId Id="454" Count="0" />
+      <LineId Id="431" Count="0" />
+      <LineId Id="427" Count="2" />
+      <LineId Id="465" Count="2" />
+      <LineId Id="457" Count="0" />
+      <LineId Id="445" Count="0" />
+      <LineId Id="451" Count="0" />
+      <LineId Id="448" Count="0" />
+      <LineId Id="435" Count="0" />
+      <LineId Id="443" Count="0" />
+      <LineId Id="423" Count="1" />
+      <LineId Id="226" Count="0" />
+      <LineId Id="264" Count="0" />
+      <LineId Id="400" Count="0" />
+      <LineId Id="267" Count="1" />
+      <LineId Id="244" Count="1" />
+      <LineId Id="227" Count="0" />
+      <LineId Id="286" Count="0" />
+      <LineId Id="218" Count="0" />
+      <LineId Id="156" Count="0" />
+      <LineId Id="330" Count="4" />
+      <LineId Id="328" Count="0" />
+      <LineId Id="170" Count="0" />
+      <LineId Id="167" Count="0" />
+      <LineId Id="159" Count="1" />
+      <LineId Id="172" Count="1" />
+      <LineId Id="175" Count="0" />
+      <LineId Id="626" Count="0" />
+      <LineId Id="635" Count="0" />
+      <LineId Id="174" Count="0" />
+      <LineId Id="161" Count="0" />
+      <LineId Id="149" Count="0" />
+      <LineId Id="501" Count="0" />
+      <LineId Id="563" Count="1" />
+      <LineId Id="504" Count="0" />
+      <LineId Id="150" Count="0" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="48" Count="0" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="24" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

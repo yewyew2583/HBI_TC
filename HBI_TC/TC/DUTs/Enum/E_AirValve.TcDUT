@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
+  <DUT Name="E_AirValve" Id="{dd6e76c5-cd3e-4640-9cc3-ac903f2fcd7f}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE E_AirValve :
+(
+	UNKNOWN		:=0,
+	TESTER	 	:=1,
+	AP		 	:=2,
+	TIU_SKT1 	:=3,
+	TIU_SKT2 	:=4
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

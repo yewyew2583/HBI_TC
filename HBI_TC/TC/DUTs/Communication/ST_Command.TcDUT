@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
+  <DUT Name="ST_Command" Id="{ed8258fb-161e-4600-90d0-342452435a3e}">
+    <Declaration><![CDATA[TYPE ST_Command :
+STRUCT
+	sLogName	: STRING(81);
+	eTaskName	: E_TaskName;
+	eModuleID	: E_ModuleID;
+	iParam		: ARRAY [1..NO_OF_INT_PARAM] OF DINT;
+	sParam		: ARRAY [1..NO_OF_STRING_PARAM] OF STRING;
+	bParam		: ARRAY [1..NO_OF_BOOL_PARAM] OF BOOL;
+	dParam		: ARRAY [1..NO_OF_LREAL_PARAM] OF LREAL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

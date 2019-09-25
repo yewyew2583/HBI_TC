@@ -1,0 +1,172 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
+  <POU Name="DFB_Switch" Id="{ae27d825-863f-44c7-a14f-b355bd28d4fd}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK DFB_Switch
+VAR_INPUT
+	Sec_P									: BOOL; // Second pulse
+	Simulation								: BOOL; // Simulation mode, 0: production mode, 1: Simulation mode
+	Simu_Manual								: BOOL; // Simulation manual mode: 0: Simulation auto mode, 1: Simulation manual mode
+	IN										: BOOL; // Actual input signal, 
+													//		IF Invert(input) = 0, Q(output) = IN(input)
+													//		IF Invert(input) = 1, Q(output) = (NOT IN(input))
+	IN_Simu									: BOOL; // Simulation input signal
+													//		Q(output) = IN_Simu(input)
+	Invert									: BOOL; // Invert Q(output) signal refer to IN(input)
+	Delay									: UDINT; // Delay in seconds
+END_VAR
+
+VAR_IN_OUT
+	DUT										: DUT_Switch;
+END_VAR
+
+VAR_OUTPUT
+	Q										: BOOL; // Output signal
+END_VAR
+
+VAR
+	
+	_Delay									: UDINT; // Delay in seconds
+	
+	_Timer									: UDINT; // Time count in seconds
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//*********************************************************************************************************************************************************************************************//
+// Method Name			: DFB_Switch	
+// Last Modified date	: 01 Jul 2019
+// Functionality		: - Handle digital signal under production mode, simulation auto mode and simulation manual mode
+//						  - Delay function is provided to map IN(input) to Q(output) under production mode and simulation auto mode
+//						  - Invert signal function is provided to give a inverted Q(output) which refer to IN(input)
+//						  - Production mode: Q(Output) will be follow IN(input) signal
+//						  - Simulation auto mode: Q(Output) will be follow IN_Simu(input) signal
+//						  - Simulation manual mode: Q(Output) will be follow DUT.Q(input-output) signal
+//*********************************************************************************************************************************************************************************************//
+// 		Version			Date				Description
+//		0.01		01 Jul 2019				- Created
+//*********************************************************************************************************************************************************************************************//
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//	Timer
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+IF ((NOT Simulation) AND IN) OR (Simulation AND IN_Simu) THEN
+	IF Sec_P THEN
+		_Timer																:= _Timer + 1;
+	END_IF
+ELSE
+	_Timer																	:= 0;
+END_IF
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//	Clamp
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+IF Delay >= 0 THEN
+	_Delay																	:= Delay;
+ELSE
+	_Delay																	:= 0;
+END_IF
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//	State machine
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+IF (NOT Simulation) THEN // Production mode
+	IF (NOT Invert) THEN
+		IF IN THEN
+			IF _Timer > _Delay THEN
+				Q															:= TRUE;
+			ELSE
+				Q															:= FALSE;
+			END_IF
+		ELSE
+			Q																:= FALSE;
+		END_IF
+	ELSE
+		IF (NOT IN) THEN
+			IF _Timer > _Delay THEN
+				Q															:= TRUE;
+			ELSE
+				Q															:= FALSE;
+			END_IF
+		ELSE
+			Q																:= FALSE;
+		END_IF
+	END_IF
+ELSE // Simulation mode
+	IF (NOT Simu_Manual) THEN // Simulation auto mode
+		IF (NOT Invert) THEN
+			IF IN_Simu THEN
+				IF _Timer > _Delay THEN
+					Q														:= TRUE;
+				ELSE
+					Q														:= FALSE;
+				END_IF
+			ELSE
+				Q															:= FALSE;
+			END_IF
+		ELSE
+			IF (NOT IN_Simu) THEN
+				IF _Timer > _Delay THEN
+					Q														:= TRUE;
+				ELSE
+					Q														:= FALSE;
+				END_IF
+			ELSE
+				Q															:= FALSE;
+			END_IF
+		END_IF
+	ELSE // Simulation manual mode
+		Q																	:= DUT.Q;
+	END_IF
+END_IF
+]]></ST>
+    </Implementation>
+    <LineIds Name="DFB_Switch">
+      <LineId Id="14" Count="3" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="18" Count="4" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="61" Count="4" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="68" Count="0" />
+      <LineId Id="51" Count="0" />
+      <LineId Id="69" Count="0" />
+      <LineId Id="71" Count="3" />
+      <LineId Id="70" Count="0" />
+      <LineId Id="52" Count="2" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="55" Count="0" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="56" Count="0" />
+      <LineId Id="59" Count="1" />
+      <LineId Id="57" Count="0" />
+      <LineId Id="28" Count="2" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="44" Count="1" />
+      <LineId Id="79" Count="0" />
+      <LineId Id="46" Count="0" />
+      <LineId Id="75" Count="0" />
+      <LineId Id="77" Count="0" />
+      <LineId Id="81" Count="0" />
+      <LineId Id="83" Count="0" />
+      <LineId Id="78" Count="0" />
+      <LineId Id="84" Count="0" />
+      <LineId Id="86" Count="0" />
+      <LineId Id="76" Count="0" />
+      <LineId Id="87" Count="0" />
+      <LineId Id="89" Count="7" />
+      <LineId Id="88" Count="0" />
+      <LineId Id="80" Count="0" />
+      <LineId Id="97" Count="1" />
+      <LineId Id="107" Count="19" />
+      <LineId Id="99" Count="0" />
+      <LineId Id="101" Count="1" />
+      <LineId Id="100" Count="0" />
+      <LineId Id="47" Count="0" />
+      <LineId Id="43" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

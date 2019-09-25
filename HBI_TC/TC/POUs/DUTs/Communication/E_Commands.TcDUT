@@ -1,0 +1,71 @@
+﻿<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.0.23">
+  <DUT Name="E_Commands" Id="{8acaa759-80d2-42c4-86a0-2e4e68fa1763}">
+    <Declaration><![CDATA[TYPE E_Commands :
+(
+
+Connect :=1, 
+Disconnect,
+GetSystemConfig,
+ActivateRecipe,
+ValidateRecipe,
+UpdateRecipeValue,
+GetRecipeValue,
+TrayDispatch,
+//TrayDispatch,
+//TrayDispatch,
+AlarmReset,
+SetLogFileVerbosity,
+Read2DID,
+ReadFiducial,
+Rescan,
+PickAndPlace,
+UpdateLCD,
+EnableModule,
+DisableModule,
+Actuate,
+Deactuate,
+InflateAirBladder,
+DeflateAirBladder,
+TCUSafeState,
+DeleteLeastUsedRecipe,
+PNBShutterOpen,
+PNBShutterClose,
+VisionReady,
+Initialise,
+Pause,
+Resume,
+StartFactoryCalibration,
+CalCamZResult,
+Jog,
+GetCurrentPosition,
+SetPosition,
+GetDistanceMoved,
+GetTeachData,
+ApplyTeachData,
+AbortTeach,
+StartProductCalibration,
+TeachOffsetData,
+CaptureCalibrationPosition,
+StartCameraCalibration,
+TriggerVision,
+EnableDryRun,
+DisableDryRun,
+EngageKitTray,
+DisengageKitTray,
+VisionPitchData,
+ReadEPROMData,
+WriteEPROMData,
+DoorOpen,
+DoorClose,
+Retry,
+Cancel,
+MainAirValve,
+CycleDPSPower,
+HardStop
+
+);
+END_TYPE
+]]></Declaration>
+    <ObjectProperties />
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <POU Name="ANLG_TO_ABC" Id="{bbe9b7ab-1d84-4de0-b840-2ec1f6c9fa5f}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION ANLG_TO_ABC : LREAL
+VAR_INPUT
+	iMn : REAL;
+	iMx : REAL;
+	oMn : REAL;
+	oMx : REAL;
+	ofs : REAL := 0; //offset
+	val : DINT;
+	b: REAL :=0.0;
+END_VAR
+VAR
+	temp:LREAL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[temp:= SEL(b=0.0,
+	   ((oMx-oMn)/(iMx-iMn))*val + b,  
+	   ((oMx-oMn)/(iMx-iMn))*val + (oMn -((oMx-oMn)/(iMx-iMn))*iMn));
+				 
+				 
+ANLG_TO_ABC:=SEL(temp<ofs AND ofs<>0 AND oMn=0, temp+ofs, temp); 				 
+				 			 
+(*				 
+ANLG_TO_ABC:= SEL(b=0.0,
+				 ((oMx-oMn)/(iMx-iMn))*val + ofs + b,  
+				 ((oMx-oMn)/(iMx-iMn))*val + ofs + (oMn -((oMx-oMn)/(iMx-iMn))*iMn));	
+*)			]]></ST>
+    </Implementation>
+    <LineIds Name="ANLG_TO_ABC">
+      <LineId Id="35" Count="1" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="45" Count="3" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="39" Count="1" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="44" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

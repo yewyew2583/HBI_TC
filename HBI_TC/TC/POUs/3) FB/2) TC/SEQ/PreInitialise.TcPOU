@@ -1,0 +1,103 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <POU Name="PreInitialise" Id="{1b25484a-6211-4e41-8f0e-ef1661458f4a}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM PreInitialise
+VAR
+	iLoop  : INT := 0;
+	bStartStep1 : BOOL := TRUE;
+	tStartStep2 : TON;
+	bStartStep2 : BOOL := FALSE;	
+	tStartStep3 : TON;
+	bStartStep3 : BOOL := FALSE;
+	tStartStep4 : TON;
+	bStartStep4 : BOOL := FALSE;
+	
+	stMLVIO : ST_TCMultiLevel_VIO;
+	iLevel:Int:=1;
+	noOfLevel: INT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[iTCColumnID		:= F_GetColumnID(eColumnID:=COLUMN_NAME);
+F_GetModuleID(eColumnID:=COLUMN_NAME);
+
+
+tStartStep2(IN:=bStartStep2, PT:=T#1S);
+tStartStep3(IN:=bStartStep3, PT:=T#5S); 
+tStartStep4(IN:=bStartStep4, PT:=T#1S);
+
+IF bStartStep1 THEN
+	bStartStep1 := FALSE;
+	bStartStep2 := TRUE; //Proceed to step-2
+	bStartStep3 := FALSE;
+	bStartStep4 := FALSE;
+	RETURN;
+END_IF
+
+IF tStartStep2.Q THEN
+	
+	Logging.fbDebugLog.M_nLogger(iLogLevel:= Logging.fbDebugLog.P_iLogVerbosity, sSource:= '', sMessage:= '                                                  ');
+	Logging.fbDebugLog.M_nLogger(iLogLevel:= Logging.fbDebugLog.P_iLogVerbosity, sSource:= '', sMessage:= '                                                  ');
+	Logging.fbDebugLog.M_nLogger(iLogLevel:= Logging.fbDebugLog.P_iLogVerbosity, sSource:= '', sMessage:= '==================================================');
+	Logging.fbDebugLog.M_nLogger(iLogLevel:= Logging.fbDebugLog.P_iLogVerbosity, sSource:= '', sMessage:= 'AEM Singapore Pte Ltd. All rights reserved.       ');
+	Logging.fbDebugLog.M_nLogger(iLogLevel:= Logging.fbDebugLog.P_iLogVerbosity, sSource:= '', sMessage:= '==================================================');
+	Logging.fbDebugLog.M_nLogger(iLogLevel:= Logging.fbDebugLog.P_iLogVerbosity, sSource:= '', sMessage:= CONCAT(CONCAT('PLC TC v', stLibVersion_TC.sVersion), ' started'));
+	Logging.fbDebugLog.M_nLogger(iLogLevel:= Logging.fbDebugLog.P_iLogVerbosity, sSource:= '', sMessage:= '                                                  ');	
+	bGetAMSNetID:= TRUE;
+	bStartStep1 := FALSE;
+	bStartStep2 := FALSE; 
+	bStartStep3 := TRUE; //Proceed to step-3
+	bStartStep4 := FALSE;
+	
+	FOR iLevel:=1 TO NO_OF_LEVEL DO 
+		stMLVIO:=arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO;
+		stMLVIO.opAPAirSupplySol := TRUE;
+		stMLVIO.opTesterDrawerAirSupplySol:= TRUE;
+		arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO := stMLVIO;
+	END_FOR
+	
+	RETURN;
+END_IF
+
+IF tStartStep3.Q THEN
+	bStartStep1 := FALSE;
+	bStartStep2 := FALSE; 
+	bStartStep3 := FALSE;
+	bStartStep4 := TRUE;
+	RETURN;
+END_IF
+
+IF tStartStep4.Q THEN
+	//bPlcRunning := TRUE;
+	
+	bStartStep1 := FALSE;
+	bStartStep2 := FALSE; 
+	bStartStep3 := FALSE;
+	bStartStep4 := FALSE;
+	RETURN;
+END_IF
+]]></ST>
+    </Implementation>
+    <LineIds Name="PreInitialise">
+      <LineId Id="296" Count="0" />
+      <LineId Id="309" Count="1" />
+      <LineId Id="295" Count="0" />
+      <LineId Id="6" Count="1" />
+      <LineId Id="281" Count="0" />
+      <LineId Id="9" Count="1" />
+      <LineId Id="106" Count="0" />
+      <LineId Id="108" Count="7" />
+      <LineId Id="263" Count="6" />
+      <LineId Id="173" Count="0" />
+      <LineId Id="226" Count="3" />
+      <LineId Id="332" Count="0" />
+      <LineId Id="326" Count="1" />
+      <LineId Id="333" Count="2" />
+      <LineId Id="328" Count="0" />
+      <LineId Id="323" Count="0" />
+      <LineId Id="230" Count="4" />
+      <LineId Id="237" Count="14" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

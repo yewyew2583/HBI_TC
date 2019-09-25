@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <POU Name="F_AlarmLog" Id="{88bb64c1-1847-4501-b557-8e61a4f87b6c}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION F_AlarmLog : BOOL
+VAR_INPUT
+	iLevel: INT;
+	sName : STRING;
+	bNew  : BOOL;
+END_VAR
+VAR
+	
+END_VAR
+VAR_IN_OUT
+	bOld : BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF (bOld <> bNew) THEN
+	Logging.fbDebugLog.P_sModule := 'Alarm Toggled';
+	Logging.fbDebugLog.M_nLogger(iLogLevel:= Logging.fbDebugLog.P_iLogVerbosity, 
+								sSource:= sName , sMessage:=  F_Concat3(BOOL_TO_STRING(bOld),'->',BOOL_TO_STRING(bNew)));
+	//Logging.fbAlarmLog.P_sModule := 'Alarm Toggled';
+	//Logging.fbAlarmLog.M_nLogger(iLogLevel:= Logging.fbDebugLog.P_iLogVerbosity, 
+	//							sSource:= sName , sMessage:=  F_Concat3(BOOL_TO_STRING(bOld),'->',BOOL_TO_STRING(bNew)));							
+								
+	bOld := bNew;
+END_IF
+]]></ST>
+    </Implementation>
+    <LineIds Name="F_AlarmLog">
+      <LineId Id="19" Count="3" />
+      <LineId Id="28" Count="1" />
+      <LineId Id="26" Count="1" />
+      <LineId Id="24" Count="1" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

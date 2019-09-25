@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
+  <DUT Name="E_ProcessState" Id="{5b9a3d7e-feaa-4c00-a416-9df0b6c77977}">
+    <Declaration><![CDATA[TYPE E_ProcessState :
+(
+	eUNKNOWN:=0,
+	eINIT,		//During Init
+	//eIDLE,
+	//eIDLEAL,
+	//eSETGUP,
+	//eREADY,
+	eAWAITGCMD,	//After Done = Idle
+	eLOADG,		//Processing
+    //eALARM,
+	ePAUSE,		//Aft Alm Rst
+	//eTARESUME,
+	eALPAUSED//,	//During Alm
+	//eCHECKG,
+	//eCOMPLETE
+	
+	
+);
+END_TYPE]]></Declaration>
+  </DUT>
+</TcPlcObject>

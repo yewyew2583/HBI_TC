@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
+  <DUT Name="ST_TTS_State" Id="{c35c4414-ae13-409e-917e-6537904d8bd9}">
+    <Declaration><![CDATA[TYPE ST_TTS_State :
+STRUCT
+	// TTS moduel state
+	arrTTSLane: ARRAY [1..3] OF E_State := [(3)(E_State.eEnabled)];
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

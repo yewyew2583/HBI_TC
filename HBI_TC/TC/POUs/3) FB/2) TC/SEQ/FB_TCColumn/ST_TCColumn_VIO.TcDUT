@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <DUT Name="ST_TCColumn_VIO" Id="{b27bb527-fc8e-488c-9cba-3e960d17156b}">
+    <Declaration><![CDATA[TYPE ST_TCColumn_VIO :
+STRUCT
+	ipColumnFluid_PCW_Leakage 	 	: BOOL;
+	//ipPressure_Switch_Error 	 	: BOOL;
+	ipAllTCDrawerRetractedinCell 	: BOOL;
+	ipTbotDoorClosedSignal 			: BOOL;
+	
+	opHotAirExhaustFan 				: BOOL;
+	bColumnErrClear 				: BOOL;
+	iAlmIDToRset					: DINT;
+	
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

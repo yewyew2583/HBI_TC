@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <DUT Name="ST_SLTC_EXTRA_BIO" Id="{0671ad11-faa5-462b-aee1-8c062f691d90}">
+    <Declaration><![CDATA[TYPE ST_SLTC_EXTRA_BIO :
+STRUCT
+	ipRTD1					: E_BackdoorState;
+	ipRTD2					: E_BackdoorState;
+	ipHeaterCurrent1		: E_BackdoorState;
+	ipHeaterCurrent2        : E_BackdoorState;
+	ipHeaterCurrent3        : E_BackdoorState;
+	ipHeaterCurrent4        : E_BackdoorState;
+	
+	ipTEUpRS 				: E_BackdoorState;
+	ipTEPressRegFeedBack 	: E_BackdoorState;
+	ipDEPressRegFeedBack 	: E_BackdoorState;
+	ipDEPressureSensor 		: E_BackdoorState;
+	
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

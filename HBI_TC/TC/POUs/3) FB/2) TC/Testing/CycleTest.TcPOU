@@ -1,0 +1,278 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <POU Name="CycleTest" Id="{af314abb-0dcf-4959-b9e7-200d5ac48c4c}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM CycleTest
+VAR
+	bCycleStart1:BOOL:= FALSE;
+	bCycleStart2:BOOL:= FALSE;
+	LevelToStart:INT:=3;
+	iLevel:INT:=1;
+	iNoOfLevel:INT:=4; //NO_OF_LEVEL;
+	nState:INT;
+	nCount:INT:=1;
+	fbGUI_TEST : ARRAY [1..NO_OF_LEVEL] OF FB_GUI_TEST;
+	arrLevelStartBits :ARRAY[1..NO_OF_LEVEL] OF BOOL;
+	
+	TDelay : TON;
+	TDelay1: TON;
+	TDelay2 : TON;
+	ClearTCSEvent: TON;
+	tCaptureDelay: TIME:= T#1000MS;
+	tDelayNextStep: TIME:= T#2000MS;
+	tInterval: TIME:= T#200MS;
+	tempstr :STRING;
+	i:INT;
+	iClearCount: INT;
+	iTotalClear: INT:=20;
+	
+	nNoOfCyclePerLevel:INT:=1;
+	bStartCycle	:BOOL;
+	bStart		:BOOL;
+	stVIO :ST_TCMultiLevel_VIO;
+	isError:BOOL;
+	
+	arrCount:ARRAY[1..NO_OF_LEVEL] OF INT;
+	NoOfCycCount:INT :=5;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//<region>
+	CASE nState OF
+		0:
+			nState:=1;
+			iLevel:=LevelToStart;
+		1:
+			IF bCycleStart1 AND bCycleStart2 THEN 
+				nState:=2; 
+			ELSE
+				IF bCycleStart1 XOR bCycleStart2 THEN
+					bCycleStart1:=FALSE;
+					bCycleStart2:=FALSE;
+				END_IF
+				iLevel:=LevelToStart;
+			END_IF
+		2:
+			arrLevelStartBits[iLevel]:=TRUE;
+			nState:=3;
+		3:	stVIO:=arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.stMLVIO;
+			
+			IF bCycleStart1 AND bCycleStart2 AND NOT isError THEN
+				arrTCSEventTriggered :=FALSE;
+				fbGUI_TEST[iLevel](iLevel:=iLevel,nCount:=nCount,bStart:=arrLevelStartBits[iLevel]);
+				isError:= stVIO.isTIIError OR stVIO.isSysError OR arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_bError;
+				IF NOT arrLevelStartBits[iLevel] THEN 
+					arrCount[iLevel]:=arrCount[iLevel]+1;
+					Logging.fbDebugLog.M_nLogger(1, sSource:='LEVEL CYCLE COUNT', F_concat3('Level',F_concat3('[',INT_TO_STRING(iLevel), ']'), F_concat3('Cycle Count =',', ',INT_TO_STRING(arrCount[iLevel]) ) ) );
+					IF iLevel < iNoOfLevel THEN
+						iLevel:=iLevel+1;
+						nState:=4;
+					ELSIF iLevel >= iNoOfLevel THEN
+						IF arrCount[iLevel]>=NoOfCycCount THEN
+							arrCount[iLevel]:=0;
+							bCycleStart1:=bCycleStart2 := FALSE;
+						END_IF
+						iLevel:=LevelToStart;
+						nState:=4;
+					END_IF
+				END_IF	
+			END_IF
+			IF isError THEN
+				isError:= stVIO.isTIIError OR stVIO.isSysError OR arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_bError;
+			END_IF
+		4:
+			nState:=1;
+		5:	
+		
+	END_CASE
+	
+
+//</region>
+
+(*
+//<CycleTest02>
+	CASE nState OF
+		0:
+			TDelay(IN:=FALSE);
+	 		TDelay1(IN:=FALSE);
+			TDelay2(IN:=FALSE);
+			i:=1;
+			nState:=1;
+		1:
+			IF bCycleStart1 AND bCycleStart2 THEN 
+				nState:=2; 
+			ELSE
+				IF bCycleStart1 XOR bCycleStart2 THEN
+					bCycleStart1:=FALSE;
+					bCycleStart2:=FALSE;
+				END_IF
+				iLevel:=1;
+			END_IF
+		2:
+			arrLevelStartBits[iLevel]:=TRUE;
+			nState:=3;
+		3:
+			arrTACommands.arrTACommands[1].sLogName := CONCAT('TIUSlideOut_TESTER_LA':CONCAT('0':INT_TO_STRING(iLevel)));
+			arrTACommands.arrTACommands[1].eTaskName := E_TaskName.TIUSlideOut;
+			arrTACommands.arrTACommands[1].eModuleID := LEVEL_MODULE_ID[iLevel];
+			arrTACommands.arrTACommands[1].bParam[1] := TRUE;
+			arrTCSCommandReady:= FALSE;
+			iClearCount := iTotalClear;
+			
+			ClearTCSEvent(IN:=(iClearCount > 0): PT:=T#100MS);
+			IF ClearTCSEvent.Q THEN
+				ClearTCSEvent(IN:=FALSE);
+				iClearCount := iClearCount - 1;
+				arrTCSEventTriggered:= FALSE;
+			END_IF
+			nState:=4;
+		4:	
+			IF arrTCMultiLevel[iLevel].stGblParam.bShuttleMoveOut =FALSE THEN
+				TDelay1(IN:=TRUE:PT:=tCaptureDelay);
+				IF TDelay1.Q THEN
+					TDelay2(IN:=TRUE:PT:=tInterval);
+					IF TDelay2.Q THEN
+											
+						TDelay2(IN:=FALSE);
+						tempstr[1] := F_concat3('X: ': REAL_TO_STRING(aiXConverted): ': ');
+						tempstr[2] := F_concat3('Y: ': REAL_TO_STRING(aiYConverted): ': ');
+						tempstr[3] := F_concat3('Z: ': REAL_TO_STRING(aiZConverted): ': ');
+						
+						tempstr[4] := F_concat3(tempstr[1]: tempstr[2]: tempstr[3]);
+						Logging.fbDebugLog.M_nLogger(1: sSource:='aisensor': F_concat3(INT_TO_STRING(i): ': ': tempstr[4]));
+						i := i+1;
+					END_IF
+				END_IF
+				TDelay(IN:=TRUE:PT:=tDelayNextStep);//after move out: delay before move in
+				IF TDelay.Q THEN
+					TDelay(IN:=FALSE);
+					nState := 2;
+				END_IF
+			END_IF
+		5:	//Move In
+			arrTACommands.arrTACommands[1].sLogName := CONCAT('TIUSlideOut_TESTER_LA':CONCAT('0':INT_TO_STRING(iLevel)));
+			arrTACommands.arrTACommands[1].eTaskName := E_TaskName.TIUSlideOut;
+			arrTACommands.arrTACommands[1].eModuleID := LEVEL_MODULE_ID[iLevel];
+			arrTACommands.arrTACommands[1].bParam[1] := TRUE;
+			arrTCSCommandReady:= FALSE;
+			iClearCount := iTotalClear;
+			
+			ClearTCSEvent(IN:=(iClearCount > 0): PT:=T#100MS);
+			IF ClearTCSEvent.Q THEN
+				ClearTCSEvent(IN:=FALSE);
+				iClearCount := iClearCount - 1;
+				arrTCSEventTriggered:= FALSE;
+			END_IF
+			nState:=4;
+			nState := 6;
+		6:	//
+			IF arrTCMultiLevel[iLevel].stGblParam.bShuttleMoveIn=FALSE THEN
+		    	TDelay(IN:=TRUE:PT:=tDelayNextStep);//after move out: delay before move in
+		    	IF TDelay.Q THEN
+		    		TDelay(IN:=FALSE);
+		    		nState := 0;
+		    		nCount := nCount +1;
+		    	END_IF	 
+		    END_IF
+		7:  
+				IF nCount> nNoOfCyclePerLevel(*AND nState =3*) THEN
+		arrLevelStartBits[iLevel] := FALSE;
+		bStart:=FALSE;
+		nCount:=1;
+		//bPBStart := FALSE;
+		
+	END_IF
+		
+		8:	
+			
+			IF NOT arrLevelStartBits[iLevel] THEN 
+				IF iLevel < NO_OF_LEVEL THEN
+					iLevel:=iLevel+1;
+					nState:=4;
+				ELSIF iLevel >= NO_OF_LEVEL THEN
+					iLevel:=1;
+					nState:=4;
+				END_IF
+			END_IF	
+		9:
+			nState:=0;
+		
+	END_CASE
+//</CycleTest02>
+*)
+
+
+
+
+
+
+
+
+	]]></ST>
+    </Implementation>
+    <LineIds Name="CycleTest">
+      <LineId Id="132" Count="0" />
+      <LineId Id="137" Count="17" />
+      <LineId Id="408" Count="0" />
+      <LineId Id="406" Count="1" />
+      <LineId Id="155" Count="0" />
+      <LineId Id="439" Count="0" />
+      <LineId Id="156" Count="0" />
+      <LineId Id="482" Count="0" />
+      <LineId Id="476" Count="0" />
+      <LineId Id="157" Count="3" />
+      <LineId Id="477" Count="0" />
+      <LineId Id="481" Count="0" />
+      <LineId Id="479" Count="1" />
+      <LineId Id="161" Count="3" />
+      <LineId Id="410" Count="0" />
+      <LineId Id="441" Count="0" />
+      <LineId Id="444" Count="0" />
+      <LineId Id="443" Count="0" />
+      <LineId Id="165" Count="3" />
+      <LineId Id="135" Count="0" />
+      <LineId Id="401" Count="1" />
+      <LineId Id="136" Count="0" />
+      <LineId Id="133" Count="1" />
+      <LineId Id="169" Count="2" />
+      <LineId Id="279" Count="2" />
+      <LineId Id="278" Count="0" />
+      <LineId Id="172" Count="0" />
+      <LineId Id="174" Count="13" />
+      <LineId Id="208" Count="2" />
+      <LineId Id="212" Count="2" />
+      <LineId Id="289" Count="0" />
+      <LineId Id="293" Count="4" />
+      <LineId Id="292" Count="0" />
+      <LineId Id="300" Count="0" />
+      <LineId Id="215" Count="0" />
+      <LineId Id="205" Count="0" />
+      <LineId Id="218" Count="12" />
+      <LineId Id="234" Count="1" />
+      <LineId Id="283" Count="4" />
+      <LineId Id="199" Count="1" />
+      <LineId Id="326" Count="13" />
+      <LineId Id="342" Count="0" />
+      <LineId Id="302" Count="0" />
+      <LineId Id="308" Count="7" />
+      <LineId Id="344" Count="0" />
+      <LineId Id="363" Count="5" />
+      <LineId Id="362" Count="0" />
+      <LineId Id="361" Count="0" />
+      <LineId Id="304" Count="0" />
+      <LineId Id="317" Count="0" />
+      <LineId Id="353" Count="7" />
+      <LineId Id="316" Count="0" />
+      <LineId Id="305" Count="1" />
+      <LineId Id="201" Count="1" />
+      <LineId Id="59" Count="0" />
+      <LineId Id="374" Count="0" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="130" Count="1" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="17" Count="1" />
+      <LineId Id="21" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

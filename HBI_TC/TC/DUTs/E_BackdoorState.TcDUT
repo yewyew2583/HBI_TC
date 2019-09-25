@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.10">
+  <DUT Name="E_BackdoorState" Id="{18f1f213-c174-4f07-bd17-a9b12b70675c}">
+    <Declaration><![CDATA[TYPE E_BackdoorState :
+(
+	eDisable := 0,
+	eForce_On :=1,
+	eForce_Off := 2
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

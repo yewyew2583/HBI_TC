@@ -1,0 +1,805 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <POU Name="FB_DebugStationSeq" Id="{09f9be3c-5add-4051-b26d-1258202fe318}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_DebugStationSeq EXTENDS Tc3_HBI_System.FB_Basic
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	nI : UINT;
+	
+	stDebugStationBIO		:ST_DebugStation_BIO;
+	stDebugStationDIO		:ST_DebugStation_DIO;
+	stDebugStationVIO		:ST_DebugStation_VIO;
+	stDbColVIO				: ST_DebugColumnDIO;
+	
+	stDbStnParam : ST_DebugStationSeqParam;
+	fbBD_ipBdoor : Tc3_HBI_Utilities.FB_BackDoor_Digital;
+	
+	btest: BOOL;
+
+	DIFUOn_TstPwr:R_TRIG;
+	DIFUOn_AP240Pwr:R_TRIG;
+	DIFUSet_bChkTstOn:R_TRIG; 	//
+	DIFUAPPresent:R_TRIG;
+	DIFDAPPresent:F_TRIG;
+	DIFUSet_bChkAP240On:R_TRIG; 	//
+	
+	tstOnCheckTim:TON;		//delay to check TesterOnFeedback
+	ap240OnCheckTim:TON;		//delay to check AP240OnFeedback
+	tstPresentTim:TON;		//delay to On Tester Air Valve after Tester Present
+	apPresentTimer:TON;
+	
+	isLeakage:BOOL;
+	isGroundFault:BOOL;
+	
+		// Common var 
+	bPause : BOOL; //Sequence pause
+	bBypassSingleMove : BOOL:=TRUE;
+	bStep : BOOL;
+	rtStep: R_TRIG;
+	rtStepCase: R_TRIG;
+	rtError: R_TRIG;
+	iStkSeqCase : INT;
+	iSeqStep: INT;
+	iSysRsetSeqStep: INT;
+	arrSeqStep: ARRAY [0..50] OF E_SeqSts; 			// seq
+	arrSysRsetSeqStep: ARRAY [0..50] OF E_SeqSts; 	//Sys Rset seq
+	
+	sMessage : STRING;
+	bErrClear: BOOL;
+	bStepDone: BOOL;
+	bSafeExecute: BOOL;
+	iStkSingStackUp:INT;
+	iLibrySts : ARRAY [1..20] OF UDINT;
+	
+	
+	
+	tAPACPwrDelayToComplete		:TON;  	//AP240ACPowerOnOff
+	tAPACPwrDelayToAutoComplete	:TON;	//AP240ACPowerAuto
+	
+	
+	timInc:TON;
+	bTIISenSimArray:ARRAY[1..NO_OF_TII_SENSOR] OF BOOL;
+	TimTemp:TON;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+]]></ST>
+    </Implementation>
+    <Method Name="Conversion" Id="{a226b9d3-12c7-467d-870e-e671e401b57e}">
+      <Declaration><![CDATA[METHOD Conversion : BOOL
+VAR_INPUT
+	isSimulation : BOOL;
+	//dIO:ST_DebugStation_DIO;
+END_VAR
+VAR		
+	tempSimIpt:LREAL;
+END_VAR
+VAR_IN_OUT
+	//vIO:ST_DebugStation_VIO;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF isSimulation THEN
+	//GetRand(Seed:=0,Num=>tempSimIpt);
+	//stDebugStationDIO.simDBStnTstAirLeakFlowSensor := tempSimIpt*10000;
+	stDebugStationDIO.fbSimDBStnTstAirLeakFlowSensor(Mn:=spDBStnTstAirLeakFlowSensor.iMn, mx:=spDBStnTstAirLeakFlowSensor.iMx, Sen:= stDebugStationDIO.simDBStnTstAirLeakFlowSensor);
+	//stDebugStationDIO.simDBStnTstAirLeakFlowSensor := INC(IN:=LREAL_TO_INT (stDebugStationDIO.simDBStnTstAirLeakFlowSensor));							
+	stDebugStationDIO.ipDBStnTstAirLeakFlowSensor	:= 	ANLG_TO_ABC(iMn:= spDBStnTstAirLeakFlowSensor.iMn, 
+																	iMx:= spDBStnTstAirLeakFlowSensor.iMx, 
+																	oMn:= spDBStnTstAirLeakFlowSensor.oMn, 
+																	oMx:= spDBStnTstAirLeakFlowSensor.oMx, 
+																	ofs:= spDBStnTstAirLeakFlowSensor.ofs, 
+																	val:= LREAL_TO_INT(stDebugStationDIO.simDBStnTstAirLeakFlowSensor) , 
+																	b  := spDBStnTstAirLeakFlowSensor.b);
+	//GetRand(Seed:=0,Num=>tempSimIpt);	
+	//stDebugStationDIO.ipDBStnAPAirLeakFlowSensor :=tempSimIpt*10000;
+	stDebugStationDIO.fbSimDBStnAPAirLeakFlowSensor(Mn:=spDBStnAPAirLeakFlowSensor.iMn, mx:=spDBStnAPAirLeakFlowSensor.iMx, Sen:= stDebugStationDIO.simDBStnAPAirLeakFlowSensor);
+	//stDebugStationDIO.ipDBStnAPAirLeakFlowSensor := INC(IN:=LREAL_TO_INT (stDebugStationDIO.simDBStnTstAirLeakFlowSensor));															
+	stDebugStationDIO.ipDBStnAPAirLeakFlowSensor	:= 	ANLG_TO_ABC(iMn:= spDBStnAPAirLeakFlowSensor.iMn, 
+																	iMx:= spDBStnAPAirLeakFlowSensor.iMx, 
+																	oMn:= spDBStnAPAirLeakFlowSensor.oMn, 
+																	oMx:= spDBStnAPAirLeakFlowSensor.oMx, 
+																	ofs:= spDBStnAPAirLeakFlowSensor.ofs, 
+																	val:=  LREAL_TO_INT(stDebugStationDIO.simDBStnAPAirLeakFlowSensor) , 
+																	b  := spDBStnAPAirLeakFlowSensor.b);
+	//GetRand(Seed:=0,Num=>tempSimIpt);	
+	//stDebugStationDIO.simDBStnPCWLeakFlowSensor := tempSimIpt*10000;
+	stDebugStationDIO.fbSimDBStnPCWLeakFlowSensor(Mn:=spDBStnPCWLeakFlowSensor.iMn, mx:=spDBStnPCWLeakFlowSensor.iMx, Sen:= stDebugStationDIO.simDBStnPCWLeakFlowSensor);
+	//stDebugStationDIO.simDBStnPCWLeakFlowSensor := INC(IN:=LREAL_TO_INT (stDebugStationDIO.simDBStnPCWLeakFlowSensor));
+	stDebugStationDIO.ipDBStnPCWLeakFlowSensor	:= 	ANLG_TO_ABC(iMn:= spDBStnPCWLeakFlowSensor.iMn, 
+																	iMx:= spDBStnPCWLeakFlowSensor.iMx, 
+																	oMn:= spDBStnPCWLeakFlowSensor.oMn, 
+																	oMx:= spDBStnPCWLeakFlowSensor.oMx, 
+																	ofs:= spDBStnPCWLeakFlowSensor.ofs, 
+																	val:= LREAL_TO_INT(stDebugStationDIO.simDBStnPCWLeakFlowSensor) , 
+																	b  := spDBStnPCWLeakFlowSensor.b);
+	//GetRand(Seed:=0,Num=>tempSimIpt);	
+	//stDebugStationDIO.simDBStnPCWLowFlowSensor :=tempSimIpt*10000;
+	stDebugStationDIO.fbSimDBStnPCWLowFlowSensor(Mn:=spDBStnPCWLowFlowSensor.iMn, mx:=spDBStnPCWLowFlowSensor.iMx, Sen:= stDebugStationDIO.simDBStnPCWLowFlowSensor);
+	//stDebugStationDIO.simDBStnPCWLowFlowSensor := INC(IN:=LREAL_TO_INT (stDebugStationDIO.simDBStnPCWLowFlowSensor));
+	stDebugStationDIO.ipDBStnPCWLowFlowSensor	:= 	ANLG_TO_ABC(iMn:= spDBStnPCWLowFlowSensor.iMn, 
+																	iMx:= spDBStnPCWLowFlowSensor.iMx, 
+																	oMn:= spDBStnPCWLowFlowSensor.oMn, 
+																	oMx:= spDBStnPCWLowFlowSensor.oMx, 
+																	ofs:= spDBStnPCWLowFlowSensor.ofs, 
+																	val:= LREAL_TO_INT(stDebugStationDIO.simDBStnPCWLowFlowSensor) , 
+																	b  := spDBStnPCWLowFlowSensor.b);
+	IF NOT bDebugStation THEN
+		stDebugStationDIO.ipDBStnTstAirLeakFlowSensor 	:=
+		stDebugStationDIO.ipDBStnAPAirLeakFlowSensor 	:=
+		stDebugStationDIO.ipDBStnPCWLeakFlowSensor 		:=
+		stDebugStationDIO.ipDBStnPCWLowFlowSensor 		:=0;
+	ELSE
+		IF stDebugStationDIO.opDBStnPCWFlowBypassValve THEN
+			stDebugStationDIO.ipDBStnPCWLeakFlowSensor 		:=
+			stDebugStationDIO.ipDBStnPCWLowFlowSensor 		:=0;
+		ELSE
+			IF NOT stDebugStationDIO.opDBStnLeakFlowPCWValve THEN
+				stDebugStationDIO.ipDBStnPCWLeakFlowSensor 		:=0;
+			END_IF
+			IF NOT stDebugStationDIO.opDBStnLowFlowPCWValve THEN
+				stDebugStationDIO.ipDBStnPCWLowFlowSensor 		:=0;
+			END_IF
+		END_IF
+	END_IF	
+	
+ELSE
+	stDebugStationDIO.ipDBStnTstAirLeakFlowSensor	:= 	ANLG_TO_ABC(iMn:= spDBStnTstAirLeakFlowSensor.iMn, 
+																iMx:= spDBStnTstAirLeakFlowSensor.iMx, 
+																oMn:= spDBStnTstAirLeakFlowSensor.oMn, 
+																oMx:= spDBStnTstAirLeakFlowSensor.oMx, 
+																ofs:= spDBStnTstAirLeakFlowSensor.ofs, 
+																val:= stDebugStationDIO.ipAnlgDBStnTstAirLeakFlowSensor , 
+																b  := spDBStnTstAirLeakFlowSensor.b);
+																
+	stDebugStationDIO.ipDBStnAPAirLeakFlowSensor	:= 	ANLG_TO_ABC(iMn:= spDBStnAPAirLeakFlowSensor.iMn, 
+																iMx:= spDBStnAPAirLeakFlowSensor.iMx, 
+																oMn:= spDBStnAPAirLeakFlowSensor.oMn, 
+																oMx:= spDBStnAPAirLeakFlowSensor.oMx, 
+																ofs:= spDBStnAPAirLeakFlowSensor.ofs, 
+																val:= stDebugStationDIO.ipAnlgDBStnAPAirLeakFlowSensor , 
+																b  := spDBStnAPAirLeakFlowSensor.b);
+
+	stDebugStationDIO.ipDBStnPCWLeakFlowSensor	:= 	ANLG_TO_ABC(iMn:= spDBStnPCWLeakFlowSensor.iMn, 
+																iMx:= spDBStnPCWLeakFlowSensor.iMx, 
+																oMn:= spDBStnPCWLeakFlowSensor.oMn, 
+																oMx:= spDBStnPCWLeakFlowSensor.oMx, 
+																ofs:= spDBStnPCWLeakFlowSensor.ofs, 
+																val:= stDebugStationDIO.ipAnlgDBStnPCWLeakFlowSensor , 
+																b  := spDBStnPCWLeakFlowSensor.b);
+
+	stDebugStationDIO.ipDBStnPCWLowFlowSensor	:= 	ANLG_TO_ABC(iMn:= spDBStnPCWLowFlowSensor.iMn, 
+																iMx:= spDBStnPCWLowFlowSensor.iMx, 
+																oMn:= spDBStnPCWLowFlowSensor.oMn, 
+																oMx:= spDBStnPCWLowFlowSensor.oMx, 
+																ofs:= spDBStnPCWLowFlowSensor.ofs, 
+																val:= stDebugStationDIO.ipAnlgDBStnPCWLowFlowSensor , 
+																b  := spDBStnPCWLowFlowSensor.b);	
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="INC" Id="{898b9e45-f951-4f57-91d5-d720dcc3f9a3}">
+      <Declaration><![CDATA[METHOD INC : UDINT
+VAR_INPUT
+	IN:INT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[(*IF timInc.Q THEN
+	IF IN >= 32768 THEN
+		INC := 0; 
+	ELSE
+		INC := IN+500; 
+	END_IF
+	timInc(IN:=FALSE);
+ELSE
+	timInc(IN:=TRUE,PT:=T#500MS);
+END_IF
+*)
+
+	IF IN >= 32768 THEN
+		INC := 0; 
+	ELSE
+		INC := IN+5; 
+	END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_nCyclic" Id="{7475bd0d-875c-4872-a0ee-0a195890a3a7}">
+      <Declaration><![CDATA[METHOD M_nCyclic : UDINT
+VAR_INPUT
+END_VAR
+
+
+VAR
+	//stTCM: INT;
+	stGblParam: INT;
+	varTest:bool;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[//M_nCompCylinder(bExtend:=TRUE, fbTCDrawerUp, sMsg);
+//M_IOMapping();
+Conversion(isSimulation:=bAnalogIOSim);
+M_OIMapping();
+
+rtError(CLK:=_bError, Q=> );
+btest:=TRUE;
+
+	//fbTCDrawerExtRet.M_nReset(bExecute:=_bReset OR rtError.Q );
+	//fbTCDrawerUpDn.M_nReset(bExecute:=_bReset OR rtError.Q );
+		
+IF _bReset OR bStepDone OR rtError.Q THEN
+	//inTCDrawerExtRet.M_nOff();
+	//inTCDrawerUpDn.M_nOff();
+	
+	//sensor
+
+	FOR nI:=1 TO 20 DO 
+		iLibrySts[1] := 0;
+	END_FOR
+	
+	bStepDone:=FALSE; 
+END_IF
+
+//inTCDrawerExtRet.P_SensorDelay:= 	FB_M_nCyclic_tSensorDelay  ;  //T#12S; 
+//inTCDrawerExtRet.P_Timeout:= 		FB_M_nCyclic_tSensorTimeOut; //T#30S;;    
+
+//inTCDrawerUpDn.P_SensorDelay:= FB_M_nCyclic_tSensorDelay;
+//inTCDrawerUpDn.P_Timeout:= FB_M_nCyclic_tSensorTimeOut;
+
+(*IF stTCSeqParam.bInitComplt THEN //temp...This portion will be done by Initialise sequence
+END_IF*)
+	
+IF _bReset THEN
+	IF stDbStnParam.bInitialise THEN
+		iSysRsetSeqStep:=0;
+	ELSE
+		iSeqStep:=0;
+	END_IF
+	iStkSeqCase:=0;
+	bStepDone:=FALSE;
+	sMessage:='';
+	_bError:=FALSE;
+	_nErrorID:=0;
+ELSIF bErrClear THEN
+	_bError:=FALSE;
+	_nErrorID:=0;
+	bErrClear:=FALSE;
+END_IF
+
+bPause:=_bReset OR _bError OR bErrClear;
+//M_StkSingStackUp state
+IF _bError THEN
+	iStkSingStackUp:=99;
+ELSIF _bReset THEN
+	iStkSingStackUp:=0;
+ELSIF iStkSeqCase=E_SeqSts.eDone THEN
+	iStkSingStackUp:=10;
+ELSIF NOT bPause THEN
+	iStkSingStackUp:=3;
+END_IF
+
+//inTCDrawerExtRet.P_nExtendAlarmID:=E_AlarmID.DrawerExtendError;
+//inTCDrawerExtRet.P_nRetractAlarmID:=E_AlarmID.DrawerRetractError;
+//inTCDrawerUpDn	 .P_nExtendAlarmID:=E_AlarmID.DrawerUpError;
+//inTCDrawerUpDn	 .P_nRetractAlarmID:=E_AlarmID.DrawerDownError;
+
+(*IF (NOT stMLVIO.ipTCDrawerCylRetractRS AND stMLVIO.ipTCDrawerCylExtendRS) THEN
+	stMLVIO.bTIUInOutStatusFlag:= TRUE;
+ELS*)
+//IF stMLVIO.ipTCDrawerCylRetractRS AND NOT stMLVIO.ipTCDrawerCylExtendRS THEN
+//	stMLVIO.bTIUInOutStatusFlag:= FALSE;
+//ELSE
+//	stMLVIO.bTIUInOutStatusFlag:= TRUE;
+//END_IF
+
+//stMLVIO.opAlarmLED:= stMLVIO.isTIIError OR _bError OR stMLVIO.isSysError;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_nDPSPowerOnOff" Id="{be69dcd0-a948-487b-8886-639ea27a5501}">
+      <Declaration><![CDATA[METHOD M_nDPSPowerOnOff : INT
+VAR_INPUT
+END_VAR
+VAR
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[M_nDPSPowerOnOff:=iStkSingStackUp;
+
+IF bPause THEN
+	RETURN;
+
+ELSIF stDebugStationVIO.isTIIError OR stDebugStationVIO.isSysError THEN  
+	IF FALSE (*DIFU Cyl Tii Err*) THEN
+	;
+	ELSE
+		M_nDPSPowerOnOff:=20;		
+		RETURN;
+	END_IF
+END_IF
+IF iSeqStep>0 THEN
+	;//Do nothing;
+	
+ELSIF stDbStnParam.bAP240ACPowerOff OR
+	  stDbStnParam.bAP240ACPowerOn OR
+	  stDbStnParam.bAP240ACPowerAuto 
+	  THEN
+	arrSeqStep[0]:=E_SeqSts.eInit;						//Init
+	arrSeqStep[1]:=E_SeqSts.eSanityCheckForAPPwr;		//Sanity check
+	arrSeqStep[2]:=E_SeqSts.eAP240ACPwrOnOff;			//AP240ACPowerOnOff
+	arrSeqStep[3]:=E_SeqSts.eDone;						//Done
+	
+END_IF
+
+
+//Sequence start
+iStkSeqCase:=arrSeqStep[iSeqStep];
+
+// State machine
+CASE iStkSeqCase OF
+E_SeqSts.eInit: //Init
+	//TDelay(IN:=FALSE);
+	sMessage:='Start Executing';
+	bStepDone:=TRUE;
+
+
+E_SeqSts.eSanityCheckForAPPwr: 				//Sanity check AP
+	sMessage:='CheckTeir2IIAlarm';
+	
+	tAPACPwrDelayToComplete(IN:=FALSE);
+	tAPACPwrDelayToAutoComplete(IN:=FALSE);
+	bStepDone:=TRUE;	
+	
+E_SeqSts.eAP240ACPwrOnOff:										// AP240ACPowerOnOff
+		tAPACPwrDelayToComplete(IN:=TRUE, PT:=T#2S); 			// origin T#10s
+		IF tAPACPwrDelayToComplete.Q THEN
+			IF stDbStnParam.bAP240ACPowerOff THEN 			(*0=Off, 1=On, 2=Auto(Off->On) *)
+				stDebugStationVIO.bAP240ACPowerOnOff:=FALSE;//TRUE;
+				tAPACPwrDelayToAutoComplete(IN:=TRUE, PT:=T#0S);
+				sMessage:='AP240AC PowerOff';
+			ELSIF stDbStnParam.bAP240ACPowerOn THEN
+				stDebugStationVIO.bAP240ACPowerOnOff		:= TRUE;//FALSE;
+				tAPACPwrDelayToAutoComplete(IN:=TRUE, PT:=T#0S);
+				sMessage:='AP240AC PowerOn';
+			ELSIF  stDbStnParam.bAP240ACPowerAuto THEN
+				stDebugStationVIO.bAP240ACPowerOnOff:=FALSE;//TRUE;
+				sMessage:='AP240AC PowerOff';
+				tAPACPwrDelayToAutoComplete(IN:=TRUE, PT:=T#2S); // origin T#10s
+				IF tAPACPwrDelayToAutoComplete.Q THEN
+					stDebugStationVIO.bAP240ACPowerOnOff:=TRUE;//FALSE;	
+					sMessage:='AP240AC PowerOn';
+				END_IF
+			END_IF
+		END_IF
+IF tAPACPwrDelayToComplete.Q AND tAPACPwrDelayToAutoComplete.Q THEN
+	tAPACPwrDelayToComplete(IN:=FALSE);
+	tAPACPwrDelayToAutoComplete(IN:=FALSE);
+	bStepDone:=TRUE;
+END_IF
+
+	
+E_SeqSts.eDone:	// Done
+	sMessage:='Done';
+	M_nDPSPowerOnOff:=10;
+END_CASE	
+
+(*IF _nErrorID>0 OR _bError THEN
+	_bError:=TRUE;
+ELS*)
+IF (bStep OR bBypassSingleMove OR iStkSeqCase<=E_SeqSts.eSanityCheck) 
+AND iStkSeqCase<E_SeqSts.eDone AND bStepDone THEN
+	iSeqStep:=iSeqStep+1;
+END_IF
+
+rtStep(CLK:=bStep AND NOT bBypassSingleMove, Q=>bStep );]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_nSystemReset" Id="{fcecb133-9004-4150-b07b-7820e4041c7e}">
+      <Declaration><![CDATA[METHOD M_nSystemReset : INT
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[FunONOFF:=TRUE;
+
+M_nSystemReset:=10;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_OIMapping" Id="{a72e6ef1-5a7c-4aa4-b869-c7c8e540ce38}">
+      <Declaration><![CDATA[METHOD M_OIMapping : BOOL
+VAR_INPUT
+	
+END_VAR
+
+VAR
+bSimu:BOOL:=FALSE;
+	stMLVIO: INT;
+	ipDBStnAPPowerOn: INT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[stDebugStationVIO.ipDBStnAPPresentSensor		:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode AND NOT bTIISenSimArray[E_TIIAlarm.ipAPPresentSensor], 
+	                                            					bActual:= stDebugStationDIO.ipDBStnAPPresentSensor, 
+	                                            					bSimu:=TRUE , 
+	                                            					iBackDoor:=stDebugStationBIO.ipDBStnAPPresentSensor );
+																	
+DebugCart_APPresentSignal		:= stDebugStationDIO.ipDBStnAPPresentSensor;
+																	
+stDebugStationVIO.ipDBStnAPPowerOn		:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode AND NOT bTIISenSimArray[E_TIIAlarm.ipAPPowerOn],
+	                                            					bActual:= stDebugStationDIO.ipDBStnAPPowerOn, 
+	                                            					bSimu:=TRUE , 
+	                                            					iBackDoor:=stDebugStationBIO.ipDBStnAPPowerOn );
+DebugCart_APPowerOnSignal						:= stDebugStationDIO.ipDBStnAPPowerOn; 																
+
+stDebugStationVIO.ipDBStnAPReady		:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode AND NOT bTIISenSimArray[E_TIIAlarm.ipAPReady],
+	                                            					bActual:=stDebugStationDIO.ipDBStnAPReady , 
+	                                            					bSimu:=bSimu , 
+	                                            					iBackDoor:=stDebugStationBIO.ipDBStnAPReady );	
+
+
+stDebugStationVIO.ipDBStnHandlerSafeToEnterPLC		:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , 
+	                                            					bActual:=stDebugStationDIO.ipDBStnHandlerSafeToEnterPLC , 
+	                                            					bSimu:=bSimu , 
+	                                            					iBackDoor:=stDebugStationBIO.ipDBStnHandlerSafeToEnterPLC );	
+
+stDebugStationVIO.ipDBStnHandlerSafeToEnterHwr		:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , 
+	                                            					bActual:=stDebugStationDIO.ipDBStnHandlerSafeToEnterHwr ,
+	                                            					bSimu:=bSimu ,
+	                                            					iBackDoor:=stDebugStationBIO.ipDBStnHandlerSafeToEnterHwr );
+
+stDebugStationVIO.ipDBStnCellGroundFault		:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , 
+	                                            					bActual:=stDebugStationDIO.ipDBStnCellGroundFault , 
+	                                            					bSimu:=bSimu , 
+	                                            					iBackDoor:=stDebugStationBIO.ipDBStnCellGroundFault );
+																	
+
+isLeakage		:=( ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWLeakageAlarm] OR ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWSupplyLeakageAlarm] OR 
+					ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWReturnLeakageAlarm]);																
+isGroundFault		:= ALMTC.Level[1].AlarmID[E_TIIAlarm.ipCellGroundFault] OR ( ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWLeakageAlarm] OR 
+						ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWSupplyLeakageAlarm] OR ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWReturnLeakageAlarm]) ;																
+																	
+																	
+//<APPowerOn>
+
+	DIFUAPPresent(clk:=stDebugStationVIO.ipDBStnAPPresentSensor );
+	//DIFUTstPresent(clk:=stMLVIO.ipTesterPresent AND stMLVIO.ipTesterLatchesClosed AND NOT stMLVIO.opAlarmLED);//To Auto On After Any Of the Alarm Occurance)
+	IF DIFUAPPresent.Q THEN
+		stDebugStationVIO.bAP240ACPowerOnOff := TRUE;
+	END_IF
+	//OnPower===========================================================================================================
+	//TII AP240 PowerOnError
+	//stDebugStationVIO.bTIIAP240OnError := ALMTC.Level[1].AlarmID[E_TIIAlarm.ipAPPowerOn] 	;
+	//stDebugStationVIO.bTIIAPPrstError:= ALMTC.Level[1].AlarmID[E_TIIAlarm.ipAPPresentSensor] 	;
+	DIFUOn_AP240Pwr(clk:= (stDebugStationVIO.ipDBStnAPPresentSensor) AND (NOT isLeakage) AND (NOT isGroundFault) AND 
+							(stDebugStationVIO.bAP240ACPowerOnOff OR stDebugStationVIO.bEnableAPPwrSupOnInit));
+	
+	IF DIFUOn_AP240Pwr.Q THEN
+		stDebugStationVIO.opDBStnAP240ACPwrEnable		:= TRUE;
+	END_IF
+	
+	ap240OnCheckTim(IN:= stDebugStationVIO.opDBStnAP240ACPwrEnable,PT:=APPwrOnChkDelay);
+	DIFUSet_bChkAP240On(CLK:=stDebugStationVIO.ipDBStnAPPresentSensor AND (stDebugStationVIO.bAP240ACPowerOnOff OR stDebugStationVIO.bEnableAPPwrSupOnInit) AND ap240OnCheckTim.Q);
+	IF DIFUSet_bChkAP240On.Q THEN
+		//ap240OnCheckTim(IN:=FALSE);
+		stDebugStationVIO.bChkAP240On		:= TRUE;	
+	END_IF
+	//CheckTesterAfter2s=====================================================================================================
+	IF (NOT stDebugStationVIO.ipDBStnAPPowerOn OR NOT stDebugStationVIO.ipDBStnAPPresentSensor)
+		AND stDebugStationVIO.bChkAP240On AND stDebugStationVIO.bAP240ACPowerOnOff AND (stDebugStationVIO.bTIIAP240OnError OR stDebugStationVIO.bTIIAPPrstError)THEN
+		stDebugStationVIO.bChkAP240On		:= FALSE;
+		stDebugStationVIO.opDBStnAP240ACPwrEnable		:= FALSE;
+		stDebugStationVIO.bAP240ACPowerOnOff		:= FALSE;
+		stDebugStationVIO.bEnableAPPwrSupOnInit		:= FALSE;
+		//stDebugStationVIO.opDBStnPCWValve:=FALSE;
+	END_IF	
+	
+		//PCW Valve ==============================================================================================================
+	IF stDebugStationVIO.ipDBStnAPPresentSensor AND (*stDebugStationVIO.bChkAP240On AND stDebugStationVIO.opDBStnAP240ACPwrEnable AND *)
+							   NOT  stDebugStationVIO.bTIIAP240OnError AND NOT isLeakage AND NOT isGroundFault 
+							   //AND NOT (stMLVIO.ipTesterPresent AND NOT stMLVIO.ipTesterPowerOn)
+								THEN
+		stDebugStationVIO.opDBStnPCWValve:=TRUE;
+	END_IF	
+	
+	//OFF if Power Off Command ===============================================================================================
+	IF NOT stDebugStationVIO.bAP240ACPowerOnOff 	AND NOT stDebugStationVIO.bEnableAPPwrSupOnInit
+										AND (stDebugStationVIO.bChkAP240On OR stDebugStationVIO.opDBStnAP240ACPwrEnable) THEN
+		stDebugStationVIO.bChkAP240On:=FALSE;
+		stDebugStationVIO.opDBStnAP240ACPwrEnable:=FALSE;
+		//stDebugStationVIO.opDBStnPCWValve:=FALSE;
+	END_IF
+	//Off All Output If Leakage
+	DIFDAPPresent(clk:=stDebugStationVIO.ipDBStnAPPresentSensor );
+	IF isLeakage OR isGroundFault OR DIFDAPPresent.Q THEN
+		stDebugStationVIO.bChkAP240On:=FALSE;
+		stDebugStationVIO.opDBStnAP240ACPwrEnable:=FALSE;
+		stDebugStationVIO.bAP240ACPowerOnOff:=FALSE;
+		stDebugStationVIO.bEnableAPPwrSupOnInit:=FALSE;
+		IF NOT stDebugStationVIO.ipDBStnAPPresentSensor OR isLeakage OR isGroundFault THEN
+			stDebugStationVIO.opDBStnPCWValve		:= FALSE;
+			stDebugStationDIO.opDBStnPCWValve		:= stDebugStationVIO.opDBStnPCWValve            ;
+		END_IF
+	END_IF
+	
+	//Reset PwrOnInit after Actual power is On
+	IF stDebugStationVIO.bEnableAPPwrSupOnInit AND stDebugStationVIO.opDBStnAP240ACPwrEnable THEN
+		stDebugStationVIO.bEnableAPPwrSupOnInit:=FALSE;
+	END_IF
+	
+	
+	
+	/////Temp/////
+	TimTemp(IN:=stDebugStationVIO.ipDBStnAPPresentSensor,PT:=T#3S);
+	IF TimTemp.Q AND NOT stDebugStationVIO.ipDBStnAPPowerOn AND stDebugStationVIO.opDBStnAP240ACPwrEnable THEN
+		stDebugStationVIO.opDBStnAP240ACPwrEnable:=FALSE;
+		TimTemp(IN:=FALSE);
+	END_IF
+	
+//</APPowerOn>																
+
+
+//<24VSencondaryPwr>ALMTC.Level[1].AlarmID[E_TIIAlarm.ipCellGroundFault]
+	IF stDebugStationVIO.ipDBStnAPPresentSensor AND NOT (isLeakage OR isGroundFault) THEN//AND NOT ( ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWLeakageAlarm] OR ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWSupplyLeakageAlarm] OR ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWReturnLeakageAlarm]) THEN
+		stDebugStationVIO.opDBStn24VPowerEnable:=TRUE;
+	ELSE
+		stDebugStationVIO.opDBStn24VPowerEnable:=FALSE;
+	END_IF
+//<24VSencondaryPwr>>
+//stDbColVIO := fbDebugColumn.P_stVIO;
+
+IF ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWLeakageAlarm] OR ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWSupplyLeakageAlarm] OR ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWReturnLeakageAlarm] THEN
+	stDebugStationDIO.opDBStnPCWValve    := FALSE;																
+END_IF
+																	
+stDebugStationVIO.opDBStnAPSafeToEngage := 	stDebugStationVIO.ipDBStnAPPresentSensor;
+														
+IF NOT stDebugStationVIO.bDiagnosticMode	THEN										
+																	
+stDebugStationVIO.ipDBStnTstAirLeakFlowSensor 	:= stDebugStationDIO.ipDBStnTstAirLeakFlowSensor	;
+stDebugStationVIO.ipDBStnAPAirLeakFlowSensor 	:= stDebugStationDIO.ipDBStnAPAirLeakFlowSensor		;
+stDebugStationVIO.ipDBStnPCWLeakFlowSensor 		:= stDebugStationDIO.ipDBStnPCWLeakFlowSensor		;
+stDebugStationVIO.ipDBStnPCWLowFlowSensor 		:= stDebugStationDIO.ipDBStnPCWLowFlowSensor		;
+
+stDebugStationDIO.opDBStnAP240ACPwrEnable		:= DebugCart_APPowerOn;			
+stDebugStationDIO.opAP_DIO_1						:= stDebugStationVIO.opAP_DIO_1					    ;
+stDebugStationDIO.opAP_DIO_2						:= stDebugStationVIO.opAP_DIO_2					    ;
+stDebugStationDIO.opAP_DIO_3						:= stDebugStationVIO.opAP_DIO_3					    ;
+IF stDebugStationVIO.ipDBStnAPPresentSensor THEN
+	stDebugStationDIO.opDBStnPCWValve                   := stDebugStationVIO.opDBStnPCWValve            ;
+END_IF
+
+//stDebugStationDIO.opDBStnPCWFlowBypassValve         := stDebugStationVIO.opDBStnPCWFlowBypassValve      ;
+//stDebugStationDIO.opDBStnAPAirSupplySol             := stDebugStationVIO.opDBStnAPAirSupplySol          ;
+//stDebugStationDIO.opDBStnBypassAPAirSupplySol       := stDebugStationVIO.opDBStnBypassAPAirSupplySol    ;
+stDebugStationDIO.opDBStn24VPowerEnable             := stDebugStationVIO.opDBStn24VPowerEnable          ;
+//stDebugStationDIO.opDBStnLeakFlowPCWValve           := stDebugStationVIO.opDBStnLeakFlowPCWValve        ;
+//stDebugStationDIO.opDBStnLowFlowPCWValve            := stDebugStationVIO.opDBStnLowFlowPCWValve         ;
+stDebugStationDIO.opDBStnAPSafeToEngage         := stDebugStationVIO.opDBStnAPSafeToEngage      ;
+stDebugStationDIO.opDBStnAPTCCReset                 := stDebugStationVIO.opDBStnAPTCCReset              ;
+
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="P_ErrClear" Id="{d9d75280-6752-4bde-84b3-4ac4c2922616}">
+      <Declaration><![CDATA[PROPERTY P_ErrClear : BOOL]]></Declaration>
+      <Get Name="Get" Id="{09852ed8-52da-4cfa-b7bf-5c72483fb233}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{1a76478d-1f95-4e98-bdef-fc0dfd77d84d}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="P_sMessage" Id="{84e476c3-1d88-492c-b680-8ada5dd9ee0c}">
+      <Declaration><![CDATA[PROPERTY P_sMessage : STRING]]></Declaration>
+      <Get Name="Get" Id="{8dd0ed32-e43c-48ad-aa52-0b6cd913d8fa}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{34c52a52-dcaf-4dc8-abbc-a2384fa7d2c8}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="P_stParam" Id="{3759f916-3333-4d72-b96b-f7d2c145b9a6}">
+      <Declaration><![CDATA[PROPERTY P_stParam : ST_DebugStationSeqParam]]></Declaration>
+      <Get Name="Get" Id="{ee0610a6-1ba8-4b51-88e3-b93f614da113}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[P_stParam:=stDbStnParam;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{961d0a57-2047-43b4-bb94-6ddf2adb26c0}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[stDbStnParam:=P_stParam;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="P_stVIO" Id="{09bbf641-3822-4c05-9931-e46f775382f4}">
+      <Declaration><![CDATA[PROPERTY P_stVIO : ST_DebugStation_VIO]]></Declaration>
+      <Get Name="Get" Id="{2795d3d2-ce22-4e14-b01f-4b70b3b99219}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[P_stVIO := stDebugStationVIO;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{b5c21703-4ce9-4b36-b997-6114dfabe7f8}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[stDebugStationVIO := P_stVIO;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <LineIds Name="FB_DebugStationSeq">
+      <LineId Id="9" Count="0" />
+      <LineId Id="20" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_DebugStationSeq.Conversion">
+      <LineId Id="15" Count="1" />
+      <LineId Id="139" Count="0" />
+      <LineId Id="155" Count="0" />
+      <LineId Id="92" Count="0" />
+      <LineId Id="17" Count="7" />
+      <LineId Id="140" Count="0" />
+      <LineId Id="156" Count="0" />
+      <LineId Id="93" Count="0" />
+      <LineId Id="25" Count="7" />
+      <LineId Id="143" Count="0" />
+      <LineId Id="157" Count="0" />
+      <LineId Id="94" Count="0" />
+      <LineId Id="33" Count="7" />
+      <LineId Id="144" Count="0" />
+      <LineId Id="158" Count="0" />
+      <LineId Id="95" Count="0" />
+      <LineId Id="41" Count="6" />
+      <LineId Id="107" Count="3" />
+      <LineId Id="114" Count="0" />
+      <LineId Id="118" Count="0" />
+      <LineId Id="115" Count="0" />
+      <LineId Id="120" Count="0" />
+      <LineId Id="116" Count="0" />
+      <LineId Id="121" Count="3" />
+      <LineId Id="126" Count="1" />
+      <LineId Id="125" Count="0" />
+      <LineId Id="117" Count="0" />
+      <LineId Id="106" Count="0" />
+      <LineId Id="48" Count="32" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_DebugStationSeq.INC">
+      <LineId Id="11" Count="9" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="21" Count="4" />
+      <LineId Id="8" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_DebugStationSeq.M_nCyclic">
+      <LineId Id="186" Count="3" />
+      <LineId Id="272" Count="0" />
+      <LineId Id="190" Count="1" />
+      <LineId Id="289" Count="0" />
+      <LineId Id="192" Count="1" />
+      <LineId Id="200" Count="5" />
+      <LineId Id="214" Count="6" />
+      <LineId Id="227" Count="10" />
+      <LineId Id="321" Count="0" />
+      <LineId Id="324" Count="1" />
+      <LineId Id="238" Count="0" />
+      <LineId Id="320" Count="0" />
+      <LineId Id="239" Count="11" />
+      <LineId Id="252" Count="9" />
+      <LineId Id="297" Count="0" />
+      <LineId Id="350" Count="0" />
+      <LineId Id="299" Count="1" />
+      <LineId Id="280" Count="0" />
+      <LineId Id="336" Count="0" />
+      <LineId Id="335" Count="0" />
+      <LineId Id="310" Count="1" />
+      <LineId Id="362" Count="0" />
+      <LineId Id="338" Count="1" />
+      <LineId Id="361" Count="0" />
+      <LineId Id="337" Count="0" />
+      <LineId Id="373" Count="0" />
+      <LineId Id="288" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_DebugStationSeq.M_nDPSPowerOnOff">
+      <LineId Id="6" Count="3" />
+      <LineId Id="337" Count="0" />
+      <LineId Id="343" Count="1" />
+      <LineId Id="358" Count="0" />
+      <LineId Id="362" Count="0" />
+      <LineId Id="359" Count="1" />
+      <LineId Id="342" Count="0" />
+      <LineId Id="361" Count="0" />
+      <LineId Id="12" Count="1" />
+      <LineId Id="367" Count="8" />
+      <LineId Id="279" Count="0" />
+      <LineId Id="188" Count="0" />
+      <LineId Id="40" Count="7" />
+      <LineId Id="49" Count="1" />
+      <LineId Id="57" Count="0" />
+      <LineId Id="229" Count="0" />
+      <LineId Id="322" Count="0" />
+      <LineId Id="325" Count="4" />
+      <LineId Id="61" Count="0" />
+      <LineId Id="323" Count="0" />
+      <LineId Id="293" Count="24" />
+      <LineId Id="290" Count="0" />
+      <LineId Id="289" Count="0" />
+      <LineId Id="94" Count="1" />
+      <LineId Id="163" Count="0" />
+      <LineId Id="165" Count="10" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_DebugStationSeq.M_nSystemReset">
+      <LineId Id="9" Count="1" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_DebugStationSeq.M_OIMapping">
+      <LineId Id="1110" Count="3" />
+      <LineId Id="1284" Count="1" />
+      <LineId Id="1114" Count="4" />
+      <LineId Id="1282" Count="0" />
+      <LineId Id="1119" Count="23" />
+      <LineId Id="1286" Count="0" />
+      <LineId Id="1144" Count="0" />
+      <LineId Id="1287" Count="0" />
+      <LineId Id="1145" Count="13" />
+      <LineId Id="1273" Count="0" />
+      <LineId Id="1272" Count="0" />
+      <LineId Id="1160" Count="2" />
+      <LineId Id="1271" Count="0" />
+      <LineId Id="1163" Count="99" />
+      <LineId Id="163" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_DebugStationSeq.P_ErrClear.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_DebugStationSeq.P_ErrClear.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_DebugStationSeq.P_sMessage.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_DebugStationSeq.P_sMessage.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_DebugStationSeq.P_stParam.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_DebugStationSeq.P_stParam.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_DebugStationSeq.P_stVIO.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_DebugStationSeq.P_stVIO.Set">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

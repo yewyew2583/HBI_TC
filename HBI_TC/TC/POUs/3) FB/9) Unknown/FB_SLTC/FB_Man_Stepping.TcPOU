@@ -1,0 +1,152 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <POU Name="FB_Man_Stepping" Id="{1087770b-40dc-4ebd-a4bb-3b7701880ea2}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Man_Stepping
+VAR_INPUT
+	noOfStep:INT;
+	startPressure:REAL;
+	endPressure:REAL;
+	StepDelay:TIME:=T#2S;
+	mode:INT; // inc,dec,inc+dec
+END_VAR
+VAR_OUTPUT
+	
+END_VAR
+VAR_IN_OUT
+	start:BOOL;
+	result:REAL;
+	Done:BOOL;
+END_VAR
+VAR
+	perStepVal:REAL;
+	i:INT;
+	ii:INT;
+	step:INT:=1;
+	loopStep:INT:=1;
+	isIncSteppingDone:BOOL;
+	isDecSteppingDone:BOOL;
+	tim1:TON;
+	nextStep:INT:=0;
+	nextLoopStep:INT:=0;
+	DIFU:R_TRIG;
+	incSteppingDoneDIFU:R_TRIG;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[DIFU(CLK:=start);
+IF DIFU.Q THEN 
+	noOfStep :=1;
+	loopStep:=1;
+	step:=1;
+	i:=1;
+	
+	CASE mode OF
+		1:isIncSteppingDone:=FALSE;isDecSteppingDone:=TRUE;
+		2:isIncSteppingDone:=TRUE;isDecSteppingDone:=FALSE;
+		3:isIncSteppingDone:=FALSE;isDecSteppingDone:=FALSE;
+	END_CASE
+
+END_IF
+
+IF NOT isIncSteppingDone THEN
+	nextLoopStep:= loopStep+1;
+	CASE loopStep OF
+		1:	
+			tim1(IN:=FALSE);
+			loopStep:=nextLoopStep;
+			step:=1;
+		2:	
+			IF noOfStep>0 THEN
+				perStepVal:= (endPressure-startPressure)/noOfStep;
+			END_IF
+			nextStep:= step+1;
+			
+			CASE step OF
+			1:	result := startPressure+ (perStepVal*i) ; //set
+				step:=nextStep; 
+			2:	tim1(IN:=TRUE,PT:=StepDelay);
+				IF tim1.Q THEN 		//wait
+					tim1(IN:=FALSE);
+					step:=nextStep;		//nxt
+					loopStep:=nextLoopStep;
+				END_IF
+			END_CASE
+		3:
+			i:=i+1;
+			IF i>noOfStep THEN
+				isIncSteppingDone:=TRUE;
+				loopStep:=nextLoopStep;
+				noOfStep :=
+				i:=1;
+			ELSE
+				loopStep:=1;
+			END_IF
+			
+	END_CASE
+END_IF;
+
+IF NOT isDecSteppingDone AND isIncSteppingDone THEN
+	incSteppingDoneDIFU(CLK:=isIncSteppingDone);
+	IF incSteppingDoneDIFU.Q THEN 
+		noOfStep :=1;
+		loopStep:=1;
+		step:=1;
+	END_IF
+	
+	nextLoopStep:= loopStep+1;
+	CASE loopStep OF
+		1:	
+			tim1(IN:=FALSE);
+			loopStep:=nextLoopStep;
+			step:=1;
+		2:	
+			IF noOfStep>0 THEN
+				perStepVal:= (endPressure-startPressure)/noOfStep;
+			END_IF
+			nextStep:= step+1;
+			
+			CASE step OF
+			1:	result := endPressure-perStepVal*i;//set
+				step:=nextStep; 
+			2:	tim1(IN:=TRUE,PT:=StepDelay);
+				IF tim1.Q THEN 		//wait
+					tim1(IN:=FALSE);
+					step:=nextStep;		//nxt
+					loopStep:=nextLoopStep;
+				END_IF
+			END_CASE
+		3:
+			i:=i+1;
+			IF i>noOfStep THEN
+				isDecSteppingDone:=TRUE;
+				loopStep:=nextLoopStep;
+				i:=1;
+			ELSE
+				loopStep:=1;
+			END_IF
+			
+	END_CASE
+END_IF;
+
+
+
+IF isIncSteppingDone AND isDecSteppingDone THEN
+	start:=FALSE;
+	DIFU(CLK:=start);
+	Done:=TRUE;
+	isIncSteppingDone := isDecSteppingDone:=FALSE;
+	incSteppingDoneDIFU(CLK:=isIncSteppingDone);
+END_IF
+]]></ST>
+    </Implementation>
+    <LineIds Name="FB_Man_Stepping">
+      <LineId Id="169" Count="1" />
+      <LineId Id="172" Count="48" />
+      <LineId Id="346" Count="0" />
+      <LineId Id="221" Count="41" />
+      <LineId Id="287" Count="1" />
+      <LineId Id="338" Count="7" />
+      <LineId Id="52" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
