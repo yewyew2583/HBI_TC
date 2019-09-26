@@ -761,17 +761,17 @@ END_VAR
 											(ALMTC.Level[iLevel].AlarmID[E_AlarmID.TBotSideDoorCloseSignalNotDetected	] OR
 											 ALMTC.Level[iLevel].AlarmID[E_AlarmID.TBotSideDoorLockSignalNotDetected	]));
 								    
-	itl_opTIUSktAirSol_1:=		(*	ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipAPPresentSensor	   	] 		
+	(*itl_opTIUSktAirSol_1:=		(*	ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipAPPresentSensor	   	] 		
 								OR	ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipCellFluidLeakage1		] 
 	                            OR	ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipCellFluidLeakage2		] 
 	                            OR*)ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipCellGroundFault 	   	] 
-								(*OR	ALMTC.Common.AlarmID[E_ColAlarm.ipColumnFluid_PCW_Leakage 		]*);		
+								(*OR	ALMTC.Common.AlarmID[E_ColAlarm.ipColumnFluid_PCW_Leakage 		]*);	*)
 
-	itl_opTIUSktAirSol_2:=		(*	ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipAPPresentSensor	   	] 		
+	(*itl_opTIUSktAirSol_2:=		(*	ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipAPPresentSensor	   	] 		
 								OR	ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipCellFluidLeakage1		] 
 	                            OR	ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipCellFluidLeakage2		] 
 	                            OR*)ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipCellGroundFault 	   	] 
-								(*OR	ALMTC.Common.AlarmID[E_ColAlarm.ipColumnFluid_PCW_Leakage 		]*);						
+								(*OR	ALMTC.Common.AlarmID[E_ColAlarm.ipColumnFluid_PCW_Leakage 		]*);	*)			
 	
 	(*itl_opCellDrawerCylUp	:=		ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipCellFluidLeakage1		] 
 	                            OR	ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipCellFluidLeakage2		] 

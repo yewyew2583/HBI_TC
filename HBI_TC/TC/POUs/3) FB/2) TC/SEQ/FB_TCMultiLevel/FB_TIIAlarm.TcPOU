@@ -167,14 +167,14 @@ END_IF
 
 FOR i := 1 TO NoOfTIIAlm DO	
 	CASE i OF
-		E_TIIAlarm.ipAPPresentSensor: 
+		(*E_TIIAlarm.ipAPPresentSensor: 
 			e															:= E_TIIAlarm.ipAPPresentSensor; 
 			ArrAlmBitBefDelay[E_TIIAlarm.ipAPPresentSensor]				:= (NOT	vIO.ipAPPresentSensor) AND bENs[1];  		
-			Arr_ms[e] 													:= 500;  (*TIIAlmText[e]:='AP_PresentSensor'*); //****stTCVIO.iAlarmCode=  E_Alarm.ipAP_PresentSensor 	 ;
+			Arr_ms[e] 													:= 500;  (*TIIAlmText[e]:='AP_PresentSensor'*); //****stTCVIO.iAlarmCode=  E_Alarm.ipAP_PresentSensor 	 ;*)
 			
         E_TIIAlarm.ipAPPowerOn: 
 			e															:= E_TIIAlarm.ipAPPowerOn; 
-			ArrAlmBitBefDelay[E_TIIAlarm.ipAPPowerOn]					:= (*((NOT vIO.ipAPPowerOn) AND bENs[2]) OR*) GVL_DUT_TC_AP240ACPower.Failed;
+			ArrAlmBitBefDelay[E_TIIAlarm.ipAPPowerOn]					:= (NOT vIO.ipAPPowerOn) AND VIO.ipAPPresentSensor AND GVL_DUT_TC_AP240ACPower.Failed AND bENs[2];
 			Arr_ms[e] 													:= 500;  (*TIIAlmText[e]:='AP_PowerOn'*); 
 			
 	    E_TIIAlarm.ipAPReady: 
@@ -207,14 +207,14 @@ FOR i := 1 TO NoOfTIIAlm DO
 			ArrAlmBitBefDelay[E_TIIAlarm.ipCellGroundFault]				:= vIO.ipCellGroundFault AND bENs[8]; 			
 			Arr_ms[e] 													:= 500;  (*TIIAlmText[e]:='CellGroundFault'*);
 			
-        E_TIIAlarm.ipTesterPresent: 
+        (*E_TIIAlarm.ipTesterPresent: 
 			e															:= E_TIIAlarm.ipTesterPresent; 
-			ArrAlmBitBefDelay[E_TIIAlarm.ipTesterPresent]				:= (NOT	vIO.ipTesterPresent) AND bTstOnCmd AND bENs[9]; 			
-			Arr_ms[e] 													:= 500;  (*TIIAlmText[e]:='TesterPresent'*);
+			ArrAlmBitBefDelay[E_TIIAlarm.ipTesterPresent]				:= (NOT	vIO.ipTesterPresent) AND bENs[9]; 			
+			Arr_ms[e] 													:= 500;  (*TIIAlmText[e]:='TesterPresent'*);*)
 			
         E_TIIAlarm.ipTesterPowerOn: 
 			e															:= E_TIIAlarm.ipTesterPowerOn; 
-			ArrAlmBitBefDelay[E_TIIAlarm.ipTesterPowerOn]				:= (NOT	vIO.ipTesterPowerOn) AND bChkTstOn AND bENs[10]; 			
+			ArrAlmBitBefDelay[E_TIIAlarm.ipTesterPowerOn]				:= (NOT	vIO.ipTesterPowerOn) AND vIO.ipTesterPresent AND bChkTstOn AND bENs[10]; 			
 			Arr_ms[e] 													:= 500;  (*TIIAlmText[e]:='TesterPowerOn'*);
     
         E_TIIAlarm.ipTesterReady: 
@@ -383,6 +383,7 @@ TIIAlarmLED															:=		ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipAPPowerOn
 																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellFluidLeakage1	   		]   OR
 																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellFluidLeakage2	   		]   OR
 																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellGroundFault 	   		]   OR
+																			ALMTC.Level[iLevel].ALarmID[E_AlarmID.DoorLockSignalNotDetected		]	OR
 																			ALMTC.Common.AlarmID[E_ColAlarm.ipColumnFluid_PCW_Leakage			]	OR
 																			(
 																				bDebugCart AND 
@@ -397,6 +398,7 @@ TIIAlarmEPT															:= 		ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipAPPowerO
 																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCDrawerCylRetractRS		]	OR
 																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCDrawerCylExtendRS		]	OR
 																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCCellDoorClosed			]	OR
+																			ALMTC.Level[iLevel].ALarmID[E_AlarmID.DoorLockSignalNotDetected		]	OR
 																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellGroundFault			]	OR
 																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellFluidLeakage1			]	OR
 																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellFluidLeakage2			]	OR
@@ -617,11 +619,14 @@ END_IF
       <LineId Id="1039" Count="2" />
       <LineId Id="1044" Count="2" />
       <LineId Id="1028" Count="2" />
+      <LineId Id="1153" Count="0" />
       <LineId Id="1048" Count="4" />
       <LineId Id="1038" Count="0" />
       <LineId Id="1022" Count="0" />
       <LineId Id="1053" Count="1" />
-      <LineId Id="1057" Count="8" />
+      <LineId Id="1057" Count="4" />
+      <LineId Id="1154" Count="0" />
+      <LineId Id="1062" Count="3" />
       <LineId Id="1068" Count="4" />
       <LineId Id="1067" Count="0" />
       <LineId Id="1066" Count="0" />
