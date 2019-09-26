@@ -32,6 +32,8 @@ END_VAR
 	stMLVIO:=arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO;
 	
 	bEptBlocked := 	(arrTCMultiLevel[iLevel].stGblParam.iProcessState = E_ProcessState.eALPAUSED)	OR	//All alarms besides TIIAlarm block the EPT, Door Recovery executing
+					(arrTCMultiLevel[iLevel].stGblParam.bInitialise)								OR //initialization
+					(arrTCMultiLevel[iLevel].stGblParam.bDoorRecovery)								OR //Door recovery
 					(TC_ModuleState[iLevel].Tester = E_State.eDisabled 								OR	//Modules disabled
 					 TC_ModuleState[iLevel].TCSite[1].TCU = E_State.eDisabled 						OR	//Modules disabled
 					 TC_ModuleState[iLevel].TCSite[1].TIERII = E_State.eDisabled)					OR	//Modules disabled
@@ -70,6 +72,8 @@ END_IF
       <LineId Id="175" Count="0" />
       <LineId Id="233" Count="0" />
       <LineId Id="67" Count="0" />
+      <LineId Id="282" Count="0" />
+      <LineId Id="284" Count="0" />
       <LineId Id="106" Count="1" />
       <LineId Id="191" Count="0" />
       <LineId Id="208" Count="0" />
