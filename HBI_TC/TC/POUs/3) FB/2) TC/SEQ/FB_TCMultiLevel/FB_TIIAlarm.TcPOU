@@ -224,7 +224,7 @@ FOR i := 1 TO NoOfTIIAlm DO
 			   
        	E_TIIAlarm.ipTCCellDoorClosed: 
 			e															:= E_TIIAlarm.ipTCCellDoorClosed; 
-			ArrAlmBitBefDelay[E_TIIAlarm.ipTCCellDoorClosed]			:= (NOT	vIO.ipTCCellDoorOpenCloseStatus) AND bENs[12]; 							
+			ArrAlmBitBefDelay[E_TIIAlarm.ipTCCellDoorClosed]			:= (NOT	vIO.ipTCCellDoorClosed) AND bENs[12]; 							
 			Arr_ms[e] 													:= 500;  (*TIIAlmText[e]:='TCCellDoorClosed' *);
 			
         E_TIIAlarm.ipTesterLatchesClosed: 

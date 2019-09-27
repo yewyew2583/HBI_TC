@@ -3117,6 +3117,13 @@ ELSE
 					iSendEvent 													:= 2;
 					JMP iSendEvent;
 				END_IF
+				
+				IF (NOT arrTCMultiLevel[iLevel].stGblParam.bTCDwrSafeToMoveEAP) THEN
+					sStatus														:= 'TBOT EAP Not allow Drawer Safe To Move.';
+					iSendEvent													:= 2;
+					JMP iSendEvent;
+				END_IF
+				
 				arrTCMultiLevel[iLevel].stGblParam.bShuttleMoveOut				:= TRUE ;
 			ELSE
 				arrTCMultiLevel[iLevel].stGblParam.bShuttleMoveIn				:= TRUE;
@@ -3135,24 +3142,36 @@ ELSE
 				iSendEvent 														:= 2;
 				JMP iSendEvent;
 			ELSE
+			
+			IF (NOT arrTCMultiLevel[iLevel].stGblParam.bTCDwrSafeToMoveEAP) THEN
+				sStatus														:= 'TBOT EAP Not allow Drawer Safe To Move.';
+				iSendEvent													:= 2;
+				JMP iSendEvent;
+			END_IF
 			//END_IF
 			//IF arrTCMultiLevel[iLevel].stGblParam.iProcessState = E_ProcessState.eAWAITGCMD  THEN
-				IF arrRCMD[n].bParam[1] = TRUE THEN
-					arrTCMultiLevel[iLevel].stGblParam.bShuttleMoveOut			:= TRUE ;
-				ELSE
-					arrTCMultiLevel[iLevel].stGblParam.bShuttleMoveIn			:= TRUE;
-				END_IF
+			IF arrRCMD[n].bParam[1] = TRUE THEN
+				arrTCMultiLevel[iLevel].stGblParam.bShuttleMoveOut			:= TRUE ;
+			ELSE
+				arrTCMultiLevel[iLevel].stGblParam.bShuttleMoveIn			:= TRUE;
+			END_IF
 			//ELSE
-				//IF arrTCMultiLevel[iLevel].stGblParam.iProcessState = E_ProcessState.ePause THEN 
-				arrTCMultiLevel[iLevel].stGblParam.bResume						:= TRUE;
-				//ELSE
-				//	sStatus := 'Nothing To Retry';
-				//	iSendEvent :=1;
-				//	JMP iSendEvent;
-				//END_IF
+			//IF arrTCMultiLevel[iLevel].stGblParam.iProcessState = E_ProcessState.ePause THEN 
+			arrTCMultiLevel[iLevel].stGblParam.bResume						:= TRUE;
+			//ELSE
+			//	sStatus := 'Nothing To Retry';
+			//	iSendEvent :=1;
+			//	JMP iSendEvent;
+			//END_IF
 			END_IF
 			
 		E_TaskName.TIUSlideOutCancel : 	
+			IF (NOT arrTCMultiLevel[iLevel].stGblParam.bTCDwrSafeToMoveEAP) THEN
+				sStatus														:= 'TBOT EAP Not allow Drawer Safe To Move.';
+				iSendEvent													:= 2;
+				JMP iSendEvent;
+			END_IF
+			
 			IF arrTCMultiLevel[iLevel].stGblParam.bShuttleMoveOut = TRUE OR arrTCMultiLevel[iLevel].stGblParam.bShuttleMoveIn = TRUE THEN
 				arrTCMultiLevel[iLevel].stGblParam.bCancel 						:= TRUE;
 				//arrTCMultiLevel[iLevel].stGblParam.bInternalCancel :=TRUE;
@@ -4982,9 +5001,21 @@ arrRCMD[n]										:= CmdEmpty;]]></ST>
       <LineId Id="3873" Count="0" />
       <LineId Id="4161" Count="0" />
       <LineId Id="3421" Count="23" />
-      <LineId Id="3446" Count="17" />
-      <LineId Id="3465" Count="21" />
-      <LineId Id="3489" Count="2" />
+      <LineId Id="3446" Count="5" />
+      <LineId Id="4501" Count="2" />
+      <LineId Id="4507" Count="1" />
+      <LineId Id="4504" Count="0" />
+      <LineId Id="4509" Count="0" />
+      <LineId Id="3452" Count="11" />
+      <LineId Id="3465" Count="5" />
+      <LineId Id="4510" Count="0" />
+      <LineId Id="4512" Count="3" />
+      <LineId Id="4511" Count="0" />
+      <LineId Id="3471" Count="15" />
+      <LineId Id="3489" Count="1" />
+      <LineId Id="4518" Count="3" />
+      <LineId Id="4516" Count="1" />
+      <LineId Id="3491" Count="0" />
       <LineId Id="3493" Count="7" />
       <LineId Id="3502" Count="3" />
       <LineId Id="4162" Count="0" />

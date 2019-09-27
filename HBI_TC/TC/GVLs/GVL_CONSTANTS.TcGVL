@@ -82,7 +82,7 @@
 	TIIAlmText : ARRAY[1..NO_OF_TII_SENSOR] OF STRING :=
 	[
 	 'AP_Not_Present'				,	
-	 'APPower_Noy_On'	    		,
+	 'APPower_Not_On'	    		,
 	 'AP_Not_Ready' 		    	,
 	 'APDeactuatedPLC_Not_On' 		,
 	 'APDeactuatedHwr_Not_On' 		,
@@ -92,7 +92,7 @@
 	 'Tester_Not_Present' 			,
 	 'TesterPower_Not_On' 			,
 	 'Tester_Not_Ready'       		,
-	 'TCCellDoor_Not_Closed'		,
+	 'TCCellDoor_Not_Locked'		,
 	 'TesterLatches_Not_Closed' 	,
 	 'TIU_Not_Present' 				,
 	 'TCDrawerCylExtendRS_Not_On' 	,
