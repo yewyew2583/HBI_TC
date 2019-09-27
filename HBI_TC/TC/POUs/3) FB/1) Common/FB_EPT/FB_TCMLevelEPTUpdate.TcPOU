@@ -35,9 +35,9 @@ END_VAR
 					(arrTCMultiLevel[iLevel].stGblParam.iProcessState = E_ProcessState.eUNKNOWN)	OR
 					(arrTCMultiLevel[iLevel].stGblParam.bInitialise)								OR //initialization
 					(arrTCMultiLevel[iLevel].stGblParam.bDoorRecovery)								OR //Door recovery
-					(TC_ModuleState[iLevel].Tester = E_State.eDisabled 								OR	//Modules disabled
-					 TC_ModuleState[iLevel].TCSite[1].TCU = E_State.eDisabled 						OR	//Modules disabled
-					 TC_ModuleState[iLevel].TCSite[1].TIERII = E_State.eDisabled)					OR	//Modules disabled
+					(TC_ModuleState[iLevel].Tester = E_State.eDisabled) 							OR	//tester Modules disabled
+					(TC_ModuleState[iLevel].TCSite[1].TCU = E_State.eDisabled) 						OR	//tcu Modules disabled
+					 //(TC_ModuleState[iLevel].TCSite[1].TIERII = E_State.eDisabled)				OR	//tier 2 Modules disabled
 					(stMLVIO.isSysError) 															OR	//System Facilities OR Column Alarms
 					(stMLVIO.TIIAlarmEPT)															OR	//Some TIIAlarms block the EPT
 					(NOT stMLVIO.ipTCCellDoorClosed);
@@ -78,7 +78,7 @@ END_IF
       <LineId Id="282" Count="0" />
       <LineId Id="284" Count="0" />
       <LineId Id="106" Count="1" />
-      <LineId Id="191" Count="0" />
+      <LineId Id="317" Count="0" />
       <LineId Id="208" Count="0" />
       <LineId Id="211" Count="0" />
       <LineId Id="301" Count="0" />

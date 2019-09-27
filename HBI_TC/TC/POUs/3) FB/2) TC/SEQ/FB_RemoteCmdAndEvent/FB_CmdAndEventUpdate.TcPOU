@@ -2764,18 +2764,24 @@ ELSIF (bDebugCart AND
 *)
 // Task name is TCCSessionRequest or DPSPower or TIUSlideOut
 ELSIF arrRCMD[n].eTaskName = E_TaskName.TCCSessionRequest OR arrRCMD[n].eTaskName = E_TaskName.DPSPower OR arrRCMD[n].eTaskName = E_TaskName.TIUSlideOut THEN
-		//bErr:=SEL(arrTCLevelState[iLevel] = E_State.eDisabled,FALSE,TRUE);
-		//sStatus := SEL(bErr,'','Module is Disabled');
-		// If tester is disabled or TCU is disabled or tier II is disabled
-		bErr																	:= SEL(TC_ModuleState[iLevel].Tester = E_State.eDisabled OR TC_ModuleState[iLevel].TCSite[1].TCU = E_State.eDisabled OR 
-				  																		TC_ModuleState[iLevel].TCSite[1].TIERII = E_State.eDisabled, FALSE, TRUE);
+	
+	bErr																:=  TC_ModuleState[iLevel].TCSite[1].TCU = E_State.eDisabled 	OR 
+			  																TC_ModuleState[iLevel].TCSite[1].TIERII = E_State.eDisabled;
+																				
+	IF arrRCMD[n].eTaskName = E_TaskName.TCCSessionRequest OR arrRCMD[n].eTaskName = E_TaskName.DPSPower THEN
+		bErr																:=  TC_ModuleState[iLevel].Tester = E_State.eDisabled;
+		
 		IF TC_ModuleState[iLevel].Tester = E_State.eDisabled THEN
 			sStatus 															:= SEL(bErr, '', 'Tester Cell Module is Disabled');
-		ELSIF TC_ModuleState[iLevel].TCSite[1].TCU = E_State.eDisabled THEN
-			sStatus																:= SEL(bErr, '', 'Tester Cell TCU is Disabled');
-		ELSIF TC_ModuleState[iLevel].TCSite[1].TIERII = E_State.eDisabled THEN
-			sStatus 															:= SEL(bErr, '', 'Tester Cell TierII is Disabled');
 		END_IF
+	END_IF
+	
+	IF TC_ModuleState[iLevel].TCSite[1].TCU = E_State.eDisabled THEN
+		sStatus																:= SEL(bErr, '', 'Tester Cell TCU is Disabled'); 
+	ELSIF TC_ModuleState[iLevel].TCSite[1].TIERII = E_State.eDisabled THEN
+		sStatus 															:= SEL(bErr, '', 'Tester Cell TierII is Disabled');
+	END_IF
+		
 END_IF
 
 //TII Alarm And System Alarm Check
@@ -4870,12 +4876,18 @@ arrRCMD[n]										:= CmdEmpty;]]></ST>
       <LineId Id="3928" Count="0" />
       <LineId Id="4217" Count="0" />
       <LineId Id="4053" Count="0" />
-      <LineId Id="3183" Count="0" />
-      <LineId Id="3186" Count="1" />
       <LineId Id="4059" Count="0" />
+      <LineId Id="4460" Count="0" />
       <LineId Id="3188" Count="0" />
-      <LineId Id="3190" Count="0" />
-      <LineId Id="3192" Count="9" />
+      <LineId Id="4445" Count="0" />
+      <LineId Id="4448" Count="1" />
+      <LineId Id="4454" Count="1" />
+      <LineId Id="4457" Count="2" />
+      <LineId Id="4452" Count="0" />
+      <LineId Id="4435" Count="0" />
+      <LineId Id="4437" Count="3" />
+      <LineId Id="4432" Count="1" />
+      <LineId Id="3199" Count="2" />
       <LineId Id="4060" Count="1" />
       <LineId Id="4065" Count="2" />
       <LineId Id="4114" Count="0" />
