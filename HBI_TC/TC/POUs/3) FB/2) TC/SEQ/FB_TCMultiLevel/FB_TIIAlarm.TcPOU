@@ -237,15 +237,15 @@ FOR i := 1 TO NoOfTIIAlm DO
 			ArrAlmBitBefDelay[E_TIIAlarm.ipTIUPresent]					:= (NOT	vIO.ipTIUPresent) AND bENs[14]; 						
 			Arr_ms[e] 													:= 200;  (*TIIAlmText[e]:='TIUPresent'*);*)
 			
-        E_TIIAlarm.ipTCDrawerCylExtendRS: 
+        (*E_TIIAlarm.ipTCDrawerCylExtendRS: 
 			e															:= E_TIIAlarm.ipTCDrawerCylExtendRS; 
 			ArrAlmBitBefDelay[E_TIIAlarm.ipTCDrawerCylExtendRS]			:= (NOT	vIO.ipTCDrawerCylExtendRS) AND vIO.opTesterDrawerAirSupplySol (*AND	vIO.opCellDrawerCylExtend*) AND (NOT bDebugCart) AND lEt AND bENs[15]; 
-			Arr_ms[e] 													:= 200;  (*TIIAlmText[e]:='TCDrawerCylExtendRS'*);
+			Arr_ms[e] 													:= 200;  (*TIIAlmText[e]:='TCDrawerCylExtendRS'*);*)
 			
-        E_TIIAlarm.ipTCDrawerCylRetractRS: 
+        (*E_TIIAlarm.ipTCDrawerCylRetractRS: 
 			e															:= E_TIIAlarm.ipTCDrawerCylRetractRS; 
 			ArrAlmBitBefDelay[E_TIIAlarm.ipTCDrawerCylRetractRS]		:= (NOT	vIO.ipTCDrawerCylRetractRS) AND vIO.opTesterDrawerAirSupplySol (*AND vIO.opCellDrawerCylRetract*) AND lRt AND bENs[16]; 
-			Arr_ms[e] 													:= 200;  (*TIIAlmText[e]:='TCDrawerCylRetractRS'*);
+			Arr_ms[e] 													:= 200;  (*TIIAlmText[e]:='TCDrawerCylRetractRS'*);*)
 			
         E_TIIAlarm.TBOT_TC_ACPower_Signal: 
 			e															:= E_TIIAlarm.TBOT_TC_ACPower_Signal; 

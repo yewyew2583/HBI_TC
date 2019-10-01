@@ -49,7 +49,18 @@ IF tStartStep2.Q THEN
 	bStartStep3 := TRUE; //Proceed to step-3
 	bStartStep4 := FALSE;
 	
+	IF NOT bProductionMode THEN
+		bEnableManualCommandTest1:=TRUE;
+		bEnableManualCommandTest2:=TRUE;
+		IsNetIDReadOK:=TRUE;
+		bDebugCart:=FALSE;
+	
+	END_IF
+	
 	FOR iLevel:=1 TO NO_OF_LEVEL DO 
+		GVL_EAP.stEAP.stTBOT_TC_EAP[iLevel].bAntiCollisionTriggered:=TRUE;
+		GVL_EAP.stEAP.stTBOT_TC_EAP[iLevel].bTCCellACPwrOff:=FALSE;
+
 		stMLVIO:=arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO;
 		stMLVIO.opAPAirSupplySol := TRUE;
 		stMLVIO.opTesterDrawerAirSupplySol:= TRUE;
@@ -91,10 +102,9 @@ END_IF
       <LineId Id="173" Count="0" />
       <LineId Id="226" Count="3" />
       <LineId Id="332" Count="0" />
-      <LineId Id="326" Count="1" />
-      <LineId Id="333" Count="2" />
-      <LineId Id="328" Count="0" />
-      <LineId Id="323" Count="0" />
+      <LineId Id="354" Count="4" />
+      <LineId Id="360" Count="10" />
+      <LineId Id="352" Count="1" />
       <LineId Id="230" Count="4" />
       <LineId Id="237" Count="14" />
       <LineId Id="2" Count="0" />
