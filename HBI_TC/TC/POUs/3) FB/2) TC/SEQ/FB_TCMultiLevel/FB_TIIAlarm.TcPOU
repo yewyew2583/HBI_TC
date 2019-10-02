@@ -411,7 +411,6 @@ TIIAlarmEPT															:= 		ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipAPPowerO
 																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.TBOT_TC_ACPower_Signal   	]  ;
 																			
 
-		
 (*
 //Alarm Reset ===========================================================================
 IF almRset THEN
@@ -631,7 +630,6 @@ END_IF
       <LineId Id="1068" Count="4" />
       <LineId Id="1067" Count="0" />
       <LineId Id="1066" Count="0" />
-      <LineId Id="1056" Count="0" />
       <LineId Id="1055" Count="0" />
       <LineId Id="205" Count="1" />
       <LineId Id="209" Count="5" />

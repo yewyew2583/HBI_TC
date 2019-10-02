@@ -50,21 +50,37 @@ IF tStartStep2.Q THEN
 	bStartStep4 := FALSE;
 	
 	IF NOT bProductionMode THEN
-		bEnableManualCommandTest1:=TRUE;
-		bEnableManualCommandTest2:=TRUE;
-		IsNetIDReadOK:=TRUE;
-		bDebugCart:=FALSE;
+		bEnableManualCommandTest1		:= TRUE;
+		bEnableManualCommandTest2		:= TRUE;
+		IsNetIDReadOK					:= TRUE;
+		bDebugCart						:= FALSE;
 	
 	END_IF
 	
 	FOR iLevel:=1 TO NO_OF_LEVEL DO 
-		GVL_EAP.stEAP.stTBOT_TC_EAP[iLevel].bAntiCollisionTriggered:=TRUE;
-		GVL_EAP.stEAP.stTBOT_TC_EAP[iLevel].bTCCellACPwrOff:=FALSE;
-
-		stMLVIO:=arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO;
-		stMLVIO.opAPAirSupplySol := TRUE;
-		stMLVIO.opTesterDrawerAirSupplySol:= TRUE;
-		arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO := stMLVIO;
+		GVL_EAP.stEAP.stTBOT_TC_EAP[iLevel].bAntiCollisionTriggered		:=TRUE;
+		GVL_EAP.stEAP.stTBOT_TC_EAP[iLevel].bTCCellACPwrOff				:=FALSE;
+		
+		stMLVIO:=arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO; //get method 
+		
+		
+		//Lock back door if closed.
+		IF stMLVIO.ipTCCellDoorOpenCloseStatus THEN
+			stMLVIO.opCellDoorClosed 						:= TRUE;
+		END_IF
+		
+		//Lock Front door if closed.
+		IF bDebugCart THEN
+			IF stMLVIO.ipTCCellTbotSideDoorOpenCloseStatus01 AND stMLVIO.ipTCCellTbotSideDoorOpenCloseStatus02 THEN
+				stMLVIO.ipTCCellTbotSideDoorLocked01 		:= TRUE;
+				stMLVIO.ipTCCellTbotSideDoorLocked02 		:= TRUE;
+			END_IF
+		END_IF
+		
+		stMLVIO.opAPAirSupplySol 							:= TRUE; //turn on all levels' AP 10bar 
+		stMLVIO.opTesterDrawerAirSupplySol					:= TRUE; //turn on all levels' tester 6bar
+		
+		arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO := stMLVIO; //set method
 	END_FOR
 	
 	RETURN;
@@ -103,7 +119,22 @@ END_IF
       <LineId Id="226" Count="3" />
       <LineId Id="332" Count="0" />
       <LineId Id="354" Count="4" />
-      <LineId Id="360" Count="10" />
+      <LineId Id="360" Count="7" />
+      <LineId Id="389" Count="0" />
+      <LineId Id="407" Count="1" />
+      <LineId Id="393" Count="0" />
+      <LineId Id="397" Count="2" />
+      <LineId Id="409" Count="0" />
+      <LineId Id="400" Count="1" />
+      <LineId Id="403" Count="0" />
+      <LineId Id="406" Count="0" />
+      <LineId Id="404" Count="0" />
+      <LineId Id="402" Count="0" />
+      <LineId Id="394" Count="0" />
+      <LineId Id="368" Count="0" />
+      <LineId Id="392" Count="0" />
+      <LineId Id="396" Count="0" />
+      <LineId Id="370" Count="0" />
       <LineId Id="352" Count="1" />
       <LineId Id="230" Count="4" />
       <LineId Id="237" Count="14" />
