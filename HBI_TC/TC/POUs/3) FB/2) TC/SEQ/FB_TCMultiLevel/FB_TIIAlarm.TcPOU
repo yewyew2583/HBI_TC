@@ -134,7 +134,7 @@ bChkAPOn																:= vIO.bChkAP240On;
 
 
 //<A_Alm_Rst For Door Open TII Alarm>
-IF ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCCellDoorClosed] AND vIO.ipTCCellDoorOpenCloseStatus THEN
+IF ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCCellDoorClosed] AND vIO.ipTCCellDoorClosed THEN
 	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCCellDoorClosed]			:= FALSE;
 END_IF
 //</A_Alm_Rst For Door Open TII Alarm>
@@ -224,7 +224,7 @@ FOR i := 1 TO NoOfTIIAlm DO
 			   
        	E_TIIAlarm.ipTCCellDoorClosed: 
 			e															:= E_TIIAlarm.ipTCCellDoorClosed; 
-			ArrAlmBitBefDelay[E_TIIAlarm.ipTCCellDoorClosed]			:= (NOT	vIO.ipTCCellDoorClosed) AND bENs[12]; 							
+			ArrAlmBitBefDelay[E_TIIAlarm.ipTCCellDoorClosed]			:= (NOT	vIO.ipTCCellDoorClosed); //AND bENs[12]; 							
 			Arr_ms[e] 													:= 200;  (*TIIAlmText[e]:='TCCellDoorClosed' *);
 			
         E_TIIAlarm.ipTesterLatchesClosed: 

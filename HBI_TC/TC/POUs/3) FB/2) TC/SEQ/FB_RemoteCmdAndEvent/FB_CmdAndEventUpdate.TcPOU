@@ -2763,25 +2763,26 @@ ELSIF (bDebugCart AND
 	sStatus 																	:= 'TBot Side Door(s) is not locked';	
 *)
 // Task name is TCCSessionRequest or DPSPower or TIUSlideOut
-ELSIF arrRCMD[n].eTaskName = E_TaskName.TCCSessionRequest OR arrRCMD[n].eTaskName = E_TaskName.DPSPower OR arrRCMD[n].eTaskName = E_TaskName.TIUSlideOut THEN
+ELSIF arrRCMD[n].eTaskName = E_TaskName.TCCSessionRequest OR arrRCMD[n].eTaskName = E_TaskName.DPSPower THEN
 	
 	bErr																:=  TC_ModuleState[iLevel].TCSite[1].TCU = E_State.eDisabled 	OR 
-			  																TC_ModuleState[iLevel].TCSite[1].TIERII = E_State.eDisabled;
-																				
-	IF arrRCMD[n].eTaskName = E_TaskName.TCCSessionRequest OR arrRCMD[n].eTaskName = E_TaskName.DPSPower THEN
-		bErr																:=  TC_ModuleState[iLevel].Tester = E_State.eDisabled;
-		
-		IF TC_ModuleState[iLevel].Tester = E_State.eDisabled THEN
-			sStatus 															:= SEL(bErr, '', 'Tester Cell Module is Disabled');
-		END_IF
-	END_IF
+			  																TC_ModuleState[iLevel].TCSite[1].TIERII = E_State.eDisabled	OR
+																			TC_ModuleState[iLevel].Tester = E_State.eDisabled;
 	
-	IF TC_ModuleState[iLevel].TCSite[1].TCU = E_State.eDisabled THEN
+	IF TC_ModuleState[iLevel].Tester = E_State.eDisabled THEN
+		sStatus 															:= SEL(bErr, '', 'Tester Cell Module is Disabled');
+	ELSIF TC_ModuleState[iLevel].TCSite[1].TCU = E_State.eDisabled THEN
 		sStatus																:= SEL(bErr, '', 'Tester Cell TCU is Disabled'); 
 	ELSIF TC_ModuleState[iLevel].TCSite[1].TIERII = E_State.eDisabled THEN
 		sStatus 															:= SEL(bErr, '', 'Tester Cell TierII is Disabled');
 	END_IF
-		
+
+ELSIF arrRCMD[n].eTaskName = E_TaskName.TIUSlideOut THEN
+	bErr																:= TC_ModuleState[iLevel].TCSite[1].TCU = E_State.eDisabled;
+	
+	IF TC_ModuleState[iLevel].Tester = E_State.eDisabled THEN
+		sStatus 															:= SEL(bErr, '', 'Tester Cell Module is Disabled');
+	END_IF
 END_IF
 
 //TII Alarm And System Alarm Check
@@ -4899,13 +4900,16 @@ arrRCMD[n]										:= CmdEmpty;]]></ST>
       <LineId Id="4460" Count="0" />
       <LineId Id="3188" Count="0" />
       <LineId Id="4445" Count="0" />
-      <LineId Id="4448" Count="1" />
-      <LineId Id="4454" Count="1" />
-      <LineId Id="4457" Count="2" />
-      <LineId Id="4452" Count="0" />
+      <LineId Id="4458" Count="0" />
       <LineId Id="4435" Count="0" />
-      <LineId Id="4437" Count="3" />
-      <LineId Id="4432" Count="1" />
+      <LineId Id="4567" Count="1" />
+      <LineId Id="4437" Count="1" />
+      <LineId Id="4562" Count="1" />
+      <LineId Id="4432" Count="0" />
+      <LineId Id="4564" Count="0" />
+      <LineId Id="4433" Count="0" />
+      <LineId Id="4565" Count="0" />
+      <LineId Id="4569" Count="3" />
       <LineId Id="3199" Count="2" />
       <LineId Id="4060" Count="1" />
       <LineId Id="4065" Count="2" />
