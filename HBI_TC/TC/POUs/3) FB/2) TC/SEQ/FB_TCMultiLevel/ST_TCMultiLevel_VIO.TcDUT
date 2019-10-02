@@ -130,8 +130,8 @@ STRUCT
 	isTIIError								: BOOL;
 	iUnBlock								: DINT; 
 	bAlarmBlock								: BOOL;
-	TIIAlarmLED							: BOOL;
-	TIIAlarmEPT							: BOOL;
+	TIIAlarmLED								: BOOL;
+	TIIAlarmEPT								: BOOL;
 	iSysUnBlockAlm							: DINT;
 	isSysError								: BOOL; 
 	bTstDelInt								: BOOL;		//Int for 20 Sec

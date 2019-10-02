@@ -207,7 +207,7 @@ CASE iSeqCase OF
 			iSeqStatus 														:= arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.M_nSystemReset();
 			
 		ELSIF arrTCMultiLevel[iLevel].stGblParam.bDoorRecovery THEN //Door Recovery
-			arrTCMultiLevel[iLevel].stGblParam.iProcessState 				:= E_ProcessState.eALPAUSED; 
+			arrTCMultiLevel[iLevel].stGblParam.iProcessState 				:= E_ProcessState.eLOADG;
 			iSeqStatus 														:= arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.M_nShuttleMoveInOut();	
 		ELSIF arrTCMultiLevel[iLevel].stGblParam.bCancel THEN								//TIU Cancel and Cancel recovery
 			arrTCMultiLevel[iLevel].stGblParam.iProcessState 				:= E_ProcessState.eLOADG;

@@ -2763,19 +2763,26 @@ ELSIF (bDebugCart AND
 	sStatus 																	:= 'TBot Side Door(s) is not locked';	
 *)
 // Task name is TCCSessionRequest or DPSPower or TIUSlideOut
-ELSIF arrRCMD[n].eTaskName = E_TaskName.TCCSessionRequest OR arrRCMD[n].eTaskName = E_TaskName.DPSPower OR arrRCMD[n].eTaskName = E_TaskName.TIUSlideOut THEN
-		//bErr:=SEL(arrTCLevelState[iLevel] = E_State.eDisabled,FALSE,TRUE);
-		//sStatus := SEL(bErr,'','Module is Disabled');
-		// If tester is disabled or TCU is disabled or tier II is disabled
-		bErr																	:= SEL(TC_ModuleState[iLevel].Tester = E_State.eDisabled OR TC_ModuleState[iLevel].TCSite[1].TCU = E_State.eDisabled OR 
-				  																		TC_ModuleState[iLevel].TCSite[1].TIERII = E_State.eDisabled, FALSE, TRUE);
-		IF TC_ModuleState[iLevel].Tester = E_State.eDisabled THEN
-			sStatus 															:= SEL(bErr, '', 'Tester Cell Module is Disabled');
-		ELSIF TC_ModuleState[iLevel].TCSite[1].TCU = E_State.eDisabled THEN
-			sStatus																:= SEL(bErr, '', 'Tester Cell TCU is Disabled');
-		ELSIF TC_ModuleState[iLevel].TCSite[1].TIERII = E_State.eDisabled THEN
-			sStatus 															:= SEL(bErr, '', 'Tester Cell TierII is Disabled');
-		END_IF
+ELSIF arrRCMD[n].eTaskName = E_TaskName.TCCSessionRequest OR arrRCMD[n].eTaskName = E_TaskName.DPSPower THEN
+	
+	bErr																:=  TC_ModuleState[iLevel].TCSite[1].TCU = E_State.eDisabled 	OR 
+			  																TC_ModuleState[iLevel].TCSite[1].TIERII = E_State.eDisabled	OR
+																			TC_ModuleState[iLevel].Tester = E_State.eDisabled;
+	
+	IF TC_ModuleState[iLevel].Tester = E_State.eDisabled THEN
+		sStatus 															:= SEL(bErr, '', 'Tester Cell Module is Disabled');
+	ELSIF TC_ModuleState[iLevel].TCSite[1].TCU = E_State.eDisabled THEN
+		sStatus																:= SEL(bErr, '', 'Tester Cell TCU is Disabled'); 
+	ELSIF TC_ModuleState[iLevel].TCSite[1].TIERII = E_State.eDisabled THEN
+		sStatus 															:= SEL(bErr, '', 'Tester Cell TierII is Disabled');
+	END_IF
+
+ELSIF arrRCMD[n].eTaskName = E_TaskName.TIUSlideOut THEN
+	bErr																:= TC_ModuleState[iLevel].TCSite[1].TCU = E_State.eDisabled;
+	
+	IF TC_ModuleState[iLevel].Tester = E_State.eDisabled THEN
+		sStatus 															:= SEL(bErr, '', 'Tester Cell Module is Disabled');
+	END_IF
 END_IF
 
 //TII Alarm And System Alarm Check
@@ -3111,6 +3118,13 @@ ELSE
 					iSendEvent 													:= 2;
 					JMP iSendEvent;
 				END_IF
+				
+				IF (NOT arrTCMultiLevel[iLevel].stGblParam.bTCDwrSafeToMoveEAP) THEN
+					sStatus														:= 'TBOT EAP Not allow Drawer Safe To Move.';
+					iSendEvent													:= 2;
+					JMP iSendEvent;
+				END_IF
+				
 				arrTCMultiLevel[iLevel].stGblParam.bShuttleMoveOut				:= TRUE ;
 			ELSE
 				arrTCMultiLevel[iLevel].stGblParam.bShuttleMoveIn				:= TRUE;
@@ -3129,24 +3143,36 @@ ELSE
 				iSendEvent 														:= 2;
 				JMP iSendEvent;
 			ELSE
+			
+			IF (NOT arrTCMultiLevel[iLevel].stGblParam.bTCDwrSafeToMoveEAP) THEN
+				sStatus														:= 'TBOT EAP Not allow Drawer Safe To Move.';
+				iSendEvent													:= 2;
+				JMP iSendEvent;
+			END_IF
 			//END_IF
 			//IF arrTCMultiLevel[iLevel].stGblParam.iProcessState = E_ProcessState.eAWAITGCMD  THEN
-				IF arrRCMD[n].bParam[1] = TRUE THEN
-					arrTCMultiLevel[iLevel].stGblParam.bShuttleMoveOut			:= TRUE ;
-				ELSE
-					arrTCMultiLevel[iLevel].stGblParam.bShuttleMoveIn			:= TRUE;
-				END_IF
+			IF arrRCMD[n].bParam[1] = TRUE THEN
+				arrTCMultiLevel[iLevel].stGblParam.bShuttleMoveOut			:= TRUE ;
+			ELSE
+				arrTCMultiLevel[iLevel].stGblParam.bShuttleMoveIn			:= TRUE;
+			END_IF
 			//ELSE
-				//IF arrTCMultiLevel[iLevel].stGblParam.iProcessState = E_ProcessState.ePause THEN 
-				arrTCMultiLevel[iLevel].stGblParam.bResume						:= TRUE;
-				//ELSE
-				//	sStatus := 'Nothing To Retry';
-				//	iSendEvent :=1;
-				//	JMP iSendEvent;
-				//END_IF
+			//IF arrTCMultiLevel[iLevel].stGblParam.iProcessState = E_ProcessState.ePause THEN 
+			arrTCMultiLevel[iLevel].stGblParam.bResume						:= TRUE;
+			//ELSE
+			//	sStatus := 'Nothing To Retry';
+			//	iSendEvent :=1;
+			//	JMP iSendEvent;
+			//END_IF
 			END_IF
 			
 		E_TaskName.TIUSlideOutCancel : 	
+			IF (NOT arrTCMultiLevel[iLevel].stGblParam.bTCDwrSafeToMoveEAP) THEN
+				sStatus														:= 'TBOT EAP Not allow Drawer Safe To Move.';
+				iSendEvent													:= 2;
+				JMP iSendEvent;
+			END_IF
+			
 			IF arrTCMultiLevel[iLevel].stGblParam.bShuttleMoveOut = TRUE OR arrTCMultiLevel[iLevel].stGblParam.bShuttleMoveIn = TRUE THEN
 				arrTCMultiLevel[iLevel].stGblParam.bCancel 						:= TRUE;
 				//arrTCMultiLevel[iLevel].stGblParam.bInternalCancel :=TRUE;
@@ -4870,12 +4896,21 @@ arrRCMD[n]										:= CmdEmpty;]]></ST>
       <LineId Id="3928" Count="0" />
       <LineId Id="4217" Count="0" />
       <LineId Id="4053" Count="0" />
-      <LineId Id="3183" Count="0" />
-      <LineId Id="3186" Count="1" />
       <LineId Id="4059" Count="0" />
+      <LineId Id="4460" Count="0" />
       <LineId Id="3188" Count="0" />
-      <LineId Id="3190" Count="0" />
-      <LineId Id="3192" Count="9" />
+      <LineId Id="4445" Count="0" />
+      <LineId Id="4458" Count="0" />
+      <LineId Id="4435" Count="0" />
+      <LineId Id="4567" Count="1" />
+      <LineId Id="4437" Count="1" />
+      <LineId Id="4562" Count="1" />
+      <LineId Id="4432" Count="0" />
+      <LineId Id="4564" Count="0" />
+      <LineId Id="4433" Count="0" />
+      <LineId Id="4565" Count="0" />
+      <LineId Id="4569" Count="3" />
+      <LineId Id="3199" Count="2" />
       <LineId Id="4060" Count="1" />
       <LineId Id="4065" Count="2" />
       <LineId Id="4114" Count="0" />
@@ -4970,9 +5005,21 @@ arrRCMD[n]										:= CmdEmpty;]]></ST>
       <LineId Id="3873" Count="0" />
       <LineId Id="4161" Count="0" />
       <LineId Id="3421" Count="23" />
-      <LineId Id="3446" Count="17" />
-      <LineId Id="3465" Count="21" />
-      <LineId Id="3489" Count="2" />
+      <LineId Id="3446" Count="5" />
+      <LineId Id="4501" Count="2" />
+      <LineId Id="4507" Count="1" />
+      <LineId Id="4504" Count="0" />
+      <LineId Id="4509" Count="0" />
+      <LineId Id="3452" Count="11" />
+      <LineId Id="3465" Count="5" />
+      <LineId Id="4510" Count="0" />
+      <LineId Id="4512" Count="3" />
+      <LineId Id="4511" Count="0" />
+      <LineId Id="3471" Count="15" />
+      <LineId Id="3489" Count="1" />
+      <LineId Id="4518" Count="3" />
+      <LineId Id="4516" Count="1" />
+      <LineId Id="3491" Count="0" />
       <LineId Id="3493" Count="7" />
       <LineId Id="3502" Count="3" />
       <LineId Id="4162" Count="0" />

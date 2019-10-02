@@ -117,31 +117,6 @@ END_VAR
 		END_IF
 		//SendEvent
 	END_IF*)
-	
-	IF bDebugCart THEN
-		IF (NOT stMLVIO.ipTCCellTbotSideDoorOpenCloseStatus01) OR (NOT stMLVIO.ipTCCellTbotSideDoorOpenCloseStatus02) THEN
-			ALMTC.Level[iLevel].AlarmID[E_AlarmID.TBotSideDoorCloseSignalNotDetected]			:= TRUE;
-		END_IF
-		IF (NOT stMLVIO.ipTCCellTbotSideDoorLocked01) OR (NOT stMLVIO.ipTCCellTbotSideDoorLocked02) THEN
-			ALMTC.Level[iLevel].AlarmID[E_AlarmID.TBotSideDoorLockSignalNotDetected]			:= TRUE;
-		END_IF
-		
-		//auto clear alarm if door is closed 
-		IF ALMTC.Level[iLevel].AlarmID[E_AlarmID.TBotSideDoorCloseSignalNotDetected] THEN
-			stMLVIO:=arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO;
-			IF stMLVIO.ipTCCellTbotSideDoorOpenCloseStatus01 AND stMLVIO.ipTCCellTbotSideDoorOpenCloseStatus02 THEN
-				ALMTC.Level[iLevel].AlarmID[E_AlarmID.TBotSideDoorCloseSignalNotDetected]		:= FALSE;
-			END_IF
-		END_IF
-		
-		//auto clear alarm if door is locked
-		IF ALMTC.Level[iLevel].AlarmID[E_AlarmID.TBotSideDoorLockSignalNotDetected] THEN
-			stMLVIO:=arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO;
-			IF stMLVIO.ipTCCellTbotSideDoorLocked01 AND stMLVIO.ipTCCellTbotSideDoorLocked02 THEN
-				ALMTC.Level[iLevel].AlarmID[E_AlarmID.TBotSideDoorLockSignalNotDetected]		:= FALSE;
-			END_IF
-		END_IF
-	END_IF
 	         
 
 //	[ResetDuringSystemReset]
@@ -474,23 +449,6 @@ END_VAR
       <LineId Id="1394" Count="0" />
       <LineId Id="1479" Count="0" />
       <LineId Id="1383" Count="0" />
-      <LineId Id="2979" Count="0" />
-      <LineId Id="3091" Count="0" />
-      <LineId Id="2983" Count="1" />
-      <LineId Id="2980" Count="0" />
-      <LineId Id="2987" Count="0" />
-      <LineId Id="2992" Count="1" />
-      <LineId Id="1398" Count="0" />
-      <LineId Id="3004" Count="0" />
-      <LineId Id="2996" Count="0" />
-      <LineId Id="3008" Count="2" />
-      <LineId Id="2997" Count="1" />
-      <LineId Id="3005" Count="1" />
-      <LineId Id="3001" Count="0" />
-      <LineId Id="3011" Count="2" />
-      <LineId Id="3007" Count="0" />
-      <LineId Id="3000" Count="0" />
-      <LineId Id="3092" Count="0" />
       <LineId Id="2995" Count="0" />
       <LineId Id="1762" Count="0" />
       <LineId Id="1761" Count="0" />

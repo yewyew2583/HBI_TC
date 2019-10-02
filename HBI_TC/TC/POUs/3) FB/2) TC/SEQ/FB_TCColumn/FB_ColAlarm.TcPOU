@@ -73,11 +73,11 @@ END_VAR
 	CASE i OF
 		E_ColAlarm.ipColumnFluid_PCW_Leakage	: 
 						IF NOT bSLTC THEN
-							e:=E_ColAlarm.ipColumnFluid_PCW_Leakage; 	  ArrAlmBitBefDelay[e]:=vIO.ipColumnFluid_PCW_Leakage  		AND bENs[1]		; Arr_ms[e] := 500;  //SysAlmText[e]:= 'ColumnFluid_PCW_Leakage';
+							e:=E_ColAlarm.ipColumnFluid_PCW_Leakage; 	  ArrAlmBitBefDelay[e]:=vIO.ipColumnFluid_PCW_Leakage  		AND bENs[1]		; Arr_ms[e] := 200;  //SysAlmText[e]:= 'ColumnFluid_PCW_Leakage';
 						END_IF 
 		   
 	    E_ColAlarm.ipTbotDoorClosedSignal	: 
-						e:=E_ColAlarm.ipTbotDoorClosedSignal; 		ArrAlmBitBefDelay[e]:= (NOT vIO.ipTbotDoorClosedSignal) 		AND bENs[2]		; Arr_ms[e] := 500;  //SysAlmText[e]:= 'ipTbotDoorClosed';
+						e:=E_ColAlarm.ipTbotDoorClosedSignal; 		ArrAlmBitBefDelay[e]:= (NOT vIO.ipTbotDoorClosedSignal) 		AND bENs[2]		; Arr_ms[e] := 200;  //SysAlmText[e]:= 'ipTbotDoorClosed';
 		
 
 		//E_ColAlarm.ipAllTCDrawerRetractedinCell	: e:=E_ColAlarm.ipAllTCDrawerRetractedinCell; ArrAlmBitBefDelay[e]:=vIO.ipAllTCDrawerRetractedinCell 	AND bENs[3]		; Arr_ms[e] := 500;  SysAlmText[e]:= 'AllTCDrawerRetractedinCell';  
