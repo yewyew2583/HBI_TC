@@ -2792,63 +2792,34 @@ END_IF
 // 4. Task name is not door close
 // 5. Task name is not SetBlinkRate
 // 6. Either no leak and ground alarm or Task name is not TIUSlideOut and DrawerUp or both
-IF arrRCMD[n].eTaskName <> E_TaskName.Cancel AND 
-	arrRCMD[n].eTaskName <> E_TaskName.AlarmReset AND 
-  	arrRCMD[n].eTaskName <> E_TaskName.DoorOpen AND  //front OR back door open shouldnt block by any alarm
-	arrRCMD[n].eTaskName <> E_TaskName.DoorClose AND //front OR back door close shouldnt block by any alarm
-	arrRCMD[n].eTaskName <> E_TaskName.SetBlinkRate(*/***/*) AND
-
-	//64, 2#00000000000000000000000001000000 leak 1
-	//128,2#00000000000000000000000010000000 leak 2
-	//256,2#00000000000000000000000100000000 GRD 
-	//2, 2#0010 SYS Leak
-	//4, 2#0100 SYS GRD 
-	NOT(
-		(*NOT(
-			stMLVIO.iUnBlock = 64 OR 
-			stMLVIO.iUnBlock = 128 OR 
-			stMLVIO.iUnBlock = 256 OR 
-			stMLVIO.iUnBlock = 192 OR 
-			stMLVIO.iUnBlock = 320 OR 
-			stMLVIO.iUnBlock = 384 OR 
-			stMLVIO.iUnBlock = 448 OR 
-			stMLVIO.iUnBlock = 2048 OR //removed testerReady check from every flow
-			stMLVIO.iSysUnBlockAlm = 2 OR 
-			stMLVIO.iSysUnBlockAlm = 4 OR 
-			stMLVIO.iSysUnBlockAlm = 6
-			) *)
-			(stMLVIO.bAlarmBlock OR
-			stMLVIO.iSysUnBlockAlm = 2 OR 
-			stMLVIO.iSysUnBlockAlm = 4 OR 
-			stMLVIO.iSysUnBlockAlm = 6) 
-		AND
-			arrRCMD[n].eTaskName = E_TaskName.TIUSlideOut OR arrRCMD[n].eTaskName = E_TaskName.DrawerUp
-		) 
-		THEN
- 
-			IF TRUE THEN
-				FOR i:= 1 TO NO_OF_COMMON_SENSOR DO
-					IF ALMTC.Common.AlarmID[i] THEN
-						IF sStatus = '' THEN 
-							sStatus														:= SysAlmText[i];	
-							CONTINUE;				
-						END_IF
-						sStatus															:= CONCAT(CONCAT(sStatus,', '),SysAlmText[i]);
-						bErr 															:= TRUE;
-					END_IF
-				END_FOR
-				
-				FOR i:= 1 TO NO_OF_TII_SENSOR DO
-					IF ALMTC.Level[iLevel].AlarmID[i] THEN
-						IF sStatus = '' THEN 
-							sStatus														:= TIIAlmText[i];	
-							CONTINUE;				
-						END_IF
-						sStatus															:= CONCAT(CONCAT(sStatus,', '),TIIAlmText[i]);
-						bErr															:= TRUE;
-					END_IF
-				END_FOR
+IF 	arrRCMD[n].eTaskName <> E_TaskName.Cancel 														AND 
+	arrRCMD[n].eTaskName <> E_TaskName.AlarmReset 													AND 
+  	arrRCMD[n].eTaskName <> E_TaskName.DoorOpen 													AND  //front OR back door open shouldnt block by any alarm
+	arrRCMD[n].eTaskName <> E_TaskName.DoorClose													AND //front OR back door close shouldnt block by any alarm
+	arrRCMD[n].eTaskName <> E_TaskName.SetBlinkRate 												AND
+	(stMLVIO.bAlarmBlock OR stMLVIO.iSysUnBlockAlm = 2 OR stMLVIO.iSysUnBlockAlm = 10)  			THEN
+	
+		FOR i:= 1 TO NO_OF_COMMON_SENSOR DO
+			IF ALMTC.Common.AlarmID[i] THEN
+				IF sStatus = '' THEN 
+					sStatus														:= SysAlmText[i];	
+					CONTINUE;				
+				END_IF
+				sStatus															:= CONCAT(CONCAT(sStatus,', '),SysAlmText[i]);
 			END_IF
+		END_FOR
+		
+		FOR i:= 1 TO NO_OF_TII_SENSOR DO
+			IF ALMTC.Level[iLevel].AlarmID[i] THEN
+				IF sStatus = '' THEN 
+					sStatus														:= TIIAlmText[i];	
+					CONTINUE;				
+				END_IF
+				sStatus															:= CONCAT(CONCAT(sStatus,', '),TIIAlmText[i]);
+			END_IF
+		END_FOR
+		
+		bErr 																	:= TRUE;
 END_IF
 
 IF arrRCMD[n].eTaskName <> E_TaskName.Cancel THEN 
@@ -4917,22 +4888,17 @@ arrRCMD[n]										:= CmdEmpty;]]></ST>
       <LineId Id="3673" Count="0" />
       <LineId Id="4062" Count="0" />
       <LineId Id="3833" Count="0" />
-      <LineId Id="4063" Count="1" />
-      <LineId Id="4109" Count="4" />
+      <LineId Id="4063" Count="0" />
       <LineId Id="4108" Count="0" />
-      <LineId Id="3677" Count="0" />
-      <LineId Id="4278" Count="13" />
-      <LineId Id="4293" Count="1" />
-      <LineId Id="4292" Count="0" />
-      <LineId Id="4229" Count="0" />
-      <LineId Id="3691" Count="0" />
-      <LineId Id="4232" Count="0" />
-      <LineId Id="4231" Count="0" />
-      <LineId Id="4233" Count="0" />
-      <LineId Id="3203" Count="10" />
+      <LineId Id="4290" Count="0" />
+      <LineId Id="4613" Count="0" />
+      <LineId Id="3204" Count="6" />
+      <LineId Id="3212" Count="1" />
       <LineId Id="4115" Count="0" />
-      <LineId Id="3214" Count="9" />
-      <LineId Id="3225" Count="1" />
+      <LineId Id="3214" Count="6" />
+      <LineId Id="3222" Count="1" />
+      <LineId Id="4614" Count="1" />
+      <LineId Id="3226" Count="0" />
       <LineId Id="3228" Count="3" />
       <LineId Id="3234" Count="0" />
       <LineId Id="3237" Count="0" />

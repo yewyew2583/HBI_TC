@@ -149,7 +149,6 @@ IF bDebugCart THEN
 	
 	//auto clear alarm if door is closed 
 	IF ALMTC.Level[iLevel].AlarmID[E_AlarmID.TBotSideDoorCloseSignalNotDetected] THEN
-		VIO:=arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO;
 		IF VIO.ipTCCellTbotSideDoorOpenCloseStatus01 AND VIO.ipTCCellTbotSideDoorOpenCloseStatus02 THEN
 			ALMTC.Level[iLevel].AlarmID[E_AlarmID.TBotSideDoorCloseSignalNotDetected]		:= FALSE;
 		END_IF
@@ -157,7 +156,6 @@ IF bDebugCart THEN
 	
 	//auto clear alarm if door is locked
 	IF ALMTC.Level[iLevel].AlarmID[E_AlarmID.TBotSideDoorLockSignalNotDetected] THEN
-		VIO:=arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO;
 		IF VIO.ipTCCellTbotSideDoorLocked01 AND VIO.ipTCCellTbotSideDoorLocked02 THEN
 			ALMTC.Level[iLevel].AlarmID[E_AlarmID.TBotSideDoorLockSignalNotDetected]		:= FALSE;
 		END_IF
@@ -377,13 +375,16 @@ TIIAlarmLED															:=		ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipAPPowerOn
 																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTesterLatchesClosed    	]	OR
 																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTesterPowerOn	       		]   OR
 																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTesterReady	           	]   OR
-																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCDrawerCylRetractRS   	]   OR
-																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCDrawerCylExtendRS	   	]   OR
 																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCCellDoorClosed	   		]   OR
 																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellFluidLeakage1	   		]   OR
 																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellFluidLeakage2	   		]   OR
 																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellGroundFault 	   		]   OR
 																			ALMTC.Level[iLevel].ALarmID[E_AlarmID.DoorLockSignalNotDetected		]	OR
+																			ALMTC.Level[iLevel].ALarmID[E_AlarmID.DrawerDownError				]	OR
+																			ALMTC.Level[iLevel].ALarmID[E_AlarmID.DrawerUpError					]	OR
+																			ALMTC.Level[iLevel].ALarmID[E_AlarmID.DrawerExtendError				]	OR
+																			ALMTC.Level[iLevel].ALarmID[E_AlarmID.DrawerRetractError			]	OR
+																			ALMTC.Level[iLevel].ALarmID[E_AlarmID.APIsNotInUPPosition			]	OR
 																			ALMTC.Common.AlarmID[E_ColAlarm.ipColumnFluid_PCW_Leakage			]	OR
 																			(
 																				bDebugCart AND 
@@ -473,7 +474,9 @@ END_IF
       <LineId Id="679" Count="2" />
       <LineId Id="678" Count="0" />
       <LineId Id="1100" Count="0" />
-      <LineId Id="1103" Count="22" />
+      <LineId Id="1103" Count="9" />
+      <LineId Id="1114" Count="6" />
+      <LineId Id="1122" Count="3" />
       <LineId Id="1101" Count="1" />
       <LineId Id="365" Count="0" />
       <LineId Id="145" Count="0" />
@@ -616,10 +619,11 @@ END_IF
       <LineId Id="203" Count="0" />
       <LineId Id="1023" Count="0" />
       <LineId Id="1027" Count="0" />
-      <LineId Id="1039" Count="2" />
-      <LineId Id="1044" Count="2" />
+      <LineId Id="1039" Count="1" />
+      <LineId Id="1045" Count="1" />
       <LineId Id="1028" Count="2" />
       <LineId Id="1153" Count="0" />
+      <LineId Id="1210" Count="4" />
       <LineId Id="1048" Count="4" />
       <LineId Id="1038" Count="0" />
       <LineId Id="1022" Count="0" />
