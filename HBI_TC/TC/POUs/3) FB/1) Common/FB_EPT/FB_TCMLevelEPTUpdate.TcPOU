@@ -42,9 +42,9 @@ END_VAR
 					(stMLVIO.TIIAlarmEPT)															OR	//Some TIIAlarms block the EPT
 					(NOT stMLVIO.ipTCCellDoorClosed);
 				
-	bEptBusy 	:= 	(arrTCMultiLevel[iLevel].stGblParam.iProcessState = E_ProcessState.eLOADG);										//	OR	//executing tasks
-					//(stMLVIO.ipAPPresentSensor AND (NOT stMLVIO.ipHandlerSafeToEnterHwr OR NOT stMLVIO.ipHandlerSafeToEnterPLC))		OR	//actuate pan actuated with ap present
-					//(stMLVIO.ipTCDrawerCylUpRS OR stMLVIO.ipTCDrawerCylExtendRS);															//tc drawer up/ out position
+	bEptBusy 	:= 	(arrTCMultiLevel[iLevel].stGblParam.iProcessState = E_ProcessState.eLOADG)											OR	//executing tasks
+					(stMLVIO.ipAPPresentSensor AND (NOT stMLVIO.ipHandlerSafeToEnterHwr OR NOT stMLVIO.ipHandlerSafeToEnterPLC))		OR	//actuate pan actuated with ap present
+					(stMLVIO.ipTCDrawerCylUpRS OR stMLVIO.ipTCDrawerCylExtendRS);															//tc drawer up/ out position
 	
 	bEptIdle 	:= 	arrTCMultiLevel[iLevel].stGblParam.iProcessState = E_ProcessState.ePAUSE OR	
 					arrTCMultiLevel[iLevel].stGblParam.iProcessState = E_ProcessState.eAWAITGCMD;	
