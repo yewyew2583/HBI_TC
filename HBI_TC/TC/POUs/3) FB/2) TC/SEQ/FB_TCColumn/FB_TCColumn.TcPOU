@@ -90,7 +90,7 @@ IF bDebugCart THEN
 ELSE
 	stTCColumnVIO.ipColumnFluid_PCW_Leakage 		:= NOT fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode AND bColSenSimArray[1] , 
 																						bActual:= (*NOT*) stTCColumnDIO.ipColumnFluid_PCW_Leakage , 
-	   																					  bSimu:=FALSE, 
+	   																					  bSimu:=TRUE, 
 																					  iBackDoor:= stTCColumnBIO.ipColumnFluid_PCW_Leakage );
 											
 	stTCColumnVIO.ipAllTCDrawerRetractedinCell 		:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode AND bColSenSimArray[2] , 
@@ -100,7 +100,7 @@ ELSE
 	
 	stTCColumnVIO.ipTbotDoorClosedSignal 			:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode AND bColSenSimArray[3], 
 																						bActual:=stTCColumnDIO.ipTbotDoorClosedSignal , 
-	   																					  bSimu:=FALSE, 
+	   																					  bSimu:=TRUE, 
 																					  iBackDoor:=stTCColumnBIO.ipTbotDoorClosedSignal );																		  
 END_IF
 																				  
