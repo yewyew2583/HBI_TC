@@ -9,7 +9,7 @@
 	
 //<Optional Flag>
 	bDebugStation							: BOOL := FALSE; // T : Do Debug Station Action
-	bDebugCart								: BOOL := TRUE;	// T : Do Debug Cart Action
+	bDebugCart								: BOOL := FALSE;	// T : Do Debug Cart Action
 	bAnalogIOSim 							: BOOL := FALSE;
 	bAlwaysOnAPPwrOnInit  					: BOOL; // F : if(!present)skip pwrOnStep, T : Doesn't depends on present signal. 
 	bAlwaysOnTstPwrOn 						: BOOL;

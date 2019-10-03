@@ -201,7 +201,6 @@ CASE iStep OF
 						IF (NOT stMultiLevelVIO.ipTCCellDoorClosed) THEN
 							bErr																:= TRUE;
 							sStatus																:= 'Door Lock Error, Door LockStatus not ON After Door Lock';
-							ALMTC.Level[_iLevel].ALarmID[E_AlarmID.DoorLockSignalNotDetected]	:= 	TRUE;
 							iStep																:= 20; // Set event
 						ELSE
 							arrTCMultiLevel[_iLevel].stGblParam.bDoorClose			:= SEL(_bLock,FALSE,TRUE);
@@ -414,9 +413,7 @@ END_VAR
       <LineId Id="1305" Count="0" />
       <LineId Id="1651" Count="0" />
       <LineId Id="1662" Count="0" />
-      <LineId Id="1307" Count="2" />
-      <LineId Id="2279" Count="0" />
-      <LineId Id="1310" Count="4" />
+      <LineId Id="1307" Count="7" />
       <LineId Id="1318" Count="0" />
       <LineId Id="1326" Count="1" />
       <LineId Id="1543" Count="0" />

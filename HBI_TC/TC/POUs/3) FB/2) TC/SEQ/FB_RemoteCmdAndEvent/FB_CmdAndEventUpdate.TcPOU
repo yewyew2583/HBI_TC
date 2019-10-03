@@ -3091,6 +3091,7 @@ ELSE
 				END_IF
 				
 				IF (NOT arrTCMultiLevel[iLevel].stGblParam.bTCDwrSafeToMoveEAP) THEN
+					bErr														:= TRUE;
 					sStatus														:= 'TBOT EAP Not allow Drawer Safe To Move.';
 					iSendEvent													:= 2;
 					JMP iSendEvent;
@@ -3116,6 +3117,7 @@ ELSE
 			ELSE
 			
 			IF (NOT arrTCMultiLevel[iLevel].stGblParam.bTCDwrSafeToMoveEAP) THEN
+				bErr														:= TRUE;
 				sStatus														:= 'TBOT EAP Not allow Drawer Safe To Move.';
 				iSendEvent													:= 2;
 				JMP iSendEvent;
@@ -3139,6 +3141,7 @@ ELSE
 			
 		E_TaskName.TIUSlideOutCancel : 	
 			IF (NOT arrTCMultiLevel[iLevel].stGblParam.bTCDwrSafeToMoveEAP) THEN
+				bErr														:= TRUE;
 				sStatus														:= 'TBOT EAP Not allow Drawer Safe To Move.';
 				iSendEvent													:= 2;
 				JMP iSendEvent;
@@ -4972,18 +4975,24 @@ arrRCMD[n]										:= CmdEmpty;]]></ST>
       <LineId Id="4161" Count="0" />
       <LineId Id="3421" Count="23" />
       <LineId Id="3446" Count="5" />
-      <LineId Id="4501" Count="2" />
+      <LineId Id="4501" Count="1" />
+      <LineId Id="4656" Count="0" />
+      <LineId Id="4503" Count="0" />
       <LineId Id="4507" Count="1" />
       <LineId Id="4504" Count="0" />
       <LineId Id="4509" Count="0" />
       <LineId Id="3452" Count="11" />
       <LineId Id="3465" Count="5" />
       <LineId Id="4510" Count="0" />
-      <LineId Id="4512" Count="3" />
+      <LineId Id="4512" Count="0" />
+      <LineId Id="4657" Count="0" />
+      <LineId Id="4513" Count="2" />
       <LineId Id="4511" Count="0" />
       <LineId Id="3471" Count="15" />
       <LineId Id="3489" Count="1" />
-      <LineId Id="4518" Count="3" />
+      <LineId Id="4518" Count="0" />
+      <LineId Id="4658" Count="0" />
+      <LineId Id="4519" Count="2" />
       <LineId Id="4516" Count="1" />
       <LineId Id="3491" Count="0" />
       <LineId Id="3493" Count="7" />

@@ -65,20 +65,21 @@ IF tStartStep2.Q THEN
 		
 		
 		//Lock back door if closed.
-		IF stMLVIO.ipTCCellDoorOpenCloseStatus THEN
+		(*IF stMLVIO.ipTCCellDoorOpenCloseStatus THEN
 			stMLVIO.opCellDoorClosed 						:= TRUE;
-		END_IF
+		END_IF*)
 		
 		//Lock Front door if closed.
 		IF bDebugCart THEN
-			IF stMLVIO.ipTCCellTbotSideDoorOpenCloseStatus01 AND stMLVIO.ipTCCellTbotSideDoorOpenCloseStatus02 THEN
-				stMLVIO.opCellTBOtSideDoorClosed1 		:= TRUE;
-				stMLVIO.opCellTBOtSideDoorClosed2 		:= TRUE;
-			END_IF
+			//IF stMLVIO.ipTCCellTbotSideDoorOpenCloseStatus01 AND stMLVIO.ipTCCellTbotSideDoorOpenCloseStatus02 THEN
+				stMLVIO.opCellTBOtSideDoorClosed1 		:= TRUE;	//lock front door
+				stMLVIO.opCellTBOtSideDoorClosed2 		:= TRUE;	//lock front door
+			//END_IF
 		END_IF
 		
 		stMLVIO.opAPAirSupplySol 							:= TRUE; //turn on all levels' AP 10bar 
 		stMLVIO.opTesterDrawerAirSupplySol					:= TRUE; //turn on all levels' tester 6bar
+		stMLVIO.opCellDoorClosed 							:= TRUE; //lock door
 		
 		arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO := stMLVIO; //set method
 	END_FOR
@@ -133,6 +134,7 @@ END_IF
       <LineId Id="394" Count="0" />
       <LineId Id="368" Count="0" />
       <LineId Id="392" Count="0" />
+      <LineId Id="425" Count="0" />
       <LineId Id="396" Count="0" />
       <LineId Id="370" Count="0" />
       <LineId Id="352" Count="1" />

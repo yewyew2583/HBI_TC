@@ -168,87 +168,87 @@ FOR i := 1 TO NoOfTIIAlm DO
 		(*E_TIIAlarm.ipAPPresentSensor: 
 			e															:= E_TIIAlarm.ipAPPresentSensor; 
 			ArrAlmBitBefDelay[E_TIIAlarm.ipAPPresentSensor]				:= (NOT	vIO.ipAPPresentSensor) AND bENs[1];  		
-			Arr_ms[e] 													:= 200;  (*TIIAlmText[e]:='AP_PresentSensor'*); //****stTCVIO.iAlarmCode=  E_Alarm.ipAP_PresentSensor 	 ;*)
+			Arr_ms[e] 													:= 500;  (*TIIAlmText[e]:='AP_PresentSensor'*); //****stTCVIO.iAlarmCode=  E_Alarm.ipAP_PresentSensor 	 ;*)
 			
         E_TIIAlarm.ipAPPowerOn: 
 			e															:= E_TIIAlarm.ipAPPowerOn; 
 			ArrAlmBitBefDelay[E_TIIAlarm.ipAPPowerOn]					:= (NOT vIO.ipAPPowerOn) AND VIO.ipAPPresentSensor AND GVL_DUT_TC_AP240ACPower.Failed AND bENs[2];
-			Arr_ms[e] 													:= 200;  (*TIIAlmText[e]:='AP_PowerOn'*); 
+			Arr_ms[e] 													:= 500;  (*TIIAlmText[e]:='AP_PowerOn'*); 
 			
 	    E_TIIAlarm.ipAPReady: 
 			e															:= E_TIIAlarm.ipAPReady; 
 			ArrAlmBitBefDelay[E_TIIAlarm.ipAPReady]						:= (NOT vIO.ipAPReady) AND vIO.ipAPPresentSensor AND bENs[3]; 	
-			Arr_ms[e] 													:= 200;  (*TIIAlmText[e]:='AP_Ready' 		    	*);      
+			Arr_ms[e] 													:= 500;  (*TIIAlmText[e]:='AP_Ready' 		    	*);      
 			
 	    (*E_TIIAlarm.ipAPDeactuatedPLC: 
 			e															:= E_TIIAlarm.ipAPDeactuatedPLC; 
 			ArrAlmBitBefDelay[E_TIIAlarm.ipAPDeactuatedPLC]				:= (NOT vIO.ipHandlerSafeToEnterPLC) AND vIO.ipAPPresentSensor AND bENs[4]; 			
-			Arr_ms[e] 													:= 200;  (*TIIAlmText[e]:='AP_DeactuatedPLC'*); *)
+			Arr_ms[e] 													:= 500;  (*TIIAlmText[e]:='AP_DeactuatedPLC'*); *)
   
 	    (*E_TIIAlarm.ipAPDeactuatedHwr: 
 			e															:= E_TIIAlarm.ipAPDeactuatedHwr; 
 			ArrAlmBitBefDelay[E_TIIAlarm.ipAPDeactuatedHwr]				:= (NOT	vIO.ipHandlerSafeToEnterHwr) AND vIO.ipAPPresentSensor AND bENs[5]; 			
-			Arr_ms[e] 													:= 200;  (*TIIAlmText[e]:='AP_DeactuatedHwr'*); *)
+			Arr_ms[e] 													:= 500;  (*TIIAlmText[e]:='AP_DeactuatedHwr'*); *)
 			
 	    E_TIIAlarm.ipCellFluidLeakage1: 
 			e															:= E_TIIAlarm.ipCellFluidLeakage1; 
 			ArrAlmBitBefDelay[E_TIIAlarm.ipCellFluidLeakage1]			:= vIO.ipCellFluidLeakage1 (*AND bENs[6]*); 			
-			Arr_ms[e] 													:= 200;  (*TIIAlmText[e]:='CellFluidLeakage1' 	*);   
+			Arr_ms[e] 													:= 500;  (*TIIAlmText[e]:='CellFluidLeakage1' 	*);   
 			
 	    E_TIIAlarm.ipCellFluidLeakage2: 
 			e															:= E_TIIAlarm.ipCellFluidLeakage2; 
 			ArrAlmBitBefDelay[E_TIIAlarm.ipCellFluidLeakage2]			:= vIO.ipCellFluidLeakage2 (*AND bENs[7]*) ; 			
-			Arr_ms[e] 													:= 200;  (*TIIAlmText[e]:='CellFluidLeakage2'*);   
+			Arr_ms[e] 													:= 500;  (*TIIAlmText[e]:='CellFluidLeakage2'*);   
 			
 	    E_TIIAlarm.ipCellGroundFault: 
 			e															:= E_TIIAlarm.ipCellGroundFault; 
 			ArrAlmBitBefDelay[E_TIIAlarm.ipCellGroundFault]				:= vIO.ipCellGroundFault AND bENs[8]; 			
-			Arr_ms[e] 													:= 200;  (*TIIAlmText[e]:='CellGroundFault'*);
+			Arr_ms[e] 													:= 500;  (*TIIAlmText[e]:='CellGroundFault'*);
 			
         (*E_TIIAlarm.ipTesterPresent: 
 			e															:= E_TIIAlarm.ipTesterPresent; 
 			ArrAlmBitBefDelay[E_TIIAlarm.ipTesterPresent]				:= (NOT	vIO.ipTesterPresent) AND bENs[9]; 			
-			Arr_ms[e] 													:= 200;  (*TIIAlmText[e]:='TesterPresent'*);*)
+			Arr_ms[e] 													:= 500;  (*TIIAlmText[e]:='TesterPresent'*);*)
 			
         E_TIIAlarm.ipTesterPowerOn: 
 			e															:= E_TIIAlarm.ipTesterPowerOn; 
 			ArrAlmBitBefDelay[E_TIIAlarm.ipTesterPowerOn]				:= (NOT	vIO.ipTesterPowerOn) AND vIO.ipTesterPresent AND bChkTstOn AND bENs[10]; 			
-			Arr_ms[e] 													:= 200;  (*TIIAlmText[e]:='TesterPowerOn'*);
+			Arr_ms[e] 													:= 500;  (*TIIAlmText[e]:='TesterPowerOn'*);
     
         E_TIIAlarm.ipTesterReady: 
 			e															:= E_TIIAlarm.ipTesterReady; 
 			ArrAlmBitBefDelay[E_TIIAlarm.ipTesterReady]					:= (NOT	vIO.ipTesterReady) AND vIO.ipTesterPresent AND bENs[11]; 	
-			Arr_ms[e] 													:= 200;  (*TIIAlmText[e]:='TesterReady'*);
+			Arr_ms[e] 													:= 500;  (*TIIAlmText[e]:='TesterReady'*);
 			   
        	E_TIIAlarm.ipTCCellDoorClosed: 
 			e															:= E_TIIAlarm.ipTCCellDoorClosed; 
 			ArrAlmBitBefDelay[E_TIIAlarm.ipTCCellDoorClosed]			:= (NOT	vIO.ipTCCellDoorClosed); //AND bENs[12]; 							
-			Arr_ms[e] 													:= 200;  (*TIIAlmText[e]:='TCCellDoorClosed' *);
+			Arr_ms[e] 													:= 500;  (*TIIAlmText[e]:='TCCellDoorClosed' *);
 			
         E_TIIAlarm.ipTesterLatchesClosed: 
 			e															:= E_TIIAlarm.ipTesterLatchesClosed ; 
 			ArrAlmBitBefDelay[E_TIIAlarm.ipTesterLatchesClosed]			:= (NOT	vIO.ipTesterLatchesClosed) AND (bTstOnCmd OR vIO.ipTesterPresent) AND bENs[13] ; 
-			Arr_ms[e] 													:= 200;  (*TIIAlmText[e]:='TesterLatchesClosed'*);
+			Arr_ms[e] 													:= 500;  (*TIIAlmText[e]:='TesterLatchesClosed'*);
 			
         (*E_TIIAlarm.ipTIUPresent: 
 			e															:= E_TIIAlarm.ipTIUPresent; 
 			ArrAlmBitBefDelay[E_TIIAlarm.ipTIUPresent]					:= (NOT	vIO.ipTIUPresent) AND bENs[14]; 						
-			Arr_ms[e] 													:= 200;  (*TIIAlmText[e]:='TIUPresent'*);*)
+			Arr_ms[e] 													:= 500;  (*TIIAlmText[e]:='TIUPresent'*);*)
 			
         (*E_TIIAlarm.ipTCDrawerCylExtendRS: 
 			e															:= E_TIIAlarm.ipTCDrawerCylExtendRS; 
 			ArrAlmBitBefDelay[E_TIIAlarm.ipTCDrawerCylExtendRS]			:= (NOT	vIO.ipTCDrawerCylExtendRS) AND vIO.opTesterDrawerAirSupplySol (*AND	vIO.opCellDrawerCylExtend*) AND (NOT bDebugCart) AND lEt AND bENs[15]; 
-			Arr_ms[e] 													:= 200;  (*TIIAlmText[e]:='TCDrawerCylExtendRS'*);*)
+			Arr_ms[e] 													:= 500;  (*TIIAlmText[e]:='TCDrawerCylExtendRS'*);*)
 			
         (*E_TIIAlarm.ipTCDrawerCylRetractRS: 
 			e															:= E_TIIAlarm.ipTCDrawerCylRetractRS; 
 			ArrAlmBitBefDelay[E_TIIAlarm.ipTCDrawerCylRetractRS]		:= (NOT	vIO.ipTCDrawerCylRetractRS) AND vIO.opTesterDrawerAirSupplySol (*AND vIO.opCellDrawerCylRetract*) AND lRt AND bENs[16]; 
-			Arr_ms[e] 													:= 200;  (*TIIAlmText[e]:='TCDrawerCylRetractRS'*);*)
+			Arr_ms[e] 													:= 500;  (*TIIAlmText[e]:='TCDrawerCylRetractRS'*);*)
 			
         E_TIIAlarm.TBOT_TC_ACPower_Signal: 
 			e															:= E_TIIAlarm.TBOT_TC_ACPower_Signal; 
 			ArrAlmBitBefDelay[E_TIIAlarm.TBOT_TC_ACPower_Signal]		:= (vIO.TBOT_TC_ACPower_Signal) AND (vIO.ipAPPresentSensor OR vIO.ipTesterPresent) AND (NOT bDebugCart) AND (NOT bDebugStation) AND bENs[17]; 
-			Arr_ms[e] 													:= 200;  (*TIIAlmText[e]:='TCDrawerCylRetractRS'*);
+			Arr_ms[e] 													:= 500;  (*TIIAlmText[e]:='TCDrawerCylRetractRS'*);
       									
 		//E_Alarm.LibraryCylErr			:	ArrAlmBitBefDelay[E_Alarm.LibraryCylErr				]:=bError(*From Lib*) AND E_Alarm.LibraryCylErr == LibErrorID  ; ArrMiliSecond[E_Alarm.LibraryCylErr   ] := 0;		
 	END_CASE
@@ -379,7 +379,6 @@ TIIAlarmLED															:=		ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipAPPowerOn
 																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellFluidLeakage1	   		]   OR
 																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellFluidLeakage2	   		]   OR
 																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellGroundFault 	   		]   OR
-																			ALMTC.Level[iLevel].ALarmID[E_AlarmID.DoorLockSignalNotDetected		]	OR
 																			ALMTC.Level[iLevel].ALarmID[E_AlarmID.DrawerDownError				]	OR
 																			ALMTC.Level[iLevel].ALarmID[E_AlarmID.DrawerUpError					]	OR
 																			ALMTC.Level[iLevel].ALarmID[E_AlarmID.DrawerExtendError				]	OR
@@ -399,7 +398,6 @@ TIIAlarmEPT															:= 		ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipAPPowerO
 																			ALMTC.Level[iLevel].AlarmID[E_AlarmID.DrawerRetractError			]	OR
 																			ALMTC.Level[iLevel].AlarmID[E_AlarmID.DrawerExtendError				]	OR
 																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCCellDoorClosed			]	OR
-																			ALMTC.Level[iLevel].ALarmID[E_AlarmID.DoorLockSignalNotDetected		]	OR
 																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellGroundFault			]	OR
 																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellFluidLeakage1			]	OR
 																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellFluidLeakage2			]	OR
@@ -622,15 +620,12 @@ END_IF
       <LineId Id="1039" Count="1" />
       <LineId Id="1045" Count="1" />
       <LineId Id="1028" Count="2" />
-      <LineId Id="1153" Count="0" />
       <LineId Id="1210" Count="4" />
       <LineId Id="1048" Count="4" />
       <LineId Id="1038" Count="0" />
       <LineId Id="1022" Count="0" />
       <LineId Id="1053" Count="1" />
-      <LineId Id="1057" Count="4" />
-      <LineId Id="1154" Count="0" />
-      <LineId Id="1062" Count="3" />
+      <LineId Id="1057" Count="8" />
       <LineId Id="1068" Count="4" />
       <LineId Id="1067" Count="0" />
       <LineId Id="1066" Count="0" />
