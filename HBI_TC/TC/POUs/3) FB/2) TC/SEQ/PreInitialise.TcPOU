@@ -52,8 +52,8 @@ IF tStartStep2.Q THEN
 	IF NOT bProductionMode THEN
 		bEnableManualCommandTest1		:= TRUE;
 		bEnableManualCommandTest2		:= TRUE;
-		IsNetIDReadOK					:= TRUE;
-		bDebugCart						:= FALSE;
+		//IsNetIDReadOK					:= TRUE;
+		//bDebugCart						:= FALSE;
 	
 	END_IF
 	
@@ -72,8 +72,8 @@ IF tStartStep2.Q THEN
 		//Lock Front door if closed.
 		IF bDebugCart THEN
 			IF stMLVIO.ipTCCellTbotSideDoorOpenCloseStatus01 AND stMLVIO.ipTCCellTbotSideDoorOpenCloseStatus02 THEN
-				stMLVIO.ipTCCellTbotSideDoorLocked01 		:= TRUE;
-				stMLVIO.ipTCCellTbotSideDoorLocked02 		:= TRUE;
+				stMLVIO.opCellTBOtSideDoorClosed1 		:= TRUE;
+				stMLVIO.opCellTBOtSideDoorClosed2 		:= TRUE;
 			END_IF
 		END_IF
 		
