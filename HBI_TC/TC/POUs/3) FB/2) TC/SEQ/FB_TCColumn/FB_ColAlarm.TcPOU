@@ -73,7 +73,7 @@ END_VAR
 	CASE i OF
 		E_ColAlarm.ipColumnFluid_PCW_Leakage	: 
 						IF NOT bSLTC THEN
-							e:=E_ColAlarm.ipColumnFluid_PCW_Leakage; 	  ArrAlmBitBefDelay[e]:=vIO.ipColumnFluid_PCW_Leakage  		AND bENs[1]		; Arr_ms[e] := 200;  //SysAlmText[e]:= 'ColumnFluid_PCW_Leakage';
+							e:=E_ColAlarm.ipColumnFluid_PCW_Leakage; 	  ArrAlmBitBefDelay[e]:=vIO.ipColumnFluid_PCW_Leakage  		(*AND bENs[1]*)		; Arr_ms[e] := 200;  //SysAlmText[e]:= 'ColumnFluid_PCW_Leakage';
 						END_IF 
 		   
 	    E_ColAlarm.ipTbotDoorClosedSignal	: 

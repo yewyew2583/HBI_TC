@@ -194,12 +194,12 @@ FOR i := 1 TO NoOfTIIAlm DO
 			
 	    E_TIIAlarm.ipCellFluidLeakage1: 
 			e															:= E_TIIAlarm.ipCellFluidLeakage1; 
-			ArrAlmBitBefDelay[E_TIIAlarm.ipCellFluidLeakage1]			:= vIO.ipCellFluidLeakage1 AND bENs[6]; 			
+			ArrAlmBitBefDelay[E_TIIAlarm.ipCellFluidLeakage1]			:= vIO.ipCellFluidLeakage1 (*AND bENs[6]*); 			
 			Arr_ms[e] 													:= 200;  (*TIIAlmText[e]:='CellFluidLeakage1' 	*);   
 			
 	    E_TIIAlarm.ipCellFluidLeakage2: 
 			e															:= E_TIIAlarm.ipCellFluidLeakage2; 
-			ArrAlmBitBefDelay[E_TIIAlarm.ipCellFluidLeakage2]			:= vIO.ipCellFluidLeakage2 AND bENs[7] ; 			
+			ArrAlmBitBefDelay[E_TIIAlarm.ipCellFluidLeakage2]			:= vIO.ipCellFluidLeakage2 (*AND bENs[7]*) ; 			
 			Arr_ms[e] 													:= 200;  (*TIIAlmText[e]:='CellFluidLeakage2'*);   
 			
 	    E_TIIAlarm.ipCellGroundFault: 
