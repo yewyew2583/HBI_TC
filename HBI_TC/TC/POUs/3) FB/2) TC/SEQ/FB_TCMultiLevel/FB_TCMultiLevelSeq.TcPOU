@@ -789,7 +789,8 @@ END_VAR
 									OR	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCCellDoorClosed			]
 									
 	                            	OR	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellGroundFault 	   		] 	
-									OR	ALMTC.Common.AlarmID[E_ColAlarm.ipColumnFluid_PCW_Leakage	]
+									OR	ALMTC.Common.AlarmID[E_ColAlarm.ipColumnFluid_PCW_Leakage			]
+									OR	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.TBOT_TC_ACPower_Signal		]
 									//OR column present?
 									//OR facility leak?
 									
@@ -1002,7 +1003,7 @@ END_VAR
 	M_IsSanityCheckFailed									:= E_AlarmID.DoorCloseSignalNotDetected;//31;
 ELSIF (NOT stMultiLevelVIO.ipTCCellDoorClosed) THEN
 	sMsg:='Door Locked Signal not Detected Error';
-	M_IsSanityCheckFailed									:= E_AlarmID.DoorLockSignalNotDetected;//32;
+	M_IsSanityCheckFailed									:= E_TIIAlarm.ipTCCellDoorClosed;//12;
 END_IF
 
 IF bDebugCart THEN 
@@ -2553,6 +2554,7 @@ END_CASE]]></ST>
       <LineId Id="106" Count="0" />
       <LineId Id="102" Count="0" />
       <LineId Id="108" Count="0" />
+      <LineId Id="138" Count="0" />
       <LineId Id="112" Count="1" />
       <LineId Id="107" Count="0" />
       <LineId Id="97" Count="2" />
