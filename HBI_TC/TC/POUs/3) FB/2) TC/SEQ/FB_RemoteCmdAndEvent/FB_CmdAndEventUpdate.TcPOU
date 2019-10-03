@@ -3577,7 +3577,7 @@ CASE iEvtStep OF
 			*)
 			
 	sParameterStr := F_TAParamtoStr(arrLocalEvent[n].iParam, arrLocalEvent[n].sParam, arrLocalEvent[n].bParam);
-	fbFormat(sFormat:= '%s[%d],%s[%d],%s', arg1:= F_String(sLogName), arg2:= F_Int(arrLocalEvent[n].eEventName), arg3:=F_String(sModuleID), 
+	fbFormat(sFormat:= '%s[%d],%s[%d],%s', arg1:= F_String(arrLocalEvent[n].sLogName), arg2:= F_Int(arrLocalEvent[n].eEventName), arg3:=F_String(sModuleID), 
 					arg4:= F_DInt(arrLocalEvent[n].eModuleID), arg5:=F_String(sParameterStr),sOut=> sLogName ); 
 	fbFormat(sFormat:= '%s,%s', arg1:= F_String(sLogName), arg2:= F_String(arrLocalEvent[n].sFailReason), sOut=> sFormatOut ); //logging
 			arrLocalEvent[n].sLogName:=sLogName;
