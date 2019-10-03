@@ -396,8 +396,8 @@ TIIAlarmLED															:=		ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipAPPowerOn
 TIIAlarmEPT															:= 		ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipAPPowerOn					]	OR
 																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipAPReady					]	OR
 																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTesterLatchesClosed		]	OR
-																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCDrawerCylRetractRS		]	OR
-																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCDrawerCylExtendRS		]	OR
+																			ALMTC.Level[iLevel].AlarmID[E_AlarmID.DrawerRetractError			]	OR
+																			ALMTC.Level[iLevel].AlarmID[E_AlarmID.DrawerExtendError				]	OR
 																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCCellDoorClosed			]	OR
 																			ALMTC.Level[iLevel].ALarmID[E_AlarmID.DoorLockSignalNotDetected		]	OR
 																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellGroundFault			]	OR
