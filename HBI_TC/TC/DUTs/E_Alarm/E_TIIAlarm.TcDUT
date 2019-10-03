@@ -19,9 +19,8 @@ TYPE E_TIIAlarm :
 	ipTCCellDoorClosed		    ,//:=12
 	ipTesterLatchesClosed	    ,//:=13
 	ipTIUPresent				,//:=14
-	ipTCDrawerCylExtendRS	    ,//:=15
-	ipTCDrawerCylRetractRS	    ,//:=16
-	TBOT_TC_ACPower_Signal      			); 
+	TBOT_TC_ACPower_Signal      ,//:=15
+	DC_Facility_EAP_ACPower_Signal); 
 END_TYPE
 
 (*
