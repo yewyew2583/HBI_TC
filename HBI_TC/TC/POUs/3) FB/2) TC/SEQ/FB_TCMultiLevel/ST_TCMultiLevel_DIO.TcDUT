@@ -80,8 +80,6 @@ opAP240ACPwrEnable  					AT %Q*: BOOL; // Actuate pan enable command, 0: Not ena
 opSpare_1 								AT %Q*: BOOL; // Spare
 opSpare_2 								AT %Q*: BOOL; // Spare
 opSpare_3 								AT %Q*: BOOL; // Spare
-opSpare_4 								AT %Q*: BOOL; // Spare
-opSpare_5 								AT %Q*: BOOL; // Spare
 
 opDoorOpenReqLED						AT %Q*: BOOL; // Back door LED, 0: Turn off, 1: Turn on
 opAlarmLED 								AT %Q*: BOOL; // Alarm LED, 0: Turn off, 1: Turn on
@@ -103,7 +101,6 @@ opCellDrawerCylUp 						AT %Q*: BOOL; // Drawer up command, 0: Do nothing, 1: Up
 opCellDrawerCylDown 					AT %Q*: BOOL; // Drawer down command, 0: Do nothing, 1: Down
 
 opTst240VACPwrEnable 					AT %Q*: BOOL; // Tester 240V AC enable command, 0: Not enable, 1: Enable 
-opCell24VPowerEnable					AT %Q*: BOOL; // 24V DC enable command, 0: Not enable, 1: Enable 
 
 opSpare_9  								AT %Q*: BOOL; // Spare
 opSpare_10 								AT %Q*: BOOL; // Spare
@@ -114,6 +111,7 @@ opTIUSktAirSol_1 						AT %Q*: BOOL; // TIU socket air solenoid valve 1, 0: Clos
 opTIUSktAirSol_2						AT %Q*: BOOL; // TIU socket air solenoid valve 2, 0: Close, 1: Open
 opAPAirSupplySol						AT %Q*: BOOL; // Actuate pan air supply solenoid valve 10 Bar (Actate Pan), 0: Close, 1: Open
 opTesterDrawerAirSupplySol				AT %Q*: BOOL; // Drawer air supply solenoid valve 6 Bar (Tester), 0: Close, 1: Open
+opCell24VPowerEnable					AT %Q*: BOOL; // 24V DC enable command, 0: Not enable, 1: Enable 
 
 opCellTBOtSideDoorClosed1				AT %Q*: BOOL; // Front door Lock 1 command, 0: Unlock, 1: Lock 
 opCellTBOtSideDoorClosed2				AT %Q*: BOOL; // Front door Lock 2 command, 0: Unlock, 1: Lock 
