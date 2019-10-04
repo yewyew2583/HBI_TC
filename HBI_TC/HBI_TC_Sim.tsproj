@@ -3630,42 +3630,6 @@
 							<Type>INT</Type>
 						</Var>
 						<Var>
-							<Name>GVL_TC.fbTCColumn.stTCColumnDIO.ipColumnFluid_PCW_Leakage</Name>
-							<Comment>
-								<![CDATA[ PCW leakage sensor, 0: Leak, 1: No leak]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbTCColumn.stTCColumnDIO.ipAllTCDrawerRetractedinCell</Name>
-							<Comment>
-								<![CDATA[ All Drawer retracted]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbTCColumn.stTCColumnDIO.ipTbotDoorClosedSignal</Name>
-							<Comment>
-								<![CDATA[ (NC) Tbot Door closed. 1: Closed, 0: Opened.]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbTCColumn.stTCColumnDIO.eapDColumnPCWLeakage</Name>
-							<Comment>
-								<![CDATA[Debug EAP Status ---------------------------------------//]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbTCColumn.stTCColumnDIO.eapDColumnPCWSupplyLeakage</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbTCColumn.stTCColumnDIO.eapDColumnPCWReturnLeakage</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
 							<Name>GVL_TC.fbSLTCExtra.stDIO.ipRTD1</Name>
 							<Type>INT</Type>
 						</Var>
@@ -3708,6 +3672,42 @@
 						<Var>
 							<Name>GVL_TC.fbSLTCExtra.stDIO.ipDEPressureSensor</Name>
 							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbTCColumn.stTCColumnDIO.ipColumnFluid_PCW_Leakage</Name>
+							<Comment>
+								<![CDATA[ PCW leakage sensor, 0: Leak, 1: No leak]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbTCColumn.stTCColumnDIO.ipAllTCDrawerRetractedinCell</Name>
+							<Comment>
+								<![CDATA[ All Drawer retracted]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbTCColumn.stTCColumnDIO.ipTbotDoorClosedSignal</Name>
+							<Comment>
+								<![CDATA[ (NC) Tbot Door closed. 1: Closed, 0: Opened.]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbTCColumn.stTCColumnDIO.eapDColumnPCWLeakage</Name>
+							<Comment>
+								<![CDATA[Debug EAP Status ---------------------------------------//]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbTCColumn.stTCColumnDIO.eapDColumnPCWSupplyLeakage</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbTCColumn.stTCColumnDIO.eapDColumnPCWReturnLeakage</Name>
+							<Type>BOOL</Type>
 						</Var>
 					</Vars>
 					<Vars VarGrpType="2">
@@ -5828,13 +5828,6 @@
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_TC.fbTCColumn.stTCColumnDIO.opHotAirExhaustFan</Name>
-							<Comment>
-								<![CDATA[ Exhaust fan]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
 							<Name>GVL_TC.fbSLTCExtra.stDIO.opASCOValve_1</Name>
 							<Type>BOOL</Type>
 						</Var>
@@ -5915,6 +5908,13 @@
 								<![CDATA[10Amp]]>
 							</Comment>
 							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbTCColumn.stTCColumnDIO.opHotAirExhaustFan</Name>
+							<Comment>
+								<![CDATA[ Exhaust fan]]>
+							</Comment>
+							<Type>BOOL</Type>
 						</Var>
 					</Vars>
 					<UnrestoredVarLinks ImportTime="2019-09-23T16:09:44">

@@ -264,6 +264,9 @@
     <Compile Include="POUs\3%29 FB\1%29 Common\FB_Alarm\FB_Alarm.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\3%29 FB\1%29 Common\FB_Alarm\FB_AlarmDelay.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\3%29 FB\1%29 Common\FB_Alarm\FB_Delay.TcPOU">
       <SubType>Code</SubType>
     </Compile>

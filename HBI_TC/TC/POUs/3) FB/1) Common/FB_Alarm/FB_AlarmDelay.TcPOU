@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <POU Name="FB_AlarmDelay" Id="{2f673dab-9385-494b-85a6-63868ddd77dd}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_AlarmDelay
+VAR_INPUT
+	msec				: INT;
+	alarmState			: BOOL;
+END_VAR
+VAR_OUTPUT
+	triggerAlarmState	: BOOL;
+END_VAR
+VAR
+	tim					: TON;
+END_VAR
+VAR_IN_OUT
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[tim(IN:=alarmState,PT:=INT_TO_TIME(msec));
+
+IF tim.Q THEN
+	triggerAlarmState		:= tim.Q;
+	tim(IN					:= FALSE);
+	
+	RETURN;
+END_IF
+
+triggerAlarmState			:=	tim.Q;]]></ST>
+    </Implementation>
+    <LineIds Name="FB_AlarmDelay">
+      <LineId Id="10" Count="8" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

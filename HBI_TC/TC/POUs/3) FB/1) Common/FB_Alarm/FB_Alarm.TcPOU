@@ -25,7 +25,7 @@ VAR
 	ArrAlmBitBefDelay : ARRAY[1..200] OF BOOL;
 	ArrAlmBitAftDelay : ARRAY[1..200] OF BOOL;
 	ArrAlarmKeepBit	:	ARRAY[1..200] OF BOOL;
-	ArrDelayAlarm : 	ARRAY[1..200] OF FB_Delay;
+	ArrDelayAlarm : 	ARRAY[1..200] OF FB_AlarmDelay;
 	Arr_ms :			ARRAY[1..200] OF INT;
 END_VAR
 VAR_IN_OUT

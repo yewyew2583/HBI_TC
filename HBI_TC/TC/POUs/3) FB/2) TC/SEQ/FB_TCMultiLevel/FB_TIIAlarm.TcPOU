@@ -28,7 +28,7 @@ VAR
 	ArrAlmBitBefDelay			: ARRAY[1..NO_OF_TII_SENSOR] OF BOOL;
 	ArrAlmBitAftDelay			: ARRAY[1..NO_OF_TII_SENSOR] OF BOOL;
 	ArrAlarmKeepBit				: ARRAY[1..NO_OF_TII_SENSOR] OF BOOL;
-	ArrDelayAlarm				: ARRAY[1..NO_OF_TII_SENSOR] OF FB_Delay;
+	ArrDelayAlarm				: ARRAY[1..NO_OF_TII_SENSOR] OF FB_AlarmDelay;
 	Arr_ms						: ARRAY[1..NO_OF_TII_SENSOR] OF INT;
 	bTIIByPassArray				: ARRAY[1..NO_OF_TII_SENSOR] OF BOOL;
 	i							: INT;
@@ -255,9 +255,9 @@ FOR i := 1 TO NoOfTIIAlm DO
 
 	//Delay Library Alm Bit
 	ArrDelayAlarm[i](
-		in																:= ArrAlmBitBefDelay[i],
-		out																:= ArrAlmBitAftDelay[i],
-		msec															:= Arr_ms[i]);	//DelayAlmBit
+		alarmState															:= ArrAlmBitBefDelay[i],
+		triggerAlarmState													=> ArrAlmBitAftDelay[i],
+		msec																:= Arr_ms[i]);	//DelayAlmBit
 	
 
 	IF ArrAlmBitAftDelay[i] THEN //realtime IO update array
