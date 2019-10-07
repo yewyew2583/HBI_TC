@@ -160,6 +160,11 @@
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
+              <v n="TextID">"1221"</v>
+              <v n="TextDefault">" : Front Side Door Lock Signal is not Detected"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
               <v n="TextID">"3399"</v>
               <v n="TextDefault">" : ipTCDrawerCylExtendRSError"</v>
               <l n="LanguageTexts" t="ArrayList" />
@@ -352,6 +357,11 @@
             <o>
               <v n="TextID">"1922"</v>
               <v n="TextDefault">" :TBot EAP AntiCollision Triggered"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"4187"</v>
+              <v n="TextDefault">" :TBot EAP Not Safe To Move Error"</v>
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
@@ -1930,6 +1940,36 @@ Dew point – PCW temperature above critical control limit, condensation alarm
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
+              <v n="TextID">"502"</v>
+              <v n="TextDefault">"ipSpare_1"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"5492"</v>
+              <v n="TextDefault">"ipSpare_10"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"2251"</v>
+              <v n="TextDefault">"ipSpare_2"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"3485"</v>
+              <v n="TextDefault">"ipSpare_3"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"3951"</v>
+              <v n="TextDefault">"ipSpare_4"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"4430"</v>
+              <v n="TextDefault">"ipSpare_9"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
               <v n="TextID">"926"</v>
               <v n="TextDefault">"ipSystemColumnGroundFault"</v>
               <l n="LanguageTexts" t="ArrayList" />
@@ -2390,6 +2430,21 @@ Dew point – PCW temperature above critical control limit, condensation alarm
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
+              <v n="TextID">"1476"</v>
+              <v n="TextDefault">"opAP_DIO_1"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"1905"</v>
+              <v n="TextDefault">"opAP_DIO_2"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"3970"</v>
+              <v n="TextDefault">"opAP_DIO_3"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
               <v n="TextID">"582"</v>
               <v n="TextDefault">"opASCOValve_1 "</v>
               <l n="LanguageTexts" t="ArrayList" />
@@ -2597,6 +2652,31 @@ Dew point – PCW temperature above critical control limit, condensation alarm
             <o>
               <v n="TextID">"590"</v>
               <v n="TextDefault">"opPowerEnable"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"5110"</v>
+              <v n="TextDefault">"opSpare_1"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"5152"</v>
+              <v n="TextDefault">"opSpare_10"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"60"</v>
+              <v n="TextDefault">"opSpare_2"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"3076"</v>
+              <v n="TextDefault">"opSpare_3"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"169"</v>
+              <v n="TextDefault">"opSpare_9"</v>
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>

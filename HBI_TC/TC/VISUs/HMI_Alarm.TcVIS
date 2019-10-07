@@ -2714,7 +2714,7 @@
                     </o>
                     <o>
                       <v n="Id">390574330L</v>
-                      <v n="Value">" :TBot EAPNotSofeToMoveError"</v>
+                      <v n="Value">" :TBot EAP Not Safe To Move Error"</v>
                     </o>
                     <o>
                       <v n="Id">3729828405L</v>
@@ -2754,7 +2754,7 @@
                     </o>
                     <o>
                       <v n="Id">823443203L</v>
-                      <v n="Value">"2535"</v>
+                      <v n="Value">"4187"</v>
                     </o>
                   </l>
                 </o>
@@ -3382,7 +3382,7 @@
                     </o>
                     <o>
                       <v n="Id">390574330L</v>
-                      <v n="Value">" :TCC Session Active"</v>
+                      <v n="Value">" :Both TIU Extern &amp; Retract  Signal  are Detected"</v>
                     </o>
                     <o>
                       <v n="Id">3729828405L</v>
@@ -3422,7 +3422,7 @@
                     </o>
                     <o>
                       <v n="Id">823443203L</v>
-                      <v n="Value">"1668"</v>
+                      <v n="Value">"369"</v>
                     </o>
                   </l>
                 </o>
@@ -3716,7 +3716,7 @@
                     </o>
                     <o>
                       <v n="Id">390574330L</v>
-                      <v n="Value">" :Both TIU Extern &amp; Retract  Signal  are Detected"</v>
+                      <v n="Value">" :Both TIU Up &amp; Down  Signal  are Detected"</v>
                     </o>
                     <o>
                       <v n="Id">3729828405L</v>
@@ -3756,7 +3756,7 @@
                     </o>
                     <o>
                       <v n="Id">823443203L</v>
-                      <v n="Value">"369"</v>
+                      <v n="Value">"644"</v>
                     </o>
                   </l>
                 </o>
@@ -4050,7 +4050,7 @@
                     </o>
                     <o>
                       <v n="Id">390574330L</v>
-                      <v n="Value">" :Both TIU Up &amp; Down  Signal  are Detected"</v>
+                      <v n="Value">" :AP is not in UP Position"</v>
                     </o>
                     <o>
                       <v n="Id">3729828405L</v>
@@ -4090,7 +4090,7 @@
                     </o>
                     <o>
                       <v n="Id">823443203L</v>
-                      <v n="Value">"644"</v>
+                      <v n="Value">"98"</v>
                     </o>
                   </l>
                 </o>
@@ -4384,7 +4384,7 @@
                     </o>
                     <o>
                       <v n="Id">390574330L</v>
-                      <v n="Value">" :AP is not in UP Position"</v>
+                      <v n="Value">" :Door Close Signal is not Detected"</v>
                     </o>
                     <o>
                       <v n="Id">3729828405L</v>
@@ -4424,7 +4424,7 @@
                     </o>
                     <o>
                       <v n="Id">823443203L</v>
-                      <v n="Value">"98"</v>
+                      <v n="Value">"752"</v>
                     </o>
                   </l>
                 </o>
@@ -4718,7 +4718,7 @@
                     </o>
                     <o>
                       <v n="Id">390574330L</v>
-                      <v n="Value">" :Door Close Signal is not Detected"</v>
+                      <v n="Value">" :TBot Side Door Close Signal is not Detected"</v>
                     </o>
                     <o>
                       <v n="Id">3729828405L</v>
@@ -4758,7 +4758,7 @@
                     </o>
                     <o>
                       <v n="Id">823443203L</v>
-                      <v n="Value">"752"</v>
+                      <v n="Value">"2562"</v>
                     </o>
                   </l>
                 </o>
@@ -5052,7 +5052,7 @@
                     </o>
                     <o>
                       <v n="Id">390574330L</v>
-                      <v n="Value">" :Door Lock Signal is not Detected"</v>
+                      <v n="Value">" :(----------------------------------------------------------)"</v>
                     </o>
                     <o>
                       <v n="Id">3729828405L</v>
@@ -5092,7 +5092,7 @@
                     </o>
                     <o>
                       <v n="Id">823443203L</v>
-                      <v n="Value">"2348"</v>
+                      <v n="Value">"1123"</v>
                     </o>
                   </l>
                 </o>
@@ -5386,7 +5386,7 @@
                     </o>
                     <o>
                       <v n="Id">390574330L</v>
-                      <v n="Value">" :TBot Side Door Close Signal is not Detected"</v>
+                      <v n="Value">" :(----------------------------------------------------------)"</v>
                     </o>
                     <o>
                       <v n="Id">3729828405L</v>
@@ -5426,7 +5426,7 @@
                     </o>
                     <o>
                       <v n="Id">823443203L</v>
-                      <v n="Value">"2562"</v>
+                      <v n="Value">"1123"</v>
                     </o>
                   </l>
                 </o>
@@ -5720,7 +5720,7 @@
                     </o>
                     <o>
                       <v n="Id">390574330L</v>
-                      <v n="Value">" :TBot Side Door Lock Signal is not Detected"</v>
+                      <v n="Value">" :(----------------------------------------------------------)"</v>
                     </o>
                     <o>
                       <v n="Id">3729828405L</v>
@@ -5760,7 +5760,7 @@
                     </o>
                     <o>
                       <v n="Id">823443203L</v>
-                      <v n="Value">"1220"</v>
+                      <v n="Value">"1123"</v>
                     </o>
                   </l>
                 </o>
@@ -14070,7 +14070,7 @@
                     </o>
                     <o>
                       <v n="Id">390574330L</v>
-                      <v n="Value">" : TIU Present Signal is not detected   "</v>
+                      <v n="Value">" : TBot EAP AC Power OFF Detected"</v>
                     </o>
                     <o>
                       <v n="Id">3729828405L</v>
@@ -14110,7 +14110,7 @@
                     </o>
                     <o>
                       <v n="Id">823443203L</v>
-                      <v n="Value">"1787"</v>
+                      <v n="Value">"4581"</v>
                     </o>
                   </l>
                 </o>
@@ -14404,7 +14404,7 @@
                     </o>
                     <o>
                       <v n="Id">390574330L</v>
-                      <v n="Value">" : TBot EAP AC Power OFF Detected"</v>
+                      <v n="Value">" : Debug Station Facility Ac Power OFF Detected"</v>
                     </o>
                     <o>
                       <v n="Id">3729828405L</v>
@@ -14444,7 +14444,7 @@
                     </o>
                     <o>
                       <v n="Id">823443203L</v>
-                      <v n="Value">"4581"</v>
+                      <v n="Value">"3618"</v>
                     </o>
                   </l>
                 </o>
@@ -14738,7 +14738,7 @@
                     </o>
                     <o>
                       <v n="Id">390574330L</v>
-                      <v n="Value">" : Debug Station Facility Ac Power OFF Detected"</v>
+                      <v n="Value">" : Front Side Door Lock Signal is not Detected"</v>
                     </o>
                     <o>
                       <v n="Id">3729828405L</v>
@@ -14778,7 +14778,7 @@
                     </o>
                     <o>
                       <v n="Id">823443203L</v>
-                      <v n="Value">"3618"</v>
+                      <v n="Value">"1221"</v>
                     </o>
                   </l>
                 </o>
@@ -29072,12 +29072,12 @@
                               <d n="TypeNodeAttributesData" t="CaseInsensitiveHashtable" ckt="String" cvt="String">
                                 <v>Visible</v>
                                 <v>False</v>
-                                <v>DefaultArraySize</v>
-                                <v>5</v>
-                                <v>VisibleChildren</v>
-                                <v>True</v>
                                 <v>ieccodeconversion_array</v>
                                 <v></v>
+                                <v>VisibleChildren</v>
+                                <v>True</v>
+                                <v>DefaultArraySize</v>
+                                <v>5</v>
                                 <v>''NORMAL__COMMENT</v>
                                 <v> We hide this node to prevent having two References nodes
  Nevertheless we want to make sure that the children are displayed</v>
@@ -29133,8 +29133,8 @@
                         <o n="TypeNodeAttributes" t="TypeNodeAttributes2">
                           <v n="AttrFlags">81920UL</v>
                           <d n="TypeNodeAttributesData" t="CaseInsensitiveHashtable" ckt="String" cvt="String">
-                            <v>DisplayFrameReferencesConfiguration</v>
-                            <v></v>
+                            <v>conditionalshow</v>
+                            <v>visu_elemdev</v>
                             <v>DescriptionTextId</v>
                             <v>TL_ElementProperties.Desc_ReferencedVisus</v>
                             <v>SortFlag</v>
@@ -29145,14 +29145,14 @@
                             <v>Simple|Standard</v>
                             <v>DynamicArray</v>
                             <v></v>
-                            <v>conditionalshow</v>
-                            <v>visu_elemdev</v>
+                            <v>DisplayFrameReferencesConfiguration</v>
+                            <v></v>
                             <v>FrameReferences</v>
                             <v></v>
-                            <v>DisplayTextId</v>
-                            <v>TL_ElementProperties.References</v>
                             <v>Storable</v>
                             <v>True</v>
+                            <v>DisplayTextId</v>
+                            <v>TL_ElementProperties.References</v>
                           </d>
                           <v n="ConvDone">true</v>
                         </o>
