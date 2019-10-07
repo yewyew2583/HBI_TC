@@ -3381,6 +3381,22 @@
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
+							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.ipSpare_1</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.ipSpare_2</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.ipSpare_3</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.ipSpare_4</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
 							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.ipDBStnCellGroundFault</Name>
 							<Type>BOOL</Type>
 						</Var>
@@ -3585,6 +3601,22 @@
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
+							<Name>GVL_TC.fbDebugColumn.stDebugStationDIO.ipSpare_1</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbDebugColumn.stDebugStationDIO.ipSpare_2</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbDebugColumn.stDebugStationDIO.ipSpare_3</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbDebugColumn.stDebugStationDIO.ipSpare_4</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
 							<Name>GVL_TC.fbDebugColumn.stDebugStationDIO.ipDBStnCellGroundFault</Name>
 							<Type>BOOL</Type>
 						</Var>
@@ -3630,6 +3662,42 @@
 							<Type>INT</Type>
 						</Var>
 						<Var>
+							<Name>GVL_TC.fbTCColumn.stTCColumnDIO.ipColumnFluid_PCW_Leakage</Name>
+							<Comment>
+								<![CDATA[ PCW leakage sensor, 0: Leak, 1: No leak]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbTCColumn.stTCColumnDIO.ipAllTCDrawerRetractedinCell</Name>
+							<Comment>
+								<![CDATA[ All Drawer retracted]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbTCColumn.stTCColumnDIO.ipTbotDoorClosedSignal</Name>
+							<Comment>
+								<![CDATA[ (NC) Tbot Door closed. 1: Closed, 0: Opened.]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbTCColumn.stTCColumnDIO.eapDColumnPCWLeakage</Name>
+							<Comment>
+								<![CDATA[Debug EAP Status ---------------------------------------//]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbTCColumn.stTCColumnDIO.eapDColumnPCWSupplyLeakage</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbTCColumn.stTCColumnDIO.eapDColumnPCWReturnLeakage</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
 							<Name>GVL_TC.fbSLTCExtra.stDIO.ipRTD1</Name>
 							<Type>INT</Type>
 						</Var>
@@ -3672,42 +3740,6 @@
 						<Var>
 							<Name>GVL_TC.fbSLTCExtra.stDIO.ipDEPressureSensor</Name>
 							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbTCColumn.stTCColumnDIO.ipColumnFluid_PCW_Leakage</Name>
-							<Comment>
-								<![CDATA[ PCW leakage sensor, 0: Leak, 1: No leak]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbTCColumn.stTCColumnDIO.ipAllTCDrawerRetractedinCell</Name>
-							<Comment>
-								<![CDATA[ All Drawer retracted]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbTCColumn.stTCColumnDIO.ipTbotDoorClosedSignal</Name>
-							<Comment>
-								<![CDATA[ (NC) Tbot Door closed. 1: Closed, 0: Opened.]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbTCColumn.stTCColumnDIO.eapDColumnPCWLeakage</Name>
-							<Comment>
-								<![CDATA[Debug EAP Status ---------------------------------------//]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbTCColumn.stTCColumnDIO.eapDColumnPCWSupplyLeakage</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbTCColumn.stTCColumnDIO.eapDColumnPCWReturnLeakage</Name>
-							<Type>BOOL</Type>
 						</Var>
 					</Vars>
 					<Vars VarGrpType="2">
@@ -4241,20 +4273,6 @@
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.opSpare_4</Name>
-							<Comment>
-								<![CDATA[ Spare]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.opSpare_5</Name>
-							<Comment>
-								<![CDATA[ Spare]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
 							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.opDoorOpenReqLED</Name>
 							<Comment>
 								<![CDATA[ Back door LED, 0: Turn off, 1: Turn on]]>
@@ -4360,13 +4378,6 @@
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.opCell24VPowerEnable</Name>
-							<Comment>
-								<![CDATA[ 24V DC enable command, 0: Not enable, 1: Enable ]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
 							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.opSpare_9</Name>
 							<Comment>
 								<![CDATA[ Spare]]>
@@ -4412,6 +4423,13 @@
 							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.opTesterDrawerAirSupplySol</Name>
 							<Comment>
 								<![CDATA[ Drawer air supply solenoid valve 6 Bar (Tester), 0: Close, 1: Open]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.opCell24VPowerEnable</Name>
+							<Comment>
+								<![CDATA[ 24V DC enable command, 0: Not enable, 1: Enable ]]>
 							</Comment>
 							<Type>BOOL</Type>
 						</Var>
@@ -4467,20 +4485,6 @@
 						</Var>
 						<Var>
 							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.opSpare_3</Name>
-							<Comment>
-								<![CDATA[ Spare]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.opSpare_4</Name>
-							<Comment>
-								<![CDATA[ Spare]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.opSpare_5</Name>
 							<Comment>
 								<![CDATA[ Spare]]>
 							</Comment>
@@ -4592,13 +4596,6 @@
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.opCell24VPowerEnable</Name>
-							<Comment>
-								<![CDATA[ 24V DC enable command, 0: Not enable, 1: Enable ]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
 							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.opSpare_9</Name>
 							<Comment>
 								<![CDATA[ Spare]]>
@@ -4644,6 +4641,13 @@
 							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.opTesterDrawerAirSupplySol</Name>
 							<Comment>
 								<![CDATA[ Drawer air supply solenoid valve 6 Bar (Tester), 0: Close, 1: Open]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.opCell24VPowerEnable</Name>
+							<Comment>
+								<![CDATA[ 24V DC enable command, 0: Not enable, 1: Enable ]]>
 							</Comment>
 							<Type>BOOL</Type>
 						</Var>
@@ -4699,20 +4703,6 @@
 						</Var>
 						<Var>
 							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.opSpare_3</Name>
-							<Comment>
-								<![CDATA[ Spare]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.opSpare_4</Name>
-							<Comment>
-								<![CDATA[ Spare]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.opSpare_5</Name>
 							<Comment>
 								<![CDATA[ Spare]]>
 							</Comment>
@@ -4824,13 +4814,6 @@
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.opCell24VPowerEnable</Name>
-							<Comment>
-								<![CDATA[ 24V DC enable command, 0: Not enable, 1: Enable ]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
 							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.opSpare_9</Name>
 							<Comment>
 								<![CDATA[ Spare]]>
@@ -4876,6 +4859,13 @@
 							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.opTesterDrawerAirSupplySol</Name>
 							<Comment>
 								<![CDATA[ Drawer air supply solenoid valve 6 Bar (Tester), 0: Close, 1: Open]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.opCell24VPowerEnable</Name>
+							<Comment>
+								<![CDATA[ 24V DC enable command, 0: Not enable, 1: Enable ]]>
 							</Comment>
 							<Type>BOOL</Type>
 						</Var>
@@ -4931,20 +4921,6 @@
 						</Var>
 						<Var>
 							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.opSpare_3</Name>
-							<Comment>
-								<![CDATA[ Spare]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.opSpare_4</Name>
-							<Comment>
-								<![CDATA[ Spare]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.opSpare_5</Name>
 							<Comment>
 								<![CDATA[ Spare]]>
 							</Comment>
@@ -5056,13 +5032,6 @@
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.opCell24VPowerEnable</Name>
-							<Comment>
-								<![CDATA[ 24V DC enable command, 0: Not enable, 1: Enable ]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
 							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.opSpare_9</Name>
 							<Comment>
 								<![CDATA[ Spare]]>
@@ -5108,6 +5077,13 @@
 							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.opTesterDrawerAirSupplySol</Name>
 							<Comment>
 								<![CDATA[ Drawer air supply solenoid valve 6 Bar (Tester), 0: Close, 1: Open]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.opCell24VPowerEnable</Name>
+							<Comment>
+								<![CDATA[ 24V DC enable command, 0: Not enable, 1: Enable ]]>
 							</Comment>
 							<Type>BOOL</Type>
 						</Var>
@@ -5163,20 +5139,6 @@
 						</Var>
 						<Var>
 							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.opSpare_3</Name>
-							<Comment>
-								<![CDATA[ Spare]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.opSpare_4</Name>
-							<Comment>
-								<![CDATA[ Spare]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.opSpare_5</Name>
 							<Comment>
 								<![CDATA[ Spare]]>
 							</Comment>
@@ -5288,13 +5250,6 @@
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.opCell24VPowerEnable</Name>
-							<Comment>
-								<![CDATA[ 24V DC enable command, 0: Not enable, 1: Enable ]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
 							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.opSpare_9</Name>
 							<Comment>
 								<![CDATA[ Spare]]>
@@ -5340,6 +5295,13 @@
 							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.opTesterDrawerAirSupplySol</Name>
 							<Comment>
 								<![CDATA[ Drawer air supply solenoid valve 6 Bar (Tester), 0: Close, 1: Open]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.opCell24VPowerEnable</Name>
+							<Comment>
+								<![CDATA[ 24V DC enable command, 0: Not enable, 1: Enable ]]>
 							</Comment>
 							<Type>BOOL</Type>
 						</Var>
@@ -5395,20 +5357,6 @@
 						</Var>
 						<Var>
 							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.opSpare_3</Name>
-							<Comment>
-								<![CDATA[ Spare]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.opSpare_4</Name>
-							<Comment>
-								<![CDATA[ Spare]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.opSpare_5</Name>
 							<Comment>
 								<![CDATA[ Spare]]>
 							</Comment>
@@ -5520,13 +5468,6 @@
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.opCell24VPowerEnable</Name>
-							<Comment>
-								<![CDATA[ 24V DC enable command, 0: Not enable, 1: Enable ]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
 							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.opSpare_9</Name>
 							<Comment>
 								<![CDATA[ Spare]]>
@@ -5572,6 +5513,13 @@
 							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.opTesterDrawerAirSupplySol</Name>
 							<Comment>
 								<![CDATA[ Drawer air supply solenoid valve 6 Bar (Tester), 0: Close, 1: Open]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.opCell24VPowerEnable</Name>
+							<Comment>
+								<![CDATA[ 24V DC enable command, 0: Not enable, 1: Enable ]]>
 							</Comment>
 							<Type>BOOL</Type>
 						</Var>
@@ -5677,6 +5625,10 @@
 						</Var>
 						<Var>
 							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.opDBStnAPTCCReset</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.opCellLTIMValve</Name>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
@@ -5828,6 +5780,17 @@
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
+							<Name>GVL_TC.fbDebugColumn.stDebugStationDIO.opCellLTIMValve</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbTCColumn.stTCColumnDIO.opHotAirExhaustFan</Name>
+							<Comment>
+								<![CDATA[ Exhaust fan]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
 							<Name>GVL_TC.fbSLTCExtra.stDIO.opASCOValve_1</Name>
 							<Type>BOOL</Type>
 						</Var>
@@ -5908,13 +5871,6 @@
 								<![CDATA[10Amp]]>
 							</Comment>
 							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbTCColumn.stTCColumnDIO.opHotAirExhaustFan</Name>
-							<Comment>
-								<![CDATA[ Exhaust fan]]>
-							</Comment>
-							<Type>BOOL</Type>
 						</Var>
 					</Vars>
 					<UnrestoredVarLinks ImportTime="2019-09-23T16:09:44">
@@ -11213,8 +11169,6 @@ Bit1: Value smaller than Limit2]]>
 				<Link VarA="PlcTask Outputs^GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.opSpare_1" VarB="Channel 2^Output"/>
 				<Link VarA="PlcTask Outputs^GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.opSpare_2" VarB="Channel 3^Output"/>
 				<Link VarA="PlcTask Outputs^GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.opSpare_3" VarB="Channel 4^Output"/>
-				<Link VarA="PlcTask Outputs^GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.opSpare_4" VarB="Channel 7^Output"/>
-				<Link VarA="PlcTask Outputs^GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.opSpare_5" VarB="Channel 8^Output"/>
 				<Link VarA="PlcTask Outputs^GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.opSpare_6" VarB="Channel 13^Output"/>
 				<Link VarA="PlcTask Outputs^GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.opSpare_7" VarB="Channel 14^Output"/>
 				<Link VarA="PlcTask Outputs^GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.opSpare_8" VarB="Channel 15^Output"/>
@@ -11312,8 +11266,6 @@ Bit1: Value smaller than Limit2]]>
 				<Link VarA="PlcTask Outputs^GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.opSpare_1" VarB="Channel 2^Output"/>
 				<Link VarA="PlcTask Outputs^GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.opSpare_2" VarB="Channel 3^Output"/>
 				<Link VarA="PlcTask Outputs^GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.opSpare_3" VarB="Channel 4^Output"/>
-				<Link VarA="PlcTask Outputs^GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.opSpare_4" VarB="Channel 7^Output"/>
-				<Link VarA="PlcTask Outputs^GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.opSpare_5" VarB="Channel 8^Output"/>
 				<Link VarA="PlcTask Outputs^GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.opSpare_6" VarB="Channel 13^Output"/>
 				<Link VarA="PlcTask Outputs^GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.opSpare_7" VarB="Channel 14^Output"/>
 				<Link VarA="PlcTask Outputs^GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.opSpare_8" VarB="Channel 15^Output"/>
@@ -11377,8 +11329,6 @@ Bit1: Value smaller than Limit2]]>
 				<Link VarA="PlcTask Outputs^GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.opSpare_1" VarB="Channel 2^Output"/>
 				<Link VarA="PlcTask Outputs^GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.opSpare_2" VarB="Channel 3^Output"/>
 				<Link VarA="PlcTask Outputs^GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.opSpare_3" VarB="Channel 4^Output"/>
-				<Link VarA="PlcTask Outputs^GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.opSpare_4" VarB="Channel 7^Output"/>
-				<Link VarA="PlcTask Outputs^GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.opSpare_5" VarB="Channel 8^Output"/>
 				<Link VarA="PlcTask Outputs^GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.opSpare_6" VarB="Channel 13^Output"/>
 				<Link VarA="PlcTask Outputs^GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.opSpare_7" VarB="Channel 14^Output"/>
 				<Link VarA="PlcTask Outputs^GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.opSpare_8" VarB="Channel 15^Output"/>
@@ -11452,8 +11402,6 @@ Bit1: Value smaller than Limit2]]>
 				<Link VarA="PlcTask Outputs^GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.opSpare_1" VarB="Channel 2^Output"/>
 				<Link VarA="PlcTask Outputs^GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.opSpare_2" VarB="Channel 3^Output"/>
 				<Link VarA="PlcTask Outputs^GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.opSpare_3" VarB="Channel 4^Output"/>
-				<Link VarA="PlcTask Outputs^GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.opSpare_4" VarB="Channel 7^Output"/>
-				<Link VarA="PlcTask Outputs^GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.opSpare_5" VarB="Channel 8^Output"/>
 				<Link VarA="PlcTask Outputs^GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.opSpare_6" VarB="Channel 13^Output"/>
 				<Link VarA="PlcTask Outputs^GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.opSpare_7" VarB="Channel 14^Output"/>
 				<Link VarA="PlcTask Outputs^GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.opSpare_8" VarB="Channel 15^Output"/>
@@ -11517,8 +11465,6 @@ Bit1: Value smaller than Limit2]]>
 				<Link VarA="PlcTask Outputs^GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.opSpare_1" VarB="Channel 2^Output"/>
 				<Link VarA="PlcTask Outputs^GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.opSpare_2" VarB="Channel 3^Output"/>
 				<Link VarA="PlcTask Outputs^GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.opSpare_3" VarB="Channel 4^Output"/>
-				<Link VarA="PlcTask Outputs^GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.opSpare_4" VarB="Channel 7^Output"/>
-				<Link VarA="PlcTask Outputs^GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.opSpare_5" VarB="Channel 8^Output"/>
 				<Link VarA="PlcTask Outputs^GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.opSpare_6" VarB="Channel 13^Output"/>
 				<Link VarA="PlcTask Outputs^GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.opSpare_7" VarB="Channel 14^Output"/>
 				<Link VarA="PlcTask Outputs^GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.opSpare_8" VarB="Channel 15^Output"/>
@@ -11582,8 +11528,6 @@ Bit1: Value smaller than Limit2]]>
 				<Link VarA="PlcTask Outputs^GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.opSpare_1" VarB="Channel 2^Output"/>
 				<Link VarA="PlcTask Outputs^GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.opSpare_2" VarB="Channel 3^Output"/>
 				<Link VarA="PlcTask Outputs^GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.opSpare_3" VarB="Channel 4^Output"/>
-				<Link VarA="PlcTask Outputs^GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.opSpare_4" VarB="Channel 7^Output"/>
-				<Link VarA="PlcTask Outputs^GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.opSpare_5" VarB="Channel 8^Output"/>
 				<Link VarA="PlcTask Outputs^GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.opSpare_6" VarB="Channel 13^Output"/>
 				<Link VarA="PlcTask Outputs^GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.opSpare_7" VarB="Channel 14^Output"/>
 				<Link VarA="PlcTask Outputs^GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.opSpare_8" VarB="Channel 15^Output"/>

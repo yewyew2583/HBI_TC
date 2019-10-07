@@ -2916,12 +2916,12 @@ ELSE
 			stMLVIO																:= arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO;
 			//bTCCSessionActiveStatusFlag
 			//IF arrTCMultiLevel[iLevel].stGblParam.bTCCSessionReq THEN
-			IF stMLVIO.bTCCSessionActiveStatusFlag THEN
+			(*IF stMLVIO.bTCCSessionActiveStatusFlag THEN
 				bErr															:= TRUE;
 				sStatus															:= 'Module is In Manual TCC Request Operation Session';
 				iSendEvent														:= 2;
 				JMP iSendEvent;
-			END_IF
+			END_IF*)
 			
 			IF stMLVIO.ipAPPresentSensor AND (NOT stMLVIO.ipAPReady) THEN
 				bErr															:= TRUE;
@@ -3745,7 +3745,7 @@ ELSE
 	ELSE
 		//arrTCMultiLevel[iLevel].stGblParam.bTCCSessionReq := bSessionStartEnd;  		//update to TCC Internal Global Bit
 		stMultiLeveVIO:=arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO;
-		stMultiLeveVIO.bTCCSessionActiveStatusFlag := bSessionStartEnd;					//update TCCAlive Bit
+		//stMultiLeveVIO.bTCCSessionActiveStatusFlag := bSessionStartEnd;					//update TCCAlive Bit
 		arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO:=stMultiLeveVIO;
 		M_TCCSessionRequest:=TRUE;
 	END_IF

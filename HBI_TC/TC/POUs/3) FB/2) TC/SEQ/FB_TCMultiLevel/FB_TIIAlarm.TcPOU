@@ -144,7 +144,7 @@ IF bDebugCart THEN
 		ALMTC.Level[iLevel].AlarmID[E_AlarmID.TBotSideDoorCloseSignalNotDetected]			:= TRUE;
 	END_IF
 	IF (NOT VIO.ipTCCellTbotSideDoorLocked01) OR (NOT VIO.ipTCCellTbotSideDoorLocked02) THEN
-		ALMTC.Level[iLevel].AlarmID[E_AlarmID.TBotSideDoorLockSignalNotDetected]			:= TRUE;
+		ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.TBotSideDoorLockSignalNotDetected]			:= TRUE;
 	END_IF
 	
 	//auto clear alarm if door is closed 
@@ -155,9 +155,9 @@ IF bDebugCart THEN
 	END_IF
 	
 	//auto clear alarm if door is locked
-	IF ALMTC.Level[iLevel].AlarmID[E_AlarmID.TBotSideDoorLockSignalNotDetected] THEN
+	IF ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.TBotSideDoorLockSignalNotDetected] THEN
 		IF VIO.ipTCCellTbotSideDoorLocked01 AND VIO.ipTCCellTbotSideDoorLocked02 THEN
-			ALMTC.Level[iLevel].AlarmID[E_AlarmID.TBotSideDoorLockSignalNotDetected]		:= FALSE;
+			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.TBotSideDoorLockSignalNotDetected]		:= FALSE;
 		END_IF
 	END_IF
 END_IF
@@ -388,7 +388,7 @@ TIIAlarmLED															:=		ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipAPPowerOn
 																			(
 																				bDebugCart AND 
 																				(ALMTC.Level[iLevel].AlarmID[E_AlarmID.TBotSideDoorCloseSignalNotDetected	]	OR
-																				 ALMTC.Level[iLevel].AlarmID[E_AlarmID.TBotSideDoorLockSignalNotDetected	])
+																				 ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.TBotSideDoorLockSignalNotDetected	])
 																			) OR
 																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.TBOT_TC_ACPower_Signal   	]  ; 
 																			
@@ -405,7 +405,7 @@ TIIAlarmEPT															:= 		ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipAPPowerO
 																			(
 																				bDebugCart AND 
 																				(ALMTC.Level[iLevel].AlarmID[E_AlarmID.TBotSideDoorCloseSignalNotDetected	]	OR
-																				 ALMTC.Level[iLevel].AlarmID[E_AlarmID.TBotSideDoorLockSignalNotDetected	])
+																				 ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.TBotSideDoorLockSignalNotDetected	])
 																			) OR
 																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.TBOT_TC_ACPower_Signal   	]  ;
 																			

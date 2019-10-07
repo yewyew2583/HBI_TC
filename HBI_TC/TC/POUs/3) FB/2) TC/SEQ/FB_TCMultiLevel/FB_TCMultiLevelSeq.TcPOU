@@ -759,7 +759,7 @@ END_VAR
 										OR	ALMTC.Common.AlarmID[E_ColAlarm.ipColumnFluid_PCW_Leakage 		]
 										OR	(bDebugCart AND 
 											(ALMTC.Level[iLevel].AlarmID[E_AlarmID.TBotSideDoorCloseSignalNotDetected	] OR
-											 ALMTC.Level[iLevel].AlarmID[E_AlarmID.TBotSideDoorLockSignalNotDetected	]));
+											 ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.TBotSideDoorLockSignalNotDetected	]));
 								    
 	(*itl_opTIUSktAirSol_1:=		(*	ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipAPPresentSensor	   	] 		
 								OR	ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipCellFluidLeakage1		] 
@@ -777,11 +777,11 @@ END_VAR
 	                            OR	ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipCellFluidLeakage2		] 
 	                            OR	ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipCellGroundFault 	   	] ;	*)
 	
-	itl_opCellDrawerCylExtend:=			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipAPPresentSensor			]									
+	(*itl_opCellDrawerCylExtend:=			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipAPPresentSensor			]									
 									OR	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipAPDeactuatedPLC			]	
 									OR	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipAPDeactuatedHwr			]	
 									OR	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTesterPresent				]								
-									OR	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTIUPresent					];	
+									OR	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTIUPresent					];	*)
 									
 	itl_opAP_SafeToMoveSignal:=			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTesterLatchesClosed		]
 									OR	ALMTC.Level[iLevel].AlarmID[E_AlarmID.DrawerDownError				]
@@ -796,7 +796,7 @@ END_VAR
 									
 									OR	(bDebugCart AND 
 											(ALMTC.Level[iLevel].AlarmID[E_AlarmID.TBotSideDoorCloseSignalNotDetected	] OR
-											 ALMTC.Level[iLevel].AlarmID[E_AlarmID.TBotSideDoorLockSignalNotDetected	]));
+											 ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.TBotSideDoorLockSignalNotDetected	]));
 										
 									
 //</TII_Interlock_Bit>
@@ -1015,10 +1015,10 @@ IF bDebugCart THEN
 		M_IsSanityCheckFailed									:= E_AlarmID.TBotSideDoorCloseSignalNotDetected;//33;
 	ELSIF (NOT stMultiLevelVIO.ipTCCellTbotSideDoorLocked01) THEN
 		sMsg:='Front Door Lock_1 Signal not Detected Error';
-		M_IsSanityCheckFailed									:=E_AlarmID.TBotSideDoorLockSignalNotDetected;//34;
+		M_IsSanityCheckFailed									:=E_TIIAlarm.TBotSideDoorLockSignalNotDetected;//34;
 	ELSIF (NOT stMultiLevelVIO.ipTCCellTbotSideDoorLocked02) THEN
 		sMsg:='Front Door Lock_2 Signal not Detected Error';
-		M_IsSanityCheckFailed									:=E_AlarmID.TBotSideDoorLockSignalNotDetected;//34;
+		M_IsSanityCheckFailed									:=E_TIIAlarm.TBotSideDoorLockSignalNotDetected;//34;
 	END_IF
 END_IF
 //Check AP Up
