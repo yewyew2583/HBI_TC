@@ -1,25 +1,22 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <DUT Name="E_AlarmID" Id="{76d14cad-78e1-4b38-b853-4ad9476aba63}">
     <Declaration><![CDATA[{attribute 'qualified_only'}
 {attribute 'strict'}
 TYPE E_AlarmID :
 (
 
-DrawerExtendError :=21,				//21
-DrawerRetractError,					//22
-DrawerUpError,						//23
-DrawerDownError,					//24	
-TBotEAPNotSafeToMoveError,			//25
-TBotEAPAntiCollisionTriggered,		//26
-TCCSessionActive,					//27
-BothTIUExternRetractSignalDetected,	//28
-BothTIUUpDownSignalDetected,		//29
-APIsNotInUPPosition,				//30
-DoorCloseSignalNotDetected,			//31
-DoorLockSignalNotDetected,			//32
-TBotSideDoorCloseSignalNotDetected,	//33
-TBotSideDoorLockSignalNotDetected	//34
+	DrawerExtendError :=21,				//21
+	DrawerRetractError,					//22
+	DrawerUpError,						//23
+	DrawerDownError,					//24	
+	TBotEAPNotSafeToMoveError,			//25
+	TBotEAPAntiCollisionTriggered,		//26
+	BothTIUExternRetractSignalDetected,	//27
+	BothTIUUpDownSignalDetected,		//28
+	APIsNotInUPPosition,				//29
+	DoorCloseSignalNotDetected,			//30
+	TBotSideDoorCloseSignalNotDetected	//31
 
 );
 END_TYPE
