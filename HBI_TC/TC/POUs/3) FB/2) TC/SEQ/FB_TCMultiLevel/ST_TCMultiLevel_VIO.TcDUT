@@ -9,7 +9,7 @@ STRUCT
 	iMaintenanceButtonLEDStatusFlag     	: INT;
 	iAbortButtonLEDStatusFlag           	: INT;
 	iDoorLockButtonLEDStatusFlag        	: INT;
-	//bTCCSessionActiveStatusFlag         	: BOOL;
+	bTCCSessionActiveStatusFlag         	: BOOL;
 	bTIUInOutStatusFlag                 	: BOOL;	
 	bTIUUpDownStatusFlag                	: BOOL;	
 	
