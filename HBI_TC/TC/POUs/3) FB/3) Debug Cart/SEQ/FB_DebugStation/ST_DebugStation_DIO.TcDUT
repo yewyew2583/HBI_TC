@@ -11,6 +11,12 @@ STRUCT
 	ipDBStnAPReady                  		AT %I* :BOOL; // Actuate pan ready signal, 0: Not ready, 1: Ready
 	ipDBStnHandlerSafeToEnterPLC          	AT %I* :BOOL; // ??
 	ipDBStnHandlerSafeToEnterHwr          	AT %I* :BOOL; // ??
+	
+	ipSpare_1								AT %I* :BOOL;
+	ipSpare_2								AT %I* :BOOL;
+	ipSpare_3								AT %I* :BOOL;
+	ipSpare_4								AT %I* :BOOL;
+	
 	ipDBStnCellGroundFault          		AT %I* :BOOL;
 	ipDBStnCellFluidLeakage1				AT %I* :BOOL; //debugcart3 new io
 	ipDBStnCellFluidLeakage2				AT %I* :BOOL; //debugcart3 new io
@@ -35,6 +41,8 @@ STRUCT
 	opDBStnLowFlowPCWValve          		AT %Q* :BOOL;
 	opDBStnAPSafeToEngage       			AT %Q* :BOOL;
 	opDBStnAPTCCReset               		AT %Q* :BOOL;
+	
+	opCellLTIMValve							AT %Q* :BOOL;
 
 //</DIO>
 
