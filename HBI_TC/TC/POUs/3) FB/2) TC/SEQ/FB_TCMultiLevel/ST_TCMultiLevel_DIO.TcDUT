@@ -50,7 +50,7 @@ ipTCCellAbortFlowBtn					AT %I*: BOOL; // User request abort flow push button, 0
 ipTCCellDoorOpenReqBtn					AT %I*: BOOL; // Back door open request push button, 0: No request, 1: Request
 ipDrawerMaintenanceModeBtn				AT %I*: BOOL; // Maintenance mode request push button, 0: No request, 1: Request
 
-//ipTIUPresent							AT %I*: BOOL; // TBD
+ipTIUPresent							AT %I*: BOOL; // TBD
 
 ipTCCellTbotSideDoorOpenCloseStatus01	AT %I*: BOOL; // Front door close status 1,  0: Opened, 1: Closed
 ipTCCellTbotSideDoorOpenCloseStatus02	AT %I*: BOOL; // Front door close status 2,  0: Opened, 1: Closed
