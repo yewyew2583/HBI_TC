@@ -397,6 +397,7 @@ IF iModuleID <> 0 THEN
 		arrTCMultiLevel[iModuleID].stGblParam.iAlmIDToRset			:= iAlarmID;
 		
 		//Clear Alarm OutSide First;
+		arrTIIAlarm[iModuleID].P_ErrClear							:= TRUE; //reset alarm state timer to be trigger in FB tii alarm
 		arrTCMultiLevel[iModuleID].fbTCMultiLevelSeq.P_ErrClear		:= TRUE;
 		arrTCMultiLevel[iModuleID].fbTCMultiLevelSeq.M_SeqAlmRset(
 			subMod													:= iModuleID,
@@ -3997,7 +3998,9 @@ arrRCMD[n]										:= CmdEmpty;]]></ST>
     </LineIds>
     <LineIds Name="FB_CmdAndEventUpdate.M_AlarmReset">
       <LineId Id="777" Count="11" />
-      <LineId Id="896" Count="2" />
+      <LineId Id="896" Count="1" />
+      <LineId Id="1025" Count="0" />
+      <LineId Id="898" Count="0" />
       <LineId Id="894" Count="0" />
       <LineId Id="981" Count="3" />
       <LineId Id="789" Count="0" />

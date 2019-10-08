@@ -3,38 +3,31 @@
   <POU Name="FB_TIIAlarmDbStn" Id="{1f1c0a9a-a15d-4901-bcd2-0649d00aa61a}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_TIIAlarmDbStn
 VAR_INPUT
-	vIO : ST_DebugStation_VIO;
-	NoOfTIIAlm : INT:=NO_OF_TII_SENSOR;
-	iLevel : INT:=1;
+	vIO 					: ST_DebugStation_VIO;
+	NoOfTIIAlm 				: INT	:= NO_OF_TII_SENSOR;
+	iLevel 					: INT	:= 1;
 END_VAR
 VAR_OUTPUT
-	isTIIError:BOOL;
+	isTIIError				: BOOL;
 END_VAR
 VAR
-	DIFU:R_TRIG;
-	tim :TON;
-	delay : FB_Delay;
-	tPOn: BOOL;	//testerPowerOutoutOn after Delay
-	dPOn: BOOL; //dpsPwrbit after Delay
-	bitNo:INT;
-	almRset:BOOL;
+	DIFU					: R_TRIG;
+	tim 					: TON;
+	delay 					: FB_Delay;
+	tPOn					: BOOL;	//testerPowerOutoutOn after Delay
+	dPOn					: BOOL; //dpsPwrbit after Delay
+	bitNo					: INT;
+	alarmReset				: BOOL;
 	
-	ArrAlmBitBefDelay : ARRAY[1..NO_OF_TII_SENSOR] OF BOOL;
-	ArrAlmBitAftDelay : ARRAY[1..NO_OF_TII_SENSOR] OF BOOL;
-	ArrAlarmKeepBit	:	ARRAY[1..NO_OF_TII_SENSOR] OF BOOL;
-	ArrDelayAlarm : 	ARRAY[1..NO_OF_TII_SENSOR] OF FB_AlarmDelay;
-	Arr_ms :			ARRAY[1..NO_OF_TII_SENSOR] OF INT;
-	bTIIByPassArray:ARRAY[1..NO_OF_TII_SENSOR] OF BOOL;
-	i:INT;
-	bTest :BOOL;
-END_VAR
-VAR_IN_OUT
-	
-	//bLibError : BOOL;
-	//stAlmSubMod:ST_AlarmSubmodules;
-	//stAlmMod:ST_AlarmModules;
-END_VAR
-]]></Declaration>
+	ArrAlmBitBefDelay 		: ARRAY[1..NO_OF_TII_SENSOR] OF BOOL;
+	ArrAlmBitAftDelay 		: ARRAY[1..NO_OF_TII_SENSOR] OF BOOL;
+	ArrAlarmKeepBit			: ARRAY[1..NO_OF_TII_SENSOR] OF BOOL;
+	ArrDelayAlarm 			: ARRAY[1..NO_OF_TII_SENSOR] OF FB_AlarmDelay;
+	Arr_ms 					: ARRAY[1..NO_OF_TII_SENSOR] OF INT;
+	bTIIByPassArray			: ARRAY[1..NO_OF_TII_SENSOR] OF BOOL;
+	i						: INT;
+	bTest 					: BOOL;
+END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[//<HMI_TII_Test>
 
@@ -136,6 +129,7 @@ FOR i:=1 TO NoOfTIIAlm DO
 	//Delay Library Alm Bit
 	ArrDelayAlarm[i](	alarmState			:= ArrAlmBitBefDelay[i],
 						triggerAlarmState	=> ArrAlmBitAftDelay[i],
+						alarmResetTimer		:= alarmReset,
 						msec				:= Arr_ms[i]);	//DelayAlmBit
 	
 
@@ -162,6 +156,25 @@ END_IF
 *)]]></ST>
       </Implementation>
     </Method>
+    <Property Name="P_ErrClear" Id="{400cb5c4-2dc6-4fab-b5e3-d1a6a6655309}">
+      <Declaration><![CDATA[PROPERTY P_ErrClear : BOOL]]></Declaration>
+      <Get Name="Get" Id="{e7f3b0b1-d5ff-4651-92e7-f2b82d74132a}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{ecaf4f2d-d579-4242-ac6c-78cd914d372d}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[alarmReset	:= P_ErrClear;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
     <LineIds Name="FB_TIIAlarmDbStn">
       <LineId Id="124" Count="0" />
       <LineId Id="134" Count="0" />
@@ -210,7 +223,9 @@ END_IF
       <LineId Id="157" Count="1" />
       <LineId Id="161" Count="1" />
       <LineId Id="177" Count="2" />
-      <LineId Id="635" Count="1" />
+      <LineId Id="635" Count="0" />
+      <LineId Id="663" Count="0" />
+      <LineId Id="636" Count="0" />
       <LineId Id="180" Count="0" />
       <LineId Id="182" Count="1" />
       <LineId Id="232" Count="0" />
@@ -223,6 +238,12 @@ END_IF
       <LineId Id="202" Count="4" />
       <LineId Id="209" Count="5" />
       <LineId Id="120" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TIIAlarmDbStn.P_ErrClear.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TIIAlarmDbStn.P_ErrClear.Set">
+      <LineId Id="2" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

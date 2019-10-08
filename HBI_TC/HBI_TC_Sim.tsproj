@@ -1032,6 +1032,13 @@
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.ipTIUPresent</Name>
+							<Comment>
+								<![CDATA[ TBD]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
 							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.ipTCCellTbotSideDoorOpenCloseStatus01</Name>
 							<Comment>
 								<![CDATA[ Front door close status 1,  0: Opened, 1: Closed]]>
@@ -1443,6 +1450,13 @@
 							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.ipDrawerMaintenanceModeBtn</Name>
 							<Comment>
 								<![CDATA[ Maintenance mode request push button, 0: No request, 1: Request]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.ipTIUPresent</Name>
+							<Comment>
+								<![CDATA[ TBD]]>
 							</Comment>
 							<Type>BOOL</Type>
 						</Var>
@@ -1862,6 +1876,13 @@
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.ipTIUPresent</Name>
+							<Comment>
+								<![CDATA[ TBD]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
 							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.ipTCCellTbotSideDoorOpenCloseStatus01</Name>
 							<Comment>
 								<![CDATA[ Front door close status 1,  0: Opened, 1: Closed]]>
@@ -2273,6 +2294,13 @@
 							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.ipDrawerMaintenanceModeBtn</Name>
 							<Comment>
 								<![CDATA[ Maintenance mode request push button, 0: No request, 1: Request]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.ipTIUPresent</Name>
+							<Comment>
+								<![CDATA[ TBD]]>
 							</Comment>
 							<Type>BOOL</Type>
 						</Var>
@@ -2692,6 +2720,13 @@
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.ipTIUPresent</Name>
+							<Comment>
+								<![CDATA[ TBD]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
 							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.ipTCCellTbotSideDoorOpenCloseStatus01</Name>
 							<Comment>
 								<![CDATA[ Front door close status 1,  0: Opened, 1: Closed]]>
@@ -3103,6 +3138,13 @@
 							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.ipDrawerMaintenanceModeBtn</Name>
 							<Comment>
 								<![CDATA[ Maintenance mode request push button, 0: No request, 1: Request]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.ipTIUPresent</Name>
+							<Comment>
+								<![CDATA[ TBD]]>
 							</Comment>
 							<Type>BOOL</Type>
 						</Var>
@@ -3620,42 +3662,6 @@
 							<Type>INT</Type>
 						</Var>
 						<Var>
-							<Name>GVL_TC.fbTCColumn.stTCColumnDIO.ipColumnFluid_PCW_Leakage</Name>
-							<Comment>
-								<![CDATA[ PCW leakage sensor, 0: Leak, 1: No leak]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbTCColumn.stTCColumnDIO.ipAllTCDrawerRetractedinCell</Name>
-							<Comment>
-								<![CDATA[ All Drawer retracted]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbTCColumn.stTCColumnDIO.ipTbotDoorClosedSignal</Name>
-							<Comment>
-								<![CDATA[ (NC) Tbot Door closed. 1: Closed, 0: Opened.]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbTCColumn.stTCColumnDIO.eapDColumnPCWLeakage</Name>
-							<Comment>
-								<![CDATA[Debug EAP Status ---------------------------------------//]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbTCColumn.stTCColumnDIO.eapDColumnPCWSupplyLeakage</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbTCColumn.stTCColumnDIO.eapDColumnPCWReturnLeakage</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
 							<Name>GVL_TC.fbSLTCExtra.stDIO.ipRTD1</Name>
 							<Type>INT</Type>
 						</Var>
@@ -3698,6 +3704,42 @@
 						<Var>
 							<Name>GVL_TC.fbSLTCExtra.stDIO.ipDEPressureSensor</Name>
 							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbTCColumn.stTCColumnDIO.ipColumnFluid_PCW_Leakage</Name>
+							<Comment>
+								<![CDATA[ PCW leakage sensor, 0: Leak, 1: No leak]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbTCColumn.stTCColumnDIO.ipAllTCDrawerRetractedinCell</Name>
+							<Comment>
+								<![CDATA[ All Drawer retracted]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbTCColumn.stTCColumnDIO.ipTbotDoorClosedSignal</Name>
+							<Comment>
+								<![CDATA[ (NC) Tbot Door closed. 1: Closed, 0: Opened.]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbTCColumn.stTCColumnDIO.eapDColumnPCWLeakage</Name>
+							<Comment>
+								<![CDATA[Debug EAP Status ---------------------------------------//]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbTCColumn.stTCColumnDIO.eapDColumnPCWSupplyLeakage</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbTCColumn.stTCColumnDIO.eapDColumnPCWReturnLeakage</Name>
+							<Type>BOOL</Type>
 						</Var>
 					</Vars>
 					<Vars VarGrpType="2">
@@ -6442,25 +6484,86 @@
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_TC.fbTCColumn.stTCMLevelVIO.opSpare_9</Name>
-							<Comment>
-								<![CDATA[ Spare]]>
-							</Comment>
+							<Name>GVL_TC.fbSLTCExtra.stDIO.opASCOValve_1</Name>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_TC.fbTCColumn.stTCMLevelVIO.opSpare_10</Name>
-							<Comment>
-								<![CDATA[ Spare]]>
-							</Comment>
+							<Name>GVL_TC.fbSLTCExtra.stDIO.opASCOValve_2</Name>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_TC.fbTCColumn.stTCColumnDIO.opHotAirExhaustFan</Name>
-							<Comment>
-								<![CDATA[ Exhaust fan]]>
-							</Comment>
+							<Name>GVL_TC.fbSLTCExtra.stDIO.opMainIncomingAirValve</Name>
 							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbSLTCExtra.stDIO.opPowerEnable</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbSLTCExtra.stDIO.opAC_SSR1</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbSLTCExtra.stDIO.opAC_SSR2</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbSLTCExtra.stDIO.opAC_SSR3</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbSLTCExtra.stDIO.opAC_SSR4</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbSLTCExtra.stDIO.opAPHeater</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbSLTCExtra.stDIO.opWaterValve</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbSLTCExtra.stDIO.opTESolValve</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbSLTCExtra.stDIO.opDESolValve</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbSLTCExtra.stDIO.opTEPressRegAOut</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbSLTCExtra.stDIO.opDEPressRegAOut</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbSLTCExtra.stDIO.ipHeaterCurCtrl1</Name>
+							<Comment>
+								<![CDATA[1Amp]]>
+							</Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbSLTCExtra.stDIO.ipHeaterCurCtrl2</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbSLTCExtra.stDIO.ipHeaterCurCtrl3</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbSLTCExtra.stDIO.ipHeaterCurCtrl4</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbSLTCExtra.stDIO.ipAPHeaterCurCtrl</Name>
+							<Comment>
+								<![CDATA[10Amp]]>
+							</Comment>
+							<Type>INT</Type>
 						</Var>
 						<Var>
 							<Name>GVL_TC.arrTIIAlarm[1].vIO.opSpare_9</Name>
@@ -6547,86 +6650,25 @@
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_TC.fbSLTCExtra.stDIO.opASCOValve_1</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbSLTCExtra.stDIO.opASCOValve_2</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbSLTCExtra.stDIO.opMainIncomingAirValve</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbSLTCExtra.stDIO.opPowerEnable</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbSLTCExtra.stDIO.opAC_SSR1</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbSLTCExtra.stDIO.opAC_SSR2</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbSLTCExtra.stDIO.opAC_SSR3</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbSLTCExtra.stDIO.opAC_SSR4</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbSLTCExtra.stDIO.opAPHeater</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbSLTCExtra.stDIO.opWaterValve</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbSLTCExtra.stDIO.opTESolValve</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbSLTCExtra.stDIO.opDESolValve</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbSLTCExtra.stDIO.opTEPressRegAOut</Name>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbSLTCExtra.stDIO.opDEPressRegAOut</Name>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbSLTCExtra.stDIO.ipHeaterCurCtrl1</Name>
+							<Name>GVL_TC.fbTCColumn.stTCMLevelVIO.opSpare_9</Name>
 							<Comment>
-								<![CDATA[1Amp]]>
+								<![CDATA[ Spare]]>
 							</Comment>
-							<Type>INT</Type>
+							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_TC.fbSLTCExtra.stDIO.ipHeaterCurCtrl2</Name>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbSLTCExtra.stDIO.ipHeaterCurCtrl3</Name>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbSLTCExtra.stDIO.ipHeaterCurCtrl4</Name>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbSLTCExtra.stDIO.ipAPHeaterCurCtrl</Name>
+							<Name>GVL_TC.fbTCColumn.stTCMLevelVIO.opSpare_10</Name>
 							<Comment>
-								<![CDATA[10Amp]]>
+								<![CDATA[ Spare]]>
 							</Comment>
-							<Type>INT</Type>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbTCColumn.stTCColumnDIO.opHotAirExhaustFan</Name>
+							<Comment>
+								<![CDATA[ Exhaust fan]]>
+							</Comment>
+							<Type>BOOL</Type>
 						</Var>
 					</Vars>
 					<UnrestoredVarLinks ImportTime="2019-09-23T16:09:44">

@@ -2251,7 +2251,7 @@ END_VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[bErrClear := P_ErrClear;]]></ST>
+          <ST><![CDATA[bErrClear 			:= P_ErrClear;]]></ST>
         </Implementation>
       </Set>
     </Property>

@@ -36,6 +36,7 @@ VAR
 	delayExtTimeOut				: FB_Delay;
 	delayRetTimeOut				: FB_Delay;
 	//iUnBlock:INT;
+	alarmReset					: BOOL;  //1: reset timer when alarm reset, 0: do not reset timer
 END_VAR
 
 VAR_IN_OUT
@@ -256,9 +257,9 @@ FOR i := 1 TO NoOfTIIAlm DO
 	//Delay Library Alm Bit
 	ArrDelayAlarm[i](
 		alarmState															:= ArrAlmBitBefDelay[i],
+		alarmResetTimer														:= alarmReset,
 		triggerAlarmState													=> ArrAlmBitAftDelay[i],
 		msec																:= Arr_ms[i]);	//DelayAlmBit
-	
 
 	IF ArrAlmBitAftDelay[i] THEN //realtime IO update array
 		//stAlmMod.Level[iLevel].AlarmID[i]:=TRUE;
@@ -352,6 +353,8 @@ FOR i := 1 TO NoOfTIIAlm DO
 	*) 
 END_FOR
 
+alarmReset			:= FALSE;	//false back and wait for next alarm reset to reset alarm timer.
+
 bAlarmBlock 																:=	//ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipAPPresentSensor	   	   	]	OR
 		    																//ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipAPPowerOn 		   	   		]   OR 
 		    																ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipAPReady		       	   	]   OR
@@ -421,6 +424,25 @@ END_IF
 *)]]></ST>
       </Implementation>
     </Method>
+    <Property Name="P_ErrClear" Id="{a7ea7319-566b-4b4c-a0be-fa28aa059c11}">
+      <Declaration><![CDATA[PROPERTY P_ErrClear : BOOL]]></Declaration>
+      <Get Name="Get" Id="{423550e5-8c77-479e-a2f2-c9a4c635ec9f}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{a6fac879-a371-480d-9d97-36ad329adf11}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[alarmReset	:= P_ErrClear;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
     <LineIds Name="FB_TIIAlarm">
       <LineId Id="124" Count="0" />
       <LineId Id="134" Count="0" />
@@ -523,8 +545,9 @@ END_IF
       <LineId Id="158" Count="0" />
       <LineId Id="162" Count="0" />
       <LineId Id="177" Count="2" />
-      <LineId Id="800" Count="2" />
-      <LineId Id="180" Count="0" />
+      <LineId Id="800" Count="0" />
+      <LineId Id="1242" Count="0" />
+      <LineId Id="801" Count="1" />
       <LineId Id="182" Count="1" />
       <LineId Id="232" Count="0" />
       <LineId Id="390" Count="0" />
@@ -612,6 +635,8 @@ END_IF
       <LineId Id="564" Count="1" />
       <LineId Id="562" Count="0" />
       <LineId Id="202" Count="0" />
+      <LineId Id="1244" Count="0" />
+      <LineId Id="1243" Count="0" />
       <LineId Id="738" Count="16" />
       <LineId Id="737" Count="0" />
       <LineId Id="203" Count="0" />
@@ -633,6 +658,12 @@ END_IF
       <LineId Id="205" Count="1" />
       <LineId Id="209" Count="5" />
       <LineId Id="120" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TIIAlarm.P_ErrClear.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TIIAlarm.P_ErrClear.Set">
+      <LineId Id="2" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>
