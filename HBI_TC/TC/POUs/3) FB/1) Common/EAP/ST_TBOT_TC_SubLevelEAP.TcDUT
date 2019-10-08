@@ -5,8 +5,8 @@
 STRUCT
 	bTCDwrSafeToMoveEAP (*AT %I**): BOOL:=TRUE;
 	
-	ipTCDrawerCylExtendRS_EAP	(*AT %Q**): BOOL;		
-	ipTCDrawerCylRetractRS_EAP	(*AT %Q**): BOOL;	
+	//ipTCDrawerCylExtendRS_EAP	(*AT %Q**): BOOL;		
+	//ipTCDrawerCylRetractRS_EAP	(*AT %Q**): BOOL;	
 END_STRUCT
 END_TYPE
 ]]></Declaration>

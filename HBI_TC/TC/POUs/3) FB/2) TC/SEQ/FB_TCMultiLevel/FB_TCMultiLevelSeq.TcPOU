@@ -698,10 +698,10 @@ stTCLevelVIO.ipStopPB:=fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProduction
 	                                            						bSimu:=TRUE, 
 	                                            						iBackDoor:=stMLBIO.ipTesterLatchesClosed );
 	
-	stMLVIO.ipTIUPresent				:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , 
+	(*stMLVIO.ipTIUPresent				:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , 
 	                                            						bActual:=stMLDIO.ipTIUPresent , 
 	                                            						bSimu:=TRUE,
-	                                            						iBackDoor:=stMLBIO.ipTIUPresent );	
+	                                            						iBackDoor:=stMLBIO.ipTIUPresent );*)	
 //</Input_BackDoor>
 ]]></ST>
       </Implementation>

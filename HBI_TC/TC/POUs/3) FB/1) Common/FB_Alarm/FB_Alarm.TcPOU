@@ -100,9 +100,9 @@ FOR i:=1 TO NoOfAlmID DO
 	CASE i OF
 		E_TIIAlarm.ipAPPresentSensor		: ArrAlmBitBefDelay[E_TIIAlarm.ipAPPresentSensor	  ]:=vIO.ipAPPresentSensor    ; Arr_ms[E_TIIAlarm.ipAPPresentSensor 	   ] := 500;         //****stTCVIO.iAlarmCode=  E_Alarm.ipAP_PresentSensor 	 ;
         E_TIIAlarm.ipTesterPresent		    : ArrAlmBitBefDelay[E_TIIAlarm.ipTesterPresent		  ]:=vIO.ipTesterPresent	   ; Arr_ms[E_TIIAlarm.ipTesterPresent        ] := 700;            
-	    E_TIIAlarm.ipTIUPresent				: ArrAlmBitBefDelay[E_TIIAlarm.ipTIUPresent		  	  ]:=vIO.ipTIUPresent          ; Arr_ms[E_TIIAlarm.ipTIUPresent           ] := 900;      
+	    //E_TIIAlarm.ipTIUPresent				: ArrAlmBitBefDelay[E_TIIAlarm.ipTIUPresent		  	  ]:=vIO.ipTIUPresent          ; Arr_ms[E_TIIAlarm.ipTIUPresent           ] := 900;      
 	    E_TIIAlarm.ipTCCellDoorClosed		: ArrAlmBitBefDelay[E_TIIAlarm.ipTCCellDoorClosed	  ]:=vIO.ipTCCellDoorClosed    ; Arr_ms[E_TIIAlarm.ipTCCellDoorClosed     ] := 300;  
-	    E_TIIAlarm.ipTCDrawerCylRetractRS	: ArrAlmBitBefDelay[E_TIIAlarm.ipTCDrawerCylRetractRS ]:=vIO.ipTCDrawerCylRetractRS; Arr_ms[E_TIIAlarm.ipTCDrawerCylRetractRS ] := 400;  
+	    //E_TIIAlarm.ipTCDrawerCylRetractRS	: ArrAlmBitBefDelay[E_TIIAlarm.ipTCDrawerCylRetractRS ]:=vIO.ipTCDrawerCylRetractRS; Arr_ms[E_TIIAlarm.ipTCDrawerCylRetractRS ] := 400;  
 	    E_TIIAlarm.ipAPDeactuatedPLC		: ArrAlmBitBefDelay[E_TIIAlarm.ipAPDeactuatedPLC	  ]:=vIO.ipHandlerSafeToEnterPLC    ; Arr_ms[E_TIIAlarm.ipAPDeactuatedPLC     ] := 500;  
 	    E_TIIAlarm.ipAPDeactuatedHwr		: ArrAlmBitBefDelay[E_TIIAlarm.ipAPDeactuatedHwr	  ]:=vIO.ipHandlerSafeToEnterHwr    ; Arr_ms[E_TIIAlarm.ipAPDeactuatedHwr     ] := 700;   
 	    E_TIIAlarm.ipTesterLatchesClosed	: ArrAlmBitBefDelay[E_TIIAlarm.ipTesterLatchesClosed  ]:=vIO.ipTesterLatchesClosed ; Arr_ms[E_TIIAlarm.ipTesterLatchesClosed  ] := 900;  

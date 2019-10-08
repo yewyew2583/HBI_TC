@@ -52,7 +52,7 @@ IF tStartStep2.Q THEN
 	IF NOT bProductionMode THEN
 		bEnableManualCommandTest1		:= TRUE;
 		bEnableManualCommandTest2		:= TRUE;
-		//IsNetIDReadOK					:= TRUE;
+		IsNetIDReadOK					:= TRUE;
 		//bDebugCart						:= FALSE;
 	
 	END_IF

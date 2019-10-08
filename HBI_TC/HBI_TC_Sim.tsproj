@@ -1032,13 +1032,6 @@
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.ipTIUPresent</Name>
-							<Comment>
-								<![CDATA[ TBD]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
 							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.ipTCCellTbotSideDoorOpenCloseStatus01</Name>
 							<Comment>
 								<![CDATA[ Front door close status 1,  0: Opened, 1: Closed]]>
@@ -1450,13 +1443,6 @@
 							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.ipDrawerMaintenanceModeBtn</Name>
 							<Comment>
 								<![CDATA[ Maintenance mode request push button, 0: No request, 1: Request]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.ipTIUPresent</Name>
-							<Comment>
-								<![CDATA[ TBD]]>
 							</Comment>
 							<Type>BOOL</Type>
 						</Var>
@@ -1876,13 +1862,6 @@
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.ipTIUPresent</Name>
-							<Comment>
-								<![CDATA[ TBD]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
 							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.ipTCCellTbotSideDoorOpenCloseStatus01</Name>
 							<Comment>
 								<![CDATA[ Front door close status 1,  0: Opened, 1: Closed]]>
@@ -2294,13 +2273,6 @@
 							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.ipDrawerMaintenanceModeBtn</Name>
 							<Comment>
 								<![CDATA[ Maintenance mode request push button, 0: No request, 1: Request]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.ipTIUPresent</Name>
-							<Comment>
-								<![CDATA[ TBD]]>
 							</Comment>
 							<Type>BOOL</Type>
 						</Var>
@@ -2720,13 +2692,6 @@
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.ipTIUPresent</Name>
-							<Comment>
-								<![CDATA[ TBD]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
 							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.ipTCCellTbotSideDoorOpenCloseStatus01</Name>
 							<Comment>
 								<![CDATA[ Front door close status 1,  0: Opened, 1: Closed]]>
@@ -3138,13 +3103,6 @@
 							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.ipDrawerMaintenanceModeBtn</Name>
 							<Comment>
 								<![CDATA[ Maintenance mode request push button, 0: No request, 1: Request]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.ipTIUPresent</Name>
-							<Comment>
-								<![CDATA[ TBD]]>
 							</Comment>
 							<Type>BOOL</Type>
 						</Var>
@@ -3745,6 +3703,454 @@
 					<Vars VarGrpType="2">
 						<Name>PlcTask Outputs</Name>
 						<Var>
+							<Name>MAIN.fbTCMLevelEPTUpdate.stMLVIO.opSpare_9</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.fbTCMLevelEPTUpdate.stMLVIO.opSpare_10</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.fbGUI_TEST[1].mlVIO.opSpare_9</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.fbGUI_TEST[1].mlVIO.opSpare_10</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.fbGUI_TEST[2].mlVIO.opSpare_9</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.fbGUI_TEST[2].mlVIO.opSpare_10</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.fbGUI_TEST[3].mlVIO.opSpare_9</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.fbGUI_TEST[3].mlVIO.opSpare_10</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.fbGUI_TEST[4].mlVIO.opSpare_9</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.fbGUI_TEST[4].mlVIO.opSpare_10</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.fbGUI_TEST[5].mlVIO.opSpare_9</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.fbGUI_TEST[5].mlVIO.opSpare_10</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.fbGUI_TEST[6].mlVIO.opSpare_9</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.fbGUI_TEST[6].mlVIO.opSpare_10</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.fbUpdateStatus[1].stMLVIO.opSpare_9</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.fbUpdateStatus[1].stMLVIO.opSpare_10</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.fbUpdateStatus[2].stMLVIO.opSpare_9</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.fbUpdateStatus[2].stMLVIO.opSpare_10</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.fbUpdateStatus[3].stMLVIO.opSpare_9</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.fbUpdateStatus[3].stMLVIO.opSpare_10</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.fbUpdateStatus[4].stMLVIO.opSpare_9</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.fbUpdateStatus[4].stMLVIO.opSpare_10</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.fbUpdateStatus[5].stMLVIO.opSpare_9</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.fbUpdateStatus[5].stMLVIO.opSpare_10</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.fbUpdateStatus[6].stMLVIO.opSpare_9</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.fbUpdateStatus[6].stMLVIO.opSpare_10</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.fbTCMultiLevel_Process[1].stTCMLVIOTemp.opSpare_9</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.fbTCMultiLevel_Process[1].stTCMLVIOTemp.opSpare_10</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.fbTCMultiLevel_Process[2].stTCMLVIOTemp.opSpare_9</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.fbTCMultiLevel_Process[2].stTCMLVIOTemp.opSpare_10</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.fbTCMultiLevel_Process[3].stTCMLVIOTemp.opSpare_9</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.fbTCMultiLevel_Process[3].stTCMLVIOTemp.opSpare_10</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.fbTCMultiLevel_Process[4].stTCMLVIOTemp.opSpare_9</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.fbTCMultiLevel_Process[4].stTCMLVIOTemp.opSpare_10</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.fbTCMultiLevel_Process[5].stTCMLVIOTemp.opSpare_9</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.fbTCMultiLevel_Process[5].stTCMLVIOTemp.opSpare_10</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.fbTCMultiLevel_Process[6].stTCMLVIOTemp.opSpare_9</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.fbTCMultiLevel_Process[6].stTCMLVIOTemp.opSpare_10</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.stTCMLevelVIO.opSpare_9</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.stTCMLevelVIO.opSpare_10</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>CycleTest.fbGUI_TEST[1].mlVIO.opSpare_9</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>CycleTest.fbGUI_TEST[1].mlVIO.opSpare_10</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>CycleTest.fbGUI_TEST[2].mlVIO.opSpare_9</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>CycleTest.fbGUI_TEST[2].mlVIO.opSpare_10</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>CycleTest.fbGUI_TEST[3].mlVIO.opSpare_9</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>CycleTest.fbGUI_TEST[3].mlVIO.opSpare_10</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>CycleTest.fbGUI_TEST[4].mlVIO.opSpare_9</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>CycleTest.fbGUI_TEST[4].mlVIO.opSpare_10</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>CycleTest.fbGUI_TEST[5].mlVIO.opSpare_9</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>CycleTest.fbGUI_TEST[5].mlVIO.opSpare_10</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>CycleTest.fbGUI_TEST[6].mlVIO.opSpare_9</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>CycleTest.fbGUI_TEST[6].mlVIO.opSpare_10</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>CycleTest.stVIO.opSpare_9</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>CycleTest.stVIO.opSpare_10</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>Logging.fbSensorMonitor.stMIO.opSpare_9</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>Logging.fbSensorMonitor.stMIO.opSpare_10</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>CmdAndEventProcess.fbCmdAndEventUpdate.fbTCUSafeState.stMultiLeveVIO.opSpare_9</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>CmdAndEventProcess.fbCmdAndEventUpdate.fbTCUSafeState.stMultiLeveVIO.opSpare_10</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>CmdAndEventProcess.fbCmdAndEventUpdate.fbDoorOpenClose.stMultiLevelVIO.opSpare_9</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>CmdAndEventProcess.fbCmdAndEventUpdate.fbDoorOpenClose.stMultiLevelVIO.opSpare_10</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>CmdAndEventProcess.fbCmdAndEventUpdate.fbDoorOpenClose._MLevelVIO_Monitor.opSpare_9</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>CmdAndEventProcess.fbCmdAndEventUpdate.fbDoorOpenClose._MLevelVIO_Monitor.opSpare_10</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PreInitialise.stMLVIO.opSpare_9</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PreInitialise.stMLVIO.opSpare_10</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
 							<Name>GVL_EAP.stEAP.stTBOT_TC_EAP[1].bTC_HeartBeat</Name>
 							<Type>INT</Type>
 						</Var>
@@ -4244,6 +4650,20 @@
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLVIO.opSpare_9</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLVIO.opSpare_10</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
 							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.opAP240ACPwrEnable</Name>
 							<Comment>
 								<![CDATA[//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -4455,9 +4875,37 @@
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stOldMLVIO.opSpare_9</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stOldMLVIO.opSpare_10</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
 							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stTCColDIO.opHotAirExhaustFan</Name>
 							<Comment>
 								<![CDATA[ Exhaust fan]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLVIO.opSpare_9</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLVIO.opSpare_10</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
 							</Comment>
 							<Type>BOOL</Type>
 						</Var>
@@ -4673,9 +5121,37 @@
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stOldMLVIO.opSpare_9</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stOldMLVIO.opSpare_10</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
 							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stTCColDIO.opHotAirExhaustFan</Name>
 							<Comment>
 								<![CDATA[ Exhaust fan]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLVIO.opSpare_9</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLVIO.opSpare_10</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
 							</Comment>
 							<Type>BOOL</Type>
 						</Var>
@@ -4891,9 +5367,37 @@
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stOldMLVIO.opSpare_9</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stOldMLVIO.opSpare_10</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
 							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stTCColDIO.opHotAirExhaustFan</Name>
 							<Comment>
 								<![CDATA[ Exhaust fan]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLVIO.opSpare_9</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLVIO.opSpare_10</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
 							</Comment>
 							<Type>BOOL</Type>
 						</Var>
@@ -5109,9 +5613,37 @@
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stOldMLVIO.opSpare_9</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stOldMLVIO.opSpare_10</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
 							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stTCColDIO.opHotAirExhaustFan</Name>
 							<Comment>
 								<![CDATA[ Exhaust fan]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLVIO.opSpare_9</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLVIO.opSpare_10</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
 							</Comment>
 							<Type>BOOL</Type>
 						</Var>
@@ -5327,9 +5859,37 @@
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stOldMLVIO.opSpare_9</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stOldMLVIO.opSpare_10</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
 							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stTCColDIO.opHotAirExhaustFan</Name>
 							<Comment>
 								<![CDATA[ Exhaust fan]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLVIO.opSpare_9</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLVIO.opSpare_10</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
 							</Comment>
 							<Type>BOOL</Type>
 						</Var>
@@ -5545,9 +6105,107 @@
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stOldMLVIO.opSpare_9</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stOldMLVIO.opSpare_10</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
 							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stTCColDIO.opHotAirExhaustFan</Name>
 							<Comment>
 								<![CDATA[ Exhaust fan]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevelVIO[1].opSpare_9</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevelVIO[1].opSpare_10</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevelVIO[2].opSpare_9</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevelVIO[2].opSpare_10</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevelVIO[3].opSpare_9</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevelVIO[3].opSpare_10</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevelVIO[4].opSpare_9</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevelVIO[4].opSpare_10</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevelVIO[5].opSpare_9</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevelVIO[5].opSpare_10</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevelVIO[6].opSpare_9</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevelVIO[6].opSpare_10</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
 							</Comment>
 							<Type>BOOL</Type>
 						</Var>
@@ -5784,9 +6442,107 @@
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
+							<Name>GVL_TC.fbTCColumn.stTCMLevelVIO.opSpare_9</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbTCColumn.stTCMLevelVIO.opSpare_10</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
 							<Name>GVL_TC.fbTCColumn.stTCColumnDIO.opHotAirExhaustFan</Name>
 							<Comment>
 								<![CDATA[ Exhaust fan]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTIIAlarm[1].vIO.opSpare_9</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTIIAlarm[1].vIO.opSpare_10</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTIIAlarm[2].vIO.opSpare_9</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTIIAlarm[2].vIO.opSpare_10</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTIIAlarm[3].vIO.opSpare_9</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTIIAlarm[3].vIO.opSpare_10</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTIIAlarm[4].vIO.opSpare_9</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTIIAlarm[4].vIO.opSpare_10</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTIIAlarm[5].vIO.opSpare_9</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTIIAlarm[5].vIO.opSpare_10</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTIIAlarm[6].vIO.opSpare_9</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTIIAlarm[6].vIO.opSpare_10</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
 							</Comment>
 							<Type>BOOL</Type>
 						</Var>
@@ -11216,7 +11972,6 @@ Bit1: Value smaller than Limit2]]>
 				<Link VarA="PlcTask Inputs^GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.ipTCDrawerCylExtendRS" VarB="Channel 6^Input"/>
 				<Link VarA="PlcTask Inputs^GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.ipTCDrawerCylRetractRS" VarB="Channel 7^Input"/>
 				<Link VarA="PlcTask Inputs^GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.ipTCDrawerCylUpRS" VarB="Channel 8^Input"/>
-				<Link VarA="PlcTask Inputs^GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.ipTIUPresent" VarB="Channel 15^Input"/>
 				<Link VarA="PlcTask Inputs^GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.ipTesterLatchesClosed" VarB="Channel 12^Input"/>
 				<Link VarA="PlcTask Inputs^GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.ipTesterPowerOn" VarB="Channel 2^Input"/>
 				<Link VarA="PlcTask Inputs^GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLDIO.ipTesterPresent" VarB="Channel 1^Input"/>
@@ -11250,7 +12005,6 @@ Bit1: Value smaller than Limit2]]>
 				<Link VarA="PlcTask Inputs^GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.ipTCDrawerCylExtendRS" VarB="Channel 6^Input"/>
 				<Link VarA="PlcTask Inputs^GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.ipTCDrawerCylRetractRS" VarB="Channel 7^Input"/>
 				<Link VarA="PlcTask Inputs^GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.ipTCDrawerCylUpRS" VarB="Channel 8^Input"/>
-				<Link VarA="PlcTask Inputs^GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.ipTIUPresent" VarB="Channel 15^Input"/>
 				<Link VarA="PlcTask Inputs^GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.ipTesterLatchesClosed" VarB="Channel 12^Input"/>
 				<Link VarA="PlcTask Inputs^GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.ipTesterPowerOn" VarB="Channel 2^Input"/>
 				<Link VarA="PlcTask Inputs^GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.ipTesterPresent" VarB="Channel 1^Input"/>
@@ -11313,7 +12067,6 @@ Bit1: Value smaller than Limit2]]>
 				<Link VarA="PlcTask Inputs^GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.ipTCDrawerCylExtendRS" VarB="Channel 6^Input"/>
 				<Link VarA="PlcTask Inputs^GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.ipTCDrawerCylRetractRS" VarB="Channel 7^Input"/>
 				<Link VarA="PlcTask Inputs^GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.ipTCDrawerCylUpRS" VarB="Channel 8^Input"/>
-				<Link VarA="PlcTask Inputs^GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.ipTIUPresent" VarB="Channel 15^Input"/>
 				<Link VarA="PlcTask Inputs^GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.ipTesterLatchesClosed" VarB="Channel 12^Input"/>
 				<Link VarA="PlcTask Inputs^GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.ipTesterPowerOn" VarB="Channel 2^Input"/>
 				<Link VarA="PlcTask Inputs^GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stMLDIO.ipTesterPresent" VarB="Channel 1^Input"/>
@@ -11386,7 +12139,6 @@ Bit1: Value smaller than Limit2]]>
 				<Link VarA="PlcTask Inputs^GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.ipTCDrawerCylExtendRS" VarB="Channel 6^Input"/>
 				<Link VarA="PlcTask Inputs^GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.ipTCDrawerCylRetractRS" VarB="Channel 7^Input"/>
 				<Link VarA="PlcTask Inputs^GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.ipTCDrawerCylUpRS" VarB="Channel 8^Input"/>
-				<Link VarA="PlcTask Inputs^GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.ipTIUPresent" VarB="Channel 15^Input"/>
 				<Link VarA="PlcTask Inputs^GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.ipTesterLatchesClosed" VarB="Channel 12^Input"/>
 				<Link VarA="PlcTask Inputs^GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.ipTesterPowerOn" VarB="Channel 2^Input"/>
 				<Link VarA="PlcTask Inputs^GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.ipTesterPresent" VarB="Channel 1^Input"/>
@@ -11449,7 +12201,6 @@ Bit1: Value smaller than Limit2]]>
 				<Link VarA="PlcTask Inputs^GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.ipTCDrawerCylExtendRS" VarB="Channel 6^Input"/>
 				<Link VarA="PlcTask Inputs^GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.ipTCDrawerCylRetractRS" VarB="Channel 7^Input"/>
 				<Link VarA="PlcTask Inputs^GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.ipTCDrawerCylUpRS" VarB="Channel 8^Input"/>
-				<Link VarA="PlcTask Inputs^GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.ipTIUPresent" VarB="Channel 15^Input"/>
 				<Link VarA="PlcTask Inputs^GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.ipTesterLatchesClosed" VarB="Channel 12^Input"/>
 				<Link VarA="PlcTask Inputs^GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.ipTesterPowerOn" VarB="Channel 2^Input"/>
 				<Link VarA="PlcTask Inputs^GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stMLDIO.ipTesterPresent" VarB="Channel 1^Input"/>
@@ -11512,7 +12263,6 @@ Bit1: Value smaller than Limit2]]>
 				<Link VarA="PlcTask Inputs^GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.ipTCDrawerCylExtendRS" VarB="Channel 6^Input"/>
 				<Link VarA="PlcTask Inputs^GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.ipTCDrawerCylRetractRS" VarB="Channel 7^Input"/>
 				<Link VarA="PlcTask Inputs^GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.ipTCDrawerCylUpRS" VarB="Channel 8^Input"/>
-				<Link VarA="PlcTask Inputs^GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.ipTIUPresent" VarB="Channel 15^Input"/>
 				<Link VarA="PlcTask Inputs^GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.ipTesterLatchesClosed" VarB="Channel 12^Input"/>
 				<Link VarA="PlcTask Inputs^GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.ipTesterPowerOn" VarB="Channel 2^Input"/>
 				<Link VarA="PlcTask Inputs^GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.ipTesterPresent" VarB="Channel 1^Input"/>
