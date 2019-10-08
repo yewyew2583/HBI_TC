@@ -134,20 +134,13 @@ bAPOnCmd																:= vIO.bAP240ACPowerOnOff;
 bChkAPOn																:= vIO.bChkAP240On;
 
 
-//<A_Alm_Rst For Door Open TII Alarm>
+//Auto reset Door lock alarm
 IF ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCCellDoorClosed] AND vIO.ipTCCellDoorClosed THEN
 	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCCellDoorClosed]			:= FALSE;
 END_IF
-//</A_Alm_Rst For Door Open TII Alarm>
 
+//Auto reset Door lock alarm (Debugcart only)
 IF bDebugCart THEN
-	IF (NOT VIO.ipTCCellTbotSideDoorOpenCloseStatus01) OR (NOT VIO.ipTCCellTbotSideDoorOpenCloseStatus02) THEN
-		ALMTC.Level[iLevel].AlarmID[E_AlarmID.TBotSideDoorCloseSignalNotDetected]			:= TRUE;
-	END_IF
-	IF (NOT VIO.ipTCCellTbotSideDoorLocked01) OR (NOT VIO.ipTCCellTbotSideDoorLocked02) THEN
-		ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.TBotSideDoorLockSignalNotDetected]			:= TRUE;
-	END_IF
-	
 	//auto clear alarm if door is closed 
 	IF ALMTC.Level[iLevel].AlarmID[E_AlarmID.TBotSideDoorCloseSignalNotDetected] THEN
 		IF VIO.ipTCCellTbotSideDoorOpenCloseStatus01 AND VIO.ipTCCellTbotSideDoorOpenCloseStatus02 THEN
@@ -248,10 +241,19 @@ FOR i := 1 TO NoOfTIIAlm DO
 			
         E_TIIAlarm.TBOT_TC_ACPower_Signal: 
 			e															:= E_TIIAlarm.TBOT_TC_ACPower_Signal; 
-			ArrAlmBitBefDelay[E_TIIAlarm.TBOT_TC_ACPower_Signal]		:= (vIO.TBOT_TC_ACPower_Signal) AND (vIO.ipAPPresentSensor OR vIO.ipTesterPresent) AND (NOT bDebugCart) AND (NOT bDebugStation) AND bENs[17]; 
+			ArrAlmBitBefDelay[E_TIIAlarm.TBOT_TC_ACPower_Signal]		:= (vIO.TBOT_TC_ACPower_Signal) AND (vIO.ipAPPresentSensor OR vIO.ipTesterPresent) AND (NOT bDebugCart) AND (NOT bDebugStation) AND bENs[14]; 
 			Arr_ms[e] 													:= 500;  (*TIIAlmText[e]:='TCDrawerCylRetractRS'*);
-      									
-		//E_Alarm.LibraryCylErr			:	ArrAlmBitBefDelay[E_Alarm.LibraryCylErr				]:=bError(*From Lib*) AND E_Alarm.LibraryCylErr == LibErrorID  ; ArrMiliSecond[E_Alarm.LibraryCylErr   ] := 0;		
+			
+		(*E_TIIAlarm.DS_Facility_EAP_ACPower_Signal: 
+			e															:= E_TIIAlarm.DS_Facility_EAP_ACPower_Signal; 
+			ArrAlmBitBefDelay[E_TIIAlarm.ipTCCellDoorClosed]			:= bDebugStation AND vIO.dseap AND bENs[15]; 							
+			Arr_ms[e] 													:= 500;*)  (*TIIAlmText[e]:='DS_Facility_EAP_ACPower_Signal' *);
+			
+      	E_TIIAlarm.TBotSideDoorLockSignalNotDetected: 
+			e																:= E_TIIAlarm.TBotSideDoorLockSignalNotDetected; 
+			ArrAlmBitBefDelay[E_TIIAlarm.TBotSideDoorLockSignalNotDetected]	:= bDebugCart AND ((NOT vIO.ipTCCellTbotSideDoorLocked01) OR (NOT vIO.ipTCCellTbotSideDoorLocked01)); //AND bENs[16]; 							
+			Arr_ms[e] 														:= 500;  (*TIIAlmText[e]:='ipTCCellTbotSideDoorLocked01' *);				
+			
 	END_CASE
 
 	//Delay Library Alm Bit
@@ -494,7 +496,7 @@ END_VAR
       <LineId Id="679" Count="2" />
       <LineId Id="678" Count="0" />
       <LineId Id="1100" Count="0" />
-      <LineId Id="1103" Count="9" />
+      <LineId Id="1110" Count="2" />
       <LineId Id="1114" Count="6" />
       <LineId Id="1122" Count="3" />
       <LineId Id="1101" Count="1" />
@@ -541,6 +543,11 @@ END_VAR
       <LineId Id="708" Count="0" />
       <LineId Id="890" Count="0" />
       <LineId Id="893" Count="1" />
+      <LineId Id="1272" Count="0" />
+      <LineId Id="1274" Count="2" />
+      <LineId Id="1273" Count="0" />
+      <LineId Id="1280" Count="0" />
+      <LineId Id="1277" Count="2" />
       <LineId Id="992" Count="0" />
       <LineId Id="158" Count="0" />
       <LineId Id="162" Count="0" />

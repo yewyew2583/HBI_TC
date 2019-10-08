@@ -750,7 +750,10 @@ END_VAR
 	                            OR	ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipCellFluidLeakage2		] 
 	                            OR	ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipCellGroundFault 	   	]
 								OR	ALMTC.Common.AlarmID[E_ColAlarm.ipColumnFluid_PCW_Leakage 		]
-								OR	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipAPReady				];
+								OR	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipAPReady				]
+								OR	(bDebugCart AND 
+											(//ALMTC.Level[iLevel].AlarmID[E_AlarmID.TBotSideDoorCloseSignalNotDetected	] OR
+											 ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.TBotSideDoorLockSignalNotDetected	]));
 	                               
 	itl_opTesterDrawerAirSupplySol:=	(*	ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipTesterPowerOn	   		]
 										OR*)ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipCellFluidLeakage1		] 
@@ -758,7 +761,7 @@ END_VAR
 	                            		OR	ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipCellGroundFault 	   	] 
 										OR	ALMTC.Common.AlarmID[E_ColAlarm.ipColumnFluid_PCW_Leakage 		]
 										OR	(bDebugCart AND 
-											(ALMTC.Level[iLevel].AlarmID[E_AlarmID.TBotSideDoorCloseSignalNotDetected	] OR
+											(//ALMTC.Level[iLevel].AlarmID[E_AlarmID.TBotSideDoorCloseSignalNotDetected	] OR
 											 ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.TBotSideDoorLockSignalNotDetected	]));
 								    
 	(*itl_opTIUSktAirSol_1:=		(*	ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipAPPresentSensor	   	] 		
@@ -795,7 +798,7 @@ END_VAR
 									//OR facility leak?
 									
 									OR	(bDebugCart AND 
-											(ALMTC.Level[iLevel].AlarmID[E_AlarmID.TBotSideDoorCloseSignalNotDetected	] OR
+											(//ALMTC.Level[iLevel].AlarmID[E_AlarmID.TBotSideDoorCloseSignalNotDetected	] OR
 											 ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.TBotSideDoorLockSignalNotDetected	]));
 										
 									
@@ -899,8 +902,8 @@ END_VAR
 //Do not have manual command, so we can on automatically if pass permissive.
 IF bDebugCart THEN
 	stMLVIO.opAPSafeToEngage	:=	(stMLVIO.ipTCDrawerCylDownRS AND stMLVIO.ipTCDrawerCylRetractRS AND NOT stMLVIO.ipTCDrawerCylExtendRS) 	//pass criteria: drawer retract: 1, drawer down: 1, drawer extend: 0
-							  		AND (stMLVIO.ipTCCellTbotSideDoorOpenCloseStatus01 AND stMLVIO.ipTCCellTbotSideDoorOpenCloseStatus02) 	//pass criteria: front door closed1&2: 1 
-									AND stMLVIO.ipTCCellDoorOpenCloseStatus 																//pass criteria: back door/ TC door closed : 1
+							  		//AND (stMLVIO.ipTCCellTbotSideDoorOpenCloseStatus01 AND stMLVIO.ipTCCellTbotSideDoorOpenCloseStatus02) 	//pass criteria: front door closed1&2: 1 
+									//AND stMLVIO.ipTCCellDoorOpenCloseStatus 																//pass criteria: back door/ TC door closed : 1
 									AND	(stMLVIO.ipTCCellTbotSideDoorLocked01 AND stMLVIO.ipTCCellTbotSideDoorLocked02)						//pass criteria: front door locked1&2: 1
 									AND stMLVIO.ipTCCellDoorClosed 																			//pass criteria: back door/ TC door locked: 1
 									AND stMLVIO.opTesterDrawerAirSupplySol 																	//pass criteria: tester air 6 bar valve: 1
@@ -909,7 +912,7 @@ IF bDebugCart THEN
 															 	
 ELSE
 	stMLVIO.opAPSafeToEngage	:=	(stMLVIO.ipTCDrawerCylDownRS AND stMLVIO.ipTCDrawerCylRetractRS) 									//pass criteria: drawer retract: 1, drawer down: 1
-									AND stMLVIO.ipTCCellDoorOpenCloseStatus 															//pass criteria: back door/ TC door closed : 1
+									//AND stMLVIO.ipTCCellDoorOpenCloseStatus 															//pass criteria: back door/ TC door closed : 1
 									AND stMLVIO.ipTCCellDoorClosed 																		//pass criteria: back door/ TC door locked: 1
 									AND stMLVIO.opTesterDrawerAirSupplySol  															//pass criteria: tester air 6 bar valve: 1
 									AND ((NOT stMLVIO.ipTesterPresent) OR (stMLVIO.ipTesterPresent AND stMLVIO.ipTesterLatchesClosed));	//pass criteria: testerpresent : 0 OR tester present and tester latches closed : 1
@@ -2540,6 +2543,8 @@ END_CASE]]></ST>
       <LineId Id="131" Count="0" />
       <LineId Id="36" Count="4" />
       <LineId Id="89" Count="0" />
+      <LineId Id="144" Count="1" />
+      <LineId Id="143" Count="0" />
       <LineId Id="41" Count="5" />
       <LineId Id="115" Count="1" />
       <LineId Id="114" Count="0" />
