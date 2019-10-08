@@ -46,10 +46,10 @@ F_SensorLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','ipAPPowerOn'), 			bNew:=ne
 F_SensorLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','ipAPReady'), 				bNew:=newVIO.ipAPReady, bOld:=oldVIO.ipAPReady);
 F_SensorLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','ipAPDeactuatedPLC'), 		bNew:=newVIO.ipHandlerSafeToEnterPLC, bOld:=oldVIO.ipHandlerSafeToEnterPLC);
 F_SensorLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','ipAPDeactuatedHwr'), 		bNew:=newVIO.ipHandlerSafeToEnterHwr, bOld:=oldVIO.ipHandlerSafeToEnterHwr);
-//F_SensorLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','ipSpare_1'), 			bNew:=newVIO.ipSpare_1, bOld:=oldVIO.ipSpare_1);
-//F_SensorLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','ipSpare_2'), 			bNew:=newVIO.ipSpare_2, bOld:=oldVIO.ipSpare_2);
-//F_SensorLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','ipSpare_3'), 			bNew:=newVIO.ipSpare_3, bOld:=oldVIO.ipSpare_3);
-//F_SensorLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','ipSpare_4'), 			bNew:=newVIO.ipSpare_4, bOld:=oldVIO.ipSpare_4);
+F_SensorLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','ipSpare_1'), 				bNew:=newVIO.ipSpare_1, bOld:=oldVIO.ipSpare_1);
+F_SensorLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','ipSpare_2'), 			bNew:=newVIO.ipSpare_2, bOld:=oldVIO.ipSpare_2);
+F_SensorLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','ipSpare_3'), 			bNew:=newVIO.ipSpare_3, bOld:=oldVIO.ipSpare_3);
+F_SensorLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','ipSpare_4'), 			bNew:=newVIO.ipSpare_4, bOld:=oldVIO.ipSpare_4);
 F_SensorLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','ipCellFluidLeakage1'), 	bNew:=newVIO.ipCellFluidLeakage1, bOld:=oldVIO.ipCellFluidLeakage1);
 F_SensorLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','ipCellFluidLeakage2'), 	bNew:=newVIO.ipCellFluidLeakage2, bOld:=oldVIO.ipCellFluidLeakage2);
 F_SensorLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','ipCellGroundFault'), 		bNew:=newVIO.ipCellGroundFault, bOld:=oldVIO.ipCellGroundFault);
@@ -60,8 +60,8 @@ F_SensorLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','ipCellGroundFault'), 		bNe
 F_SensorLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','ipTesterPresent'), 		bNew:=newVIO.ipTesterPresent, bOld:=oldVIO.ipTesterPresent);
 F_SensorLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','ipTesterPowerOn'), 		bNew:=newVIO.ipTesterPowerOn, bOld:=oldVIO.ipTesterPowerOn);
 F_SensorLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','ipTesterReady'), 			bNew:=newVIO.ipTesterReady, bOld:=oldVIO.ipTesterReady);
-//F_SensorLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','ipSpare_9'), 			bNew:=newVIO.ipSpare_9, bOld:=oldVIO.ipSpare_9);
-//F_SensorLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','ipSpare_10'), 			bNew:=newVIO.ipSpare_10, bOld:=oldVIO.ipSpare_10);
+F_SensorLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','ipSpare_9'), 			bNew:=newVIO.ipSpare_9, bOld:=oldVIO.ipSpare_9);
+F_SensorLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','ipSpare_10'), 			bNew:=newVIO.ipSpare_10, bOld:=oldVIO.ipSpare_10);
 F_SensorLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','ipTCDrawerCylExtendRS'), 	bNew:=newVIO.ipTCDrawerCylExtendRS, bOld:=oldVIO.ipTCDrawerCylExtendRS);
 F_SensorLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','ipTCDrawerCylRetractRS'), bNew:=newVIO.ipTCDrawerCylRetractRS, bOld:=oldVIO.ipTCDrawerCylRetractRS);
 F_SensorLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','ipTCDrawerCylUpRS'), 		bNew:=newVIO.ipTCDrawerCylUpRS, bOld:=oldVIO.ipTCDrawerCylUpRS);
