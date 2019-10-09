@@ -246,7 +246,7 @@ FOR i := 1 TO NoOfTIIAlm DO
 			
 		E_TIIAlarm.DS_Facility_EAP_ACPower_Signal: 
 			e																:= E_TIIAlarm.DS_Facility_EAP_ACPower_Signal; 
-			ArrAlmBitBefDelay[E_TIIAlarm.DS_Facility_EAP_ACPower_Signal]	:= bDebugStation AND DS_Facility_eapShutOffAllACPower AND bENs[15]; 							
+			ArrAlmBitBefDelay[E_TIIAlarm.DS_Facility_EAP_ACPower_Signal]	:= bDebugCart AND DS_Facility_eapShutOffAllACPower AND bENs[15]; 							
 			Arr_ms[e] 														:= 500;  (*TIIAlmText[e]:='DS_Facility_EAP_ACPower_Signal' *);
 			
       	E_TIIAlarm.TBotSideDoorLockSignalNotDetected: 

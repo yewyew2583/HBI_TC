@@ -505,15 +505,15 @@ END_VAR
 //stDebugColDIO.ipDBColumnPCWReturnTemperature  :=  stDebugColDIO.ipAnlgDBColumnPCWReturnTemperature  ;
 
 
-	stDebugColumnVIO.ipDBColumnPCWLeakage		:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , 
+	stDebugColumnVIO.ipDBColumnPCWLeakage		:= NOT fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , 
 	                                            					bActual:=stDebugColumnDIO.ipDBColumnPCWLeakage , 
 	                                            					bSimu:=FALSE , 
 	                                            					iBackDoor:=stDebugColumnBIO.ipDBColumnPCWLeakage );
-	stDebugColumnVIO.ipDBColumnPCWSupplyLeakage		:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , 
+	stDebugColumnVIO.ipDBColumnPCWSupplyLeakage		:= NOT fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , 
 	                                            					bActual:=stDebugColumnDIO.ipDBColumnPCWSupplyLeakage , 
 	                                            					bSimu:=FALSE , 
 	                                            					iBackDoor:=stDebugColumnBIO.ipDBColumnPCWSupplyLeakage );
-	stDebugColumnVIO.ipDBColumnPCWReturnLeakage		:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , 
+	stDebugColumnVIO.ipDBColumnPCWReturnLeakage		:= NOT fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , 
 	                                            					bActual:=stDebugColumnDIO.ipDBColumnPCWReturnLeakage , 
 	                                            					bSimu:=FALSE , 
 	                                            					iBackDoor:=stDebugColumnBIO.ipDBColumnPCWReturnLeakage );
