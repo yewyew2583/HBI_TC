@@ -5,7 +5,7 @@
 VAR_GLOBAL
 	stEAP:ST_EAP;
 	stDCEAP:ST_DCEAP;
-	eapShutOffAllACPower					AT %I* :BOOL; // shut off Tester and AP AC Power, 0: On, 1: Off //only for debug cart and station
+	DS_Facility_eapShutOffAllACPower					AT %I* :BOOL; // shut off Tester and AP AC Power, 0: On, 1: Off //only for debug cart and station
 END_VAR]]></Declaration>
   </GVL>
 </TcPlcObject>

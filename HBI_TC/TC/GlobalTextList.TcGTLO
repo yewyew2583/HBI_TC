@@ -1405,6 +1405,11 @@
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
+              <v n="TextID">"101"</v>
+              <v n="TextDefault">"DBColumnShutOffACPowerEAP"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
               <v n="TextID">"3120"</v>
               <v n="TextDefault">"Dbug Station PCW Low Flow"</v>
               <l n="LanguageTexts" t="ArrayList" />
@@ -1587,6 +1592,11 @@ Dew point – PCW temperature above critical control limit, condensation alarm
             <o>
               <v n="TextID">"562"</v>
               <v n="TextDefault">"Drawer Teaching Mode"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"1994"</v>
+              <v n="TextDefault">"DS_Facility_eapShutOffAllACPower"</v>
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
@@ -3007,6 +3017,11 @@ Dew point – PCW temperature above critical control limit, condensation alarm
             <o>
               <v n="TextID">"266"</v>
               <v n="TextDefault">"System Ready"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"4689"</v>
+              <v n="TextDefault">"TC COLUMN ALARM STATUS"</v>
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>

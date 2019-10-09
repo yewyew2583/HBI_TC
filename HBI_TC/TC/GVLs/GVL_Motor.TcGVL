@@ -4,6 +4,7 @@
     <Declaration><![CDATA[//{attribute 'qualified_only'}
 VAR_GLOBAL
 	GVL_DUT_TC_AP240ACPower					: DUT_Cylinder;
+	GVL_DUT_DC_AP240ACPower					: DUT_Cylinder;
 END_VAR]]></Declaration>
   </GVL>
 </TcPlcObject>
