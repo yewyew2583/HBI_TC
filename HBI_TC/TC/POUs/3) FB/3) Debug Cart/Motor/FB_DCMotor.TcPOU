@@ -27,8 +27,7 @@ END_VAR
 //	
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-PermSD();
-
+(*
 IF DewPoint_Abort OR OFA6Bar_Abort THEN
 	_Alarm		:= TRUE;
 ELSIF (NOT ALM_DCCOL.AlarmID[E_DCFACAlarm.eCriticalCondensationAlarm]) AND (NOT ALM_DCCOL.AlarmID[E_DCFACAlarm.e6BarLowOFAAirPressureAlarm]) THEN
@@ -57,14 +56,17 @@ fb_DebugCart_AP240Power(
 	ORetract		=> , 
 	DUT		:= _DUT_DebugCart_AP240Power);
 
-
+*)
 
 
 	
+PermSD();
+
 _DUT_DebugCart_Col_PCWValve.AutInp		:= (NOT ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWLeakageAlarm]) AND
 											(NOT ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWSupplyLeakageAlarm]) AND
 											(NOT ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWReturnLeakageAlarm]) AND
-											(NOT _Alarm);
+											(NOT ALM_DCCOL.AlarmID[E_DCFACAlarm.eCriticalCondensationAlarm]) AND 
+											(NOT ALM_DCCOL.AlarmID[E_DCFACAlarm.e6BarLowOFAAirPressureAlarm]);
 					
 fb_DebugCart_Col_PCWValve(
 	Sec_P:= Sec_P, 
@@ -87,44 +89,6 @@ fb_DebugCart_Col_PCWValve(
     <Action Name="PermSD" Id="{f9871df8-4830-4d77-a1c4-fe839ea41fec}">
       <Implementation>
         <ST><![CDATA[FC_BitToWord(
-	BOOL_00		:= TRUE, 
-	BOOL_01		:= TRUE, 
-	BOOL_02		:= TRUE, 
-	BOOL_03		:= TRUE, 
-	BOOL_04		:= TRUE, 
-	BOOL_05		:= TRUE, 
-	BOOL_06		:= TRUE, 
-	BOOL_07		:= TRUE, 
-	BOOL_08		:= TRUE, 
-	BOOL_09		:= TRUE, 
-	BOOL_10		:= TRUE, 
-	BOOL_11		:= TRUE, 
-	BOOL_12		:= TRUE, 
-	BOOL_13		:= TRUE, 
-	BOOL_14		:= TRUE, 
-	BOOL_15		:= TRUE, 
-	Output_Word		=> _AP240Power_Perm);
-	
-FC_BitToWord(
-	BOOL_00		:= FALSE, 
-	BOOL_01		:= FALSE, 
-	BOOL_02		:= FALSE, 
-	BOOL_03		:= FALSE, 
-	BOOL_04		:= FALSE, 
-	BOOL_05		:= FALSE, 
-	BOOL_06		:= FALSE, 
-	BOOL_07		:= FALSE, 
-	BOOL_08		:= FALSE, 
-	BOOL_09		:= FALSE, 
-	BOOL_10		:= FALSE, 
-	BOOL_11		:= FALSE, 
-	BOOL_12		:= FALSE, 
-	BOOL_13		:= FALSE, 
-	BOOL_14		:= FALSE, 
-	BOOL_15		:= FALSE, 
-	Output_Word		=> _AP240Power_SD);
-	
-FC_BitToWord(
 	BOOL_00		:= TRUE, 
 	BOOL_01		:= TRUE, 
 	BOOL_02		:= TRUE, 
@@ -166,38 +130,25 @@ FC_BitToWord(
     <LineIds Name="FB_DCMotor">
       <LineId Id="9" Count="0" />
       <LineId Id="22" Count="1" />
-      <LineId Id="50" Count="0" />
-      <LineId Id="48" Count="0" />
-      <LineId Id="168" Count="4" />
-      <LineId Id="166" Count="0" />
-      <LineId Id="164" Count="0" />
-      <LineId Id="47" Count="0" />
-      <LineId Id="173" Count="0" />
-      <LineId Id="51" Count="1" />
-      <LineId Id="25" Count="11" />
-      <LineId Id="45" Count="0" />
-      <LineId Id="49" Count="0" />
-      <LineId Id="46" Count="0" />
-      <LineId Id="39" Count="0" />
-      <LineId Id="24" Count="0" />
-      <LineId Id="104" Count="0" />
-      <LineId Id="133" Count="0" />
+      <LineId Id="207" Count="7" />
+      <LineId Id="241" Count="2" />
+      <LineId Id="215" Count="0" />
+      <LineId Id="222" Count="0" />
+      <LineId Id="225" Count="14" />
+      <LineId Id="204" Count="2" />
       <LineId Id="143" Count="0" />
       <LineId Id="132" Count="0" />
       <LineId Id="130" Count="0" />
+      <LineId Id="244" Count="1" />
       <LineId Id="105" Count="2" />
-      <LineId Id="122" Count="1" />
+      <LineId Id="122" Count="0" />
+      <LineId Id="266" Count="0" />
+      <LineId Id="123" Count="0" />
       <LineId Id="89" Count="14" />
       <LineId Id="65" Count="0" />
       <LineId Id="53" Count="0" />
     </LineIds>
     <LineIds Name="FB_DCMotor.PermSD">
-      <LineId Id="2" Count="16" />
-      <LineId Id="1" Count="0" />
-      <LineId Id="19" Count="0" />
-      <LineId Id="21" Count="16" />
-      <LineId Id="20" Count="0" />
-      <LineId Id="38" Count="0" />
       <LineId Id="40" Count="35" />
       <LineId Id="39" Count="0" />
     </LineIds>

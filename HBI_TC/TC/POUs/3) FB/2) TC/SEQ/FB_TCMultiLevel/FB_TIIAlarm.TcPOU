@@ -244,10 +244,10 @@ FOR i := 1 TO NoOfTIIAlm DO
 			ArrAlmBitBefDelay[E_TIIAlarm.TBOT_TC_ACPower_Signal]		:= (vIO.TBOT_TC_ACPower_Signal) AND (vIO.ipAPPresentSensor OR vIO.ipTesterPresent) AND (NOT bDebugCart) AND (NOT bDebugStation) AND bENs[14]; 
 			Arr_ms[e] 													:= 500;  (*TIIAlmText[e]:='TCDrawerCylRetractRS'*);
 			
-		(*E_TIIAlarm.DS_Facility_EAP_ACPower_Signal: 
-			e															:= E_TIIAlarm.DS_Facility_EAP_ACPower_Signal; 
-			ArrAlmBitBefDelay[E_TIIAlarm.ipTCCellDoorClosed]			:= bDebugStation AND vIO.dseap AND bENs[15]; 							
-			Arr_ms[e] 													:= 500;*)  (*TIIAlmText[e]:='DS_Facility_EAP_ACPower_Signal' *);
+		E_TIIAlarm.DS_Facility_EAP_ACPower_Signal: 
+			e																:= E_TIIAlarm.DS_Facility_EAP_ACPower_Signal; 
+			ArrAlmBitBefDelay[E_TIIAlarm.DS_Facility_EAP_ACPower_Signal]	:= bDebugStation AND DS_Facility_eapShutOffAllACPower AND bENs[15]; 							
+			Arr_ms[e] 														:= 500;  (*TIIAlmText[e]:='DS_Facility_EAP_ACPower_Signal' *);
 			
       	E_TIIAlarm.TBotSideDoorLockSignalNotDetected: 
 			e																:= E_TIIAlarm.TBotSideDoorLockSignalNotDetected; 
@@ -390,12 +390,9 @@ TIIAlarmLED															:=		ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipAPPowerOn
 																			ALMTC.Level[iLevel].ALarmID[E_AlarmID.DrawerRetractError			]	OR
 																			ALMTC.Level[iLevel].ALarmID[E_AlarmID.APIsNotInUPPosition			]	OR
 																			ALMTC.Common.AlarmID[E_ColAlarm.ipColumnFluid_PCW_Leakage			]	OR
-																			(
-																				bDebugCart AND 
-																				(ALMTC.Level[iLevel].AlarmID[E_AlarmID.TBotSideDoorCloseSignalNotDetected	]	OR
-																				 ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.TBotSideDoorLockSignalNotDetected	])
-																			) OR
-																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.TBOT_TC_ACPower_Signal   	]  ; 
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.TBotSideDoorLockSignalNotDetected	]	OR
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.TBOT_TC_ACPower_Signal   	]  OR	
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.DS_Facility_EAP_ACPower_Signal]; 
 																			
 TIIAlarmEPT															:= 		ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipAPPowerOn					]	OR
 																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipAPReady					]	OR
@@ -407,12 +404,9 @@ TIIAlarmEPT															:= 		ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipAPPowerO
 																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellFluidLeakage1			]	OR
 																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellFluidLeakage2			]	OR
 																			ALMTC.Common.AlarmID[E_ColAlarm.ipColumnFluid_PCW_Leakage			]	OR
-																			(
-																				bDebugCart AND 
-																				(ALMTC.Level[iLevel].AlarmID[E_AlarmID.TBotSideDoorCloseSignalNotDetected	]	OR
-																				 ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.TBotSideDoorLockSignalNotDetected	])
-																			) OR
-																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.TBOT_TC_ACPower_Signal   	]  ;
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.TBotSideDoorLockSignalNotDetected	]	OR
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.TBOT_TC_ACPower_Signal   	]	OR
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.DS_Facility_EAP_ACPower_Signal]; 
 																			
 
 (*
@@ -653,13 +647,15 @@ END_VAR
       <LineId Id="1045" Count="1" />
       <LineId Id="1028" Count="2" />
       <LineId Id="1210" Count="4" />
-      <LineId Id="1048" Count="4" />
-      <LineId Id="1038" Count="0" />
+      <LineId Id="1048" Count="0" />
+      <LineId Id="1051" Count="0" />
       <LineId Id="1022" Count="0" />
+      <LineId Id="1309" Count="0" />
       <LineId Id="1053" Count="1" />
-      <LineId Id="1057" Count="8" />
-      <LineId Id="1068" Count="4" />
+      <LineId Id="1057" Count="7" />
+      <LineId Id="1069" Count="1" />
       <LineId Id="1067" Count="0" />
+      <LineId Id="1308" Count="0" />
       <LineId Id="1066" Count="0" />
       <LineId Id="1055" Count="0" />
       <LineId Id="205" Count="1" />

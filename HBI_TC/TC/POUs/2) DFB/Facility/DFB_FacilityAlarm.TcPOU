@@ -100,7 +100,7 @@ CASE _State OF
 		ELSIF PV < LowLowSP THEN
 			_State								:= 21; // Low Low Alarm - Delay
 		ELSIF _State_Timer >= WarningTimer THEN
-			_State								:= 21; // Low Low Alarm - Delay
+			_State								:= 22; // Low Low Alarm - Delay
 		END_IF
 	
 	21: (*Low Low Alarm - Delay*)
@@ -115,11 +115,33 @@ CASE _State OF
 		IF PV >= LowSP + DB THEN
 			_State								:= 0; // Idle
 		ELSIF _State_Timer >= AlarmTimer THEN
-			_State								:= 22; // Low Low Alarm - Send Event
+			_State								:= 24; // Low Low Alarm - Send Event
 		END_IF
-		
-	22: (*Low Low Alarm - Send Event*)
+	
+	22:	(*Low Alarm - Send Event*)
 		_Last_State								:= 22;
+		
+		(*Action*)
+		Warning									:= TRUE;
+		Alarm									:= FALSE;
+		Abort									:= FALSE;
+		
+		// Event - AbortInProgress
+		CmdAndEventProcess.fbCmdAndEventUpdate.M_AddEvent(
+			sLogName							:= LogName, 
+			eEventName							:= EventName, 
+			eModuleID							:= ModuleID, 
+			iParam								:= _EmptyEvent.iParam,
+			sParam								:= _EmptyEvent.sParam, 
+			bParam								:= _EmptyEvent.bParam, 
+			dParam								:= _EmptyEvent.dParam,
+			sFailReason							:= '');
+		
+		(*Transition*)
+		_State									:= 25; // Low Low Alarm - Check abort time
+		
+	24: (*Low Low Alarm - Send Event*)
+		_Last_State								:= 24;
 		
 		(*Action*)
 		Warning									:= TRUE;
@@ -138,10 +160,23 @@ CASE _State OF
 			sFailReason							:= '');
 		
 		(*Transition*)
-		_State									:= 23; // Low Low Alarm - Check abort time
+		_State									:= 26; // Low Low Alarm - Check abort time
 		
-	23: (*Low Low Alarm - Check abort time*)
-		_Last_State								:= 23;
+	25: (*Low Alarm - Check abort time*)
+		_Last_State								:= 25;
+		
+		(*Action*)
+		Warning									:= TRUE;
+		Alarm									:= FALSE;
+		Abort									:= FALSE;
+		
+		(*Transition*)
+		IF _State_Timer >= AbortTimer THEN
+			_State								:= 40; // Abort
+		END_IF
+		
+	26: (*Low Low Alarm - Check abort time*)
+		_Last_State								:= 26;
 		
 		(*Action*)
 		Warning									:= TRUE;
@@ -150,11 +185,24 @@ CASE _State OF
 		
 		(*Transition*)
 		IF _State_Timer >= AbortTimer THEN
-			_State								:= 29; // Abort
+			_State								:= 41; // Abort
 		END_IF
 		
-	29: (*Abort*)
-		_Last_State								:= 29;
+	40: (*Abort*)
+		_Last_State								:= 40;
+		
+		(*Action*)
+		Warning									:= TRUE;
+		Alarm									:= FALSE;
+		Abort									:= TRUE;
+		
+		(*Transition*)
+		IF PV >= LowSP + DB THEN
+			_State								:= 0; // Idle
+		END_IF
+		
+	41: (*Abort*)
+		_Last_State								:= 41;
 		
 		(*Action*)
 		Warning									:= TRUE;
@@ -216,7 +264,15 @@ END_CASE]]></ST>
       <LineId Id="90" Count="2" />
       <LineId Id="95" Count="2" />
       <LineId Id="83" Count="0" />
-      <LineId Id="102" Count="0" />
+      <LineId Id="225" Count="0" />
+      <LineId Id="227" Count="0" />
+      <LineId Id="226" Count="0" />
+      <LineId Id="228" Count="0" />
+      <LineId Id="232" Count="2" />
+      <LineId Id="229" Count="1" />
+      <LineId Id="235" Count="11" />
+      <LineId Id="231" Count="0" />
+      <LineId Id="222" Count="0" />
       <LineId Id="105" Count="5" />
       <LineId Id="103" Count="0" />
       <LineId Id="139" Count="1" />
@@ -227,11 +283,18 @@ END_CASE]]></ST>
       <LineId Id="116" Count="1" />
       <LineId Id="119" Count="4" />
       <LineId Id="118" Count="0" />
-      <LineId Id="124" Count="5" />
+      <LineId Id="124" Count="4" />
+      <LineId Id="247" Count="0" />
+      <LineId Id="249" Count="10" />
+      <LineId Id="248" Count="0" />
+      <LineId Id="129" Count="0" />
       <LineId Id="131" Count="5" />
       <LineId Id="130" Count="0" />
       <LineId Id="137" Count="1" />
       <LineId Id="145" Count="2" />
+      <LineId Id="260" Count="0" />
+      <LineId Id="262" Count="10" />
+      <LineId Id="261" Count="0" />
       <LineId Id="47" Count="0" />
     </LineIds>
   </POU>

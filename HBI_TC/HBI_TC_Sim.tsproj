@@ -48,7 +48,7 @@
 					<Vars VarGrpType="1">
 						<Name>PlcTask Inputs</Name>
 						<Var>
-							<Name>GVL_EAP.eapShutOffAllACPower</Name>
+							<Name>GVL_EAP.DS_Facility_eapShutOffAllACPower</Name>
 							<Comment>
 								<![CDATA[ shut off Tester and AP AC Power, 0: On, 1: Off //only for debug cart and station]]>
 							</Comment>

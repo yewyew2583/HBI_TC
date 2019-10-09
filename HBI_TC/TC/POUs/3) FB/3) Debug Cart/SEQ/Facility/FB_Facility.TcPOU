@@ -80,8 +80,8 @@ fb_AIN_6BarOFA(
 	RAW		:= GVL_TC.fbDebugColumn.stDebugColumnDIO.ipAnlgDBColumnTstAirPressure, 
 	Hi_RAW		:= 16384, 
 	Lo_RAW		:= 1966, 
-	Hi_PV		:= 10000, // kPA
-	Lo_PV		:= -1000, // kPA 
+	Hi_PV		:= 1000, // kPA
+	Lo_PV		:= -100, // kPA 
 	AHH_Enable		:= _DUT_AIN_6BarOFA.AHH_Enable, 
 	AHH_SP		:= _DUT_AIN_6BarOFA.AHH_SP, 
 	AH_Enable		:= _DUT_AIN_6BarOFA.AH_Enable, 
@@ -113,7 +113,7 @@ fb_DewPoint_Alarm(
 	DB		:= 0.2, //When recover, need extra 0.2 degree celsius
 	LogName		:= 'DewPoint', 
 	ModuleID		:= E_ModuleID.NA, 
-	EventName		:= E_EventName.DewPoint_AbortInProgress, 
+	EventName		:= E_EventName.DewPointAbortInProgress, 
 	Warning		=> DewPoint_Warning, 
 	Alarm		=> DewPoint_Alarm, 
 	Abort		=> DewPoint_Abort, 
@@ -130,7 +130,7 @@ fb_6BarOFA_Alarm(
 	DB		:= 5,  //when recover, need extra 5KPa
 	LogName		:= 'OFA 6Bar', 
 	ModuleID		:= E_ModuleID.NA, 
-	EventName		:= E_EventName.OFA6Bar_AbortInProgress, 
+	EventName		:= E_EventName.SixbarOFAAbortInProgress, 
 	Warning		=> OFA6Bar_Warning, 
 	Alarm		=> OFA6Bar_Alarm, 
 	Abort		=> OFA6Bar_Abort, 

@@ -21,6 +21,13 @@ VAR
 	fbBD_ipBdoor 					: Tc3_HBI_Utilities.FB_BackDoor_Digital;
 	fb_facility_DewPoint_OFA6Bar 	: FB_Facility;
 	
+	
+	noDBColAlarm 				: INT	:= NO_OF_TII_SENSOR;	//col alrm count will change later
+	ArrDelayAlarm 				: ARRAY[1..NO_OF_TII_SENSOR] OF FB_AlarmDelay;
+	ArrAlmBitBefDelay 			: ARRAY[1..NO_OF_TII_SENSOR] OF BOOL;
+	ArrAlmBitAftDelay 			: ARRAY[1..NO_OF_TII_SENSOR] OF BOOL;
+	Arr_ms 						: ARRAY[1..NO_OF_TII_SENSOR] OF INT;
+	
 	timInc 							: TON;
 END_VAR
 ]]></Declaration>
@@ -28,9 +35,116 @@ END_VAR
       <ST><![CDATA[Conversion(isSimulation:=bAnalogIOSim);
 M_IOMapping();
 M_PCW_Cyclic();
-
+AlarmUpdate();
 fb_DebugCart_Motor();]]></ST>
     </Implementation>
+    <Method Name="AlarmUpdate" Id="{9c21e4e3-806f-4cfd-b42e-5ef79c5e31a4}">
+      <Declaration><![CDATA[METHOD AlarmUpdate : BOOL
+VAR
+	i			: INT;
+	eAlarm		: E_DCFACAlarm;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[fb_facility_DewPoint_OFA6Bar(); //debug column facility check OFA6bar and Dew point
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////// Warning Trigger Area ////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Warning up after warning timer expired, auto clear
+ALM_DCCOL.AlarmID[E_DCFACAlarm.e6BarLowOFAAirPressureWarning]		:= OFA6Bar_Warning;
+
+//Warning up after warning timer expired, auto clear
+ALM_DCCOL.AlarmID[E_DCFACAlarm.eCondensationWarning]				:= DewPoint_Warning;
+
+//'Warning: PCW supply high temp' auto clear 14
+ALM_DCCOL.AlarmID[E_DCFACAlarm.ePCWSupplyHighTempWarning]			:= (stDebugColumnDIO.ipDBColumnPCWSupplyTemperature > lmtPCWSupplyHighTempWarning_Limit); 
+
+//'Warning: 9 bar OFA LH air pressure low' 850
+ALM_DCCOL.AlarmID[E_DCFACAlarm.e9BarLowOFAAirPressureWarning]		:= (stDebugColumnDIO.ipDBColumnAPAirPressure < lmt9BarLowOFAAirPressureWarning_limit);
+
+//'Warning: Excessive heat load into PCW' 14  THEN		
+ALM_DCCOL.AlarmID[E_DCFACAlarm.eExcessiveHeatLoadIntoPCWWarning]	:= (stDebugColumnDIO.ipDBColumnPCWReturnTemperature - stDebugColumnDIO.ipDBColumnPCWSupplyTemperature > lmtExcessiveHeatLoadIntoPCWWarning_Limit);
+
+
+IF DewPoint_Abort OR OFA6Bar_Abort THEN
+	//after delay 60seconds, trigger EAP to shut off AP & tester 240 AC power in full cell stack.
+	stDebugColumnVIO.bShutOffAllACPower								:= TRUE;
+ELSIF (NOT ALM_DCCOL.AlarmID[E_DCFACAlarm.eCriticalCondensationAlarm]) AND (NOT ALM_DCCOL.AlarmID[E_DCFACAlarm.e6BarLowOFAAirPressureAlarm]) THEN
+	stDebugColumnVIO.bShutOffAllACPower								:= FALSE;
+END_IF
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////// Alarm Trigger Area (with delay time) ////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+FOR i:=1 TO noDBColAlarm DO	
+	CASE i OF
+        E_DCFACAlarm.e6BarLowOFAAirPressureAlarm: 
+			eAlarm															:= E_DCFACAlarm.e6BarLowOFAAirPressureAlarm; 
+			ArrAlmBitBefDelay[E_DCFACAlarm.e6BarLowOFAAirPressureAlarm]		:= OFA6Bar_Alarm;
+			Arr_ms[eAlarm] 													:= 500;  (*TIIAlmText[e]:='AP_PowerOn'*); 
+			
+	    E_DCFACAlarm.eCriticalCondensationAlarm: 
+			eAlarm															:= E_DCFACAlarm.eCriticalCondensationAlarm; 
+			ArrAlmBitBefDelay[E_DCFACAlarm.eCriticalCondensationAlarm]		:= DewPoint_Alarm; 	
+			Arr_ms[eAlarm] 													:= 500;  (*TIIAlmText[e]:='AP_Ready' 		    	*);     
+                   
+	    E_DCFACAlarm.eSystemPCWLeakageAlarm:
+			eAlarm															:= E_DCFACAlarm.eSystemPCWLeakageAlarm; 
+			ArrAlmBitBefDelay[E_DCFACAlarm.eSystemPCWLeakageAlarm]			:= stDebugColumnDIO.eapDBColumnPCWLeakage; 
+			Arr_ms[eAlarm] 													:= 500;  //TIIAlmText[e]:='CellGroundFault'  		;
+		E_DCFACAlarm.eSystemPCWReturnLeakageAlarm:
+			eAlarm															:= E_DCFACAlarm.eSystemPCWReturnLeakageAlarm; 
+			ArrAlmBitBefDelay[E_DCFACAlarm.eSystemPCWReturnLeakageAlarm]	:= stDebugColumnDIO.eapDBColumnPCWReturnLeakage; 
+			Arr_ms[eAlarm] 													:= 500;  //TIIAlmText[e]:='CellGroundFault'  		;  
+		E_DCFACAlarm.eSystemPCWSupplyLeakageAlarm:
+			eAlarm															:= E_DCFACAlarm.eSystemPCWSupplyLeakageAlarm; 
+			ArrAlmBitBefDelay[E_DCFACAlarm.eSystemPCWSupplyLeakageAlarm]	:= stDebugColumnDIO.eapDBColumnPCWSupplyLeakage; 
+			Arr_ms[eAlarm] 													:= 500;  //TIIAlmText[e]:='CellGroundFault'  		;  
+	END_CASE
+	
+	//Delay Library Alm Bit
+	ArrDelayAlarm[i](	alarmState			:= ArrAlmBitBefDelay[i],
+						triggerAlarmState	=> ArrAlmBitAftDelay[i],
+						alarmResetTimer		:= stDebugColumnVIO.bDebugColErrClear,
+						msec				:= Arr_ms[i]);	//DelayAlmBit
+	
+	IF ArrAlmBitAftDelay[i] THEN
+		ALM_DCCOL.AlarmID[i]				:= TRUE;
+	END_IF
+			
+END_FOR
+
+
+
+
+(*
+IF DewPoint_Alarm THEN
+	//Alarm up after alarm timer expired
+	ALM_DCCOL.AlarmID[E_DCFACAlarm.eCriticalCondensationAlarm]		:=TRUE;
+END_IF
+
+IF OFA6Bar_Alarm THEN
+	//Alarm up after alarm timer expired
+	ALM_DCCOL.AlarmID[E_DCFACAlarm.e6BarLowOFAAirPressureAlarm]		:=TRUE;
+END_IF
+
+	
+IF stDebugColumnDIO.eapDBColumnPCWLeakage OR stDebugColumnDIO.eapDBColumnPCWSupplyLeakage OR stDebugColumnDIO.eapDBColumnPCWReturnLeakage THEN		
+	IF stDebugColumnDIO.eapDBColumnPCWLeakage THEN
+		ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWLeakageAlarm]:=TRUE;
+	END_IF
+	IF stDebugColumnDIO.eapDBColumnPCWSupplyLeakage THEN
+		ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWSupplyLeakageAlarm]:=TRUE;
+	END_IF
+	IF stDebugColumnDIO.eapDBColumnPCWReturnLeakage THEN
+		ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWReturnLeakageAlarm]:=TRUE;
+	END_IF
+END_IF *)]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="Conversion" Id="{51823aa7-0cba-4746-93d5-cd64ea2d0196}">
       <Declaration><![CDATA[METHOD Conversion : BOOL
 VAR_INPUT
@@ -391,17 +505,17 @@ END_VAR
 //stDebugColDIO.ipDBColumnPCWReturnTemperature  :=  stDebugColDIO.ipAnlgDBColumnPCWReturnTemperature  ;
 
 
-	stDebugColumnVIO.ipDBColumnPCWLeakage		:= NOT fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , 
+	stDebugColumnVIO.ipDBColumnPCWLeakage		:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , 
 	                                            					bActual:=stDebugColumnDIO.ipDBColumnPCWLeakage , 
-	                                            					bSimu:=bSimuLeakage , 
+	                                            					bSimu:=FALSE , 
 	                                            					iBackDoor:=stDebugColumnBIO.ipDBColumnPCWLeakage );
-	stDebugColumnVIO.ipDBColumnPCWSupplyLeakage		:= NOT fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , 
+	stDebugColumnVIO.ipDBColumnPCWSupplyLeakage		:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , 
 	                                            					bActual:=stDebugColumnDIO.ipDBColumnPCWSupplyLeakage , 
-	                                            					bSimu:=bSimuLeakage , 
+	                                            					bSimu:=FALSE , 
 	                                            					iBackDoor:=stDebugColumnBIO.ipDBColumnPCWSupplyLeakage );
-	stDebugColumnVIO.ipDBColumnPCWReturnLeakage		:= NOT fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , 
+	stDebugColumnVIO.ipDBColumnPCWReturnLeakage		:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , 
 	                                            					bActual:=stDebugColumnDIO.ipDBColumnPCWReturnLeakage , 
-	                                            					bSimu:=bSimuLeakage , 
+	                                            					bSimu:=FALSE , 
 	                                            					iBackDoor:=stDebugColumnBIO.ipDBColumnPCWReturnLeakage );
 																				
 //EAP===========================================================================================																	
@@ -438,7 +552,7 @@ END_IF
 IF NOT stDebugColumnVIO.bDiagnosticMode	THEN		
 //Colum DIO is Control by PLC, Not Direct accessed by TA
 	stDebugColumnDIO.opDBColumnHotAirExhaustFan := stDebugColumnVIO.opDBColumnHotAirExhaustFan;		
-	//stDebugColumnDIO.opDBColumnPCWValve       := stDebugColumnVIO.opDBColumnPCWValve;
+	//stDebugColumnDIO.opDBColumnPCWValve       	:= stDebugColumnVIO.opDBColumnPCWValve;
 	stDebugColumnDIO.opDBColumnPCWValve			:= DebugCart_ColumnPCWValve;
 	stDebugColumnDIO.opDBColumnTstAirSol        := stDebugColumnVIO.opDBColumnTstAirSol;				
 	stDebugColumnDIO.opDBColumnAPAirSol         := stDebugColumnVIO.opDBColumnAPAirSol;
@@ -481,7 +595,7 @@ END_VAR
 	//tempReal:=stDebugColDIO.ipDBColumnPCWReturnTemperature  ;
 //</_____>
 //<PCW Behavior> ALM_LC01
-
+(*-----------------------------
 	fb_facility_DewPoint_OFA6Bar(); //debug column facility check OFA6bar and Dew point
 	
 	//Warning up after warning timer expired, auto clear
@@ -546,7 +660,7 @@ END_VAR
 		//'Alarm: System PCW Leakage'
 		//stDebugColumnVIO.bShutOffPCW:=TRUE;
 		//stDebugColumnVIO.bShutOffAir:=TRUE;
-	END_IF
+	END_IF -----------------------------*)
 //</PCW Behavior>
 
 //**** Asign and Set the Alarm bit later. [DONE]
@@ -573,7 +687,7 @@ IF stDebugColumnVIO.bDebugColErrClear THEN
 		//stAlmMod.Common.AlarmID[vIO.iAlmIDToRset]:=FALSE;
 		ALM_DCCOL.AlarmID[stDebugColumnVIO.iAlmIDToRset]:=FALSE;
 	END_IF
-	stDebugColumnVIO.bDebugColErrClear:=FALSE;
+	stDebugColumnVIO.bDebugColErrClear:= FALSE;
 END_IF
 
 
@@ -647,6 +761,48 @@ END_VAR
       <LineId Id="34" Count="0" />
       <LineId Id="61" Count="0" />
       <LineId Id="56" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_DebugColumn.AlarmUpdate">
+      <LineId Id="6" Count="0" />
+      <LineId Id="107" Count="1" />
+      <LineId Id="133" Count="0" />
+      <LineId Id="132" Count="0" />
+      <LineId Id="109" Count="0" />
+      <LineId Id="103" Count="0" />
+      <LineId Id="110" Count="1" />
+      <LineId Id="105" Count="0" />
+      <LineId Id="113" Count="0" />
+      <LineId Id="115" Count="0" />
+      <LineId Id="117" Count="0" />
+      <LineId Id="130" Count="1" />
+      <LineId Id="121" Count="0" />
+      <LineId Id="123" Count="2" />
+      <LineId Id="169" Count="0" />
+      <LineId Id="176" Count="5" />
+      <LineId Id="126" Count="0" />
+      <LineId Id="112" Count="0" />
+      <LineId Id="134" Count="1" />
+      <LineId Id="106" Count="0" />
+      <LineId Id="136" Count="2" />
+      <LineId Id="145" Count="14" />
+      <LineId Id="161" Count="2" />
+      <LineId Id="160" Count="0" />
+      <LineId Id="165" Count="2" />
+      <LineId Id="164" Count="0" />
+      <LineId Id="143" Count="0" />
+      <LineId Id="199" Count="4" />
+      <LineId Id="189" Count="1" />
+      <LineId Id="210" Count="0" />
+      <LineId Id="207" Count="0" />
+      <LineId Id="209" Count="0" />
+      <LineId Id="208" Count="0" />
+      <LineId Id="186" Count="1" />
+      <LineId Id="140" Count="2" />
+      <LineId Id="9" Count="4" />
+      <LineId Id="16" Count="3" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="54" Count="11" />
+      <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="FB_DebugColumn.Conversion">
       <LineId Id="11" Count="0" />
@@ -792,7 +948,9 @@ END_VAR
       <LineId Id="81" Count="0" />
     </LineIds>
     <LineIds Name="FB_DebugColumn.M_PCW_Cyclic">
-      <LineId Id="331" Count="160" />
+      <LineId Id="331" Count="103" />
+      <LineId Id="501" Count="11" />
+      <LineId Id="447" Count="44" />
       <LineId Id="140" Count="0" />
     </LineIds>
     <LineIds Name="FB_DebugColumn.P_stVIO.Get">
