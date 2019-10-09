@@ -24,7 +24,6 @@ STRUCT
 	opDBStnPCWValve                 	: BOOL;
 	opDBStnPCWFlowBypassValve			: BOOL;
 	opDBStnBypassAPAirSupplySol			: BOOL;
-	//opDBStnBypassAPAirSupplySol		:BOOL;
 	opDBStn24VPowerEnable				: BOOL;
 	opDBStnLeakFlowPCWValve         	: BOOL;
 	opDBStnLowFlowPCWValve				: BOOL;

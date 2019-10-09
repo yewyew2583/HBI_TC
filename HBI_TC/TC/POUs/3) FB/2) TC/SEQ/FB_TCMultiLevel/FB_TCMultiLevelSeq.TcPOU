@@ -153,10 +153,6 @@ VAR
 	TC_APAirSupplySol_Reset				: R_TRIG;
 	TC_TesterDrawerAirSupplySol_Reset	: R_TRIG;
 END_VAR
-
-VAR PERSISTENT
-	_Start_Up							: BOOL; // BOOL to indicate PLC first start up
-END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[]]></ST>
@@ -371,7 +367,7 @@ PermSD();
 TC_AP240ACPower_Precondition		:= (
 											stMLVIO.ipAPPresentSensor AND stMLVIO.ipAPReady	AND	//precondition
 											(NOT itl_opAP_240ACPwrEnable) AND 					//TIIAlarm interlock checking
-											(NOT eapShutOffAllACPower OR NOT bDebugCart) AND	//EAP shut off from debug station facility. 1: shutoff, 0: Normal
+											(NOT DS_Facility_eapShutOffAllACPower OR NOT bDebugCart) AND	//EAP shut off from debug station facility. 1: shutoff, 0: Normal
 											(NOT TBOT_TC_ACPower_Signal OR bDebugCart)				//TBOT signal to TC. 1:shutoff, 0: Normal
 										) AND			
 										Ap240AcPowerMode <> 1;								//power on and off manual command);
@@ -475,7 +471,7 @@ stMLVIO.opCellPCWValve*) )THEN
 	//	stMLVIO.bDPSPowerOnOff:=FALSE;
 	END_IF	
 	//OffPCWValve and All Output If Leakage
-	IF isLeakage OR isGroundFault OR ( NOT stMLVIO.ipTesterPresent ) OR TBOT_TC_ACPower_Signal OR eapShutOffAllACPower THEN
+	IF isLeakage OR isGroundFault OR ( NOT stMLVIO.ipTesterPresent ) OR TBOT_TC_ACPower_Signal OR DS_Facility_eapShutOffAllACPower THEN
 		stMLVIO.bChkTesterOn:=FALSE;	
 		stMLVIO.opTst240VACPwrEnable:=FALSE;
 		stMLVIO.bDPSPowerOnOff:=FALSE;
@@ -722,7 +718,8 @@ END_VAR
 								OR	ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipCellFluidLeakage2		] 
 								OR	ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipCellGroundFault 	   	] 
 								OR	ALMTC.Common.AlarmID[E_ColAlarm.ipColumnFluid_PCW_Leakage 		]
-								OR	ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.TBOT_TC_ACPower_Signal 	];		
+								OR	ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.TBOT_TC_ACPower_Signal 	]
+								OR	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.DS_Facility_EAP_ACPower_Signal];		
 	
 	itl_opCell_24VPowerEnable:=	(*	ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipAPPresentSensor		]
 								OR*)ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipCellFluidLeakage1		] 
@@ -737,7 +734,8 @@ END_VAR
 	                            OR	ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipCellFluidLeakage2		] 
 	                            OR	ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipCellGroundFault 	   	] 
 								OR	ALMTC.Common.AlarmID[E_ColAlarm.ipColumnFluid_PCW_Leakage 		]
-								OR	ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.TBOT_TC_ACPower_Signal 	];
+								OR	ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.TBOT_TC_ACPower_Signal 	]
+								OR	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.DS_Facility_EAP_ACPower_Signal];	
 	                                
 	itl_opCellPCWValve:=			ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipTesterPowerOn			] 
 								OR	ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipCellFluidLeakage1		] 
@@ -750,16 +748,15 @@ END_VAR
 	                            OR	ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipCellFluidLeakage2		] 
 	                            OR	ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipCellGroundFault 	   	]
 								OR	ALMTC.Common.AlarmID[E_ColAlarm.ipColumnFluid_PCW_Leakage 		]
-								OR	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipAPReady				];
+								OR	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipAPReady				]
+								OR	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.TBotSideDoorLockSignalNotDetected	];
 	                               
 	itl_opTesterDrawerAirSupplySol:=	(*	ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipTesterPowerOn	   		]
 										OR*)ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipCellFluidLeakage1		] 
 	                            		OR	ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipCellFluidLeakage2		] 
 	                            		OR	ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipCellGroundFault 	   	] 
 										OR	ALMTC.Common.AlarmID[E_ColAlarm.ipColumnFluid_PCW_Leakage 		]
-										OR	(bDebugCart AND 
-											(ALMTC.Level[iLevel].AlarmID[E_AlarmID.TBotSideDoorCloseSignalNotDetected	] OR
-											 ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.TBotSideDoorLockSignalNotDetected	]));
+										OR	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.TBotSideDoorLockSignalNotDetected	];
 								    
 	(*itl_opTIUSktAirSol_1:=		(*	ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipAPPresentSensor	   	] 		
 								OR	ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipCellFluidLeakage1		] 
@@ -791,12 +788,7 @@ END_VAR
 	                            	OR	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellGroundFault 	   		] 	
 									OR	ALMTC.Common.AlarmID[E_ColAlarm.ipColumnFluid_PCW_Leakage			]
 									OR	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.TBOT_TC_ACPower_Signal		]
-									//OR column present?
-									//OR facility leak?
-									
-									OR	(bDebugCart AND 
-											(ALMTC.Level[iLevel].AlarmID[E_AlarmID.TBotSideDoorCloseSignalNotDetected	] OR
-											 ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.TBotSideDoorLockSignalNotDetected	]));
+									OR	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.TBotSideDoorLockSignalNotDetected	];
 										
 									
 //</TII_Interlock_Bit>
@@ -899,8 +891,8 @@ END_VAR
 //Do not have manual command, so we can on automatically if pass permissive.
 IF bDebugCart THEN
 	stMLVIO.opAPSafeToEngage	:=	(stMLVIO.ipTCDrawerCylDownRS AND stMLVIO.ipTCDrawerCylRetractRS AND NOT stMLVIO.ipTCDrawerCylExtendRS) 	//pass criteria: drawer retract: 1, drawer down: 1, drawer extend: 0
-							  		AND (stMLVIO.ipTCCellTbotSideDoorOpenCloseStatus01 AND stMLVIO.ipTCCellTbotSideDoorOpenCloseStatus02) 	//pass criteria: front door closed1&2: 1 
-									AND stMLVIO.ipTCCellDoorOpenCloseStatus 																//pass criteria: back door/ TC door closed : 1
+							  		//AND (stMLVIO.ipTCCellTbotSideDoorOpenCloseStatus01 AND stMLVIO.ipTCCellTbotSideDoorOpenCloseStatus02) 	//pass criteria: front door closed1&2: 1 
+									//AND stMLVIO.ipTCCellDoorOpenCloseStatus 																//pass criteria: back door/ TC door closed : 1
 									AND	(stMLVIO.ipTCCellTbotSideDoorLocked01 AND stMLVIO.ipTCCellTbotSideDoorLocked02)						//pass criteria: front door locked1&2: 1
 									AND stMLVIO.ipTCCellDoorClosed 																			//pass criteria: back door/ TC door locked: 1
 									AND stMLVIO.opTesterDrawerAirSupplySol 																	//pass criteria: tester air 6 bar valve: 1
@@ -909,7 +901,7 @@ IF bDebugCart THEN
 															 	
 ELSE
 	stMLVIO.opAPSafeToEngage	:=	(stMLVIO.ipTCDrawerCylDownRS AND stMLVIO.ipTCDrawerCylRetractRS) 									//pass criteria: drawer retract: 1, drawer down: 1
-									AND stMLVIO.ipTCCellDoorOpenCloseStatus 															//pass criteria: back door/ TC door closed : 1
+									//AND stMLVIO.ipTCCellDoorOpenCloseStatus 															//pass criteria: back door/ TC door closed : 1
 									AND stMLVIO.ipTCCellDoorClosed 																		//pass criteria: back door/ TC door locked: 1
 									AND stMLVIO.opTesterDrawerAirSupplySol  															//pass criteria: tester air 6 bar valve: 1
 									AND ((NOT stMLVIO.ipTesterPresent) OR (stMLVIO.ipTesterPresent AND stMLVIO.ipTesterLatchesClosed));	//pass criteria: testerpresent : 0 OR tester present and tester latches closed : 1
@@ -923,6 +915,9 @@ END_IF
 //<Output>
 	IF stMLVIO.bDiagnosticMode=FALSE THEN
 		stMLDIO.opAP240ACPwrEnable  			:= 		NOT	itl_opAP_240ACPwrEnable  							AND	stMLVIO.opAP240ACPwrEnable  				;//AND stMLVIO.bTstDelInt	(*&!	bTstAC	Off*)	;
+		stMLDIO.ipSpare_1						:=		stMLVIO.ipSpare_1;
+		stMLDIO.ipSpare_2						:=		stMLVIO.ipSpare_2;
+		stMLDIO.ipSpare_3						:=		stMLVIO.ipSpare_3;
 		stMLDIO.opDoorOpenReqLED				:= 		NOT	itl_opDoorOpenReqLED								AND	stMLVIO.opDoorOpenReqLED					;
 		stMLDIO.opAlarmLED 						:= 		NOT	itl_opAlarmLED 				        				AND	stMLVIO.opAlarmLED 							;		
 		stMLDIO.opTCCellAbortFlowBtnLED			:= 		NOT	itl_opTesterAPDetachReqBtnLED						AND	stMLVIO.opTCCellAbortFlowBtnLED		    	;
@@ -935,6 +930,8 @@ END_IF
 		stMLDIO.opCellDrawerCylUp 				:= 		(NOT	itl_opCellDrawerCylUp 		OR TRUE)			AND stMLVIO.opCellDrawerCylUp 					; //:= fbTCDrawerUpDn.P_opExtend; 		
 		stMLDIO.opCellDrawerCylDown 			:= 		(NOT	itl_opCellDrawerCylDown 	OR TRUE)			AND	stMLVIO.opCellDrawerCylDown 				; //:= fbTCDrawerUpDn.P_opRetract; 
 		stMLDIO.opTst240VACPwrEnable 			:= 		NOT	itl_opTst240VACPwrEnable 							AND	stMLVIO.opTst240VACPwrEnable 				;
+		stMLDIO.ipSpare_9						:=		stMLVIO.ipSpare_9;
+		stMLDIO.ipSpare_10						:=		stMLVIO.ipSpare_10;
 		stMLDIO.opCellPCWValve  				:= 		NOT	itl_opCellPCWValve  			    				AND	stMLVIO.opCellPCWValve  					;	//AND stMLVIO.bTstDelInt	;
 		stMLDIO.opTIUSktAirSol_1 				:= 		NOT	itl_opTIUSktAirSol_1 								AND stMLVIO.opTIUSktAirSol_1 					;
 		stMLDIO.opTIUSktAirSol_2				:= 		NOT	itl_opTIUSktAirSol_2								AND stMLVIO.opTIUSktAirSol_2					;	
@@ -2527,12 +2524,14 @@ END_CASE]]></ST>
     <LineIds Name="FB_TCMultiLevelSeq.M_InterlockTII">
       <LineId Id="6" Count="8" />
       <LineId Id="122" Count="0" />
+      <LineId Id="150" Count="0" />
       <LineId Id="15" Count="7" />
       <LineId Id="123" Count="0" />
       <LineId Id="133" Count="0" />
       <LineId Id="77" Count="0" />
       <LineId Id="23" Count="2" />
       <LineId Id="121" Count="0" />
+      <LineId Id="151" Count="0" />
       <LineId Id="26" Count="1" />
       <LineId Id="132" Count="0" />
       <LineId Id="29" Count="1" />
@@ -2540,9 +2539,9 @@ END_CASE]]></ST>
       <LineId Id="131" Count="0" />
       <LineId Id="36" Count="4" />
       <LineId Id="89" Count="0" />
+      <LineId Id="144" Count="0" />
       <LineId Id="41" Count="5" />
-      <LineId Id="115" Count="1" />
-      <LineId Id="114" Count="0" />
+      <LineId Id="115" Count="0" />
       <LineId Id="48" Count="12" />
       <LineId Id="129" Count="1" />
       <LineId Id="61" Count="0" />
@@ -2555,9 +2554,7 @@ END_CASE]]></ST>
       <LineId Id="102" Count="0" />
       <LineId Id="108" Count="0" />
       <LineId Id="138" Count="0" />
-      <LineId Id="112" Count="1" />
-      <LineId Id="107" Count="0" />
-      <LineId Id="97" Count="2" />
+      <LineId Id="98" Count="0" />
       <LineId Id="101" Count="0" />
       <LineId Id="100" Count="0" />
       <LineId Id="68" Count="0" />
@@ -2606,7 +2603,15 @@ END_CASE]]></ST>
       <LineId Id="17929" Count="0" />
       <LineId Id="17973" Count="0" />
       <LineId Id="17926" Count="0" />
-      <LineId Id="17151" Count="21" />
+      <LineId Id="17151" Count="2" />
+      <LineId Id="18020" Count="1" />
+      <LineId Id="18012" Count="0" />
+      <LineId Id="17154" Count="9" />
+      <LineId Id="18015" Count="0" />
+      <LineId Id="17165" Count="0" />
+      <LineId Id="18019" Count="0" />
+      <LineId Id="18017" Count="0" />
+      <LineId Id="17166" Count="6" />
       <LineId Id="17270" Count="1" />
       <LineId Id="17173" Count="1" />
       <LineId Id="17760" Count="0" />
