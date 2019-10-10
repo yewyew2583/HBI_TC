@@ -46,7 +46,6 @@ VAR
 	_eFailEvent							: E_EventName;
 	_ePassEvent							: E_EventName;
 	stMultiLevelVIO						: ST_TCMultiLevel_VIO;
-	_MLevelVIO_Monitor					: ST_TCMultiLevel_VIO; // Multi-level IO for monitor purpose
 	_arrRCMD							: ARRAY [1..NO_OF_CMD_BUFFER] OF ST_Command;
 	_arrEvent							: ARRAY [1..NO_OF_EVENT_BUFFER] OF ST_Event;
 	//fbCmdAndEventUpdate: FB_CmdAndEventUpdate;
@@ -65,12 +64,6 @@ END_IF
 IF (NOT start) THEN
 	RETURN;
 END_IF
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//	Door Open Permissive
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-_MLevelVIO_Monitor 																	:= arrTCMultiLevel[_iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO;
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -232,11 +225,11 @@ CASE iStep OF
 		
 		(*Transition*)
 		IF timDwrUp.Q (*OR (NOT arrTCMultiLevel[_iLevel].stGblParam.bDrawerUpBefFrtDoorOpen)*) THEN
-			stMultiLevelVIO.opAPAirSupplySol 									:= FALSE;
-			stMultiLevelVIO.opTesterDrawerAirSupplySol 							:= FALSE;
+			stMultiLevelVIO 													:= arrTCMultiLevel[_iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO;
 			stMultiLevelVIO.opCellTBOtSideDoorClosed1							:= FALSE;
 			stMultiLevelVIO.opCellTBOtSideDoorClosed2							:= FALSE;
-			arrTCMultiLevel[_iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO 		:= stMultiLevelVIO;
+			arrTCMultiLevel[_iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO		:= stMultiLevelVIO;
+			
 			timDwrUp(IN:= FALSE);
 			iStep																	:= 20; // Set event
 			
@@ -330,11 +323,6 @@ END_VAR
       <LineId Id="1220" Count="3" />
       <LineId Id="1868" Count="0" />
       <LineId Id="1224" Count="1" />
-      <LineId Id="2338" Count="0" />
-      <LineId Id="1985" Count="0" />
-      <LineId Id="1984" Count="0" />
-      <LineId Id="1988" Count="1" />
-      <LineId Id="1995" Count="0" />
       <LineId Id="2001" Count="0" />
       <LineId Id="1990" Count="3" />
       <LineId Id="1227" Count="0" />
@@ -429,10 +417,11 @@ END_VAR
       <LineId Id="1915" Count="1" />
       <LineId Id="1409" Count="0" />
       <LineId Id="1883" Count="1" />
-      <LineId Id="2222" Count="1" />
       <LineId Id="1410" Count="0" />
+      <LineId Id="2595" Count="0" />
       <LineId Id="1412" Count="1" />
-      <LineId Id="1980" Count="0" />
+      <LineId Id="2597" Count="0" />
+      <LineId Id="2596" Count="0" />
       <LineId Id="1415" Count="1" />
       <LineId Id="2491" Count="0" />
       <LineId Id="1417" Count="2" />

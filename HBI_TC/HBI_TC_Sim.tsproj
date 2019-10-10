@@ -4137,48 +4137,6 @@
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>CmdAndEventProcess.fbCmdAndEventUpdate.fbTCUSafeState.stMultiLeveVIO.opSpare_9</Name>
-							<Comment>
-								<![CDATA[ Spare]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>CmdAndEventProcess.fbCmdAndEventUpdate.fbTCUSafeState.stMultiLeveVIO.opSpare_10</Name>
-							<Comment>
-								<![CDATA[ Spare]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>CmdAndEventProcess.fbCmdAndEventUpdate.fbDoorOpenClose.stMultiLevelVIO.opSpare_9</Name>
-							<Comment>
-								<![CDATA[ Spare]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>CmdAndEventProcess.fbCmdAndEventUpdate.fbDoorOpenClose.stMultiLevelVIO.opSpare_10</Name>
-							<Comment>
-								<![CDATA[ Spare]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>CmdAndEventProcess.fbCmdAndEventUpdate.fbDoorOpenClose._MLevelVIO_Monitor.opSpare_9</Name>
-							<Comment>
-								<![CDATA[ Spare]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>CmdAndEventProcess.fbCmdAndEventUpdate.fbDoorOpenClose._MLevelVIO_Monitor.opSpare_10</Name>
-							<Comment>
-								<![CDATA[ Spare]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
 							<Name>PreInitialise.stMLVIO.opSpare_9</Name>
 							<Comment>
 								<![CDATA[ Spare]]>
@@ -6669,6 +6627,34 @@
 								<![CDATA[10Amp]]>
 							</Comment>
 							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>CmdAndEventProcess.fbCmdAndEventUpdate.fbTCUSafeState.stMultiLeveVIO.opSpare_9</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>CmdAndEventProcess.fbCmdAndEventUpdate.fbTCUSafeState.stMultiLeveVIO.opSpare_10</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>CmdAndEventProcess.fbCmdAndEventUpdate.fbDoorOpenClose.stMultiLevelVIO.opSpare_9</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>CmdAndEventProcess.fbCmdAndEventUpdate.fbDoorOpenClose.stMultiLevelVIO.opSpare_10</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
 						</Var>
 					</Vars>
 					<UnrestoredVarLinks ImportTime="2019-09-23T16:09:44">

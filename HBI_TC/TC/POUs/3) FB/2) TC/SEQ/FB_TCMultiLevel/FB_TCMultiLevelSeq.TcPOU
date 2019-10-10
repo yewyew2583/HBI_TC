@@ -748,15 +748,15 @@ END_VAR
 	                            OR	ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipCellFluidLeakage2		] 
 	                            OR	ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipCellGroundFault 	   	]
 								OR	ALMTC.Common.AlarmID[E_ColAlarm.ipColumnFluid_PCW_Leakage 		]
-								OR	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipAPReady				]
-								OR	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.TBotSideDoorLockSignalNotDetected	];
+								OR	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipAPReady				];
+								//OR	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.TBotSideDoorLockSignalNotDetected	];
 	                               
 	itl_opTesterDrawerAirSupplySol:=	(*	ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipTesterPowerOn	   		]
 										OR*)ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipCellFluidLeakage1		] 
 	                            		OR	ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipCellFluidLeakage2		] 
 	                            		OR	ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipCellGroundFault 	   	] 
-										OR	ALMTC.Common.AlarmID[E_ColAlarm.ipColumnFluid_PCW_Leakage 		]
-										OR	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.TBotSideDoorLockSignalNotDetected	];
+										OR	ALMTC.Common.AlarmID[E_ColAlarm.ipColumnFluid_PCW_Leakage 		];
+										//OR	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.TBotSideDoorLockSignalNotDetected	];
 								    
 	(*itl_opTIUSktAirSol_1:=		(*	ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipAPPresentSensor	   	] 		
 								OR	ALMTC.Level[iLevel].ALarmID[E_TIIAlarm.ipCellFluidLeakage1		] 
@@ -1485,10 +1485,10 @@ ELSIF stTCMLSeqParam.bShuttleMoveIn OR stTCMLSeqParam.bDoorRecovery OR stTCMLSeq
 	arrSeqStep[3]											:= E_SeqSts.eTBotEAPSanityCheck; //Sanity check
 	arrSeqStep[4]											:= E_SeqSts.eMoveDrawerUp;	//Move drawer up
 	arrSeqStep[5]											:= E_SeqSts.eTBotEAPSanityCheck; //Sanity check
-	arrSeqStep[6]											:= E_SeqSts.eTurnOnTesterAirValve;	//turn on 6 bar tester air valve
-	arrSeqStep[7]											:= E_SeqSts.eMoveDrawerIn;	//Move drawer In
+	arrSeqStep[6]											:= E_SeqSts.eMoveDrawerIn;	//Move drawer In
+	arrSeqStep[7]											:= E_SeqSts.eTurnOnTesterAirValve;	//turn on 6 bar tester air valve //debug cart only
 	arrSeqStep[8]											:= E_SeqSts.eMoveDrawerDown; //Move drawer down
-	arrSeqStep[9]											:= E_SeqSts.eTurnOnAPAirValve;	//turn on 10 bar AP air valve
+	arrSeqStep[9]											:= E_SeqSts.eTurnOnAPAirValve;	//turn on 10 bar AP air valve //Debug cart only
 	arrSeqStep[10]											:= E_SeqSts.eDone; //done
 END_IF
 
@@ -1531,49 +1531,6 @@ CASE iStkSeqCase OF
 	E_SeqSts.eSanityCheck: //Sanity sheck (#01-CHECK TBOT SAFTY SIGNAL and #02-AP PIN SAFTY SIGNAL)
 		sMessage											:= 'Sanity Check ';
 		stColVIO											:= fbTCColumn.P_stTCColumnVIO;
-	(*
-		isError:=FALSE;
-		//Check TCC Request
-		IF stMLVIO.bTCCSessionActiveStatusFlag THEN
-			isError:=TRUE;
-			sMessage:='Module is In Manual TCC Request Operation Session';
-			ALMTC.Level[iLevel].AlarmID[27] :=TRUE;
-			//*Set Error Bit;
-		//Check Door Sensor;
-		ELSIF NOT stMLVIO.ipTCCellDoorClosed OR NOT stMLVIO.ipTCCellDoorOpenCloseStatus THEN
-			isError:=TRUE;
-			sMessage:='Cell Door NOT Closed AND Locked,Please Close the door';
-			ALMTC.Level[iLevel].AlarmID[32] :=TRUE;
-			//*Set Error Bit;
-		//Check AP Up
-		ELSIF stMLVIO.ipAPPresentSensor THEN
-			IF NOT stMLVIO.ipAPDeactuatedHwr OR NOT stMLVIO.ipAPDeactuatedPLC THEN
-				isError:=TRUE;
-				sMessage:='AP is not Deactuated (UP)!';
-				ALMTC.Level[iLevel].AlarmID[30] :=TRUE;
-			END_IF
-		//*Set Error Bit;
-		//Check Cell Retract //Can ByPass Now
-		//ELSIF NOT stColVIO.ipAllTCDrawerRetractedinCell AND stTCMLSeqParam.bShuttleMoveOut THEN
-		//	isError:=TRUE;
-		//	sMessage:='All Level are Not In Retracted Position';
-		//	//*Set Error Bit;
-		END_IF
-		IF isError THEN
-			M_nShuttleMoveInOut:=30;
-			//*Set Error Bit;
-		ELSE
-			bStepDone:=TRUE;
-		END_IF
-	*)
-	(*
-		IF M_IsSanityCheckFailed(stColVIO:=stColVIO, sMsg=>sMessage) THEN
-			M_nShuttleMoveInOut:=30;
-		ELSE
-			bStepDone:=TRUE;
-		END_IF
-	*)	
-		//***
 		_nErrorID											:= INT_TO_UDINT(M_IsSanityCheckFailed(stMultiLevelVIO:= stMLVIO, sMsg=> sMessage)) ;
 		IF _nErrorID = 0 THEN
 			bStepDone										:= TRUE;
@@ -1719,31 +1676,35 @@ CASE iStkSeqCase OF
 		
 	
 	E_SeqSts.eTurnOffAPAirValve: //only for debug cart front door
-		//stMLVIO.opAPAirSupplySol 										:= FALSE; //not able to false it maybe library turn it back on
-		bStepDone														:= TRUE;
+		sMessage												:= ' Turn Off AP Air Valve (10Bar)';
+		stMLVIO.opAPAirSupplySol 								:= FALSE; //not able to false it maybe library turn it back on
+		bStepDone												:= TRUE;
 		
 		
 	E_SeqSts.eTurnOffTesterAirValve: //only for debug cart front door
-		//stMLVIO.opTesterDrawerAirSupplySol 							:= FALSE; //not able to false it maybe library turn it back on
-		bStepDone														:= TRUE;
+		sMessage												:= ' Turn Off Tester Air Valve (6Bar)';
+		stMLVIO.opTesterDrawerAirSupplySol 						:= FALSE; //not able to false it maybe library turn it back on
+		bStepDone												:= TRUE;
 		
 	
 	E_SeqSts.eTurnOnAPAirValve: //only for debug cart front door
 		IF bDebugCart THEN
 			IF stMLVIO.ipAPPresentSensor THEN 
-				stMLVIO.opAPAirSupplySol								:= TRUE;
+				sMessage										:= ' Turn on AP Air Valve (10Bar)';
+				stMLVIO.opAPAirSupplySol						:= TRUE;
 			END_IF
 		END_IF
 		
-		bStepDone														:= TRUE;
+		bStepDone												:= TRUE;
 	
 	
 	E_SeqSts.eTurnOnTesterAirValve: //only for debug cart front door
 		IF bDebugCart THEN
-			stMLVIO.opTesterDrawerAirSupplySol							:= TRUE;
+			sMessage											:= ' Turn on Tester Air Valve (6Bar)';
+			stMLVIO.opTesterDrawerAirSupplySol					:= TRUE;
 		END_IF
 		
-		bStepDone														:= TRUE;
+		bStepDone												:= TRUE;
 	
 	E_SeqSts.eOnDrawerOutputOnly:				//On Output Only
 		//stMLVIO.opCellDrawerCylExtend:= TRUE;
@@ -1752,20 +1713,10 @@ CASE iStkSeqCase OF
 		bStepDone												:= TRUE;
 		
 	E_SeqSts.eDone:	// Done
-		sMessage												:= 'Done';
-		(*
-		IF stTCMLSeqParam.bShuttleMoveOut THEN
-			IF stMLVIO.ipTCDrawerCylExtendRS THEN
-				stMLVIO.bTIUInOutStatusFlag:=TRUE;
-			END_IF
-		ELSIF stTCMLSeqParam.bShuttleMoveIn THEN
-			IF stMLVIO.ipTCDrawerCylRetractRS THEN
-				stMLVIO.bTIUInOutStatusFlag:=FALSE;
-			END_IF;
-		END_IF *)
-		//bCommand:=FALSE;
+		sMessage												:= ' Done';
 		M_nShuttleMoveInOut										:= 10;
 END_CASE	
+
 
 IF _nErrorID > 0 OR _bError THEN
 	_bError													:= TRUE;
@@ -2539,7 +2490,7 @@ END_CASE]]></ST>
       <LineId Id="131" Count="0" />
       <LineId Id="36" Count="4" />
       <LineId Id="89" Count="0" />
-      <LineId Id="144" Count="0" />
+      <LineId Id="156" Count="0" />
       <LineId Id="41" Count="5" />
       <LineId Id="115" Count="0" />
       <LineId Id="48" Count="12" />
@@ -2855,8 +2806,9 @@ END_CASE]]></ST>
       <LineId Id="1960" Count="0" />
       <LineId Id="763" Count="1" />
       <LineId Id="2311" Count="3" />
+      <LineId Id="2531" Count="0" />
       <LineId Id="2458" Count="0" />
-      <LineId Id="2315" Count="1" />
+      <LineId Id="2316" Count="0" />
       <LineId Id="2457" Count="0" />
       <LineId Id="1263" Count="0" />
       <LineId Id="997" Count="0" />
@@ -2880,39 +2832,7 @@ END_CASE]]></ST>
       <LineId Id="1220" Count="0" />
       <LineId Id="1059" Count="3" />
       <LineId Id="1219" Count="0" />
-      <LineId Id="1723" Count="0" />
-      <LineId Id="1825" Count="1" />
-      <LineId Id="1695" Count="0" />
-      <LineId Id="1703" Count="0" />
-      <LineId Id="1709" Count="0" />
-      <LineId Id="1716" Count="0" />
-      <LineId Id="1779" Count="0" />
-      <LineId Id="1727" Count="0" />
-      <LineId Id="1708" Count="0" />
-      <LineId Id="1704" Count="0" />
-      <LineId Id="1710" Count="0" />
-      <LineId Id="1719" Count="0" />
-      <LineId Id="1780" Count="0" />
-      <LineId Id="1726" Count="0" />
-      <LineId Id="1711" Count="0" />
-      <LineId Id="1706" Count="0" />
-      <LineId Id="1802" Count="0" />
-      <LineId Id="1805" Count="2" />
-      <LineId Id="1803" Count="0" />
-      <LineId Id="1725" Count="0" />
-      <LineId Id="1713" Count="0" />
-      <LineId Id="1754" Count="1" />
-      <LineId Id="1751" Count="2" />
-      <LineId Id="1748" Count="2" />
-      <LineId Id="1696" Count="0" />
-      <LineId Id="1701" Count="0" />
-      <LineId Id="1697" Count="0" />
-      <LineId Id="1818" Count="0" />
-      <LineId Id="1862" Count="0" />
-      <LineId Id="1820" Count="1" />
-      <LineId Id="1823" Count="1" />
-      <LineId Id="1819" Count="0" />
-      <LineId Id="1860" Count="1" />
+      <LineId Id="1860" Count="0" />
       <LineId Id="1574" Count="0" />
       <LineId Id="1863" Count="2" />
       <LineId Id="1890" Count="0" />
@@ -3020,16 +2940,19 @@ END_CASE]]></ST>
       <LineId Id="1465" Count="0" />
       <LineId Id="2409" Count="0" />
       <LineId Id="2418" Count="0" />
+      <LineId Id="2535" Count="0" />
       <LineId Id="2422" Count="0" />
       <LineId Id="2421" Count="0" />
       <LineId Id="2433" Count="0" />
       <LineId Id="2424" Count="0" />
       <LineId Id="2428" Count="0" />
+      <LineId Id="2536" Count="0" />
       <LineId Id="2479" Count="0" />
       <LineId Id="2411" Count="0" />
       <LineId Id="2434" Count="2" />
       <LineId Id="2459" Count="0" />
       <LineId Id="2437" Count="0" />
+      <LineId Id="2532" Count="0" />
       <LineId Id="2441" Count="0" />
       <LineId Id="2440" Count="0" />
       <LineId Id="2460" Count="0" />
@@ -3038,6 +2961,7 @@ END_CASE]]></ST>
       <LineId Id="2412" Count="0" />
       <LineId Id="2446" Count="0" />
       <LineId Id="2461" Count="0" />
+      <LineId Id="2533" Count="0" />
       <LineId Id="2450" Count="0" />
       <LineId Id="2462" Count="1" />
       <LineId Id="2444" Count="1" />
@@ -3046,20 +2970,12 @@ END_CASE]]></ST>
       <LineId Id="2369" Count="0" />
       <LineId Id="1466" Count="0" />
       <LineId Id="1171" Count="0" />
-      <LineId Id="1174" Count="1" />
-      <LineId Id="1837" Count="0" />
-      <LineId Id="1551" Count="0" />
-      <LineId Id="1828" Count="0" />
-      <LineId Id="1552" Count="0" />
-      <LineId Id="1830" Count="0" />
-      <LineId Id="1553" Count="0" />
-      <LineId Id="1833" Count="0" />
-      <LineId Id="1836" Count="0" />
-      <LineId Id="1832" Count="0" />
-      <LineId Id="1550" Count="0" />
+      <LineId Id="1174" Count="0" />
       <LineId Id="1176" Count="0" />
       <LineId Id="1388" Count="0" />
-      <LineId Id="1178" Count="4" />
+      <LineId Id="1178" Count="0" />
+      <LineId Id="2534" Count="0" />
+      <LineId Id="1179" Count="3" />
       <LineId Id="1185" Count="0" />
       <LineId Id="1405" Count="0" />
       <LineId Id="1186" Count="1" />
