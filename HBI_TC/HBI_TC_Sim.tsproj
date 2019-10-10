@@ -3927,6 +3927,90 @@
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
+							<Name>MAIN.fbTCMultiLevel_Process[1].stTCMLVIOTemp.opSpare_9</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.fbTCMultiLevel_Process[1].stTCMLVIOTemp.opSpare_10</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.fbTCMultiLevel_Process[2].stTCMLVIOTemp.opSpare_9</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.fbTCMultiLevel_Process[2].stTCMLVIOTemp.opSpare_10</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.fbTCMultiLevel_Process[3].stTCMLVIOTemp.opSpare_9</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.fbTCMultiLevel_Process[3].stTCMLVIOTemp.opSpare_10</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.fbTCMultiLevel_Process[4].stTCMLVIOTemp.opSpare_9</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.fbTCMultiLevel_Process[4].stTCMLVIOTemp.opSpare_10</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.fbTCMultiLevel_Process[5].stTCMLVIOTemp.opSpare_9</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.fbTCMultiLevel_Process[5].stTCMLVIOTemp.opSpare_10</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.fbTCMultiLevel_Process[6].stTCMLVIOTemp.opSpare_9</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.fbTCMultiLevel_Process[6].stTCMLVIOTemp.opSpare_10</Name>
+							<Comment>
+								<![CDATA[ Spare]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
 							<Name>MAIN.stTCMLevelVIO.opSpare_9</Name>
 							<Comment>
 								<![CDATA[ Spare]]>
@@ -6571,90 +6655,6 @@
 								<![CDATA[10Amp]]>
 							</Comment>
 							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.fbTCMultiLevel_Process[1].stTCMLVIOTemp.opSpare_9</Name>
-							<Comment>
-								<![CDATA[ Spare]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.fbTCMultiLevel_Process[1].stTCMLVIOTemp.opSpare_10</Name>
-							<Comment>
-								<![CDATA[ Spare]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.fbTCMultiLevel_Process[2].stTCMLVIOTemp.opSpare_9</Name>
-							<Comment>
-								<![CDATA[ Spare]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.fbTCMultiLevel_Process[2].stTCMLVIOTemp.opSpare_10</Name>
-							<Comment>
-								<![CDATA[ Spare]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.fbTCMultiLevel_Process[3].stTCMLVIOTemp.opSpare_9</Name>
-							<Comment>
-								<![CDATA[ Spare]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.fbTCMultiLevel_Process[3].stTCMLVIOTemp.opSpare_10</Name>
-							<Comment>
-								<![CDATA[ Spare]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.fbTCMultiLevel_Process[4].stTCMLVIOTemp.opSpare_9</Name>
-							<Comment>
-								<![CDATA[ Spare]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.fbTCMultiLevel_Process[4].stTCMLVIOTemp.opSpare_10</Name>
-							<Comment>
-								<![CDATA[ Spare]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.fbTCMultiLevel_Process[5].stTCMLVIOTemp.opSpare_9</Name>
-							<Comment>
-								<![CDATA[ Spare]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.fbTCMultiLevel_Process[5].stTCMLVIOTemp.opSpare_10</Name>
-							<Comment>
-								<![CDATA[ Spare]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.fbTCMultiLevel_Process[6].stTCMLVIOTemp.opSpare_9</Name>
-							<Comment>
-								<![CDATA[ Spare]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.fbTCMultiLevel_Process[6].stTCMLVIOTemp.opSpare_10</Name>
-							<Comment>
-								<![CDATA[ Spare]]>
-							</Comment>
-							<Type>BOOL</Type>
 						</Var>
 					</Vars>
 					<UnrestoredVarLinks ImportTime="2019-09-23T16:09:44">

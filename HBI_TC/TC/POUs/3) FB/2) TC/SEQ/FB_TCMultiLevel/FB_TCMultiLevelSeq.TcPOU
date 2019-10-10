@@ -1423,11 +1423,11 @@ ELSIF stTCMLSeqParam.bDrawerUpBefFrtDoorOpen THEN
 	arrSeqStep[1]											:= E_SeqSts.eFrontDoorOpenConditionCheck;
 	arrSeqStep[2]											:= E_SeqSts.eSanityCheck;
 	arrSeqStep[3]											:= E_SeqSts.eMoveDrawerUp;
-	//arrSeqStep[4]											:= E_SeqSts.eMoveDrawerOut; //eOnDrawerOutputOnly
-	arrSeqStep[4]											:= E_SeqSts.eTurnOffAPAirValve;
-	arrSeqStep[5]											:= E_SeqSts.eTurnOffTesterAirValve;
-	arrSeqStep[6]											:= E_SeqSts.eUnlockFrontDoor;
-	arrSeqStep[7]											:= E_SeqSts.eDone;
+	arrSeqStep[4]											:= E_SeqSts.eMoveDrawerOut; //eOnDrawerOutputOnly
+	arrSeqStep[5]											:= E_SeqSts.eTurnOffAPAirValve;
+	arrSeqStep[6]											:= E_SeqSts.eTurnOffTesterAirValve;
+	arrSeqStep[7]											:= E_SeqSts.eUnlockFrontDoor;
+	arrSeqStep[8]											:= E_SeqSts.eDone;
 		
 	
 ELSIF stTCMLSeqParam.bShuttleMoveIn OR stTCMLSeqParam.bDoorRecovery OR stTCMLSeqParam.bTBotbShuttleMoveInReq THEN
@@ -1461,7 +1461,7 @@ CASE iStkSeqCase OF
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
 	E_SeqSts.eFrontDoorOpenConditionCheck:
 		IF stMLVIO.ipTCDrawerCylUpRS THEN
-			iSeqStep										:= 4; 	//jump to unlock door
+			iSeqStep										:= 4; 	//jump to drawer on output
 		ELSE
 			bStepDone										:= TRUE; 
 		END_IF
