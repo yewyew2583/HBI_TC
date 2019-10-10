@@ -28,7 +28,8 @@
 	eTurnOffAPAirValve,
 	eTurnOnTesterAirValve,
 	eTurnOffTesterAirValve,
-
+	eUnlockFrontDoor,
+	
 	eReset,
 	eExecute,
 	eAlarmed,

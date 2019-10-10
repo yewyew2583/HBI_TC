@@ -95,7 +95,7 @@ CASE iStep OF
 //Front Door
 			IF _bFrontDoor THEN
 				(*Sanity Check*)
-				_sanityCheck		:= arrTCMultiLevel[_iLevel].fbTCMultiLevelSeq.M_IsSanityCheckFailed(stMultiLevelVIO:= stMultiLevelVIO, sMsg=> sStatus);
+				(*_sanityCheck		:= arrTCMultiLevel[_iLevel].fbTCMultiLevelSeq.M_IsSanityCheckFailed(stMultiLevelVIO:= stMultiLevelVIO, sMsg=> sStatus);
 				IF  _sanityCheck <> 0 THEN
 					bErr												:= TRUE;
 					ALMTC.Level[_iLevel].AlarmID[_sanityCheck]			:= TRUE;
@@ -111,12 +111,18 @@ CASE iStep OF
 					sStatus												:= 'AP is not Ready';
 					iStep												:= 20;
 				END_IF
-				
-				IF (NOT bErr) THEN
+				*)
+				(*IF (NOT bErr) THEN
 					arrTCMultiLevel[_iLevel].stGblParam.bDrawerUpBefFrtDoorOpen		:= TRUE;
 					arrTCMultiLevel[_iLevel].fbTCMultiLevelSeq.P_stParam 			:= arrTCMultiLevel[_iLevel].stGblParam;
 					iStep															:= 4; // Trigger door output
-				END_IF
+				END_IF*)
+				
+				////////////////////////////////////// I MOVED OPEN FRONT DOOR TO SEQUENCE BECAUSE OF ALL HERE RUBBISH CODE////////////////////////////////////////////////////
+				start																	:= FALSE;
+				arrTCMultiLevel[_iLevel].stGblParam.bDrawerUpBefFrtDoorOpen				:= TRUE;
+				RETURN;
+				////////////////////////////////////// I MOVED OPEN FRONT DOOR TO SEQUENCE BECAUSE OF THIS RUBBISH CODE////////////////////////////////////////////////////
 //Back Door
 			ELSE
 				IF (NOT bErr) THEN
@@ -216,24 +222,6 @@ CASE iStep OF
 		
 		(*Transition*)
 		iStep																		:= 20;
-		
-		
-	4: (*Trigger front door output only*)
-	
-		(*Action*)
-		timDwrUp(IN:= TRUE, PT:= T#7S);
-		
-		(*Transition*)
-		IF timDwrUp.Q (*OR (NOT arrTCMultiLevel[_iLevel].stGblParam.bDrawerUpBefFrtDoorOpen)*) THEN
-			stMultiLevelVIO 													:= arrTCMultiLevel[_iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO;
-			stMultiLevelVIO.opCellTBOtSideDoorClosed1							:= FALSE;
-			stMultiLevelVIO.opCellTBOtSideDoorClosed2							:= FALSE;
-			arrTCMultiLevel[_iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO		:= stMultiLevelVIO;
-			
-			timDwrUp(IN:= FALSE);
-			iStep																	:= 20; // Set event
-			
-		END_IF
 		
 	20: (*Set event*)
 
@@ -354,10 +342,15 @@ END_VAR
       <LineId Id="2514" Count="0" />
       <LineId Id="2520" Count="0" />
       <LineId Id="2512" Count="0" />
-      <LineId Id="1885" Count="0" />
+      <LineId Id="2654" Count="0" />
       <LineId Id="1252" Count="0" />
       <LineId Id="1254" Count="2" />
       <LineId Id="1259" Count="0" />
+      <LineId Id="2655" Count="0" />
+      <LineId Id="2657" Count="1" />
+      <LineId Id="2665" Count="0" />
+      <LineId Id="2656" Count="0" />
+      <LineId Id="2652" Count="0" />
       <LineId Id="2495" Count="0" />
       <LineId Id="1888" Count="0" />
       <LineId Id="1265" Count="0" />
@@ -413,18 +406,8 @@ END_VAR
       <LineId Id="1397" Count="0" />
       <LineId Id="1404" Count="0" />
       <LineId Id="1912" Count="1" />
-      <LineId Id="1405" Count="3" />
-      <LineId Id="1915" Count="1" />
-      <LineId Id="1409" Count="0" />
-      <LineId Id="1883" Count="1" />
-      <LineId Id="1410" Count="0" />
-      <LineId Id="2595" Count="0" />
-      <LineId Id="1412" Count="1" />
-      <LineId Id="2597" Count="0" />
-      <LineId Id="2596" Count="0" />
-      <LineId Id="1415" Count="1" />
-      <LineId Id="2491" Count="0" />
-      <LineId Id="1417" Count="2" />
+      <LineId Id="1405" Count="1" />
+      <LineId Id="1419" Count="0" />
       <LineId Id="1914" Count="0" />
       <LineId Id="1420" Count="6" />
       <LineId Id="1439" Count="0" />

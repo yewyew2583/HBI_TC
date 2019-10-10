@@ -3,51 +3,48 @@
   <POU Name="FB_TCMultiLevel_Process" Id="{0373861f-33d7-4205-b47e-dd6e84a82bda}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_TCMultiLevel_Process 
 VAR_INPUT
-	iLevel : UINT;
+	iLevel 								: UINT;
 END_VAR
 VAR_OUTPUT
 END_VAR
 VAR
-	rDrawerInReq :R_TRIG;
-	rDrawerOutReq:R_TRIG;
-	sOtherFailReason:STRING;
-	i:INT;
-	//For testing purpose only
-	//bShuttleMoveInOut: BOOL;
-	//bInitialize: BOOL;
-	//bAlarmClear : BOOL;
-	bLogEveryStep : BOOL:=TRUE;
+	rDrawerInReq 						: R_TRIG;
+	rDrawerOutReq						: R_TRIG;
+	sOtherFailReason					: STRING;
+	i									: INT;
+	bLogEveryStep 						: BOOL	:= TRUE;
+
 	
-	//*****************
-	rtTCShuttleStart: R_TRIG;
-	//stTCShuttleSeqParam : ST_FlyoverSeqParam;
-	iSeqCase: INT:=1;
-	iSeqStatus: INT; //To defind current status of subsequence 
-	bError: BOOL;
-	sMessage : STRING;
-	sAlarmID: STRING(40);
-	sModuleID: STRING(INT#40);
-	sDebugSource: STRING(INT#50);
-	bExecute: BOOL;
-	iErrorID: UDINT;
+	rtTCShuttleStart					: R_TRIG;
+	iSeqCase							: INT:=1;
+	iSeqStatus							: INT; //To defind current status of subsequence 
+	bError								: BOOL;
+	sMessage							: STRING;
+	sAlarmID							: STRING(40);
+	sModuleID							: STRING(INT#40);
+	sDebugSource						: STRING(INT#50);
+	bExecute							: BOOL;
+	iErrorID							: UDINT;
 	
-	fbFormat   : FB_FormatString;
-	sPrevMsg: STRING;
-	sCurrentMsg:STRING;
-	iPrevLevel:INT;
-	iEventName : E_EventName;
-	sLogName : STRING;
-	iSendEvent :INT;
-	sFailReason: STRING;
+	
+	fbFormat   							: FB_FormatString;
+	sPrevMsg							: STRING;
+	sCurrentMsg							: STRING;
+	iPrevLevel							: INT;
+	iEventName 							: E_EventName;
+	sLogName 							: STRING;
+	iSendEvent 							: INT;
+	sFailReason							: STRING;
 	
 	stTCMLVIOTemp :ST_TCMultiLevel_VIO;
 	DIFU:R_TRIG;
 	
-	CmdEmpty: ST_Command;
-	EmptyEvents: ST_Event; // to Clear the event array[n]
-	DoorRecEventName:E_EventName;
-	DoorRecLogName	:STRING;
-	iSendDoorRecoveryEvent:INT;
+	CmdEmpty							: ST_Command;
+	EmptyEvents							: ST_Event; // to Clear the event array[n]
+	DoorRecEventName					: E_EventName;
+	eventName							: E_EventName;
+	DoorRecLogName						: STRING;
+	iSendDoorRecoveryEvent				: INT;
 	
 END_VAR
 
@@ -157,7 +154,7 @@ ELSIF arrTCMultiLevel[iLevel].stGblParam.bDrawerDown THEN
 ELSIF arrTCMultiLevel[iLevel].stGblParam.bDrawerUp THEN
 	sDebugSource															:= 'Drawer Up';
 ELSIF arrTCMultiLevel[iLevel].stGblParam.bDrawerUpBefFrtDoorOpen THEN
-	sDebugSource															:= 'Drawer Up';
+	sDebugSource															:= 'Front Door opening';
 ELSIF arrTCMultiLevel[iLevel].stGblParam.bInitialise THEN
 	sDebugSource															:= 'Initialise';
 ELSIF arrTCMultiLevel[iLevel].stGblParam.bCancel THEN
@@ -322,6 +319,9 @@ CASE iSeqCase OF
 			arrTCMultiLevel[iLevel].stGblParam.bCancel						:= FALSE;
 		ELSE
 		
+		IF arrTCMultiLevel[iLevel].stGblParam.bDrawerUpBefFrtDoorOpen THEN 
+			arrTCMultiLevel[iLevel].stGblParam.bDrawerUpBefFrtDoorOpen 		:= FALSE; 
+		END_IF
 		//=====================================================================
 		//*For Door Recovery
 		//=====================================================================
@@ -374,7 +374,6 @@ CASE iSeqCase OF
 		IF arrTCMultiLevel[iLevel].stGblParam.bAP240ACPowerOff 	 THEN 	arrTCMultiLevel[iLevel].stGblParam.bAP240ACPowerOff 	 	:= FALSE; END_IF
 		IF arrTCMultiLevel[iLevel].stGblParam.bAP240ACPowerAuto 	THEN 	arrTCMultiLevel[iLevel].stGblParam.bAP240ACPowerAuto 		:= FALSE; END_IF
 		IF arrTCMultiLevel[iLevel].stGblParam.bDrawerUpBefFrtDoorOpen THEN arrTCMultiLevel[iLevel].stGblParam.bDrawerUpBefFrtDoorOpen := FALSE; END_IF
-		IF arrTCMultiLevel[iLevel].stGblParam.bDrawerUpBefFrtDoorOpen THEN arrTCMultiLevel[iLevel].stGblParam.bDrawerUpBefFrtDoorOpen := FALSE; END_IF
 		IF arrTCMultiLevel[iLevel].stGblParam.bDoorRecovery THEN arrTCMultiLevel[iLevel].stGblParam.bDoorRecovery := FALSE; END_IF 
 		
 
@@ -399,52 +398,63 @@ iSendEvent :
 		END_IF
 	//</TBotSlideInOutTrigger>
 	
-	//<DwrUpBefDoorOpen>
-		IF arrTCMultiLevel[iLevel].stGblParam.bDrawerUpBefFrtDoorOpen THEN
+		//<DwrUpBefDoorOpen>
+		(*IF arrTCMultiLevel[iLevel].stGblParam.bDrawerUpBefFrtDoorOpen THEN
 			arrTCMultiLevel[iLevel].stGblParam.bDrawerUpBefFrtDoorOpen := FALSE;
-			iSendEvent :=0;
-			RETURN;
-		END_IF
-	//</DwrUpBefDoorOpen>
+		END_IF*)
+		//</DwrUpBefDoorOpen>
 	
-		 IF (NOT arrTCMultiLevel[iLevel].stGblParam.bCancel AND  NOT arrTCMultiLevel[iLevel].stGblParam.bBufClear ) THEN 
-		CmdAndEventProcess.fbCmdAndEventUpdate.M_nCmdtoEvent(eCmd2Event_TaskName:=arrTCMultiLevel[iLevel].stGblParam.stTACommand.eTaskName , iCmd2Event_Result:=iSendEvent , eCmd2Event_EventName:=iEventName , sCmd2Event_EventName:=sLogName );
-		sFailReason := arrTCMultiLevel[iLevel].stGblParam.sFailReason;
-		
-		CmdAndEventProcess.fbCmdAndEventUpdate.M_AddEvent(
-			sLogName:= sLogName, 
-			eEventName:= iEventName, 
-			eModuleID:= arrTCMultiLevel[iLevel].stGblParam.stTACommand.eModuleID, 
-			iParam:= arrTCMultiLevel[iLevel].stGblParam.stTACommand.iParam,
-			sParam:= arrTCMultiLevel[iLevel].stGblParam.stTACommand.sParam, 
-			bParam:= arrTCMultiLevel[iLevel].stGblParam.stTACommand.bParam, 
-			dParam:= arrTCMultiLevel[iLevel].stGblParam.stTACommand.dParam,
-			sFailReason:= sFailReason);
+		IF (NOT arrTCMultiLevel[iLevel].stGblParam.bCancel AND NOT arrTCMultiLevel[iLevel].stGblParam.bBufClear) THEN 
+			CmdAndEventProcess.fbCmdAndEventUpdate.M_nCmdtoEvent(
+				eCmd2Event_TaskName										:= arrTCMultiLevel[iLevel].stGblParam.stTACommand.eTaskName , 
+				iCmd2Event_Result										:= iSendEvent, 
+				eCmd2Event_EventName									:= iEventName, 
+				sCmd2Event_EventName									:= sLogName 
+			);
 			
-			IF iSendEvent=1 THEN arrTCMultiLevel[iLevel].stGblParam.stTACommand := CmdEmpty; END_IF
-		END_IF;
+			sFailReason := arrTCMultiLevel[iLevel].stGblParam.sFailReason;
+			
+			CmdAndEventProcess.fbCmdAndEventUpdate.M_AddEvent(
+				sLogName												:= sLogName, 
+				eEventName												:= iEventName, 
+				eModuleID												:= arrTCMultiLevel[iLevel].stGblParam.stTACommand.eModuleID, 
+				iParam													:= arrTCMultiLevel[iLevel].stGblParam.stTACommand.iParam,
+				sParam													:= arrTCMultiLevel[iLevel].stGblParam.stTACommand.sParam, 
+				bParam													:= arrTCMultiLevel[iLevel].stGblParam.stTACommand.bParam, 
+				dParam													:= arrTCMultiLevel[iLevel].stGblParam.stTACommand.dParam,
+				sFailReason												:= sFailReason
+			);
+				
+			IF iSendEvent=1 THEN 
+				arrTCMultiLevel[iLevel].stGblParam.stTACommand := CmdEmpty; 
+			END_IF
+			
+		END_IF
+		
 		arrTCShuttlePOC[iLevel].stGblParam.bInitialise:= FALSE;
+		
 		IF iSendEvent=1 THEN
-			arrTCMultiLevel[iLevel].stGblParam.bShuttleMoveIn		:= 			//Drawer
-			arrTCMultiLevel[iLevel].stGblParam.bShuttleMoveOut		:=			//Drawer
-			arrTCMultiLevel[iLevel].stGblParam.bDrawerDown			:=			//Drawer
-			arrTCMultiLevel[iLevel].stGblParam.bDrawerUp			:=			//Drawer
-			arrTCMultiLevel[iLevel].stGblParam.bInitialise			:= 			//  SystemReset
-			arrTCMultiLevel[iLevel].stGblParam.bCancel				:= 			//  SlideOutCancel
-			arrTCMultiLevel[iLevel].stGblParam.bBufClear 			:=			//  CancelW/O Module ID
-			arrTCMultiLevel[iLevel].stGblParam.bAP240ACPowerOff 	:=			//AP240AC
-			arrTCMultiLevel[iLevel].stGblParam.bAP240ACPowerOn 		:=			//AP240AC
-			arrTCMultiLevel[iLevel].stGblParam.bAP240ACPowerAuto 	:=			//AP240AC
- 			arrTCMultiLevel[iLevel].stGblParam.bDSPPowerOff 		:=			//  DSPPower
-			arrTCMultiLevel[iLevel].stGblParam.bDSPPowerOn 			:=			//  DSPPower
-			arrTCMultiLevel[iLevel].stGblParam.bDSPPowerAuto 		:= FALSE;	//  DSPPower
-			arrTCMultiLevel[iLevel].stGblParam.bDoorRecovery 		:= FALSE;	//  Door Recovery
+			arrTCMultiLevel[iLevel].stGblParam.bShuttleMoveIn								:= 			//Drawer
+			arrTCMultiLevel[iLevel].stGblParam.bShuttleMoveOut								:=			//Drawer
+			arrTCMultiLevel[iLevel].stGblParam.bDrawerDown									:=			//Drawer
+			arrTCMultiLevel[iLevel].stGblParam.bDrawerUp									:=			//Drawer
+			arrTCMultiLevel[iLevel].stGblParam.bInitialise									:= 			//  SystemReset
+			arrTCMultiLevel[iLevel].stGblParam.bCancel										:= 			//  SlideOutCancel
+			arrTCMultiLevel[iLevel].stGblParam.bBufClear 									:=			//  CancelW/O Module ID
+			arrTCMultiLevel[iLevel].stGblParam.bAP240ACPowerOff 							:=			//AP240AC
+			arrTCMultiLevel[iLevel].stGblParam.bAP240ACPowerOn 								:=			//AP240AC
+			arrTCMultiLevel[iLevel].stGblParam.bAP240ACPowerAuto 							:=			//AP240AC
+ 			arrTCMultiLevel[iLevel].stGblParam.bDSPPowerOff 								:=			//  DSPPower
+			arrTCMultiLevel[iLevel].stGblParam.bDSPPowerOn 									:=			//  DSPPower
+			arrTCMultiLevel[iLevel].stGblParam.bDSPPowerAuto 								:= FALSE;	//  DSPPower
+			arrTCMultiLevel[iLevel].stGblParam.bDoorRecovery 								:= FALSE;	//  Door Recovery
 	
 			arrTCMultiLevel[iLevel].stGblParam.iProcessState :=E_ProcessState.eAWAITGCMD;
 		END_IF
 	END_IF
-		iSendEvent :=0;
-
+	
+	iSendEvent :=0;
+	
 //send event to TA
 iSendDoorRecoveryEvent :
 	IF iSendDoorRecoveryEvent<>0 (* AND bInitialise*)THEN
@@ -570,6 +580,7 @@ iSendDoorRecoveryEvent :
       <LineId Id="3118" Count="2" />
       <LineId Id="3122" Count="3" />
       <LineId Id="3446" Count="0" />
+      <LineId Id="4325" Count="2" />
       <LineId Id="3466" Count="0" />
       <LineId Id="3449" Count="0" />
       <LineId Id="3464" Count="0" />
@@ -584,7 +595,8 @@ iSendDoorRecoveryEvent :
       <LineId Id="3148" Count="11" />
       <LineId Id="3717" Count="1" />
       <LineId Id="3715" Count="0" />
-      <LineId Id="4017" Count="2" />
+      <LineId Id="4017" Count="0" />
+      <LineId Id="4019" Count="0" />
       <LineId Id="3665" Count="0" />
       <LineId Id="3177" Count="5" />
       <LineId Id="3791" Count="0" />
@@ -601,16 +613,32 @@ iSendDoorRecoveryEvent :
       <LineId Id="3795" Count="0" />
       <LineId Id="3770" Count="0" />
       <LineId Id="3933" Count="0" />
-      <LineId Id="3960" Count="2" />
-      <LineId Id="3964" Count="1" />
+      <LineId Id="3960" Count="0" />
+      <LineId Id="4324" Count="0" />
+      <LineId Id="3962" Count="0" />
       <LineId Id="3953" Count="0" />
       <LineId Id="3935" Count="0" />
       <LineId Id="3769" Count="0" />
-      <LineId Id="3183" Count="30" />
+      <LineId Id="3183" Count="1" />
+      <LineId Id="4281" Count="2" />
+      <LineId Id="4285" Count="2" />
+      <LineId Id="3185" Count="10" />
+      <LineId Id="4288" Count="0" />
+      <LineId Id="3196" Count="1" />
+      <LineId Id="4291" Count="0" />
+      <LineId Id="4289" Count="0" />
+      <LineId Id="4292" Count="0" />
+      <LineId Id="3198" Count="0" />
+      <LineId Id="4293" Count="0" />
+      <LineId Id="3199" Count="0" />
+      <LineId Id="4294" Count="0" />
+      <LineId Id="3200" Count="13" />
       <LineId Id="3369" Count="0" />
       <LineId Id="3214" Count="3" />
+      <LineId Id="4299" Count="0" />
       <LineId Id="871" Count="0" />
-      <LineId Id="3421" Count="1" />
+      <LineId Id="4295" Count="0" />
+      <LineId Id="3422" Count="0" />
       <LineId Id="3407" Count="0" />
       <LineId Id="3423" Count="0" />
       <LineId Id="3426" Count="1" />

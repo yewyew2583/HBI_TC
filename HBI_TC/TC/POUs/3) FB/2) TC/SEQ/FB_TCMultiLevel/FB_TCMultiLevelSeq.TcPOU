@@ -995,15 +995,15 @@ VAR_OUTPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF (NOT stMultiLevelVIO.ipTCCellDoorOpenCloseStatus) THEN
+        <ST><![CDATA[(*IF (NOT stMultiLevelVIO.ipTCCellDoorOpenCloseStatus) THEN
 	sMsg:='Door Closed Signal not Detected Error';
 	M_IsSanityCheckFailed									:= E_AlarmID.DoorCloseSignalNotDetected;//31;
 ELSIF (NOT stMultiLevelVIO.ipTCCellDoorClosed) THEN
 	sMsg:='Door Locked Signal not Detected Error';
 	M_IsSanityCheckFailed									:= E_TIIAlarm.ipTCCellDoorClosed;//12;
-END_IF
+END_IF*)
 
-IF bDebugCart THEN 
+(*IF bDebugCart THEN 
 	IF (NOT stMultiLevelVIO.ipTCCellTbotSideDoorOpenCloseStatus01) THEN
 		sMsg:='Front Door Closed_1 Signal not Detected Error';
 		M_IsSanityCheckFailed									:= E_AlarmID.TBotSideDoorCloseSignalNotDetected;//33;
@@ -1017,7 +1017,7 @@ IF bDebugCart THEN
 		sMsg:='Front Door Lock_2 Signal not Detected Error';
 		M_IsSanityCheckFailed									:=E_TIIAlarm.TBotSideDoorLockSignalNotDetected;//34;
 	END_IF
-END_IF
+END_IF*)
 //Check AP Up
 IF stMultiLevelVIO.ipAPPresentSensor THEN
 	IF (NOT stMultiLevelVIO.ipHandlerSafeToEnterHwr) OR (NOT stMultiLevelVIO.ipHandlerSafeToEnterPLC) THEN
@@ -1366,60 +1366,17 @@ VAR
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[M_nShuttleMoveInOut:=iStkSingStackUp;
-IF (bPause) THEN //AND NOT stTCMLSeqParam.bCancel (* OR stTCMultiLevelVIO.isTIIError *) THEN	
+
+IF (bPause) THEN
 	RETURN;
-//ELSIF stMLVIO.isTIIError THEN //OR stMLVIO.isSysError THEN  
-(*	IF FALSE (*DIFU Cyl Tii Err*) THEN
-		
-	//  TO RESET CYL LIBRARY ALARM and RETRACT CYL BACK
-		fbTCDrawerExtRet.M_nOff();
-	//	fbTCDrawerExtRet.M_nExtend(bExecute:= FALSE);
-	//	fbTCDrawerExtRet.M_nRetract(bExecute:= TRUE);
-	
-		inTCDrawerExtRet.P_opExtend:=FALSE;
-		inTCDrawerExtRet.P_opRetract:= TRUE;
-		fbTCDrawerExtRet.M_nReset(bExecute:=TRUE );						//ResetCyl
-		iStkSeqCase:=0;                                 				
-		//inTCDrawerExtRet.P_ipRetract:=TRUE;							//RemapInput
-		//iLibrySts[1]:=M_nCmptInOut(bExtend:=FALSE,  sErrorMSg:=sMsg);	//Retract
-		//SetOkToStop
-	ELSE*)
-		//To unblock the sequence during some of the alarm
-ELSIF 	//64, 	2#0000 00000 00000 00000 00000 00010 00000 leak 1
-	//128,	2#0000 00000 00000 00000 00000 00100 00000 leak 2
-	//256,	2#0000 00000 00000 00000 00000 01000 00000 GRD
-	//2948, 2#0000 00000 00000 00000 01000 00000 00000 GRD
-	(* NOT ( ( stMLVIO.iUnBlock =64 OR 
-			stMLVIO.iUnBlock =128 OR 
-			stMLVIO.iUnBlock =256 OR 
-			stMLVIO.iUnBlock =192 OR 
-			stMLVIO.iUnBlock =320 OR 
-			stMLVIO.iUnBlock =384 OR 
-			stMLVIO.iUnBlock =448) OR 
-			//stMLVIO.iUnBlock =2048)OR
-	//2, 2#0010 SYS Leak
-	//4, 2#0100 SYS GRD 
-		(	stMLVIO.iSysUnBlockAlm =2 OR 
-			stMLVIO.iSysUnBlockAlm =4 OR 
-			stMLVIO.iSysUnBlockAlm =6) )
-		OR *)
+ELSIF
 	stMLVIO.bAlarmBlock OR
 	stMLVIO.iSysUnBlockAlm = 2 OR 
 	stMLVIO.iSysUnBlockAlm = 10
 THEN
 	M_nShuttleMoveInOut:=20;		//return fail event
 	RETURN;
-//M_nShuttleMoveInOut:=20;		
-//RETURN;
 END_IF
-
-//ELSIF  !stTCMultiLevelVIO.isTIIError AND SysEror THEN 
-	//M_nShuttleMoveInOut:=30;		
-	//RETURN;	
-//ELSIF  stTCMultiLevelVIO.isTIIError AND SysEror THEN 
-	//M_nShuttleMoveInOut:=40;
-	//RETURN;	
-	
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //	State Assignment
@@ -1427,69 +1384,64 @@ END_IF
 
 IF iSeqStep > 0 THEN
 	;//Do nothing;
-ELSIF stTCMLSeqParam.bDrawerUp 
-	//OR stTCMLSeqParam.bDrawerUpBefFrtDoorOpen
-								THEN 		//*Manual Cyl-Up_Down Command*
-	iStkSeqCase := 0; 						//reset to init step, then do recovery
-	arrSeqStep[0]:=E_SeqSts.eInit;			//Init
-	arrSeqStep[1]:=E_SeqSts.eSanityCheck;	//Sanity check	
-	arrSeqStep[2]:=E_SeqSts.eMoveDrawerUp;	//Move drawer up
+ELSIF stTCMLSeqParam.bDrawerUp THEN
+	iStkSeqCase := 0;
+	arrSeqStep[0]:=E_SeqSts.eInit;
+	arrSeqStep[1]:=E_SeqSts.eSanityCheck;
+	arrSeqStep[2]:=E_SeqSts.eMoveDrawerUp;
 	arrSeqStep[3]:=E_SeqSts.eDone;		
 	
-ELSIF stTCMLSeqParam.bDrawerDown  
-	//OR (stTCMLSeqParam.bDoorRecovery AND bDebugCart)
-								  THEN 		//*Manual Cyl-Up_Down Command*
-	iStkSeqCase := 0; 						//reset to init step, then do recovery
-	arrSeqStep[0]:=E_SeqSts.eInit;			//Init
-	arrSeqStep[1]:=E_SeqSts.eSanityCheck;	//Sanity check	
-	arrSeqStep[2]:=E_SeqSts.eMoveDrawerDown;//Move drawer Down
+ELSIF stTCMLSeqParam.bDrawerDown THEN 		
+	iStkSeqCase := 0; 						
+	arrSeqStep[0]:=E_SeqSts.eInit;			
+	arrSeqStep[1]:=E_SeqSts.eSanityCheck;	
+	arrSeqStep[2]:=E_SeqSts.eMoveDrawerDown;
 	arrSeqStep[3]:=E_SeqSts.eDone;	
 	
-ELSIF stTCMLSeqParam.bCancel THEN			//OR stTCMLSeqParam.bDoorRecovery(* || Cancel || Initial || System Reset || DoorCloseRecovery *) THEN 
-	iStkSeqCase := 0; 						//reset to init step, then do recovery
-	arrSeqStep[0]:=E_SeqSts.eInit;			//Init
-	arrSeqStep[1]:=E_SeqSts.eSanityCheck;	//Sanity check	
-	arrSeqStep[2]:=E_SeqSts.eTBotEAPSanityCheck;	//Sanity check
-	arrSeqStep[3]:=E_SeqSts.eMoveDrawerUp;	//Move drawer up
-	arrSeqStep[4]:=E_SeqSts.eTBotEAPSanityCheck;	//Sanity check
-	arrSeqStep[5]:=E_SeqSts.eMoveDrawerIn;	//Move drawer In
-	arrSeqStep[6]:=E_SeqSts.eMoveDrawerDown;	//Move drawer In
-	arrSeqStep[7]:=E_SeqSts.eDone;			//done
+ELSIF stTCMLSeqParam.bCancel THEN
+	iStkSeqCase := 0;
+	arrSeqStep[0]:=E_SeqSts.eInit;
+	arrSeqStep[1]:=E_SeqSts.eSanityCheck;
+	arrSeqStep[2]:=E_SeqSts.eTBotEAPSanityCheck;
+	arrSeqStep[3]:=E_SeqSts.eMoveDrawerUp;
+	arrSeqStep[4]:=E_SeqSts.eTBotEAPSanityCheck;
+	arrSeqStep[5]:=E_SeqSts.eMoveDrawerIn;
+	arrSeqStep[6]:=E_SeqSts.eMoveDrawerDown;
+	arrSeqStep[7]:=E_SeqSts.eDone;
 	
 ELSIF stTCMLSeqParam.bShuttleMoveOut OR stTCMLSeqParam.bTBotbShuttleMoveOutReq THEN
-	arrSeqStep[0]											:= E_SeqSts.eInit; // Init
-	arrSeqStep[1]											:= E_SeqSts.eSanityCheck; // Sanity check
-	arrSeqStep[2]											:= E_SeqSts.eTBotEAPSanityCheck; // Sanity check
-	arrSeqStep[3]											:= E_SeqSts.eMoveDrawerUp; // Move drawer up
+	arrSeqStep[0]											:= E_SeqSts.eInit;
+	arrSeqStep[1]											:= E_SeqSts.eSanityCheck;
+	arrSeqStep[2]											:= E_SeqSts.eTBotEAPSanityCheck;
+	arrSeqStep[3]											:= E_SeqSts.eMoveDrawerUp;
 	arrSeqStep[4]											:= E_SeqSts.eTBotEAPSanityCheck;
-	arrSeqStep[5]											:= E_SeqSts.eMoveDrawerOut; // Move drawer out*)
-	arrSeqStep[6]											:= E_SeqSts.eDone; // Done
+	arrSeqStep[5]											:= E_SeqSts.eMoveDrawerOut;
+	arrSeqStep[6]											:= E_SeqSts.eDone;
 	
 ELSIF stTCMLSeqParam.bDrawerUpBefFrtDoorOpen THEN
-	arrSeqStep[0]											:= E_SeqSts.eInit; // Init
-	arrSeqStep[1]											:= E_SeqSts.eFrontDoorOpenConditionCheck; // Check DebugCarFronDoor Open Condition //have jump
-	arrSeqStep[2]											:= E_SeqSts.eSanityCheck; // Sanity check
-	arrSeqStep[3]											:= E_SeqSts.eTBotEAPSanityCheck; // Sanity check
-	arrSeqStep[4]											:= E_SeqSts.eMoveDrawerUp; // Move drawer up
-	arrSeqStep[5]											:= E_SeqSts.eTBotEAPSanityCheck;
-	arrSeqStep[6]											:= E_SeqSts.eMoveDrawerOut; //eOnDrawerOutputOnly;		//Move drawer out*)
-	arrSeqStep[7]											:= E_SeqSts.eTurnOffAPAirValve; //not using put in side FB_dooropenclose
-	arrSeqStep[8]											:= E_SeqSts.eTurnOffTesterAirValve; //not using put in side FB_dooropenclose
-	arrSeqStep[9]											:= E_SeqSts.eDone; //done
+	arrSeqStep[0]											:= E_SeqSts.eInit;
+	arrSeqStep[1]											:= E_SeqSts.eFrontDoorOpenConditionCheck;
+	arrSeqStep[2]											:= E_SeqSts.eSanityCheck;
+	arrSeqStep[3]											:= E_SeqSts.eMoveDrawerUp;
+	//arrSeqStep[4]											:= E_SeqSts.eMoveDrawerOut; //eOnDrawerOutputOnly
+	arrSeqStep[4]											:= E_SeqSts.eTurnOffAPAirValve;
+	arrSeqStep[5]											:= E_SeqSts.eTurnOffTesterAirValve;
+	arrSeqStep[6]											:= E_SeqSts.eUnlockFrontDoor;
+	arrSeqStep[7]											:= E_SeqSts.eDone;
 		
 	
 ELSIF stTCMLSeqParam.bShuttleMoveIn OR stTCMLSeqParam.bDoorRecovery OR stTCMLSeqParam.bTBotbShuttleMoveInReq THEN
-	arrSeqStep[0]											:= E_SeqSts.eInit; //Init
-	arrSeqStep[1]											:= E_SeqSts.eSanityCheck; //Sanity check
-	arrSeqStep[2]											:= E_SeqSts.eChkTIUPosition; //check drawer position to skip drawer up action if already drawer up
-	arrSeqStep[3]											:= E_SeqSts.eTBotEAPSanityCheck; //Sanity check
-	arrSeqStep[4]											:= E_SeqSts.eMoveDrawerUp;	//Move drawer up
-	arrSeqStep[5]											:= E_SeqSts.eTBotEAPSanityCheck; //Sanity check
-	arrSeqStep[6]											:= E_SeqSts.eMoveDrawerIn;	//Move drawer In
-	arrSeqStep[7]											:= E_SeqSts.eTurnOnTesterAirValve;	//turn on 6 bar tester air valve //debug cart only
-	arrSeqStep[8]											:= E_SeqSts.eMoveDrawerDown; //Move drawer down
-	arrSeqStep[9]											:= E_SeqSts.eTurnOnAPAirValve;	//turn on 10 bar AP air valve //Debug cart only
-	arrSeqStep[10]											:= E_SeqSts.eDone; //done
+	arrSeqStep[0]											:= E_SeqSts.eInit;
+	arrSeqStep[1]											:= E_SeqSts.eSanityCheck;
+	arrSeqStep[2]											:= E_SeqSts.eChkTIUPosition;
+	arrSeqStep[3]											:= E_SeqSts.eTBotEAPSanityCheck;
+	arrSeqStep[4]											:= E_SeqSts.eMoveDrawerUp;
+	arrSeqStep[5]											:= E_SeqSts.eTBotEAPSanityCheck;
+	arrSeqStep[6]											:= E_SeqSts.eMoveDrawerIn;
+	arrSeqStep[7]											:= E_SeqSts.eTurnOnTesterAirValve;
+	arrSeqStep[8]											:= E_SeqSts.eMoveDrawerDown;
+	arrSeqStep[9]											:= E_SeqSts.eTurnOnAPAirValve;
+	arrSeqStep[10]											:= E_SeqSts.eDone;
 END_IF
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1503,24 +1455,29 @@ iStkSeqCase													:= arrSeqStep[iSeqStep];
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 CASE iStkSeqCase OF
+	
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//	State: Front door open check, if drawer up signal direct skip to unlock front door.
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
 	E_SeqSts.eFrontDoorOpenConditionCheck:
-		// 1. Drawer Up input signal = true
-		// 2. Drawer Down output signal = false
-		// 3. Drawer Up output signal = true
-		// 4. Drawer retract output signal = false
-		// 5. Drawer extend output signal = true
-		// 6. Front door lock signal = true
-		// 7. Front door lock signal = true
-		IF stMLVIO.ipTCDrawerCylUpRS AND stMLVIO.opCellDrawerCylDown = FALSE AND stMLVIO.opCellDrawerCylUP = TRUE AND stMLVIO.opCellDrawerCylRetract = FALSE AND 
-			stMLVIO.opCellDrawerCylExtend = TRUE AND stMLVIO.opCellTBOtSideDoorClosed1 = FALSE AND stMLVIO.opCellTBOtSideDoorClosed1 = FALSE THEN
-			iSeqStep										:= 7; // Completed
+		IF stMLVIO.ipTCDrawerCylUpRS THEN
+			iSeqStep										:= 4; 	//jump to unlock door
 		ELSE
 			bStepDone										:= TRUE; 
 		END_IF
 		
-	E_SeqSts.eInit: //Init
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//	State: Front door open check, if drawer up signal direct skip to unlock front door.
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////			
+	E_SeqSts.eUnlockFrontDoor:
+		stMLVIO.opCellTBOtSideDoorClosed1							:= FALSE;
+		stMLVIO.opCellTBOtSideDoorClosed2							:= FALSE;
+		bStepDone													:= TRUE;
 		
-		//TDelay(IN:=FALSE);
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//	State: Initiate or Stay IDLE 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
+	E_SeqSts.eInit:
 		sMessage											:= 'Start Executing';
 		
 		IF stTCMLSeqParam.bInitialise THEN
@@ -1528,7 +1485,10 @@ CASE iStkSeqCase OF
 		END_IF
 		bStepDone											:= TRUE;
 		
-	E_SeqSts.eSanityCheck: //Sanity sheck (#01-CHECK TBOT SAFTY SIGNAL and #02-AP PIN SAFTY SIGNAL)
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//	State: Sanity check for Actuate Pan (AP), AP ready, deactuated
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////			
+	E_SeqSts.eSanityCheck: //Sanity sheck for 
 		sMessage											:= 'Sanity Check ';
 		stColVIO											:= fbTCColumn.P_stTCColumnVIO;
 		_nErrorID											:= INT_TO_UDINT(M_IsSanityCheckFailed(stMultiLevelVIO:= stMLVIO, sMsg=> sMessage)) ;
@@ -1536,6 +1496,9 @@ CASE iStkSeqCase OF
 			bStepDone										:= TRUE;
 		END_IF
 		
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//	State: Check TIU position, alarm if both signal detected // donno using or not.
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////			
 	eChkTIUPosition:
 		iTIUStatus											:= M_GetTIUStatus(
 																b3:= stMLVIO.ipTCDrawerCylUpRS,
@@ -1608,14 +1571,20 @@ CASE iStkSeqCase OF
 					bStepDone									:= TRUE;
 			END_CASE
 		END_IF	
-		
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//	State: TBOT EAP checking, anticollision signal & drawer safe to move signal
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////				
 	E_SeqSts.eTBotEAPSanityCheck:
 		sMessage												:= 'Checking TBot EAP';
 		_nErrorID												:= INT_TO_UDINT(M_IsEAPError(sMsg=>sMessage)) ;
 		IF _nErrorID=0 THEN
 			bStepDone											:= TRUE;
 		END_IF
-		
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//	State: Drawer Move Up OR Move Down
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
 	E_SeqSts.eMoveDrawerUp, E_SeqSts.eMoveDrawerDown: //drawer up, drawer down
 		sMessage												:= SEL(iStkSeqCase = E_SeqSts.eMoveDrawerUp,' Drawer Down ',' Drawer Up ');
 		IF (NOT tUpDnlock) THEN
@@ -1623,8 +1592,9 @@ CASE iStkSeqCase OF
 			tUpDnlock											:= TRUE;
 		END_IF
 		iLibrySts[1]											:= M_nCmptUpDown(
-																	bExtend:= iStkSeqCase = E_SeqSts.eMoveDrawerUp,  
-																	sErrorMSg:= sMsg);
+																		bExtend		:= iStkSeqCase = E_SeqSts.eMoveDrawerUp,  
+																		sErrorMSg	:= sMsg
+																	);
 		
 		IF iLibrySts[1] = 10 THEN
 			tAft												:= TIME();
@@ -1639,6 +1609,9 @@ CASE iStkSeqCase OF
 			_bError												:= TRUE;
 		END_IF
 	
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//	State: Drawer Move In OR Move Out
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////			
 	E_SeqSts.eMoveDrawerIn, E_SeqSts.eMoveDrawerOut: //drawer in, drawer out
 		sMessage												:= SEL(iStkSeqCase = E_SeqSts.eMoveDrawerIn,
 																	' Drawer Out ',
@@ -1648,10 +1621,10 @@ CASE iStkSeqCase OF
 			tInOutlock											:= TRUE;
 		END_IF	
 		
-		//IF stTCMLSeqParam.bShuttleMoveIn THEN  stMLVIO.bTIUInOutStatusFlag:=TRUE; END_IF
 		iLibrySts[1]											:= M_nCmptInOut(
-																	bExtend:= iStkSeqCase = E_SeqSts.eMoveDrawerOut,  
-																	sErrorMSg:= sMsg);
+																	bExtend			:= iStkSeqCase = E_SeqSts.eMoveDrawerOut,  
+																	sErrorMSg		:= sMsg
+																	);
 		
 		IF iLibrySts[1] = 10 THEN
 			//<Cyl_Duration_Log>
@@ -1674,19 +1647,25 @@ CASE iStkSeqCase OF
 			_bError												:= TRUE;
 		END_IF
 		
-	
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//	State: Turn OFF AP Air Valve (10Bar)	(Debug Cart only.)
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	E_SeqSts.eTurnOffAPAirValve: //only for debug cart front door
 		sMessage												:= ' Turn Off AP Air Valve (10Bar)';
 		stMLVIO.opAPAirSupplySol 								:= FALSE; //not able to false it maybe library turn it back on
 		bStepDone												:= TRUE;
 		
-		
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//	State: Turn OFF Tester Air Valve (6Bar)	(Debug Cart only.)
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////		
 	E_SeqSts.eTurnOffTesterAirValve: //only for debug cart front door
 		sMessage												:= ' Turn Off Tester Air Valve (6Bar)';
 		stMLVIO.opTesterDrawerAirSupplySol 						:= FALSE; //not able to false it maybe library turn it back on
 		bStepDone												:= TRUE;
 		
-	
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//	State: Turn ON AP Air Valve (10Bar)	(Debug Cart only.)
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	E_SeqSts.eTurnOnAPAirValve: //only for debug cart front door
 		IF bDebugCart THEN
 			IF stMLVIO.ipAPPresentSensor THEN 
@@ -1697,7 +1676,9 @@ CASE iStkSeqCase OF
 		
 		bStepDone												:= TRUE;
 	
-	
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//	State: Turn ON Tesrer Air Valve (6Bar) (Debug Cart only.)
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	E_SeqSts.eTurnOnTesterAirValve: //only for debug cart front door
 		IF bDebugCart THEN
 			sMessage											:= ' Turn on Tester Air Valve (6Bar)';
@@ -1706,26 +1687,32 @@ CASE iStkSeqCase OF
 		
 		bStepDone												:= TRUE;
 	
-	E_SeqSts.eOnDrawerOutputOnly:				//On Output Only
-		//stMLVIO.opCellDrawerCylExtend:= TRUE;
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//	State: On Drawer Extend Output only?? For what (Debug Cart only.)
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	E_SeqSts.eOnDrawerOutputOnly:
 		inTCDrawerExtRet.M_nExtend(
 			bExecute											:= TRUE);
 		bStepDone												:= TRUE;
 		
-	E_SeqSts.eDone:	// Done
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//	State: Completed
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////		
+	E_SeqSts.eDone:
 		sMessage												:= ' Done';
 		M_nShuttleMoveInOut										:= 10;
 END_CASE	
 
 
+
+//Checking any error, if error return, else continue next step
 IF _nErrorID > 0 OR _bError THEN
 	_bError													:= TRUE;
 ELSIF (stMLVIO.bStep OR stMLVIO.bBypassSingleMove OR iStkSeqCase <= E_SeqSts.eSanityCheck) AND iStkSeqCase < E_SeqSts.eDone AND bStepDone THEN
 	iSeqStep												:= iSeqStep + 1;
 	stMLVIO.bStep											:= FALSE;
 END_IF
-
-//rtStep(CLK:=bStep AND NOT bBypassSingleMove, Q=>bStep );]]></ST>
+]]></ST>
       </Implementation>
     </Method>
     <Method Name="M_nSystemReset" Id="{942afd54-b1c1-4798-a25e-93d4e56947c9}">
@@ -2735,48 +2722,25 @@ END_CASE]]></ST>
     </LineIds>
     <LineIds Name="FB_TCMultiLevelSeq.M_nShuttleMoveInOut">
       <LineId Id="1485" Count="0" />
-      <LineId Id="139" Count="1" />
-      <LineId Id="1250" Count="0" />
-      <LineId Id="2505" Count="13" />
-      <LineId Id="2521" Count="0" />
+      <LineId Id="2594" Count="0" />
+      <LineId Id="139" Count="0" />
       <LineId Id="2206" Count="0" />
-      <LineId Id="2170" Count="2" />
-      <LineId Id="2264" Count="0" />
-      <LineId Id="2173" Count="6" />
-      <LineId Id="2289" Count="0" />
-      <LineId Id="2180" Count="3" />
-      <LineId Id="2095" Count="0" />
       <LineId Id="2287" Count="0" />
       <LineId Id="2489" Count="0" />
       <LineId Id="2503" Count="0" />
       <LineId Id="2502" Count="0" />
       <LineId Id="2504" Count="0" />
       <LineId Id="2093" Count="0" />
-      <LineId Id="2099" Count="0" />
-      <LineId Id="2097" Count="0" />
       <LineId Id="1293" Count="0" />
-      <LineId Id="2501" Count="0" />
-      <LineId Id="1289" Count="0" />
-      <LineId Id="1253" Count="0" />
-      <LineId Id="1258" Count="1" />
-      <LineId Id="1255" Count="0" />
-      <LineId Id="1251" Count="0" />
-      <LineId Id="1260" Count="0" />
       <LineId Id="1458" Count="0" />
       <LineId Id="2337" Count="2" />
       <LineId Id="142" Count="0" />
       <LineId Id="2340" Count="0" />
       <LineId Id="143" Count="1" />
-      <LineId Id="1426" Count="0" />
-      <LineId Id="1986" Count="0" />
-      <LineId Id="1985" Count="0" />
-      <LineId Id="1427" Count="3" />
+      <LineId Id="1426" Count="4" />
       <LineId Id="1424" Count="0" />
       <LineId Id="1431" Count="0" />
-      <LineId Id="1433" Count="0" />
-      <LineId Id="2008" Count="0" />
-      <LineId Id="1984" Count="0" />
-      <LineId Id="1434" Count="3" />
+      <LineId Id="1433" Count="4" />
       <LineId Id="1432" Count="0" />
       <LineId Id="1425" Count="0" />
       <LineId Id="999" Count="0" />
@@ -2799,8 +2763,11 @@ END_CASE]]></ST>
       <LineId Id="2035" Count="0" />
       <LineId Id="2039" Count="0" />
       <LineId Id="2235" Count="0" />
-      <LineId Id="2040" Count="4" />
+      <LineId Id="2040" Count="0" />
+      <LineId Id="2042" Count="0" />
+      <LineId Id="2546" Count="0" />
       <LineId Id="2393" Count="1" />
+      <LineId Id="2547" Count="0" />
       <LineId Id="2045" Count="0" />
       <LineId Id="2033" Count="1" />
       <LineId Id="1960" Count="0" />
@@ -2819,23 +2786,34 @@ END_CASE]]></ST>
       <LineId Id="1047" Count="0" />
       <LineId Id="2344" Count="0" />
       <LineId Id="1048" Count="0" />
-      <LineId Id="2237" Count="0" />
-      <LineId Id="2373" Count="6" />
-      <LineId Id="2238" Count="0" />
-      <LineId Id="2372" Count="0" />
-      <LineId Id="2239" Count="2" />
+      <LineId Id="2552" Count="0" />
+      <LineId Id="2550" Count="1" />
+      <LineId Id="2548" Count="0" />
+      <LineId Id="2237" Count="4" />
       <LineId Id="2236" Count="0" />
+      <LineId Id="2598" Count="0" />
+      <LineId Id="2596" Count="1" />
       <LineId Id="2242" Count="0" />
+      <LineId Id="2595" Count="0" />
+      <LineId Id="2601" Count="1" />
+      <LineId Id="2599" Count="0" />
+      <LineId Id="2603" Count="0" />
+      <LineId Id="2554" Count="1" />
+      <LineId Id="2553" Count="0" />
       <LineId Id="1378" Count="0" />
-      <LineId Id="1403" Count="1" />
       <LineId Id="1052" Count="2" />
       <LineId Id="1220" Count="0" />
-      <LineId Id="1059" Count="3" />
+      <LineId Id="1059" Count="2" />
+      <LineId Id="2558" Count="1" />
+      <LineId Id="2556" Count="0" />
+      <LineId Id="1062" Count="0" />
       <LineId Id="1219" Count="0" />
       <LineId Id="1860" Count="0" />
       <LineId Id="1574" Count="0" />
       <LineId Id="1863" Count="2" />
       <LineId Id="1890" Count="0" />
+      <LineId Id="2562" Count="1" />
+      <LineId Id="2560" Count="0" />
       <LineId Id="1893" Count="1" />
       <LineId Id="2319" Count="3" />
       <LineId Id="1895" Count="2" />
@@ -2896,18 +2874,23 @@ END_CASE]]></ST>
       <LineId Id="1931" Count="0" />
       <LineId Id="2351" Count="0" />
       <LineId Id="1932" Count="0" />
-      <LineId Id="1891" Count="1" />
+      <LineId Id="1891" Count="0" />
+      <LineId Id="2564" Count="0" />
+      <LineId Id="2566" Count="1" />
+      <LineId Id="1892" Count="0" />
       <LineId Id="1575" Count="0" />
       <LineId Id="1859" Count="0" />
       <LineId Id="1809" Count="0" />
       <LineId Id="1867" Count="1" />
       <LineId Id="1866" Count="0" />
+      <LineId Id="2568" Count="2" />
       <LineId Id="1099" Count="1" />
       <LineId Id="1103" Count="0" />
       <LineId Id="1520" Count="2" />
       <LineId Id="1519" Count="0" />
       <LineId Id="1105" Count="0" />
       <LineId Id="2365" Count="1" />
+      <LineId Id="2571" Count="0" />
       <LineId Id="1106" Count="1" />
       <LineId Id="1517" Count="0" />
       <LineId Id="1523" Count="0" />
@@ -2915,13 +2898,17 @@ END_CASE]]></ST>
       <LineId Id="1108" Count="1" />
       <LineId Id="1524" Count="0" />
       <LineId Id="1110" Count="2" />
-      <LineId Id="1114" Count="2" />
+      <LineId Id="1114" Count="0" />
+      <LineId Id="2574" Count="1" />
+      <LineId Id="2572" Count="0" />
+      <LineId Id="1115" Count="1" />
       <LineId Id="2367" Count="1" />
       <LineId Id="1525" Count="2" />
       <LineId Id="1117" Count="0" />
-      <LineId Id="1548" Count="1" />
+      <LineId Id="1548" Count="0" />
       <LineId Id="1223" Count="0" />
       <LineId Id="2370" Count="1" />
+      <LineId Id="2576" Count="0" />
       <LineId Id="1162" Count="1" />
       <LineId Id="1621" Count="0" />
       <LineId Id="1512" Count="0" />
@@ -2938,18 +2925,22 @@ END_CASE]]></ST>
       <LineId Id="1529" Count="0" />
       <LineId Id="1166" Count="2" />
       <LineId Id="1465" Count="0" />
+      <LineId Id="2577" Count="1" />
       <LineId Id="2409" Count="0" />
       <LineId Id="2418" Count="0" />
       <LineId Id="2535" Count="0" />
       <LineId Id="2422" Count="0" />
       <LineId Id="2421" Count="0" />
       <LineId Id="2433" Count="0" />
+      <LineId Id="2579" Count="1" />
       <LineId Id="2424" Count="0" />
       <LineId Id="2428" Count="0" />
       <LineId Id="2536" Count="0" />
       <LineId Id="2479" Count="0" />
       <LineId Id="2411" Count="0" />
-      <LineId Id="2434" Count="2" />
+      <LineId Id="2434" Count="0" />
+      <LineId Id="2581" Count="1" />
+      <LineId Id="2435" Count="1" />
       <LineId Id="2459" Count="0" />
       <LineId Id="2437" Count="0" />
       <LineId Id="2532" Count="0" />
@@ -2958,6 +2949,7 @@ END_CASE]]></ST>
       <LineId Id="2460" Count="0" />
       <LineId Id="2442" Count="1" />
       <LineId Id="2438" Count="0" />
+      <LineId Id="2583" Count="1" />
       <LineId Id="2412" Count="0" />
       <LineId Id="2446" Count="0" />
       <LineId Id="2461" Count="0" />
@@ -2965,20 +2957,25 @@ END_CASE]]></ST>
       <LineId Id="2450" Count="0" />
       <LineId Id="2462" Count="1" />
       <LineId Id="2444" Count="1" />
-      <LineId Id="2047" Count="1" />
+      <LineId Id="2586" Count="1" />
+      <LineId Id="2585" Count="0" />
+      <LineId Id="2047" Count="0" />
       <LineId Id="2070" Count="0" />
       <LineId Id="2369" Count="0" />
       <LineId Id="1466" Count="0" />
       <LineId Id="1171" Count="0" />
+      <LineId Id="2590" Count="1" />
+      <LineId Id="2588" Count="0" />
       <LineId Id="1174" Count="0" />
       <LineId Id="1176" Count="0" />
       <LineId Id="1388" Count="0" />
       <LineId Id="1178" Count="0" />
       <LineId Id="2534" Count="0" />
+      <LineId Id="2592" Count="1" />
       <LineId Id="1179" Count="3" />
       <LineId Id="1185" Count="0" />
       <LineId Id="1405" Count="0" />
-      <LineId Id="1186" Count="1" />
+      <LineId Id="1186" Count="0" />
       <LineId Id="231" Count="0" />
     </LineIds>
     <LineIds Name="FB_TCMultiLevelSeq.M_nSystemReset">
