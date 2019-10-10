@@ -111,8 +111,8 @@ fb_DewPoint_Alarm(
 	AlarmTimer		:= DewPoint_Alarm_Timer, 
 	AbortTimer		:= DewPoint_Abort_Timer, 
 	DB		:= 0.2, //When recover, need extra 0.2 degree celsius
-	LogName		:= 'DewPoint', 
-	ModuleID		:= E_ModuleID.NA, 
+	LogName		:= 'DewPoint Abort In Progess', 
+	ModuleID		:= E_ModuleID.COLUMN_LB, 
 	EventName		:= E_EventName.DewPointAbortInProgress, 
 	Warning		=> DewPoint_Warning, 
 	Alarm		=> DewPoint_Alarm, 
@@ -128,8 +128,8 @@ fb_6BarOFA_Alarm(
 	AlarmTimer	:= OFA6Bar_Alarm_Timer, 
 	AbortTimer	:= OFA6Bar_Abort_Timer, 
 	DB		:= 5,  //when recover, need extra 5KPa
-	LogName		:= 'OFA 6Bar', 
-	ModuleID		:= E_ModuleID.NA, 
+	LogName		:= 'OFA 6Bar Abort In Progress', 
+	ModuleID		:= E_ModuleID.COLUMN_LB, 
 	EventName		:= E_EventName.SixbarOFAAbortInProgress, 
 	Warning		=> OFA6Bar_Warning, 
 	Alarm		=> OFA6Bar_Alarm, 

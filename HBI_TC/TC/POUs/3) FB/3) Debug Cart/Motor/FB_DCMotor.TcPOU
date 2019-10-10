@@ -62,11 +62,18 @@ fb_DebugCart_AP240Power(
 	
 PermSD();
 
+
+
+
+
 _DUT_DebugCart_Col_PCWValve.AutInp		:= (NOT ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWLeakageAlarm]) AND
 											(NOT ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWSupplyLeakageAlarm]) AND
 											(NOT ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWReturnLeakageAlarm]) AND
 											(NOT ALM_DCCOL.AlarmID[E_DCFACAlarm.eCriticalCondensationAlarm]) AND 
-											(NOT ALM_DCCOL.AlarmID[E_DCFACAlarm.e6BarLowOFAAirPressureAlarm]);
+											(NOT ALM_DCCOL.AlarmID[E_DCFACAlarm.e6BarLowOFAAirPressureAlarm])AND 
+											(NOT DewPoint_Abort) AND
+											(NOT OFA6Bar_Abort);
+
 					
 fb_DebugCart_Col_PCWValve(
 	Sec_P:= Sec_P, 
@@ -139,10 +146,16 @@ FC_BitToWord(
       <LineId Id="143" Count="0" />
       <LineId Id="132" Count="0" />
       <LineId Id="130" Count="0" />
-      <LineId Id="244" Count="1" />
+      <LineId Id="244" Count="0" />
+      <LineId Id="287" Count="0" />
+      <LineId Id="293" Count="0" />
+      <LineId Id="288" Count="1" />
+      <LineId Id="245" Count="0" />
       <LineId Id="105" Count="2" />
       <LineId Id="122" Count="0" />
       <LineId Id="266" Count="0" />
+      <LineId Id="294" Count="1" />
+      <LineId Id="292" Count="0" />
       <LineId Id="123" Count="0" />
       <LineId Id="89" Count="14" />
       <LineId Id="65" Count="0" />
