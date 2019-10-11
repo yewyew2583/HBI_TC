@@ -216,8 +216,8 @@ END_IF
 	END_IF]]></ST>
       </Implementation>
     </Method>
-    <Method Name="M_240APPwr" Id="{8b504b38-c8b9-4f13-804b-f71cac2517bc}">
-      <Declaration><![CDATA[METHOD M_240APPwr : UDINT
+    <Method Name="M_AP240Power" Id="{8b504b38-c8b9-4f13-804b-f71cac2517bc}">
+      <Declaration><![CDATA[METHOD M_AP240Power : UDINT
 VAR_INPUT
 END_VAR
 VAR 
@@ -311,9 +311,9 @@ isLeakage		:=( ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWLeakageAlarm] OR ALM_DCC
 					ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWReturnLeakageAlarm]);																
 isGroundFault		:= ALMTC.Level[1].AlarmID[E_TIIAlarm.ipCellGroundFault];															
 																	
-//<APPowerOn>	
-	M_240APPwr();
-//</APPowerOn>																
+//<LOOP>	
+	M_AP240Power();
+//</LOOP>																
 
 
 //<24VSencondaryPwr>
@@ -726,7 +726,7 @@ FC_BitToWord(
       <LineId Id="21" Count="4" />
       <LineId Id="8" Count="0" />
     </LineIds>
-    <LineIds Name="FB_DebugStationSeq.M_240APPwr">
+    <LineIds Name="FB_DebugStationSeq.M_AP240Power">
       <LineId Id="124" Count="0" />
       <LineId Id="187" Count="12" />
       <LineId Id="220" Count="1" />

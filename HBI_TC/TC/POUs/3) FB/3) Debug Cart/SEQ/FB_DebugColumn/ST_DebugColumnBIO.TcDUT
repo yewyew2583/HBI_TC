@@ -24,7 +24,7 @@ STRUCT
 	ipDBColumnDewPointSensor          	:REAL;
 	ipDBColumnTempSensor 	:REAL;
 	ipDBColumnPCWSupplyTemperature    	:REAL;
-	ipDBColumnPCWReturnTemperature    	:REAL;
+	ipDBColumnPCWReturnTemperature    	:REAL; 
 //</CVTIO>
 
 END_STRUCT

@@ -195,10 +195,6 @@
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
-    <Compile Include="GVLs\GVL_IO.TcGVL">
-      <SubType>Code</SubType>
-      <LinkAlways>true</LinkAlways>
-    </Compile>
     <Compile Include="GVLs\GVL_Motor.TcGVL">
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
@@ -387,16 +383,10 @@
     <Compile Include="POUs\3%29 FB\2%29 TC\Testing\TestManually.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\3%29 FB\3%29 Debug Cart\Motor\FB_DCMotor.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="POUs\3%29 FB\3%29 Debug Cart\SEQ\Facility\FB_Facility.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\3%29 FB\3%29 Debug Cart\SEQ\FB_DebugColumn\FB_DebugColumn.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\3%29 FB\3%29 Debug Cart\SEQ\FB_DebugColumn\ST_DebugColumnAIO.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\3%29 FB\3%29 Debug Cart\SEQ\FB_DebugColumn\ST_DebugColumnBIO.TcDUT">
@@ -619,7 +609,6 @@
     <Folder Include="POUs\3%29 FB\2%29 TC\SEQ\FB_TCMultiLevel" />
     <Folder Include="POUs\3%29 FB\2%29 TC\SEQ\FB_TCShuttlePOC" />
     <Folder Include="POUs\3%29 FB\2%29 TC\Testing" />
-    <Folder Include="POUs\3%29 FB\3%29 Debug Cart\Motor" />
     <Folder Include="POUs\3%29 FB\3%29 Debug Cart\SEQ" />
     <Folder Include="POUs\3%29 FB\3%29 Debug Cart\SEQ\Facility" />
     <Folder Include="POUs\3%29 FB\3%29 Debug Cart\SEQ\FB_DebugColumn" />

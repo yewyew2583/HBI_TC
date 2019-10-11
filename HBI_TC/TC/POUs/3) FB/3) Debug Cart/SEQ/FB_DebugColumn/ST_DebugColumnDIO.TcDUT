@@ -70,26 +70,6 @@ STRUCT
 	
 
 END_STRUCT
-END_TYPE
-
-(*
-GVL_TC.fbDebugColumn.stDebugColumnDIO.ipDBColumnPCWLeakage				
-GVL_TC.fbDebugColumn.stDebugColumnDIO.ipDBColumnPCWSupplyLeakage    	
-GVL_TC.fbDebugColumn.stDebugColumnDIO.ipDBColumnPCWReturnLeakage    	
-                                        
-GVL_TC.fbDebugColumn.stDebugColumnDIO.ipDBColumnPCWRegularFlowSensor	
-GVL_TC.fbDebugColumn.stDebugColumnDIO.ipDBColumnPCWSupplyPressure       
-GVL_TC.fbDebugColumn.stDebugColumnDIO.ipDBColumnPCWReturnPressure       
-GVL_TC.fbDebugColumn.stDebugColumnDIO.ipDBColumnTstAirPressure          
-GVL_TC.fbDebugColumn.stDebugColumnDIO.ipDBColumnAPAirPressure           
-GVL_TC.fbDebugColumn.stDebugColumnDIO.ipDBColumnDewPointSensor          
-GVL_TC.fbDebugColumn.stDebugColumnDIO.ipDBColumnPCWSupplyTemperature    
-GVL_TC.fbDebugColumn.stDebugColumnDIO.ipDBColumnPCWReturnTemperature    
-                                        
-GVL_TC.fbDebugColumn.stDebugColumnDIO.opDBColumnHotAirExhaustFan 		
-GVL_TC.fbDebugColumn.stDebugColumnDIO.opDBColumnPCWValve         		
-GVL_TC.fbDebugColumn.stDebugColumnDIO.opDBColumnTstAirSol        		
-GVL_TC.fbDebugColumn.stDebugColumnDIO.opDBColumnAPAirSol         		
-*)]]></Declaration>
+END_TYPE]]></Declaration>
   </DUT>
 </TcPlcObject>
