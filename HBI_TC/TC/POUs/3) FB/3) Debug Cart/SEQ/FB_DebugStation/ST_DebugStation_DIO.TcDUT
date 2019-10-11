@@ -30,19 +30,19 @@ STRUCT
 	opDBStnPCWFlowBypassValve       		AT %Q* :BOOL;
 	opDBStnBypassAPAirSupplySol           	AT %Q* :BOOL;
 	//opDBStnMainPCWSupply					AT %Q* :BOOL; //debugcart3 new io
-	opDBStnMainPCWReturn					AT %Q* :BOOL; //debugcart3 new io
-	opDBStnPCWSupplyPurge					AT %Q* :BOOL; //debugcart3 new io
-	
-	opDBStnAlarmLED 						AT %Q* :BOOL; //debugcart3 new io
-	opDBStnPurgeLED 						AT %Q* :BOOL; //debugcart3 new io
-	
 	opDBStn24VPowerEnable           		AT %Q* :BOOL;
 	opDBStnLeakFlowPCWValve        			AT %Q* :BOOL;
 	opDBStnLowFlowPCWValve          		AT %Q* :BOOL;
 	opDBStnAPSafeToEngage       			AT %Q* :BOOL;
 	opDBStnAPTCCReset               		AT %Q* :BOOL;
-	
+	opDBStnMainPCWReturn					AT %Q* :BOOL; //debugcart3 new io
+	opDBStnPCWSupplyPurge					AT %Q* :BOOL; //debugcart3 new io
 	opCellLTIMValve							AT %Q* :BOOL;
+	
+	opDBStnAlarmLED 						AT %Q* :BOOL; //debugcart3 new io
+	opDBStnPurgeLED 						AT %Q* :BOOL; //debugcart3 new io
+	
+	
 
 //</DIO>
 

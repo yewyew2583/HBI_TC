@@ -915,9 +915,9 @@ END_IF
 //<Output>
 	IF stMLVIO.bDiagnosticMode=FALSE THEN
 		stMLDIO.opAP240ACPwrEnable  			:= 		NOT	itl_opAP_240ACPwrEnable  							AND	stMLVIO.opAP240ACPwrEnable  				;//AND stMLVIO.bTstDelInt	(*&!	bTstAC	Off*)	;
-		stMLDIO.ipSpare_1						:=		stMLVIO.ipSpare_1;
-		stMLDIO.ipSpare_2						:=		stMLVIO.ipSpare_2;
-		stMLDIO.ipSpare_3						:=		stMLVIO.ipSpare_3;
+		stMLDIO.opSpare_1						:=		stMLVIO.opSpare_1;
+		stMLDIO.opSpare_2						:=		stMLVIO.opSpare_2;
+		stMLDIO.opSpare_3						:=		stMLVIO.opSpare_3;
 		stMLDIO.opDoorOpenReqLED				:= 		NOT	itl_opDoorOpenReqLED								AND	stMLVIO.opDoorOpenReqLED					;
 		stMLDIO.opAlarmLED 						:= 		NOT	itl_opAlarmLED 				        				AND	stMLVIO.opAlarmLED 							;		
 		stMLDIO.opTCCellAbortFlowBtnLED			:= 		NOT	itl_opTesterAPDetachReqBtnLED						AND	stMLVIO.opTCCellAbortFlowBtnLED		    	;
@@ -930,8 +930,8 @@ END_IF
 		stMLDIO.opCellDrawerCylUp 				:= 		(NOT	itl_opCellDrawerCylUp 		OR TRUE)			AND stMLVIO.opCellDrawerCylUp 					; //:= fbTCDrawerUpDn.P_opExtend; 		
 		stMLDIO.opCellDrawerCylDown 			:= 		(NOT	itl_opCellDrawerCylDown 	OR TRUE)			AND	stMLVIO.opCellDrawerCylDown 				; //:= fbTCDrawerUpDn.P_opRetract; 
 		stMLDIO.opTst240VACPwrEnable 			:= 		NOT	itl_opTst240VACPwrEnable 							AND	stMLVIO.opTst240VACPwrEnable 				;
-		stMLDIO.ipSpare_9						:=		stMLVIO.ipSpare_9;
-		stMLDIO.ipSpare_10						:=		stMLVIO.ipSpare_10;
+		stMLDIO.opSpare_9						:=		stMLVIO.opSpare_9;
+		stMLDIO.opSpare_10						:=		stMLVIO.opSpare_10;
 		stMLDIO.opCellPCWValve  				:= 		NOT	itl_opCellPCWValve  			    				AND	stMLVIO.opCellPCWValve  					;	//AND stMLVIO.bTstDelInt	;
 		stMLDIO.opTIUSktAirSol_1 				:= 		NOT	itl_opTIUSktAirSol_1 								AND stMLVIO.opTIUSktAirSol_1 					;
 		stMLDIO.opTIUSktAirSol_2				:= 		NOT	itl_opTIUSktAirSol_2								AND stMLVIO.opTIUSktAirSol_2					;	
@@ -1460,8 +1460,9 @@ CASE iStkSeqCase OF
 //	State: Front door open check, if drawer up signal direct skip to unlock front door.
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
 	E_SeqSts.eFrontDoorOpenConditionCheck:
+		sMessage											:= ' Drawer Up Condition Checking';
 		IF stMLVIO.ipTCDrawerCylUpRS THEN
-			iSeqStep										:= 4; 	//jump to drawer on output
+			iSeqStep										:= 5; 	//jump to drawer on output
 		ELSE
 			bStepDone										:= TRUE; 
 		END_IF
@@ -2789,7 +2790,9 @@ END_CASE]]></ST>
       <LineId Id="2552" Count="0" />
       <LineId Id="2550" Count="1" />
       <LineId Id="2548" Count="0" />
-      <LineId Id="2237" Count="4" />
+      <LineId Id="2237" Count="0" />
+      <LineId Id="2613" Count="0" />
+      <LineId Id="2238" Count="3" />
       <LineId Id="2236" Count="0" />
       <LineId Id="2598" Count="0" />
       <LineId Id="2596" Count="1" />

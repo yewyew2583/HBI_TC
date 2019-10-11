@@ -29,7 +29,14 @@ STRUCT
 	opDBStnLowFlowPCWValve				: BOOL;
 	opDBStnAPSafeToEngage				: BOOL;
 	opDBStnAPTCCReset					: BOOL;
-
+	opDBStnMainPCWReturn				: BOOL;
+	opDBStnPCWSupplyPurge				: BOOL;
+	opCellLTIMValve						: BOOL;
+	
+	opDBStnAlarmLED						: BOOL;
+	opDBStnPurgeLED						: BOOL;
+	
+	
 //</DIO>
 
 //<CIO>

@@ -76,9 +76,9 @@ STRUCT
 //</Input>
 //<Output>	
 	opAP240ACPwrEnable  					: BOOL;     //AP Power                                              
-	//Spare
-	//Spare
-	//Spare
+	opSpare_1 								: BOOL; // Spare
+	opSpare_2 								: BOOL; // Spare
+	opSpare_3 								: BOOL; // Spare
 	opDoorOpenReqLED						: BOOL;     //PB LED                                                    
 	opAlarmLED 								: BOOL;     //Alarm LED                                                    
 	//Spare
@@ -99,8 +99,8 @@ STRUCT
 	opCellDrawerCylDown 					: BOOL;	    //Cyl Dn                                                   
 	opTst240VACPwrEnable 					: BOOL;  	//Tester Power                                         
 	
-	opSpare_9  								AT %Q*: BOOL; // Spare
-	opSpare_10 								AT %Q*: BOOL; // Spare
+	opSpare_9  								: BOOL; // Spare
+	opSpare_10 								: BOOL; // Spare
 	
 	opCellPCWValve  						: BOOL; 	//???                                                        
 	opTIUSktAirSol_1 						: BOOL; 	//                                                          

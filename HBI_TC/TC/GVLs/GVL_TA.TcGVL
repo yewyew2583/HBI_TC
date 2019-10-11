@@ -4,7 +4,7 @@
     <Declaration><![CDATA[VAR_GLOBAL
 	// 1 = Production mode, 0 = Engineering mode 
 	// Engineering mode can have IO's from either of one, Actual HW , Backdoor or Simualted
-	bProductionMode										: BOOL	:= TRUE;  //0: simulation, 1: actual/ production mode
+	bProductionMode										: BOOL	:= FALSE;  //0: simulation, 1: actual/ production mode
 	bEnableTIIAlarm										: BOOL	:= FALSE;
 	
 	// TA Heartbeat signal 
