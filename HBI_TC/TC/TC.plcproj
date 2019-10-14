@@ -365,64 +365,64 @@
     <Compile Include="POUs\3%29 FB\2%29 TC\SEQ\PreInitialise.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\3%29 FB\2%29 TC\Testing\CycleTest.TcPOU">
+    <Compile Include="POUs\3) FB\2) TC\CycleTesting\CycleTest.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\3%29 FB\2%29 TC\Testing\EAPUpdate.TcPOU">
+    <Compile Include="POUs\3) FB\2) TC\CycleTesting\EAPUpdate.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\3%29 FB\2%29 TC\Testing\FB_GUI_TEST.TcPOU">
+    <Compile Include="POUs\3) FB\2) TC\CycleTesting\FB_GUI_TEST.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\3%29 FB\2%29 TC\Testing\FB_GUI_TEST_SLTC.TcPOU">
+    <Compile Include="POUs\3) FB\2) TC\CycleTesting\FB_GUI_TEST_SLTC.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\3%29 FB\2%29 TC\Testing\Testing.TcPOU">
+    <Compile Include="POUs\3) FB\2) TC\CycleTesting\Testing.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\3%29 FB\2%29 TC\Testing\TestManually.TcPOU">
+    <Compile Include="POUs\3) FB\2) TC\CycleTesting\TestManually.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\3%29 FB\3%29 Debug Cart\SEQ\Facility\FB_Facility.TcPOU">
+    <Compile Include="POUs\3%29 FB\3%29 Debug Cart\Facility\FB_Facility.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\3%29 FB\3%29 Debug Cart\SEQ\FB_DebugColumn\FB_DebugColumn.TcPOU">
+    <Compile Include="POUs\3%29 FB\3%29 Debug Cart\FB_DebugColumn\FB_DebugColumn.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\3%29 FB\3%29 Debug Cart\SEQ\FB_DebugColumn\ST_DebugColumnBIO.TcDUT">
+    <Compile Include="POUs\3%29 FB\3%29 Debug Cart\FB_DebugColumn\ST_DebugColumnBIO.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\3%29 FB\3%29 Debug Cart\SEQ\FB_DebugColumn\ST_DebugColumnDIO.TcDUT">
+    <Compile Include="POUs\3%29 FB\3%29 Debug Cart\FB_DebugColumn\ST_DebugColumnDIO.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\3%29 FB\3%29 Debug Cart\SEQ\FB_DebugColumn\ST_DebugColumnVIO.TcDUT">
+    <Compile Include="POUs\3%29 FB\3%29 Debug Cart\FB_DebugColumn\ST_DebugColumnVIO.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\3%29 FB\3%29 Debug Cart\SEQ\FB_DebugStation\ANLG_TO_ABC.TcPOU">
+    <Compile Include="POUs\3%29 FB\3%29 Debug Cart\FB_DebugStation\ANLG_TO_ABC.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\3%29 FB\3%29 Debug Cart\SEQ\FB_DebugStation\FB_DebugStationProcess.TcPOU">
+    <Compile Include="POUs\3%29 FB\3%29 Debug Cart\FB_DebugStation\FB_DebugStationProcess.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\3%29 FB\3%29 Debug Cart\SEQ\FB_DebugStation\FB_DebugStationSeq.TcPOU">
+    <Compile Include="POUs\3%29 FB\3%29 Debug Cart\FB_DebugStation\FB_DebugStationSeq.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\3%29 FB\3%29 Debug Cart\SEQ\FB_DebugStation\FB_TIIAlarmDbStn.TcPOU">
+    <Compile Include="POUs\3%29 FB\3%29 Debug Cart\FB_DebugStation\FB_TIIAlarmDbStn.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\3%29 FB\3%29 Debug Cart\SEQ\FB_DebugStation\ST_DebugStationSeqParam.TcDUT">
+    <Compile Include="POUs\3%29 FB\3%29 Debug Cart\FB_DebugStation\ST_DebugStationSeqParam.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\3%29 FB\3%29 Debug Cart\SEQ\FB_DebugStation\ST_DebugStation_BIO.TcDUT">
+    <Compile Include="POUs\3%29 FB\3%29 Debug Cart\FB_DebugStation\ST_DebugStation_BIO.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\3%29 FB\3%29 Debug Cart\SEQ\FB_DebugStation\ST_DebugStation_DIO.TcDUT">
+    <Compile Include="POUs\3%29 FB\3%29 Debug Cart\FB_DebugStation\ST_DebugStation_DIO.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\3%29 FB\3%29 Debug Cart\SEQ\FB_DebugStation\ST_DebugStation_VIO.TcDUT">
+    <Compile Include="POUs\3%29 FB\3%29 Debug Cart\FB_DebugStation\ST_DebugStation_VIO.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\3%29 FB\3%29 Debug Cart\SEQ\FB_DebugStation\ST_SenSpec.TcDUT">
+    <Compile Include="POUs\3%29 FB\3%29 Debug Cart\FB_DebugStation\ST_SenSpec.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\3%29 FB\9%29 Unknown\CheckBounds.TcPOU">
@@ -602,17 +602,15 @@
     <Folder Include="POUs\3%29 FB\1%29 Common\FB_Alarm" />
     <Folder Include="POUs\3%29 FB\1%29 Common\FB_EPT" />
     <Folder Include="POUs\3%29 FB\1%29 Common\FB_Logging" />
-    <Folder Include="POUs\3%29 FB\2%29 TC\Motor" />
     <Folder Include="POUs\3%29 FB\2%29 TC\SEQ" />
     <Folder Include="POUs\3%29 FB\2%29 TC\SEQ\FB_RemoteCmdAndEvent" />
     <Folder Include="POUs\3%29 FB\2%29 TC\SEQ\FB_TCColumn" />
     <Folder Include="POUs\3%29 FB\2%29 TC\SEQ\FB_TCMultiLevel" />
     <Folder Include="POUs\3%29 FB\2%29 TC\SEQ\FB_TCShuttlePOC" />
-    <Folder Include="POUs\3%29 FB\2%29 TC\Testing" />
-    <Folder Include="POUs\3%29 FB\3%29 Debug Cart\SEQ" />
-    <Folder Include="POUs\3%29 FB\3%29 Debug Cart\SEQ\Facility" />
-    <Folder Include="POUs\3%29 FB\3%29 Debug Cart\SEQ\FB_DebugColumn" />
-    <Folder Include="POUs\3%29 FB\3%29 Debug Cart\SEQ\FB_DebugStation" />
+    <Folder Include="POUs\3%29 FB\2%29 TC\CycleTesting" />
+    <Folder Include="POUs\3%29 FB\3%29 Debug Cart\Facility" />
+    <Folder Include="POUs\3%29 FB\3%29 Debug Cart\FB_DebugColumn" />
+    <Folder Include="POUs\3%29 FB\3%29 Debug Cart\FB_DebugStation" />
     <Folder Include="POUs\3%29 FB\9%29 Unknown\FB_CommonFunction" />
     <Folder Include="POUs\3%29 FB\9%29 Unknown\FB_SLTC" />
     <Folder Include="POUs\3%29 FB\9%29 Unknown\FB_TCLevel" />
