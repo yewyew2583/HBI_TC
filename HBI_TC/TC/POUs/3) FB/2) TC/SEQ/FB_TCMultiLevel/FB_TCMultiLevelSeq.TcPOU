@@ -1462,7 +1462,7 @@ CASE iStkSeqCase OF
 	E_SeqSts.eFrontDoorOpenConditionCheck:
 		sMessage											:= ' Drawer Up Condition Checking';
 		IF stMLVIO.ipTCDrawerCylUpRS THEN
-			iSeqStep										:= 5; 	//jump to drawer on output
+			iSeqStep										:= 5; 	//jump to turn off air valves
 		ELSE
 			bStepDone										:= TRUE; 
 		END_IF

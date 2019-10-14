@@ -48,322 +48,6 @@
 					<Vars VarGrpType="1">
 						<Name>PlcTask Inputs</Name>
 						<Var>
-							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.ipDBStnAPPresentSensor</Name>
-							<Comment>
-								<![CDATA[ Actuate pan present signal, 0: Not present, 1: Present]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.ipDBStnAPPowerOn</Name>
-							<Comment>
-								<![CDATA[ Actuate pan power on signal, 0: Power off, 1: Power on]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.ipDBStnAPReady</Name>
-							<Comment>
-								<![CDATA[ Actuate pan ready signal, 0: Not ready, 1: Ready]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.ipDBStnHandlerSafeToEnterPLC</Name>
-							<Comment>
-								<![CDATA[ ??]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.ipDBStnHandlerSafeToEnterHwr</Name>
-							<Comment>
-								<![CDATA[ ??]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.ipSpare_1</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.ipSpare_2</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.ipSpare_3</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.ipSpare_4</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.ipDBStnCellGroundFault</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.ipDBStnCellFluidLeakage1</Name>
-							<Comment>
-								<![CDATA[debugcart3 new io]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.ipDBStnCellFluidLeakage2</Name>
-							<Comment>
-								<![CDATA[debugcart3 new io]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.ipDBStnPurgeButton</Name>
-							<Comment>
-								<![CDATA[debugcart3 new io]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.ipAnlgDBStnTstAirLeakFlowSensor</Name>
-							<Comment>
-								<![CDATA[</DIO>
-<AIO>]]>
-							</Comment>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.ipAnlgDBStnAPAirLeakFlowSensor</Name>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.ipAnlgDBStnPCWLeakFlowSensor</Name>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.ipAnlgDBStnPCWLowFlowSensor</Name>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDbColVIO.ipDBColumnPCWLeakage</Name>
-							<Comment>
-								<![CDATA[debugcart3 new io]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDbColVIO.ipDBColumnPCWLeakage2</Name>
-							<Comment>
-								<![CDATA[debugcart3 new io]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDbColVIO.ipDBColumnPCWSupplyLeakage</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDbColVIO.ipDBColumnPCWReturnLeakage</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDbColVIO.ipAnlgDBColumnPCWRegularFlowSensor</Name>
-							<Comment>
-								<![CDATA[</EAP>
-<AIO>]]>
-							</Comment>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDbColVIO.ipAnlgDBColumnPCWSupplyPressure</Name>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDbColVIO.ipAnlgDBColumnPCWReturnPressure</Name>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDbColVIO.ipAnlgDBColumnTstAirPressure</Name>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDbColVIO.ipAnlgDBColumnAPAirPressure</Name>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDbColVIO.ipAnlgDBColumnDewPointSensor</Name>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDbColVIO.ipAnlgDBColumnTempSensor</Name>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDbColVIO.ipAnlgDBColumnPCWSupplyTemperature</Name>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDbColVIO.ipAnlgDBColumnPCWReturnTemperature</Name>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbDebugColumn.stDebugColumnDIO.ipDBColumnPCWLeakage</Name>
-							<Comment>
-								<![CDATA[debugcart3 new io]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbDebugColumn.stDebugColumnDIO.ipDBColumnPCWLeakage2</Name>
-							<Comment>
-								<![CDATA[debugcart3 new io]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbDebugColumn.stDebugColumnDIO.ipDBColumnPCWSupplyLeakage</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbDebugColumn.stDebugColumnDIO.ipDBColumnPCWReturnLeakage</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbDebugColumn.stDebugColumnDIO.ipAnlgDBColumnPCWRegularFlowSensor</Name>
-							<Comment>
-								<![CDATA[</EAP>
-<AIO>]]>
-							</Comment>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbDebugColumn.stDebugColumnDIO.ipAnlgDBColumnPCWSupplyPressure</Name>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbDebugColumn.stDebugColumnDIO.ipAnlgDBColumnPCWReturnPressure</Name>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbDebugColumn.stDebugColumnDIO.ipAnlgDBColumnTstAirPressure</Name>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbDebugColumn.stDebugColumnDIO.ipAnlgDBColumnAPAirPressure</Name>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbDebugColumn.stDebugColumnDIO.ipAnlgDBColumnDewPointSensor</Name>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbDebugColumn.stDebugColumnDIO.ipAnlgDBColumnTempSensor</Name>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbDebugColumn.stDebugColumnDIO.ipAnlgDBColumnPCWSupplyTemperature</Name>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbDebugColumn.stDebugColumnDIO.ipAnlgDBColumnPCWReturnTemperature</Name>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbDebugColumn.stDebugStationDIO.ipDBStnAPPresentSensor</Name>
-							<Comment>
-								<![CDATA[ Actuate pan present signal, 0: Not present, 1: Present]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbDebugColumn.stDebugStationDIO.ipDBStnAPPowerOn</Name>
-							<Comment>
-								<![CDATA[ Actuate pan power on signal, 0: Power off, 1: Power on]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbDebugColumn.stDebugStationDIO.ipDBStnAPReady</Name>
-							<Comment>
-								<![CDATA[ Actuate pan ready signal, 0: Not ready, 1: Ready]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbDebugColumn.stDebugStationDIO.ipDBStnHandlerSafeToEnterPLC</Name>
-							<Comment>
-								<![CDATA[ ??]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbDebugColumn.stDebugStationDIO.ipDBStnHandlerSafeToEnterHwr</Name>
-							<Comment>
-								<![CDATA[ ??]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbDebugColumn.stDebugStationDIO.ipSpare_1</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbDebugColumn.stDebugStationDIO.ipSpare_2</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbDebugColumn.stDebugStationDIO.ipSpare_3</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbDebugColumn.stDebugStationDIO.ipSpare_4</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbDebugColumn.stDebugStationDIO.ipDBStnCellGroundFault</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbDebugColumn.stDebugStationDIO.ipDBStnCellFluidLeakage1</Name>
-							<Comment>
-								<![CDATA[debugcart3 new io]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbDebugColumn.stDebugStationDIO.ipDBStnCellFluidLeakage2</Name>
-							<Comment>
-								<![CDATA[debugcart3 new io]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbDebugColumn.stDebugStationDIO.ipDBStnPurgeButton</Name>
-							<Comment>
-								<![CDATA[debugcart3 new io]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbDebugColumn.stDebugStationDIO.ipAnlgDBStnTstAirLeakFlowSensor</Name>
-							<Comment>
-								<![CDATA[</DIO>
-<AIO>]]>
-							</Comment>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbDebugColumn.stDebugStationDIO.ipAnlgDBStnAPAirLeakFlowSensor</Name>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbDebugColumn.stDebugStationDIO.ipAnlgDBStnPCWLeakFlowSensor</Name>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbDebugColumn.stDebugStationDIO.ipAnlgDBStnPCWLowFlowSensor</Name>
-							<Type>INT</Type>
-						</Var>
-						<Var>
 							<Name>GVL_EAP.DS_Facility_eapShutOffAllACPower</Name>
 							<Comment>
 								<![CDATA[ shut off Tester and AP AC Power, 0: On, 1: Off //only for debug cart and station]]>
@@ -3662,6 +3346,200 @@
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
+							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.ipDBStnAPPresentSensor</Name>
+							<Comment>
+								<![CDATA[ Actuate pan present signal, 0: Not present, 1: Present]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.ipDBStnAPPowerOn</Name>
+							<Comment>
+								<![CDATA[ Actuate pan power on signal, 0: Power off, 1: Power on]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.ipDBStnAPReady</Name>
+							<Comment>
+								<![CDATA[ Actuate pan ready signal, 0: Not ready, 1: Ready]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.ipDBStnHandlerSafeToEnterPLC</Name>
+							<Comment>
+								<![CDATA[ ??]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.ipDBStnHandlerSafeToEnterHwr</Name>
+							<Comment>
+								<![CDATA[ ??]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.ipSpare_1</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.ipSpare_2</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.ipSpare_3</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.ipSpare_4</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.ipDBStnCellGroundFault</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.ipDBStnCellFluidLeakage1</Name>
+							<Comment>
+								<![CDATA[debugcart3 new io]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.ipDBStnCellFluidLeakage2</Name>
+							<Comment>
+								<![CDATA[debugcart3 new io]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.ipDBStnPurgeButton</Name>
+							<Comment>
+								<![CDATA[debugcart3 new io]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.ipAnlgDBStnTstAirLeakFlowSensor</Name>
+							<Comment>
+								<![CDATA[</DIO>
+<AIO>]]>
+							</Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.ipAnlgDBStnAPAirLeakFlowSensor</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.ipAnlgDBStnPCWLeakFlowSensor</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.ipAnlgDBStnPCWLowFlowSensor</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDbColVIO.ipDBColumnPCWLeakage</Name>
+							<Comment>
+								<![CDATA[debugcart3 new io]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDbColVIO.ipDBColumnPCWLeakage2</Name>
+							<Comment>
+								<![CDATA[debugcart3 new io]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDbColVIO.ipDBColumnPCWSupplyLeakage</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDbColVIO.ipDBColumnPCWReturnLeakage</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDbColVIO.ipAnlgDBColumnPCWRegularFlowSensor</Name>
+							<Comment>
+								<![CDATA[</EAP>
+<AIO>]]>
+							</Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDbColVIO.ipAnlgDBColumnPCWSupplyPressure</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDbColVIO.ipAnlgDBColumnPCWReturnPressure</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDbColVIO.ipAnlgDBColumnTstAirPressure</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDbColVIO.ipAnlgDBColumnAPAirPressure</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDbColVIO.ipAnlgDBColumnDewPointSensor</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDbColVIO.ipAnlgDBColumnTempSensor</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDbColVIO.ipAnlgDBColumnPCWSupplyTemperature</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDbColVIO.ipAnlgDBColumnPCWReturnTemperature</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbTCColumn.stTCColumnDIO.ipColumnFluid_PCW_Leakage</Name>
+							<Comment>
+								<![CDATA[ PCW leakage sensor, 0: Leak, 1: No leak]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbTCColumn.stTCColumnDIO.ipAllTCDrawerRetractedinCell</Name>
+							<Comment>
+								<![CDATA[ All Drawer retracted]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbTCColumn.stTCColumnDIO.ipTbotDoorClosedSignal</Name>
+							<Comment>
+								<![CDATA[ (NC) Tbot Door closed. 1: Closed, 0: Opened.]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbTCColumn.stTCColumnDIO.eapDColumnPCWLeakage</Name>
+							<Comment>
+								<![CDATA[Debug EAP Status ---------------------------------------//]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbTCColumn.stTCColumnDIO.eapDColumnPCWSupplyLeakage</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbTCColumn.stTCColumnDIO.eapDColumnPCWReturnLeakage</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
 							<Name>GVL_TC.fbSLTCExtra.stDIO.ipRTD1</Name>
 							<Type>INT</Type>
 						</Var>
@@ -3706,282 +3584,166 @@
 							<Type>INT</Type>
 						</Var>
 						<Var>
-							<Name>GVL_TC.fbTCColumn.stTCColumnDIO.ipColumnFluid_PCW_Leakage</Name>
+							<Name>GVL_TC.fbDebugColumn.stDebugColumnDIO.ipDBColumnPCWLeakage</Name>
 							<Comment>
-								<![CDATA[ PCW leakage sensor, 0: Leak, 1: No leak]]>
+								<![CDATA[debugcart3 new io]]>
 							</Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_TC.fbTCColumn.stTCColumnDIO.ipAllTCDrawerRetractedinCell</Name>
+							<Name>GVL_TC.fbDebugColumn.stDebugColumnDIO.ipDBColumnPCWLeakage2</Name>
 							<Comment>
-								<![CDATA[ All Drawer retracted]]>
+								<![CDATA[debugcart3 new io]]>
 							</Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_TC.fbTCColumn.stTCColumnDIO.ipTbotDoorClosedSignal</Name>
+							<Name>GVL_TC.fbDebugColumn.stDebugColumnDIO.ipDBColumnPCWSupplyLeakage</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbDebugColumn.stDebugColumnDIO.ipDBColumnPCWReturnLeakage</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbDebugColumn.stDebugColumnDIO.ipAnlgDBColumnPCWRegularFlowSensor</Name>
 							<Comment>
-								<![CDATA[ (NC) Tbot Door closed. 1: Closed, 0: Opened.]]>
+								<![CDATA[</EAP>
+<AIO>]]>
+							</Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbDebugColumn.stDebugColumnDIO.ipAnlgDBColumnPCWSupplyPressure</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbDebugColumn.stDebugColumnDIO.ipAnlgDBColumnPCWReturnPressure</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbDebugColumn.stDebugColumnDIO.ipAnlgDBColumnTstAirPressure</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbDebugColumn.stDebugColumnDIO.ipAnlgDBColumnAPAirPressure</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbDebugColumn.stDebugColumnDIO.ipAnlgDBColumnDewPointSensor</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbDebugColumn.stDebugColumnDIO.ipAnlgDBColumnTempSensor</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbDebugColumn.stDebugColumnDIO.ipAnlgDBColumnPCWSupplyTemperature</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbDebugColumn.stDebugColumnDIO.ipAnlgDBColumnPCWReturnTemperature</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbDebugColumn.stDebugStationDIO.ipDBStnAPPresentSensor</Name>
+							<Comment>
+								<![CDATA[ Actuate pan present signal, 0: Not present, 1: Present]]>
 							</Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_TC.fbTCColumn.stTCColumnDIO.eapDColumnPCWLeakage</Name>
+							<Name>GVL_TC.fbDebugColumn.stDebugStationDIO.ipDBStnAPPowerOn</Name>
 							<Comment>
-								<![CDATA[Debug EAP Status ---------------------------------------//]]>
+								<![CDATA[ Actuate pan power on signal, 0: Power off, 1: Power on]]>
 							</Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_TC.fbTCColumn.stTCColumnDIO.eapDColumnPCWSupplyLeakage</Name>
+							<Name>GVL_TC.fbDebugColumn.stDebugStationDIO.ipDBStnAPReady</Name>
+							<Comment>
+								<![CDATA[ Actuate pan ready signal, 0: Not ready, 1: Ready]]>
+							</Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_TC.fbTCColumn.stTCColumnDIO.eapDColumnPCWReturnLeakage</Name>
+							<Name>GVL_TC.fbDebugColumn.stDebugStationDIO.ipDBStnHandlerSafeToEnterPLC</Name>
+							<Comment>
+								<![CDATA[ ??]]>
+							</Comment>
 							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbDebugColumn.stDebugStationDIO.ipDBStnHandlerSafeToEnterHwr</Name>
+							<Comment>
+								<![CDATA[ ??]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbDebugColumn.stDebugStationDIO.ipSpare_1</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbDebugColumn.stDebugStationDIO.ipSpare_2</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbDebugColumn.stDebugStationDIO.ipSpare_3</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbDebugColumn.stDebugStationDIO.ipSpare_4</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbDebugColumn.stDebugStationDIO.ipDBStnCellGroundFault</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbDebugColumn.stDebugStationDIO.ipDBStnCellFluidLeakage1</Name>
+							<Comment>
+								<![CDATA[debugcart3 new io]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbDebugColumn.stDebugStationDIO.ipDBStnCellFluidLeakage2</Name>
+							<Comment>
+								<![CDATA[debugcart3 new io]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbDebugColumn.stDebugStationDIO.ipDBStnPurgeButton</Name>
+							<Comment>
+								<![CDATA[debugcart3 new io]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbDebugColumn.stDebugStationDIO.ipAnlgDBStnTstAirLeakFlowSensor</Name>
+							<Comment>
+								<![CDATA[</DIO>
+<AIO>]]>
+							</Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbDebugColumn.stDebugStationDIO.ipAnlgDBStnAPAirLeakFlowSensor</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbDebugColumn.stDebugStationDIO.ipAnlgDBStnPCWLeakFlowSensor</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbDebugColumn.stDebugStationDIO.ipAnlgDBStnPCWLowFlowSensor</Name>
+							<Type>INT</Type>
 						</Var>
 					</Vars>
 					<Vars VarGrpType="2">
 						<Name>PlcTask Outputs</Name>
-						<Var>
-							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.opDBStnAP240ACPwrEnable</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.opAP_DIO_1</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.opAP_DIO_2</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.opAP_DIO_3</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.opDBStnPCWValve</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.opDBStnPCWFlowBypassValve</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.opDBStnBypassAPAirSupplySol</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.opDBStn24VPowerEnable</Name>
-							<Comment>
-								<![CDATA[opDBStnMainPCWSupply					AT %Q* :BOOL; //debugcart3 new io]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.opDBStnLeakFlowPCWValve</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.opDBStnLowFlowPCWValve</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.opDBStnAPSafeToEngage</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.opDBStnAPTCCReset</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.opDBStnMainPCWReturn</Name>
-							<Comment>
-								<![CDATA[debugcart3 new io]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.opDBStnPCWSupplyPurge</Name>
-							<Comment>
-								<![CDATA[debugcart3 new io]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.opCellLTIMValve</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.opDBStnAlarmLED</Name>
-							<Comment>
-								<![CDATA[debugcart3 new io]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.opDBStnPurgeLED</Name>
-							<Comment>
-								<![CDATA[debugcart3 new io]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDbColVIO.opDBColumnHotAirExhaustFan</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDbColVIO.opDBColumnPCWValve</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDbColVIO.opDBColumnTstAirSol</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDbColVIO.opDBColumnAPAirSol</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDbColVIO.eapDBColumnPCWLeakage</Name>
-							<Comment>
-								<![CDATA[</DIO>
-<EAP>]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDbColVIO.eapDBColumnPCWSupplyLeakage</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDbColVIO.eapDBColumnPCWReturnLeakage</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDbColVIO.eapShutOffAllACPower</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbDebugColumn.stDebugColumnDIO.opDBColumnHotAirExhaustFan</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbDebugColumn.stDebugColumnDIO.opDBColumnPCWValve</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbDebugColumn.stDebugColumnDIO.opDBColumnTstAirSol</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbDebugColumn.stDebugColumnDIO.opDBColumnAPAirSol</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbDebugColumn.stDebugColumnDIO.eapDBColumnPCWLeakage</Name>
-							<Comment>
-								<![CDATA[</DIO>
-<EAP>]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbDebugColumn.stDebugColumnDIO.eapDBColumnPCWSupplyLeakage</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbDebugColumn.stDebugColumnDIO.eapDBColumnPCWReturnLeakage</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbDebugColumn.stDebugColumnDIO.eapShutOffAllACPower</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbDebugColumn.stDebugStationDIO.opDBStnAP240ACPwrEnable</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbDebugColumn.stDebugStationDIO.opAP_DIO_1</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbDebugColumn.stDebugStationDIO.opAP_DIO_2</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbDebugColumn.stDebugStationDIO.opAP_DIO_3</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbDebugColumn.stDebugStationDIO.opDBStnPCWValve</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbDebugColumn.stDebugStationDIO.opDBStnPCWFlowBypassValve</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbDebugColumn.stDebugStationDIO.opDBStnBypassAPAirSupplySol</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbDebugColumn.stDebugStationDIO.opDBStn24VPowerEnable</Name>
-							<Comment>
-								<![CDATA[opDBStnMainPCWSupply					AT %Q* :BOOL; //debugcart3 new io]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbDebugColumn.stDebugStationDIO.opDBStnLeakFlowPCWValve</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbDebugColumn.stDebugStationDIO.opDBStnLowFlowPCWValve</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbDebugColumn.stDebugStationDIO.opDBStnAPSafeToEngage</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbDebugColumn.stDebugStationDIO.opDBStnAPTCCReset</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbDebugColumn.stDebugStationDIO.opDBStnMainPCWReturn</Name>
-							<Comment>
-								<![CDATA[debugcart3 new io]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbDebugColumn.stDebugStationDIO.opDBStnPCWSupplyPurge</Name>
-							<Comment>
-								<![CDATA[debugcart3 new io]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbDebugColumn.stDebugStationDIO.opCellLTIMValve</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbDebugColumn.stDebugStationDIO.opDBStnAlarmLED</Name>
-							<Comment>
-								<![CDATA[debugcart3 new io]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_TC.fbDebugColumn.stDebugStationDIO.opDBStnPurgeLED</Name>
-							<Comment>
-								<![CDATA[debugcart3 new io]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
 						<Var>
 							<Name>GVL_EAP.stEAP.stTBOT_TC_EAP[1].bTC_HeartBeat</Name>
 							<Type>INT</Type>
@@ -5790,6 +5552,132 @@
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
+							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.opDBStnAP240ACPwrEnable</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.opAP_DIO_1</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.opAP_DIO_2</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.opAP_DIO_3</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.opDBStnPCWValve</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.opDBStnPCWFlowBypassValve</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.opDBStnBypassAPAirSupplySol</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.opDBStn24VPowerEnable</Name>
+							<Comment>
+								<![CDATA[opDBStnMainPCWSupply					AT %Q* :BOOL; //debugcart3 new io]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.opDBStnLeakFlowPCWValve</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.opDBStnLowFlowPCWValve</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.opDBStnAPSafeToEngage</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.opDBStnAPTCCReset</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.opDBStnMainPCWReturn</Name>
+							<Comment>
+								<![CDATA[debugcart3 new io]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.opDBStnPCWSupplyPurge</Name>
+							<Comment>
+								<![CDATA[debugcart3 new io]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.opCellLTIMValve</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.opDBStnAlarmLED</Name>
+							<Comment>
+								<![CDATA[debugcart3 new io]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.opDBStnPurgeLED</Name>
+							<Comment>
+								<![CDATA[debugcart3 new io]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDbColVIO.opDBColumnHotAirExhaustFan</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDbColVIO.opDBColumnPCWValve</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDbColVIO.opDBColumnTstAirSol</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDbColVIO.opDBColumnAPAirSol</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDbColVIO.eapDBColumnPCWLeakage</Name>
+							<Comment>
+								<![CDATA[</DIO>
+<EAP>]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDbColVIO.eapDBColumnPCWSupplyLeakage</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDbColVIO.eapDBColumnPCWReturnLeakage</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDbColVIO.eapShutOffAllACPower</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbTCColumn.stTCColumnDIO.opHotAirExhaustFan</Name>
+							<Comment>
+								<![CDATA[ Exhaust fan]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
 							<Name>GVL_TC.fbSLTCExtra.stDIO.opASCOValve_1</Name>
 							<Type>BOOL</Type>
 						</Var>
@@ -5872,9 +5760,121 @@
 							<Type>INT</Type>
 						</Var>
 						<Var>
-							<Name>GVL_TC.fbTCColumn.stTCColumnDIO.opHotAirExhaustFan</Name>
+							<Name>GVL_TC.fbDebugColumn.stDebugColumnDIO.opDBColumnHotAirExhaustFan</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbDebugColumn.stDebugColumnDIO.opDBColumnPCWValve</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbDebugColumn.stDebugColumnDIO.opDBColumnTstAirSol</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbDebugColumn.stDebugColumnDIO.opDBColumnAPAirSol</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbDebugColumn.stDebugColumnDIO.eapDBColumnPCWLeakage</Name>
 							<Comment>
-								<![CDATA[ Exhaust fan]]>
+								<![CDATA[</DIO>
+<EAP>]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbDebugColumn.stDebugColumnDIO.eapDBColumnPCWSupplyLeakage</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbDebugColumn.stDebugColumnDIO.eapDBColumnPCWReturnLeakage</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbDebugColumn.stDebugColumnDIO.eapShutOffAllACPower</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbDebugColumn.stDebugStationDIO.opDBStnAP240ACPwrEnable</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbDebugColumn.stDebugStationDIO.opAP_DIO_1</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbDebugColumn.stDebugStationDIO.opAP_DIO_2</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbDebugColumn.stDebugStationDIO.opAP_DIO_3</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbDebugColumn.stDebugStationDIO.opDBStnPCWValve</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbDebugColumn.stDebugStationDIO.opDBStnPCWFlowBypassValve</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbDebugColumn.stDebugStationDIO.opDBStnBypassAPAirSupplySol</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbDebugColumn.stDebugStationDIO.opDBStn24VPowerEnable</Name>
+							<Comment>
+								<![CDATA[opDBStnMainPCWSupply					AT %Q* :BOOL; //debugcart3 new io]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbDebugColumn.stDebugStationDIO.opDBStnLeakFlowPCWValve</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbDebugColumn.stDebugStationDIO.opDBStnLowFlowPCWValve</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbDebugColumn.stDebugStationDIO.opDBStnAPSafeToEngage</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbDebugColumn.stDebugStationDIO.opDBStnAPTCCReset</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbDebugColumn.stDebugStationDIO.opDBStnMainPCWReturn</Name>
+							<Comment>
+								<![CDATA[debugcart3 new io]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbDebugColumn.stDebugStationDIO.opDBStnPCWSupplyPurge</Name>
+							<Comment>
+								<![CDATA[debugcart3 new io]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbDebugColumn.stDebugStationDIO.opCellLTIMValve</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbDebugColumn.stDebugStationDIO.opDBStnAlarmLED</Name>
+							<Comment>
+								<![CDATA[debugcart3 new io]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbDebugColumn.stDebugStationDIO.opDBStnPurgeLED</Name>
+							<Comment>
+								<![CDATA[debugcart3 new io]]>
 							</Comment>
 							<Type>BOOL</Type>
 						</Var>

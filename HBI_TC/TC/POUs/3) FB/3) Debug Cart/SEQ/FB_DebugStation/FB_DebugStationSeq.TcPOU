@@ -26,13 +26,13 @@ VAR
 	DIFDAPPresent:F_TRIG;
 	DIFUSet_bChkAP240On:R_TRIG; 	//
 	
-	FB_DC_AP240ACPower					: DFB_Cylinder;
-	DUT_DC_AP240ACPower					: DUT_Cylinder;
-	DC_AP240Power_Perm					: WORD;
-	DC_AP240Power_SD					: WORD;
-	DC_AP240ACPower_Reset				: R_TRIG;
-	DC_AP240ACPower_Precondition		: BOOL;
-	_Alarm		: BOOL;
+	FB_opDBStnAP240ACPwrEnable					: DFB_Cylinder;
+	DUT_opDBStnAP240ACPwrEnable					: DUT_Cylinder;
+	Permissive_opDBStnAP240ACPwrEnable			: WORD;
+	Shutdown_opDBStnAP240ACPwrEnable			: WORD;
+	Reset_opDBStnAP240ACPwrEnable				: R_TRIG;
+	Precondition_opDBStnAP240ACPwrEnable		: BOOL;
+	_Alarm										: BOOL;
 	
 	
 	tstOnCheckTim:TON;		//delay to check TesterOnFeedback
@@ -232,35 +232,35 @@ ELSIF (NOT ALM_DCCOL.AlarmID[E_DCFACAlarm.eCriticalCondensationAlarm]) AND (NOT 
 	_Alarm		:= FALSE;
 END_IF
 
-DC_AP240ACPower_Precondition	:= (stDebugStationVIO.ipDBStnAPPresentSensor AND (NOT isLeakage) AND (NOT isGroundFault) AND (NOT _Alarm))
-									AND Ap240AcPowerMode <> 1;
+Precondition_opDBStnAP240ACPwrEnable	:= (stDebugStationVIO.ipDBStnAPPresentSensor AND (NOT isLeakage) AND (NOT isGroundFault) AND (NOT _Alarm))
+											AND Ap240AcPowerMode <> 1;
 
-DC_AP240ACPower_Reset(CLK:= DC_AP240ACPower_Precondition);
+Reset_opDBStnAP240ACPwrEnable(CLK:= precondition_opDBStnAP240ACPwrEnable);
 
-DUT_DC_AP240ACPower.AutInp		:= DC_AP240ACPower_Precondition;
-DUT_DC_AP240ACPower.Reset		:= DC_AP240ACPower_Reset.Q;
-DUT_DC_AP240ACPower.Travel_Time	:= 5;
+DUT_opDBStnAP240ACPwrEnable.AutInp		:= Precondition_opDBStnAP240ACPwrEnable;
+DUT_opDBStnAP240ACPwrEnable.Reset		:= Reset_opDBStnAP240ACPwrEnable.Q;
+DUT_opDBStnAP240ACPwrEnable.Travel_Time	:= 5;
 											
 											
-FB_DC_AP240ACPower(
+FB_opDBStnAP240ACPwrEnable(
 	Sec_P		:= Sec_P, 
 	ID		:= 'DebugCart AP240Power', 
-	Simulate		:= DUT_DC_AP240ACPower.Simulate, 
-	Permissive		:= DC_AP240Power_Perm, 
-	ShutDown		:= DC_AP240Power_SD, 
-	AutoInp		:= DUT_DC_AP240ACPower.AutInp, 
-	Command		:= DUT_DC_AP240ACPower.CMD, 
+	Simulate		:= DUT_opDBStnAP240ACPwrEnable.Simulate, 
+	Permissive		:= Permissive_opDBStnAP240ACPwrEnable, 
+	ShutDown		:= Shutdown_opDBStnAP240ACPwrEnable, 
+	AutoInp		:= DUT_opDBStnAP240ACPwrEnable.AutInp, 
+	Command		:= DUT_opDBStnAP240ACPwrEnable.CMD, 
 	IExtend		:= stDebugStationVIO.ipDBStnAPPowerOn, 
 	IRetract		:= (NOT stDebugStationVIO.ipDBStnAPPowerOn), 
-	Travel_Time		:= DUT_DC_AP240ACPower.Travel_Time, 
+	Travel_Time		:= DUT_opDBStnAP240ACPwrEnable.Travel_Time, 
 	SetOutput_Pulse		:= FALSE, 
 	FailedHoldLast		:= FALSE,
 	OExtend		=> stDebugStationVIO.opDBStnAP240ACPwrEnable, 
 	ORetract		=> , 
-	DUT		:= DUT_DC_AP240ACPower);
+	DUT		:= DUT_opDBStnAP240ACPwrEnable);
 //</APPowerOn>
 
-GVL_DUT_DC_AP240ACPower		:= DUT_DC_AP240ACPower;]]></ST>
+GVL_DUT_DC_AP240ACPower		:= DUT_opDBStnAP240ACPwrEnable;]]></ST>
       </Implementation>
     </Method>
     <Method Name="M_IOMapping" Id="{a72e6ef1-5a7c-4aa4-b869-c7c8e540ce38}">
@@ -662,7 +662,7 @@ END_VAR
 	BOOL_13		:= TRUE, 
 	BOOL_14		:= TRUE, 
 	BOOL_15		:= TRUE, 
-	Output_Word		=> DC_AP240Power_Perm);
+	Output_Word		=> Permissive_opDBStnAP240ACPwrEnable);
 	
 FC_BitToWord(
 	BOOL_00		:= FALSE, 
@@ -681,7 +681,7 @@ FC_BitToWord(
 	BOOL_13		:= FALSE, 
 	BOOL_14		:= FALSE, 
 	BOOL_15		:= FALSE, 
-	Output_Word		=> DC_AP240Power_SD);]]></ST>
+	Output_Word		=> Shutdown_opDBStnAP240ACPwrEnable);]]></ST>
       </Implementation>
     </Action>
     <LineIds Name="FB_DebugStationSeq">
