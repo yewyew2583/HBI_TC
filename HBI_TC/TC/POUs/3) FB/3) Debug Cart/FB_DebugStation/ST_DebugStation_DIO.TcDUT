@@ -42,8 +42,10 @@ STRUCT
 	opDBStnAlarmLED 						AT %Q* :BOOL; //debugcart3 new io
 	opDBStnPurgeLED 						AT %Q* :BOOL; //debugcart3 new io
 	
+	//debug cart #4 valves
+	opDBStnPCWAWN							AT %Q* :BOOL; //not yet
+	opDBStnSupplyAirPurge					AT %Q* :BOOL; //not yet
 	
-
 //</DIO>
 
 //<AIO>

@@ -6,6 +6,8 @@ STRUCT
 	bAP240ACPowerOff				: BOOL;
 	bAP240ACPowerOn					: BOOL;
 	bAP240ACPowerAuto				: BOOL;
+	bSecondary24VPowerOff			: BOOL;
+	bSecondary24VPowerOn				: BOOL;
 	bInitialise						: BOOL;
 	bAlarmClear						: BOOL;
 	bAlarmOccur						: BOOL;
@@ -13,6 +15,8 @@ STRUCT
 	bBufClear						: BOOL;
 	bInternalCancel					: BOOL;
 	bResume							: BOOL;
+	
+	
 	
 	iProcessState					: E_ProcessState :=0;
 	sFailReason						: STRING;

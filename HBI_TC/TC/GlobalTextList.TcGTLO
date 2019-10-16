@@ -110,6 +110,16 @@
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
+              <v n="TextID">"4041"</v>
+              <v n="TextDefault">" : DS cell fluid leakage 1 Signal is Detected"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"3638"</v>
+              <v n="TextDefault">" : DS cell fluid leakage 2 signal is detected"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
               <v n="TextID">"5457"</v>
               <v n="TextDefault">" : e6BarLowOFAAirPressureAlarm"</v>
               <l n="LanguageTexts" t="ArrayList" />
@@ -165,8 +175,23 @@
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
+              <v n="TextID">"3147"</v>
+              <v n="TextDefault">" : ipTCDrawerCylExtendRS Signal not detected"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"1457"</v>
+              <v n="TextDefault">" : ipTCDrawerCylExtendRS signal not detected"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
               <v n="TextID">"3399"</v>
               <v n="TextDefault">" : ipTCDrawerCylExtendRSError"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"1978"</v>
+              <v n="TextDefault">" : ipTCDrawerCylRetractRS signal not detected"</v>
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
@@ -645,6 +670,11 @@
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
+              <v n="TextID">"2484"</v>
+              <v n="TextDefault">"1. opDBStnMainPCWSupply"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
               <v n="TextID">"433"</v>
               <v n="TextDefault">"10)_TesterPowerOn"</v>
               <l n="LanguageTexts" t="ArrayList" />
@@ -702,6 +732,11 @@
             <o>
               <v n="TextID">"628"</v>
               <v n="TextDefault">"2)_AP_PowerOn"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"1565"</v>
+              <v n="TextDefault">"2. opDBStnPCWSupplyPurge"</v>
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
@@ -790,6 +825,11 @@
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
+              <v n="TextID">"6218"</v>
+              <v n="TextDefault">"3. opDBStnMainPCWReturn"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
               <v n="TextID">"84"</v>
               <v n="TextDefault">"4) AP_DeactuatedPLC"</v>
               <l n="LanguageTexts" t="ArrayList" />
@@ -802,6 +842,11 @@
             <o>
               <v n="TextID">"965"</v>
               <v n="TextDefault">"4)_AP_DeactuatedPLC"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"1662"</v>
+              <v n="TextDefault">"4. opDBStnPCWAWN"</v>
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
@@ -820,13 +865,28 @@
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
+              <v n="TextID">"6470"</v>
+              <v n="TextDefault">"5. opDBStnSupplyAirPurge"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
               <v n="TextID">"104"</v>
               <v n="TextDefault">"6)_CellFluidLeakage1"</v>
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
+              <v n="TextID">"2776"</v>
+              <v n="TextDefault">"6. opDBStnLeakFlowPCWValve"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
               <v n="TextID">"144"</v>
               <v n="TextDefault">"7)_CellFluidLeakage2"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"2027"</v>
+              <v n="TextDefault">"7. opDBStnLowFlowPCWValve"</v>
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
@@ -2610,6 +2670,11 @@ Dew point – PCW temperature above critical control limit, condensation alarm
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
+              <v n="TextID">"2648"</v>
+              <v n="TextDefault">"opDBStnPCWAWN"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
               <v n="TextID">"3509"</v>
               <v n="TextDefault">"opDBStnPCWFlowBypassValve"</v>
               <l n="LanguageTexts" t="ArrayList" />
@@ -2872,6 +2937,11 @@ Dew point – PCW temperature above critical control limit, condensation alarm
             <o>
               <v n="TextID">"987"</v>
               <v n="TextDefault">"Save"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"6434"</v>
+              <v n="TextDefault">"sdsdsds"</v>
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>

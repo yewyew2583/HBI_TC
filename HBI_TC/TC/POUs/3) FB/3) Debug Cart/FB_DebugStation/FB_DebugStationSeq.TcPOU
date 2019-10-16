@@ -306,6 +306,22 @@ stDebugStationVIO.ipDBStnCellGroundFault		:= fbBD_ipBdoor.M_bBackDoorCtrl(bProdu
 	                                            					bSimu:=FALSE , 
 	                                            					iBackDoor:=stDebugStationBIO.ipDBStnCellGroundFault );
 																	
+stDebugStationVIO.ipDBStnCellFluidLeakage1		:= NOT fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode AND bTIISenSimArray[E_TIIAlarm.ipCellFluidLeakage1] , 
+	                                            						bActual:=stDebugStationDIO.ipDBStnCellFluidLeakage1 , 
+	                                            						bSimu:=TRUE , 
+	                                            						iBackDoor:=stDebugStationBIO.ipDBStnCellFluidLeakage1 );
+				
+stDebugStationVIO.ipDBStnCellFluidLeakage2		:= NOT fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode AND bTIISenSimArray[E_TIIAlarm.ipCellFluidLeakage2] , 
+	                                            						bActual:=stDebugStationDIO.ipDBStnCellFluidLeakage2 , 
+	                                            						bSimu:=TRUE , 
+	                                            						iBackDoor:=stDebugStationBIO.ipDBStnCellFluidLeakage2 );
+
+
+stDebugStationVIO.ipDBStnPurgeButton			:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode, 
+	                                            								bActual:= stDebugStationDIO.ipDBStnPurgeButton, 
+	                                            								bSimu:=FALSE, 
+	                                            								iBackDoor:=stDebugStationBIO.ipDBStnPurgeButton);
+																	
 
 isLeakage		:=( ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWLeakageAlarm] OR ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWSupplyLeakageAlarm] OR 
 					ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWReturnLeakageAlarm]);																
@@ -376,83 +392,48 @@ VAR
 	varTest:bool;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[//M_nCompCylinder(bExtend:=TRUE, fbTCDrawerUp, sMsg);
-//M_IOMapping();
-Conversion(isSimulation:=bAnalogIOSim);
+        <ST><![CDATA[Conversion(isSimulation:=bAnalogIOSim);
 M_IOMapping();
 
 rtError(CLK:=_bError, Q=> );
-btest:=TRUE;
-
-	//fbTCDrawerExtRet.M_nReset(bExecute:=_bReset OR rtError.Q );
-	//fbTCDrawerUpDn.M_nReset(bExecute:=_bReset OR rtError.Q );
+btest					:= TRUE;
 		
 IF _bReset OR bStepDone OR rtError.Q THEN
-	//inTCDrawerExtRet.M_nOff();
-	//inTCDrawerUpDn.M_nOff();
-	
-	//sensor
-
 	FOR nI:=1 TO 20 DO 
-		iLibrySts[1] := 0;
+		iLibrySts[1] 	:= 0;
 	END_FOR
-	
-	bStepDone:=FALSE; 
+	bStepDone			:= FALSE; 
 END_IF
-
-//inTCDrawerExtRet.P_SensorDelay:= 	FB_M_nCyclic_tSensorDelay  ;  //T#12S; 
-//inTCDrawerExtRet.P_Timeout:= 		FB_M_nCyclic_tSensorTimeOut; //T#30S;;    
-
-//inTCDrawerUpDn.P_SensorDelay:= FB_M_nCyclic_tSensorDelay;
-//inTCDrawerUpDn.P_Timeout:= FB_M_nCyclic_tSensorTimeOut;
-
-(*IF stTCSeqParam.bInitComplt THEN //temp...This portion will be done by Initialise sequence
-END_IF*)
 	
 IF _bReset THEN
 	IF stDbStnParam.bInitialise THEN
-		iSysRsetSeqStep:=0;
+		iSysRsetSeqStep	:= 0;
 	ELSE
-		iSeqStep:=0;
+		iSeqStep		:= 0;
 	END_IF
-	iStkSeqCase:=0;
-	bStepDone:=FALSE;
-	sMessage:='';
-	_bError:=FALSE;
-	_nErrorID:=0;
+	iStkSeqCase			:= 0;
+	bStepDone			:= FALSE;
+	sMessage			:= '';
+	_bError				:= FALSE;
+	_nErrorID			:= 0;
 ELSIF bErrClear THEN
-	_bError:=FALSE;
-	_nErrorID:=0;
-	bErrClear:=FALSE;
+	_bError				:= FALSE;
+	_nErrorID			:= 0;
+	bErrClear			:= FALSE;
 END_IF
 
 bPause:=_bReset OR _bError OR bErrClear;
 //M_StkSingStackUp state
 IF _bError THEN
-	iStkSingStackUp:=99;
+	iStkSingStackUp		:= 99;
 ELSIF _bReset THEN
-	iStkSingStackUp:=0;
+	iStkSingStackUp		:= 0;
 ELSIF iStkSeqCase=E_SeqSts.eDone THEN
-	iStkSingStackUp:=10;
+	iStkSingStackUp		:= 10;
 ELSIF NOT bPause THEN
-	iStkSingStackUp:=3;
+	iStkSingStackUp		:= 3;
 END_IF
-
-//inTCDrawerExtRet.P_nExtendAlarmID:=E_AlarmID.DrawerExtendError;
-//inTCDrawerExtRet.P_nRetractAlarmID:=E_AlarmID.DrawerRetractError;
-//inTCDrawerUpDn	 .P_nExtendAlarmID:=E_AlarmID.DrawerUpError;
-//inTCDrawerUpDn	 .P_nRetractAlarmID:=E_AlarmID.DrawerDownError;
-
-(*IF (NOT stMLVIO.ipTCDrawerCylRetractRS AND stMLVIO.ipTCDrawerCylExtendRS) THEN
-	stMLVIO.bTIUInOutStatusFlag:= TRUE;
-ELS*)
-//IF stMLVIO.ipTCDrawerCylRetractRS AND NOT stMLVIO.ipTCDrawerCylExtendRS THEN
-//	stMLVIO.bTIUInOutStatusFlag:= FALSE;
-//ELSE
-//	stMLVIO.bTIUInOutStatusFlag:= TRUE;
-//END_IF
-
-//stMLVIO.opAlarmLED:= stMLVIO.isTIIError OR _bError OR stMLVIO.isSysError;]]></ST>
+]]></ST>
       </Implementation>
     </Method>
     <Method Name="M_nDPSPowerOnOff" Id="{be69dcd0-a948-487b-8886-639ea27a5501}">
@@ -737,7 +718,15 @@ FC_BitToWord(
       <LineId Id="182" Count="0" />
     </LineIds>
     <LineIds Name="FB_DebugStationSeq.M_IOMapping">
-      <LineId Id="1110" Count="32" />
+      <LineId Id="1110" Count="28" />
+      <LineId Id="1425" Count="0" />
+      <LineId Id="1429" Count="0" />
+      <LineId Id="1447" Count="7" />
+      <LineId Id="1434" Count="0" />
+      <LineId Id="1441" Count="0" />
+      <LineId Id="1443" Count="3" />
+      <LineId Id="1440" Count="0" />
+      <LineId Id="1140" Count="2" />
       <LineId Id="1286" Count="0" />
       <LineId Id="1144" Count="1" />
       <LineId Id="1220" Count="0" />
@@ -760,32 +749,21 @@ FC_BitToWord(
       <LineId Id="163" Count="0" />
     </LineIds>
     <LineIds Name="FB_DebugStationSeq.M_nCyclic">
-      <LineId Id="186" Count="3" />
+      <LineId Id="188" Count="1" />
       <LineId Id="272" Count="0" />
-      <LineId Id="190" Count="1" />
-      <LineId Id="289" Count="0" />
-      <LineId Id="192" Count="1" />
-      <LineId Id="200" Count="5" />
-      <LineId Id="214" Count="6" />
-      <LineId Id="227" Count="10" />
+      <LineId Id="190" Count="0" />
+      <LineId Id="193" Count="0" />
+      <LineId Id="383" Count="0" />
+      <LineId Id="200" Count="0" />
+      <LineId Id="215" Count="2" />
+      <LineId Id="219" Count="0" />
+      <LineId Id="235" Count="2" />
       <LineId Id="321" Count="0" />
       <LineId Id="324" Count="1" />
       <LineId Id="238" Count="0" />
       <LineId Id="320" Count="0" />
       <LineId Id="239" Count="11" />
       <LineId Id="252" Count="9" />
-      <LineId Id="297" Count="0" />
-      <LineId Id="350" Count="0" />
-      <LineId Id="299" Count="1" />
-      <LineId Id="280" Count="0" />
-      <LineId Id="336" Count="0" />
-      <LineId Id="335" Count="0" />
-      <LineId Id="310" Count="1" />
-      <LineId Id="362" Count="0" />
-      <LineId Id="338" Count="1" />
-      <LineId Id="361" Count="0" />
-      <LineId Id="337" Count="0" />
-      <LineId Id="373" Count="0" />
       <LineId Id="288" Count="0" />
     </LineIds>
     <LineIds Name="FB_DebugStationSeq.M_nDPSPowerOnOff">

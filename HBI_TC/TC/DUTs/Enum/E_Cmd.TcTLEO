@@ -1,46 +1,51 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <EnumerationTextList Name="E_Cmd" Id="{ac96e949-a18f-4c77-a16f-32c06176c4b3}">
     <Declaration><![CDATA[{attribute 'qualified_only'}
 {attribute 'strict'}
 TYPE E_Cmd :
-( INITIALISE:=0,
-AlarmReset,
-ColumnAlarmReset,
-TIUSlideIn,
-TIUSlideOut,
-TIUDrawerUp,
-TIUDrawerDown,
-TIUSlideOutRetry,
-TIUSlideOutCancel,
-DPSPowerON,
-DPSPowerOFF,
-DPSPowerAuto,
-AP240ACPowerON,
-AP240ACPowerOFF,
-APAirValveON,
-APAirValveOFF,
-TstAirValveON,
-TstAirValveOFF,
-CellDoorOpen,
-CellDoorClose,
-CancelBuffer,
-SetLEDON,
-SetLEDOFF, 
-SetLEDBlink,
-DCCellFrontDoorOpen,
-DCCellFrontDoorClose,
-TIUSocketAirOn_1,
-TIUSocketAirOn_2,
-TIUSocketAirOff_1,
-TIUSocketAirOff_2,
-EnableTester,
-DisableTester,
-EnableTCU,
-DisableTCU,
-EnableTII,
-DisableTII,
-SetTCUSafeState
+( 	
+	INITIALISE:=0,
+	AlarmReset,
+	ColumnAlarmReset,
+	TIUSlideIn,
+	TIUSlideOut,
+	TIUDrawerUp,
+	TIUDrawerDown,
+	TIUSlideOutRetry,
+	TIUSlideOutCancel,
+	DPSPowerON,
+	DPSPowerOFF,
+	DPSPowerAuto,
+	AP240ACPowerON,
+	AP240ACPowerOFF,
+	APAirValveON,
+	APAirValveOFF,
+	TstAirValveON,
+	TstAirValveOFF,
+	CellDoorOpen,
+	CellDoorClose,
+	CancelBuffer,
+	SetLEDON,
+	SetLEDOFF, 
+	SetLEDBlink,
+	DCCellFrontDoorOpen,
+	DCCellFrontDoorClose,
+	TIUSocketAirOn_1,
+	TIUSocketAirOn_2,
+	TIUSocketAirOff_1,
+	TIUSocketAirOff_2,
+	EnableTester,
+	DisableTester,
+	EnableTCU,
+	DisableTCU,
+	EnableTII,
+	DisableTII,
+	SetTCUSafeState,
+	SetSolenoidValvesON,
+	SetSolenoidValvesOFF,
+	Secondary24VPowerON,
+	Secondary24VPowerOFF
 );
 END_TYPE
 ]]></Declaration>
@@ -230,6 +235,26 @@ END_TYPE
             </o>
             <o>
               <v n="TextID">"SetTCUSafeState"</v>
+              <v n="TextDefault">""</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"SetSolenoidValvesON"</v>
+              <v n="TextDefault">""</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"SetSolenoidValvesOFF"</v>
+              <v n="TextDefault">""</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"Secondary24VPowerON"</v>
+              <v n="TextDefault">""</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"Secondary24VPowerOFF"</v>
               <v n="TextDefault">""</v>
               <l n="LanguageTexts" t="ArrayList" />
             </o>

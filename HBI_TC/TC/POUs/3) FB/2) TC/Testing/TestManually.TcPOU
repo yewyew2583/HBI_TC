@@ -3,106 +3,110 @@
   <POU Name="TestManually" Id="{d5dec931-0d3f-44e6-a89b-a019a5f5e3a0}" SpecialFunc="None">
     <Declaration><![CDATA[ PROGRAM TestManually
 VAR
-	tTestCmd : TON;
-	bTIUSlide: BOOL;
-	bSlideOut: BOOL;
-	bDrawer: BOOL;
-	bUpDown:BOOL;
-	bAPAirValve:BOOL;
-	bTesterAirValve:BOOL;
-	bOnOff:BOOL;
-	AP240ACPwr:BOOL;
-	AP240ACPwrPara:INT;
-	bEnableModule:BOOL;
-	bDisableModule:BOOL;
-	bTCCSessionRequest 	:BOOL;
-	bTCCSessionStartEnd :BOOL;
-	bDoorClose: BOOL;
-	bDoorOpen: BOOL;
-	bDPSPower: BOOL;
-	iDPSPowerPara: INT;
-	bLvlAlarmReset: BOOL;
-	bColAlarmReset: BOOL;
-	bCancel: BOOL;
-	bTIUSlideOutRetry: BOOL;
-	bTIUSlideOutCancel:BOOL;
-	bActivateRecipe: BOOL;
-	bValidateRecipe: BOOL;
-	bSetLogFileVerbosity:BOOL;
-	bInitialise: BOOL;
-	bResume: BOOL;
+	tTestCmd 				: TON;
+	bTIUSlide				: BOOL;
+	bSlideOut				: BOOL;
+	bDrawer					: BOOL;
+	bUpDown					: BOOL;
+	bAPAirValve				: BOOL;
+	bTesterAirValve			: BOOL;
+	bOnOff					: BOOL;
+	AP240ACPwr				: BOOL;
+	AP240ACPwrPara			: INT;
+	bEnableModule			: BOOL;
+	bDisableModule			: BOOL;
+	bTCCSessionRequest 		: BOOL;
+	bTCCSessionStartEnd 	: BOOL;
+	bDoorClose				: BOOL;
+	bDoorOpen				: BOOL;
+	bDPSPower				: BOOL;
+	iDPSPowerPara			: INT;
+	bLvlAlarmReset			: BOOL;
+	bColAlarmReset			: BOOL;
+	bCancel					: BOOL;
+	bTIUSlideOutRetry		: BOOL;
+	bTIUSlideOutCancel		: BOOL;
+	bActivateRecipe			: BOOL;
+	bValidateRecipe			: BOOL;
+	bSetLogFileVerbosity	: BOOL;
+	bInitialise				: BOOL;
+	bResume					: BOOL;
 	
-	ClearTCSEvent : TON;
-	iClearCount   : INT := 0;
-	iTotalClear   : INT := 20;
-	bAutoClearEvent : BOOL := FALSE;
+	ClearTCSEvent 		: TON;
+	iClearCount   		: INT 		:= 0;
+	iTotalClear   		: INT 		:= 20;
+	bAutoClearEvent 	: BOOL 		:= FALSE;
 	
-	iAlarmCodes: ARRAY[1..NO_OF_LEVEL] OF INT :=[1,1,1,1,1,1];
-	iAlarmCode:INT:=1;
-	iBlinkRate:INT:=1000;
-	iSubModule: INT :=1;
-	TestLogName:STRING:='';
-	TestCommandID : E_TaskName;
-	TestModuleID : E_ModuleID:=E_ModuleID.NA;
-	bTestCommand: BOOL;	
-	TestInteger:ARRAY[0..5] OF INT;
-	TestString : STRING;
-	TestBool : BOOL;
-	iBtnNo:INT:=3;
-	i:INT;
+	iAlarmCodes			: ARRAY[1..NO_OF_LEVEL] OF INT 	:= [1,1,1,1,1,1];
+	iAlarmCode			: INT		:= 1;
+	iBlinkRate			: INT		:= 1000;
+	iSubModule			: INT 		:= 1;
+	TestLogName			: STRING	:= '';
+	TestCommandID 		: E_TaskName;
+	TestModuleID 		: E_ModuleID:=E_ModuleID.NA;
+	bTestCommand		: BOOL;	
+	TestInteger			: ARRAY[1..10] OF DINT;
+	TestString 			: STRING;
+	TestBool 			: BOOL;
+	iBtnNo				: INT		:= 5;
+	i					: INT;
 	
-	bInitialiseAll :BOOL;
-	bAlmResetAll :BOOL;
+	bInitialiseAll 		: BOOL;
+	bAlmResetAll 		: BOOL;
 	
-	tim:TON;
-	miniState:INT;
-	
+	tim					: TON;
+	miniState			: INT;
+	solenoidNumber		: ARRAY [1..10] OF DINT := [1,2,3];
 END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[//<HMICommandTest>
 	CASE iHMICbCmdSelection OF
-		E_Cmd.EnableTester:		 (*TestBool:=FALSE;*) TestInteger[0]:=iAlarmCode; TestString:='';		TestCommandID:=E_TaskName.EnableModule;			TestModuleID:=E_ModuleID.CELL_LA101_TESTER; TestLogName:=CONCAT('EnableModule' ,CONCAT('Level_',INT_TO_STRING(iHMICbLevelSelection)));
-		E_Cmd.DisableTester:     (*TestBool:=FALSE;*) TestInteger[0]:=iAlarmCode; TestString:='';		TestCommandID:=E_TaskName.DisableModule;		TestModuleID:=E_ModuleID.CELL_LA101_TESTER; TestLogName:=CONCAT('DisableModule',CONCAT('Level_',INT_TO_STRING(iHMICbLevelSelection)));
-	
-		E_Cmd.EnableTCU:		 (*TestBool:=FALSE;*) TestInteger[0]:=iAlarmCode; TestString:='';		TestCommandID:=E_TaskName.EnableModule;			TestModuleID:=E_ModuleID.CELL_LA101_AP; TestLogName:=CONCAT('EnableTCU' ,CONCAT('Level_',INT_TO_STRING(iHMICbLevelSelection)));
-		E_Cmd.DisableTCU:		 (*TestBool:=FALSE;*) TestInteger[0]:=iAlarmCode; TestString:='';		TestCommandID:=E_TaskName.DisableModule;		TestModuleID:=E_ModuleID.CELL_LA101_AP; TestLogName:=CONCAT('DisableTCU',CONCAT('Level_',INT_TO_STRING(iHMICbLevelSelection)));
-	
-		E_Cmd.EnableTII:		 (*TestBool:=FALSE;*) TestInteger[0]:=iAlarmCode; TestString:='';		TestCommandID:=E_TaskName.EnableModule;			TestModuleID:=E_ModuleID.CELL_LA101_TIERII; TestLogName:=CONCAT('EnableTII' ,CONCAT('Level_',INT_TO_STRING(iHMICbLevelSelection)));
-		E_Cmd.DisableTII:		 (*TestBool:=FALSE;*) TestInteger[0]:=iAlarmCode; TestString:='';		TestCommandID:=E_TaskName.DisableModule;		TestModuleID:=E_ModuleID.CELL_LA101_TIERII; TestLogName:=CONCAT('DisableTII',CONCAT('Level_',INT_TO_STRING(iHMICbLevelSelection)));
-	
-		E_Cmd.INITIALISE:		 TestBool:=FALSE; TestInteger[0]:=0; TestString:='';				TestCommandID:=E_TaskName.Initialize;			TestModuleID:=LevelModuleID[iHMICbLevelSelection]; TestLogName:=CONCAT('Initialize',CONCAT('Level_',INT_TO_STRING(iHMICbLevelSelection)));
-		E_Cmd.AlarmReset:		 (*TestBool:=FALSE;*) TestInteger[0]:=iAlarmCode; TestString:='';		TestCommandID:=E_TaskName.AlarmReset;			TestModuleID:=LevelModuleID[iHMICbLevelSelection]; TestLogName:=CONCAT('AlarmReset',CONCAT('Level_',INT_TO_STRING(iHMICbLevelSelection)));
-		E_Cmd.ColumnAlarmReset:	 (*TestBool:=FALSE;*) TestInteger[0]:=iAlarmCode; TestString:='';		TestCommandID:=E_TaskName.AlarmReset;			TestModuleID:=COLUMN_NAME;							 //TestLogName:=CONCAT('Initialize',CONCAT('Level_',INT_TO_STRING(iHMICbLevelSelection)));
-		E_Cmd.TIUSlideIn:		 TestBool:=FALSE; TestInteger[0]:=0; TestString:='';				TestCommandID:=E_TaskName.TIUSlideOut;			TestModuleID:=LevelModuleID[iHMICbLevelSelection]; TestLogName:=CONCAT('TIUSlideIN',CONCAT('Level_',INT_TO_STRING(iHMICbLevelSelection)));
-		E_Cmd.TIUSlideOut:		 TestBool:=TRUE; TestInteger[0]:=0; TestString:='';				TestCommandID:=E_TaskName.TIUSlideOut;			TestModuleID:=LevelModuleID[iHMICbLevelSelection]; TestLogName:=CONCAT('TIUSlideOut',CONCAT('Level_',INT_TO_STRING(iHMICbLevelSelection)));
-		E_Cmd.TIUDrawerUp:		 TestBool:=TRUE; TestInteger[0]:=0; TestString:='';				TestCommandID:=E_TaskName.DrawerUp;				TestModuleID:=LevelModuleID[iHMICbLevelSelection]; TestLogName:=CONCAT('DrawerUp',CONCAT('Level_',INT_TO_STRING(iHMICbLevelSelection)));
-		E_Cmd.TIUDrawerDown:	 TestBool:=FALSE; TestInteger[0]:=0; TestString:='';            	TestCommandID:=E_TaskName.DrawerUp;				TestModuleID:=LevelModuleID[iHMICbLevelSelection]; TestLogName:=CONCAT('DrawerDOWN',CONCAT('Level_',INT_TO_STRING(iHMICbLevelSelection)));
-		E_Cmd.TIUSlideOutRetry:  (*TestBool:=FALSE; TestInteger[0]:=0; TestString:='';*)        	TestCommandID:=E_TaskName.TIUSlideOutRetry;		TestModuleID:=LevelModuleID[iHMICbLevelSelection]; TestLogName:=CONCAT('TIUSlideOutRetry',CONCAT('Level_',INT_TO_STRING(iHMICbLevelSelection)));
-		E_Cmd.TIUSlideOutCancel: TestBool:=FALSE; TestInteger[0]:=0; TestString:='';            	TestCommandID:=E_TaskName.TIUSlideOutCancel;	TestModuleID:=LevelModuleID[iHMICbLevelSelection]; TestLogName:=CONCAT('TIUSlideOutCancel',CONCAT('Level_',INT_TO_STRING(iHMICbLevelSelection)));
-		E_Cmd.DPSPowerON:        TestBool:=FALSE; TestInteger[0]:=1; TestString:='';			 	TestCommandID:=E_TaskName.DPSPower;             TestModuleID:=LevelModuleID[iHMICbLevelSelection]; TestLogName:=CONCAT('DPSPowerON',CONCAT('Level_',INT_TO_STRING(iHMICbLevelSelection)));
-		E_Cmd.DPSPowerOFF:       TestBool:=FALSE; TestInteger[0]:=0; TestString:='';            	TestCommandID:=E_TaskName.DPSPower;             TestModuleID:=LevelModuleID[iHMICbLevelSelection]; TestLogName:=CONCAT('DPSPowerOFF',CONCAT('Level_',INT_TO_STRING(iHMICbLevelSelection)));
-		E_Cmd.DPSPowerAuto:		 TestBool:=FALSE; TestInteger[0]:=2; TestString:='';            	TestCommandID:=E_TaskName.DPSPower;             TestModuleID:=LevelModuleID[iHMICbLevelSelection]; TestLogName:=CONCAT('DPSPowerAUTO',CONCAT('Level_',INT_TO_STRING(iHMICbLevelSelection)));
-		E_Cmd.AP240ACPowerON:    TestBool:=FALSE; TestInteger[0]:=1; TestString:='';            	TestCommandID:=E_TaskName.AP240ACPOWER;           TestModuleID:=LevelModuleID[iHMICbLevelSelection]; TestLogName:=CONCAT('AP240ACPwrON',CONCAT('Level_',INT_TO_STRING(iHMICbLevelSelection)));
-		E_Cmd.AP240ACPowerOFF:   TestBool:=FALSE; TestInteger[0]:=0; TestString:='';			 	TestCommandID:=E_TaskName.AP240ACPOWER;           TestModuleID:=LevelModuleID[iHMICbLevelSelection]; TestLogName:=CONCAT('AP240ACPwrOFF',CONCAT('Level_',INT_TO_STRING(iHMICbLevelSelection)));
-		E_Cmd.APAirValveON:      TestBool:=TRUE; TestInteger[0]:=0; TestString:='';             	TestCommandID:=E_TaskName.APAirValve;           TestModuleID:=LevelModuleID[iHMICbLevelSelection]; TestLogName:=CONCAT('APAirValveON',CONCAT('Level_',INT_TO_STRING(iHMICbLevelSelection)));
-		E_Cmd.APAirValveOFF:     TestBool:=FALSE; TestInteger[0]:=0; TestString:='';            	TestCommandID:=E_TaskName.APAirValve;           TestModuleID:=LevelModuleID[iHMICbLevelSelection]; TestLogName:=CONCAT('APAirValveOFF',CONCAT('Level_',INT_TO_STRING(iHMICbLevelSelection)));
-		E_Cmd.TstAirValveON:	 TestBool:=TRUE; TestInteger[0]:=0; TestString:='';             	TestCommandID:=E_TaskName.TesterAirValve;       TestModuleID:=LevelModuleID[iHMICbLevelSelection]; TestLogName:=CONCAT('TesterAirValveON',CONCAT('Level_',INT_TO_STRING(iHMICbLevelSelection)));
-		E_Cmd.TstAirValveOFF:     TestBool:=FALSE; TestInteger[0]:=0; TestString:='';			 	TestCommandID:=E_TaskName.TesterAirValve;	    TestModuleID:=LevelModuleID[iHMICbLevelSelection]; TestLogName:=CONCAT('TesterAirValveOFF',CONCAT('Level_',INT_TO_STRING(iHMICbLevelSelection)));                 
-		E_Cmd.CellDoorOpen:     TestBool:=FALSE; TestInteger[0]:=0; TestString:='';            	TestCommandID:=E_TaskName.DoorOpen;        	 	TestModuleID:=LevelModuleID[iHMICbLevelSelection]; TestLogName:=CONCAT('CellDoorOpen',CONCAT('Level_',INT_TO_STRING(iHMICbLevelSelection)));
-		E_Cmd.CellDoorClose:	 TestBool:=TRUE; TestInteger[0]:=0; TestString:='';             	TestCommandID:=E_TaskName.DoorClose;       		TestModuleID:=LevelModuleID[iHMICbLevelSelection]; TestLogName:=CONCAT('CellDoorClose',CONCAT('Level_',INT_TO_STRING(iHMICbLevelSelection)));
-		E_Cmd.CancelBuffer:     TestBool:=FALSE; TestInteger[0]:=0; TestString:='';			 	TestCommandID:=E_TaskName.Cancel;	    		TestModuleID:=E_ModuleID.NA; 						 TestLogName:=CONCAT('CancelBuffer',CONCAT('Level_',INT_TO_STRING(iHMICbLevelSelection)));                 
-		E_Cmd.TIUSocketAirOn_1:      TestBool:=TRUE; TestInteger[0]:=1; TestString:='';             	TestCommandID:=E_TaskName.TIUSocketCoolingAir;           TestModuleID:=LevelModuleID[iHMICbLevelSelection]; TestLogName:=CONCAT('TIUSocketCoolingAir_1',CONCAT('Level_',INT_TO_STRING(iHMICbLevelSelection)));
-		E_Cmd.TIUSocketAirOn_2:      TestBool:=TRUE; TestInteger[0]:=2; TestString:='';             	TestCommandID:=E_TaskName.TIUSocketCoolingAir;           TestModuleID:=LevelModuleID[iHMICbLevelSelection]; TestLogName:=CONCAT('TIUSocketCoolingAir_2',CONCAT('Level_',INT_TO_STRING(iHMICbLevelSelection)));
-		E_Cmd.TIUSocketAirOff_1:      TestBool:=FALSE; TestInteger[0]:=1; TestString:='';             	TestCommandID:=E_TaskName.TIUSocketCoolingAir;           TestModuleID:=LevelModuleID[iHMICbLevelSelection]; TestLogName:=CONCAT('TIUSocketCoolingAir_1',CONCAT('Level_',INT_TO_STRING(iHMICbLevelSelection)));
-		E_Cmd.TIUSocketAirOff_2:      TestBool:=FALSE; TestInteger[0]:=2; TestString:='';             	TestCommandID:=E_TaskName.TIUSocketCoolingAir;           TestModuleID:=LevelModuleID[iHMICbLevelSelection]; TestLogName:=CONCAT('TIUSocketCoolingAir_2',CONCAT('Level_',INT_TO_STRING(iHMICbLevelSelection)));		
-		E_Cmd.SetLEDON:     	TestBool:=TRUE; TestInteger[1]:=0;				TestInteger[0]:=iBtnNo; TestString:='';	TestCommandID:=E_TaskName.SetBlinkRate;	TestModuleID:=LevelModuleID[iHMICbLevelSelection]; TestLogName:=CONCAT(CONCAT('SetLEDON_Btn_0',INT_TO_STRING(iBtnNo)),CONCAT('Level_',INT_TO_STRING(iHMICbLevelSelection)));                 
-		E_Cmd.SetLEDOFF:     	TestBool:=FALSE; TestInteger[1]:=iBlinkRate; 	TestInteger[0]:=iBtnNo; TestString:='';	TestCommandID:=E_TaskName.SetBlinkRate;	TestModuleID:=LevelModuleID[iHMICbLevelSelection]; TestLogName:=CONCAT(CONCAT('SetLEDON_Btn_0',INT_TO_STRING(iBtnNo)),CONCAT('Level_',INT_TO_STRING(iHMICbLevelSelection)));                 
-		E_Cmd.SetLEDBlink:     	TestBool:=TRUE; TestInteger[1]:=iBlinkRate; 	TestInteger[0]:=iBtnNo; TestString:='';	TestCommandID:=E_TaskName.SetBlinkRate;	TestModuleID:=LevelModuleID[iHMICbLevelSelection]; TestLogName:=CONCAT(CONCAT('SetLEDBlink_Btn_0',INT_TO_STRING(iBtnNo)),CONCAT('Level_',INT_TO_STRING(iHMICbLevelSelection)));                 
-		E_Cmd.DCCellFrontDoorOpen:  TestBool:=FALSE; 	TestInteger[0]:=0; TestString:=''; 	TestCommandID:=E_TaskName.DoorOpen;  TestModuleID:=LA_FRONT_DOOR_MODULE_ID[iHMICbLevelSelection]; TestLogName:=CONCAT('CellFrontDoorOpen',CONCAT('Level_',INT_TO_STRING(iHMICbLevelSelection)));                
-		E_Cmd.DCCellFrontDoorClose: TestBool:=TRUE; 	TestInteger[0]:=0; TestString:='';  TestCommandID:=E_TaskName.DoorClose; TestModuleID:=LA_FRONT_DOOR_MODULE_ID[iHMICbLevelSelection]; TestLogName:=CONCAT('CellFrontDoorClose',CONCAT('Level_',INT_TO_STRING(iHMICbLevelSelection)));        
+		E_Cmd.EnableTester:		 	(*TestBool:=FALSE;*) 	TestInteger[1]:=iAlarmCode; TestString:='';		TestCommandID:=E_TaskName.EnableModule;			TestModuleID:=E_ModuleID.CELL_LA101_TESTER; TestLogName:=CONCAT('EnableModule' ,CONCAT('Level_',INT_TO_STRING(iHMICbLevelSelection)));
+		E_Cmd.DisableTester:     	(*TestBool:=FALSE;*) 	TestInteger[1]:=iAlarmCode; TestString:='';		TestCommandID:=E_TaskName.DisableModule;		TestModuleID:=E_ModuleID.CELL_LA101_TESTER; TestLogName:=CONCAT('DisableModule',CONCAT('Level_',INT_TO_STRING(iHMICbLevelSelection)));
+	                             
+		E_Cmd.EnableTCU:		 	(*TestBool:=FALSE;*) 	TestInteger[1]:=iAlarmCode; TestString:='';		TestCommandID:=E_TaskName.EnableModule;			TestModuleID:=E_ModuleID.CELL_LA101_AP; TestLogName:=CONCAT('EnableTCU' ,CONCAT('Level_',INT_TO_STRING(iHMICbLevelSelection)));
+		E_Cmd.DisableTCU:		 	(*TestBool:=FALSE;*) 	TestInteger[1]:=iAlarmCode; TestString:='';		TestCommandID:=E_TaskName.DisableModule;		TestModuleID:=E_ModuleID.CELL_LA101_AP; TestLogName:=CONCAT('DisableTCU',CONCAT('Level_',INT_TO_STRING(iHMICbLevelSelection)));
+	                             
+		E_Cmd.EnableTII:		 	(*TestBool:=FALSE;*) 	TestInteger[1]:=iAlarmCode; TestString:='';		TestCommandID:=E_TaskName.EnableModule;			TestModuleID:=E_ModuleID.CELL_LA101_TIERII; TestLogName:=CONCAT('EnableTII' ,CONCAT('Level_',INT_TO_STRING(iHMICbLevelSelection)));
+		E_Cmd.DisableTII:		 	(*TestBool:=FALSE;*) 	TestInteger[1]:=iAlarmCode; TestString:='';		TestCommandID:=E_TaskName.DisableModule;		TestModuleID:=E_ModuleID.CELL_LA101_TIERII; TestLogName:=CONCAT('DisableTII',CONCAT('Level_',INT_TO_STRING(iHMICbLevelSelection)));
 
-	END_CASE                  
+		E_Cmd.INITIALISE:			TestBool:=FALSE; 		TestInteger[1]:=0; TestString:='';				TestCommandID:=E_TaskName.Initialize;				TestModuleID:=LevelModuleID[iHMICbLevelSelection]; 			TestLogName:=CONCAT('Initialize',CONCAT('Level_',INT_TO_STRING(iHMICbLevelSelection)));
+		E_Cmd.AlarmReset:		 	(*TestBool:=FALSE;*)	TestInteger[1]:=iAlarmCode; TestString:='';		TestCommandID:=E_TaskName.AlarmReset;				TestModuleID:=LevelModuleID[iHMICbLevelSelection]; 			TestLogName:=CONCAT('AlarmReset',CONCAT('Level_',INT_TO_STRING(iHMICbLevelSelection)));
+		E_Cmd.ColumnAlarmReset:	 	(*TestBool:=FALSE;*) 	TestInteger[1]:=iAlarmCode; TestString:='';		TestCommandID:=E_TaskName.AlarmReset;				TestModuleID:=COLUMN_NAME;										 //TestLogName:=CONCAT('Initialize',CONCAT('Level_',INT_TO_STRING(iHMICbLevelSelection)));
+		E_Cmd.TIUSlideIn:		 	TestBool:=FALSE; 		TestInteger[1]:=0; TestString:='';				TestCommandID:=E_TaskName.TIUSlideOut;				TestModuleID:=LevelModuleID[iHMICbLevelSelection]; 			TestLogName:=CONCAT('TIUSlideIN',CONCAT('Level_',INT_TO_STRING(iHMICbLevelSelection)));
+		E_Cmd.TIUSlideOut:		 	TestBool:=TRUE;			TestInteger[1]:=0; TestString:='';				TestCommandID:=E_TaskName.TIUSlideOut;				TestModuleID:=LevelModuleID[iHMICbLevelSelection]; 			TestLogName:=CONCAT('TIUSlideOut',CONCAT('Level_',INT_TO_STRING(iHMICbLevelSelection)));
+		E_Cmd.TIUDrawerUp:		 	TestBool:=TRUE; 		TestInteger[1]:=0; TestString:='';				TestCommandID:=E_TaskName.DrawerUp;					TestModuleID:=LevelModuleID[iHMICbLevelSelection]; 			TestLogName:=CONCAT('DrawerUp',CONCAT('Level_',INT_TO_STRING(iHMICbLevelSelection)));
+		E_Cmd.TIUDrawerDown:	 	TestBool:=FALSE; 		TestInteger[1]:=0; TestString:='';            	TestCommandID:=E_TaskName.DrawerUp;					TestModuleID:=LevelModuleID[iHMICbLevelSelection]; 			TestLogName:=CONCAT('DrawerDOWN',CONCAT('Level_',INT_TO_STRING(iHMICbLevelSelection)));
+		E_Cmd.TIUSlideOutRetry:  	(*TestBool:=FALSE; 		TestInteger[1]:=0; TestString:='';*)        	TestCommandID:=E_TaskName.TIUSlideOutRetry;			TestModuleID:=LevelModuleID[iHMICbLevelSelection]; 			TestLogName:=CONCAT('TIUSlideOutRetry',CONCAT('Level_',INT_TO_STRING(iHMICbLevelSelection)));
+		E_Cmd.TIUSlideOutCancel: 	TestBool:=FALSE; 		TestInteger[1]:=0; TestString:='';            	TestCommandID:=E_TaskName.TIUSlideOutCancel;		TestModuleID:=LevelModuleID[iHMICbLevelSelection]; 			TestLogName:=CONCAT('TIUSlideOutCancel',CONCAT('Level_',INT_TO_STRING(iHMICbLevelSelection)));
+		E_Cmd.DPSPowerON:        	TestBool:=FALSE; 		TestInteger[1]:=1; TestString:='';			 	TestCommandID:=E_TaskName.DPSPower;             	TestModuleID:=LevelModuleID[iHMICbLevelSelection]; 			TestLogName:=CONCAT('DPSPowerON',CONCAT('Level_',INT_TO_STRING(iHMICbLevelSelection)));
+		E_Cmd.DPSPowerOFF:       	TestBool:=FALSE; 		TestInteger[1]:=0; TestString:='';            	TestCommandID:=E_TaskName.DPSPower;             	TestModuleID:=LevelModuleID[iHMICbLevelSelection]; 			TestLogName:=CONCAT('DPSPowerOFF',CONCAT('Level_',INT_TO_STRING(iHMICbLevelSelection)));
+		E_Cmd.DPSPowerAuto:		 	TestBool:=FALSE; 		TestInteger[1]:=2; TestString:='';            	TestCommandID:=E_TaskName.DPSPower;             	TestModuleID:=LevelModuleID[iHMICbLevelSelection]; 			TestLogName:=CONCAT('DPSPowerAUTO',CONCAT('Level_',INT_TO_STRING(iHMICbLevelSelection)));
+		E_Cmd.AP240ACPowerON:    	TestBool:=FALSE; 		TestInteger[1]:=1; TestString:='';            	TestCommandID:=E_TaskName.AP240ACPOWER;         	TestModuleID:=LevelModuleID[iHMICbLevelSelection]; 			TestLogName:=CONCAT('AP240ACPwrON',CONCAT('Level_',INT_TO_STRING(iHMICbLevelSelection)));
+		E_Cmd.AP240ACPowerOFF:   	TestBool:=FALSE; 		TestInteger[1]:=0; TestString:='';			 	TestCommandID:=E_TaskName.AP240ACPOWER;         	TestModuleID:=LevelModuleID[iHMICbLevelSelection]; 			TestLogName:=CONCAT('AP240ACPwrOFF',CONCAT('Level_',INT_TO_STRING(iHMICbLevelSelection)));
+		E_Cmd.APAirValveON:      	TestBool:=TRUE; 		TestInteger[1]:=0; TestString:='';             	TestCommandID:=E_TaskName.APAirValve;           	TestModuleID:=LevelModuleID[iHMICbLevelSelection]; 			TestLogName:=CONCAT('APAirValveON',CONCAT('Level_',INT_TO_STRING(iHMICbLevelSelection)));
+		E_Cmd.APAirValveOFF:     	TestBool:=FALSE; 		TestInteger[1]:=0; TestString:='';            	TestCommandID:=E_TaskName.APAirValve;           	TestModuleID:=LevelModuleID[iHMICbLevelSelection]; 			TestLogName:=CONCAT('APAirValveOFF',CONCAT('Level_',INT_TO_STRING(iHMICbLevelSelection)));
+		E_Cmd.TstAirValveON:	 	TestBool:=TRUE; 		TestInteger[1]:=0; TestString:='';             	TestCommandID:=E_TaskName.TesterAirValve;       	TestModuleID:=LevelModuleID[iHMICbLevelSelection]; 			TestLogName:=CONCAT('TesterAirValveON',CONCAT('Level_',INT_TO_STRING(iHMICbLevelSelection)));
+		E_Cmd.TstAirValveOFF:     	TestBool:=FALSE; 		TestInteger[1]:=0; TestString:='';			 	TestCommandID:=E_TaskName.TesterAirValve;	    	TestModuleID:=LevelModuleID[iHMICbLevelSelection]; 			TestLogName:=CONCAT('TesterAirValveOFF',CONCAT('Level_',INT_TO_STRING(iHMICbLevelSelection)));                 
+		E_Cmd.CellDoorOpen:     	TestBool:=FALSE; 		TestInteger[1]:=0; TestString:='';            	TestCommandID:=E_TaskName.DoorOpen;        	 		TestModuleID:=LevelModuleID[iHMICbLevelSelection]; 			TestLogName:=CONCAT('CellDoorOpen',CONCAT('Level_',INT_TO_STRING(iHMICbLevelSelection)));
+		E_Cmd.CellDoorClose:	 	TestBool:=TRUE; 		TestInteger[1]:=0; TestString:='';             	TestCommandID:=E_TaskName.DoorClose;       			TestModuleID:=LevelModuleID[iHMICbLevelSelection]; 			TestLogName:=CONCAT('CellDoorClose',CONCAT('Level_',INT_TO_STRING(iHMICbLevelSelection)));
+		E_Cmd.CancelBuffer:     	TestBool:=FALSE; 		TestInteger[1]:=0; TestString:='';			 	TestCommandID:=E_TaskName.Cancel;	    			TestModuleID:=E_ModuleID.NA; 								TestLogName:=CONCAT('CancelBuffer',CONCAT('Level_',INT_TO_STRING(iHMICbLevelSelection)));                 
+		E_Cmd.TIUSocketAirOn_1:     TestBool:=TRUE; 		TestInteger[1]:=1; TestString:='';             	TestCommandID:=E_TaskName.TIUSocketCoolingAir;		TestModuleID:=LevelModuleID[iHMICbLevelSelection]; 			TestLogName:=CONCAT('TIUSocketCoolingAir_1',CONCAT('Level_',INT_TO_STRING(iHMICbLevelSelection)));
+		E_Cmd.TIUSocketAirOn_2:     TestBool:=TRUE; 		TestInteger[1]:=2; TestString:='';             	TestCommandID:=E_TaskName.TIUSocketCoolingAir;		TestModuleID:=LevelModuleID[iHMICbLevelSelection]; 			TestLogName:=CONCAT('TIUSocketCoolingAir_2',CONCAT('Level_',INT_TO_STRING(iHMICbLevelSelection)));
+		E_Cmd.TIUSocketAirOff_1:	TestBool:=FALSE; 		TestInteger[1]:=1; TestString:='';             	TestCommandID:=E_TaskName.TIUSocketCoolingAir;		TestModuleID:=LevelModuleID[iHMICbLevelSelection]; 			TestLogName:=CONCAT('TIUSocketCoolingAir_1',CONCAT('Level_',INT_TO_STRING(iHMICbLevelSelection)));
+		E_Cmd.TIUSocketAirOff_2:	TestBool:=FALSE; 		TestInteger[1]:=2; TestString:='';             	TestCommandID:=E_TaskName.TIUSocketCoolingAir;		TestModuleID:=LevelModuleID[iHMICbLevelSelection]; 			TestLogName:=CONCAT('TIUSocketCoolingAir_2',CONCAT('Level_',INT_TO_STRING(iHMICbLevelSelection)));		
+		E_Cmd.SetLEDON:     		TestBool:=TRUE; 		TestInteger[2]:=0;						TestInteger[1]:=iBtnNo; TestString:='';	TestCommandID:=E_TaskName.SetBlinkRate;	TestModuleID:=LevelModuleID[iHMICbLevelSelection]; TestLogName:=CONCAT(CONCAT('SetLEDON_Btn_0',INT_TO_STRING(iBtnNo)),CONCAT('Level_',INT_TO_STRING(iHMICbLevelSelection)));                 
+		E_Cmd.SetLEDOFF:     		TestBool:=FALSE; 		TestInteger[2]:=iBlinkRate; 			TestInteger[1]:=iBtnNo; TestString:='';	TestCommandID:=E_TaskName.SetBlinkRate;	TestModuleID:=LevelModuleID[iHMICbLevelSelection]; TestLogName:=CONCAT(CONCAT('SetLEDON_Btn_0',INT_TO_STRING(iBtnNo)),CONCAT('Level_',INT_TO_STRING(iHMICbLevelSelection)));                 
+		E_Cmd.SetLEDBlink:     		TestBool:=TRUE; 		TestInteger[2]:=iBlinkRate; 			TestInteger[1]:=iBtnNo; TestString:='';	TestCommandID:=E_TaskName.SetBlinkRate;	TestModuleID:=LevelModuleID[iHMICbLevelSelection]; TestLogName:=CONCAT(CONCAT('SetLEDBlink_Btn_0',INT_TO_STRING(iBtnNo)),CONCAT('Level_',INT_TO_STRING(iHMICbLevelSelection)));                 
+		E_Cmd.DCCellFrontDoorOpen:  TestBool:=FALSE; 		TestInteger[1]:=0; TestString:=''; 				TestCommandID:=E_TaskName.DoorOpen;  				TestModuleID:=LA_FRONT_DOOR_MODULE_ID[iHMICbLevelSelection]; TestLogName:=CONCAT('CellFrontDoorOpen',CONCAT('Level_',INT_TO_STRING(iHMICbLevelSelection)));                
+		E_Cmd.DCCellFrontDoorClose: TestBool:=TRUE; 		TestInteger[1]:=0; TestString:='';  			TestCommandID:=E_TaskName.DoorClose; 				TestModuleID:=LA_FRONT_DOOR_MODULE_ID[iHMICbLevelSelection]; TestLogName:=CONCAT('CellFrontDoorClose',CONCAT('Level_',INT_TO_STRING(iHMICbLevelSelection)));     
+   		E_Cmd.SetSolenoidValvesON:	TestBool:=TRUE;			TestInteger	:=solenoidNumber; 			TestString:='';				TestCommandID:=E_TaskName.SetSolenoidValves;  		TestModuleID:=LB_LEVEL_MODULE_ID[iHMICbLevelSelection]; 	TestLogName:=CONCAT('SetSolenoidValveON',CONCAT('Level_',INT_TO_STRING(iHMICbLevelSelection)));
+		E_Cmd.SetSolenoidValvesOFF:	TestBool:=FALSE;		TestInteger	:=solenoidNumber;			TestString:='';				TestCommandID:=E_TaskName.SetSolenoidValves;  		TestModuleID:=LB_LEVEL_MODULE_ID[iHMICbLevelSelection]; 	TestLogName:=CONCAT('SetSolenoidValveOFF',CONCAT('Level_',INT_TO_STRING(iHMICbLevelSelection)));
+		E_Cmd.Secondary24VPowerON:	TestBool:=FALSE; 		TestInteger[1]:=1; TestString:='';            	TestCommandID:=E_TaskName.Secondary24VPower;         	TestModuleID:=LevelModuleID[iHMICbLevelSelection]; 			TestLogName:=CONCAT('Secondary24VPowerON',CONCAT('Level_',INT_TO_STRING(iHMICbLevelSelection)));
+		E_Cmd.Secondary24VPowerOFF:	TestBool:=FALSE; 		TestInteger[1]:=0; TestString:='';            	TestCommandID:=E_TaskName.Secondary24VPower;         	TestModuleID:=LevelModuleID[iHMICbLevelSelection]; 			TestLogName:=CONCAT('Secondary24VPowerOFF',CONCAT('Level_',INT_TO_STRING(iHMICbLevelSelection)));
+
+END_CASE                  
 //</HMICommandTest>        
 
 //
@@ -133,13 +137,14 @@ END_IF
 	
 //<ManualTest>
 	IF bTestCommand   THEN
-		arrTACommands.arrTACommands[1].sLogName := TestLogName;
-		arrTACommands.arrTACommands[1].eTaskName := TestCommandID;
-		arrTACommands.arrTACommands[1].eModuleID := TestModuleID; //E_MODULEID_Rcmd.LP_L01_STACKER_01;
-		arrTACommands.arrTACommands[1].iParam[1] := TestInteger[0];
-		arrTACommands.arrTACommands[1].iParam[2] := TestInteger[1];
-		arrTACommands.arrTACommands[1].sParam[1] := TestString;
-		arrTACommands.arrTACommands[1].bParam[1] := TestBool;
+		arrTACommands.arrTACommands[1].sLogName 	:= TestLogName;
+		arrTACommands.arrTACommands[1].eTaskName 	:= TestCommandID;
+		arrTACommands.arrTACommands[1].eModuleID 	:= TestModuleID; 
+		arrTACommands.arrTACommands[1].iParam[1] 	:= TestInteger[1];
+		arrTACommands.arrTACommands[1].iParam[2] 	:= TestInteger[2];
+		arrTACommands.arrTACommands[1].iParam		:= TestInteger;
+		arrTACommands.arrTACommands[1].sParam[1] 	:= TestString;
+		arrTACommands.arrTACommands[1].bParam[1] 	:= TestBool;
 		arrTCSCommandReady:= FALSE;
 		iClearCount := iTotalClear;
 		bTestCommand := FALSE;
@@ -398,8 +403,10 @@ END_VAR
       <LineId Id="1946" Count="1" />
       <LineId Id="2008" Count="0" />
       <LineId Id="2011" Count="0" />
-      <LineId Id="1944" Count="0" />
-      <LineId Id="1878" Count="0" />
+      <LineId Id="2350" Count="1" />
+      <LineId Id="2469" Count="0" />
+      <LineId Id="2471" Count="1" />
+      <LineId Id="2470" Count="0" />
       <LineId Id="1819" Count="0" />
       <LineId Id="2161" Count="0" />
       <LineId Id="2136" Count="0" />
@@ -419,7 +426,9 @@ END_VAR
       <LineId Id="1696" Count="0" />
       <LineId Id="1694" Count="0" />
       <LineId Id="2160" Count="0" />
-      <LineId Id="2150" Count="9" />
+      <LineId Id="2150" Count="5" />
+      <LineId Id="2411" Count="0" />
+      <LineId Id="2156" Count="3" />
       <LineId Id="1695" Count="0" />
       <LineId Id="1693" Count="0" />
       <LineId Id="1065" Count="5" />

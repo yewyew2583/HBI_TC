@@ -1,0 +1,176 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <POU Name="FB_DBStnUpdateStatus" Id="{5381dd1c-40ad-401f-b8cf-0ba3b8536a89}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_DBStnUpdateStatus
+VAR_INPUT
+	DBColumnAlarmLED			: BOOL;
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	stDbStnVIO		: ST_DebugStation_VIO;
+	Btn5Tim			: TON;
+	rtRiseBtn5Trig	: R_TRIG;
+	ftFallBtn5Trig	: F_TRIG;
+	
+	EmptyEvents				: ST_Event; // to Clear the event array[n]
+	stManualBtnEvent		: ST_Event;
+	sentManualBtnEvent		: BOOL;
+	iBtnLEDModes			: ARRAY[1..NO_OF_BTNLED] OF INT;	//1: OFF, 2: ON, 3: BLINK
+	
+	i				: INT;
+	bState			: BOOL;
+	iFreq			: DINT;
+	iLevel			: INT 	:= 1;
+	
+	bTriggerBlinks		: ARRAY [1..NO_OF_BTNLED] OF BOOL;
+	bLastTriggerBlinks	: ARRAY [1..NO_OF_BTNLED] OF BOOL;
+	tBlinkDuration		: TIME	:= T#1000MS;
+	fbButtonBlinks		: ARRAY [1..NO_OF_BTNLED] OF  FB_Blink;
+	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[stDbStnVIO 														:= stDebugStation.fbDBStnSeq.P_stVIO;
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////// Alarm led update (DBColumn and DB station)///////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+stDBStnVIO.opDBStnAlarmLED	:= stDBStnVIO.TIIAlarmLED OR DBColumnAlarmLED;
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////// Button Press event update///////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Btn5Tim(IN:=stDBStnVIO.ipDBStnPurgeButton, PT:=T#5MS);
+rtRiseBtn5Trig(Clk:=Btn5Tim.Q);
+ftFallBtn5Trig(Clk:=Btn5Tim.Q);
+
+sentManualBtnEvent												:= FALSE;
+IF rtRiseBtn5Trig.Q THEN
+	stManualBtnEvent.eEventName									:= E_EventName.ManualButtonPressCompleted;
+	stManualBtnEvent.sLogName									:= 'PurgeButtonPressed';
+	stManualBtnEvent.eModuleID									:= LevelModuleID[iLevel];	//debug station level 1
+	stManualBtnEvent.iParam[1]									:= 5;	//button number for purge
+	sentManualBtnEvent											:= TRUE;
+END_IF
+
+IF sentManualBtnEvent THEN
+	CmdAndEventProcess.fbCmdAndEventUpdate.M_AddEvent(
+		sLogName		:= stManualBtnEvent.sLogName, 
+		eEventName		:= stManualBtnEvent.eEventName, 
+		eModuleID		:= stManualBtnEvent.eModuleID, 
+		iParam			:= stManualBtnEvent.iParam,
+		sParam			:= EmptyEvents.sParam, 
+		bParam			:= EmptyEvents.bParam, 
+		dParam			:= EmptyEvents.dParam,
+		sFailReason		:= EmptyEvents.sFailReason
+	);
+	
+	sentManualBtnEvent:=FALSE;
+END_IF
+
+IF ftFallBtn5Trig.Q THEN
+	Btn5Tim(IN:= FALSE);
+END_IF
+
+(*===========================================
+SOLID OFF 	::State=0, 	Frequency = Don’tCare
+SOLID ON 	::State=1,	Frequency = 0
+BLINKING  	::State=1, 	Frequency = BlinkFreq
+===========================================*)
+FOR i:=4 TO NO_OF_BTNLED DO   
+	//stDbStnVIO 														:= stDebugStation.fbDBStnSeq.P_stVIO;
+	
+	CASE i OF     
+		E_DBStnLED.PurgeButton:	
+			bState				:= stDbStnVIO.bDBStnPurgeBtnLEDState;
+			iFreq				:= stDbStnVIO.iDBStnPurgeBtnLEDBlinkFreq;
+	END_CASE
+	
+	IF (NOT bState) THEN
+		iBtnLEDModes[i]			:= 1;	//OFF
+	ELSIF bState AND iFreq>0 THEN
+		iBtnLEDModes[i]			:= 3;	//BLINK
+		tBlinkDuration			:= DINT_TO_TIME(iFreq);
+	ELSIF bState THEN
+		iBtnLEDModes[i]			:= 2;	//ON
+	END_IF
+	
+	//stDbStnVIO															:= stDebugStation.fbDBStnSeq.P_stVIO;
+	fbButtonBlinks[i](MODE:= iBtnLEDModes[i], Duration:= tBlinkDuration, LED=> bTriggerBlinks[i]);
+	
+	CASE i OF
+		E_DBStnLED.PurgeButton :	
+			stDbStnVIO.opDBStnPurgeLED						:= bTriggerBlinks[i];
+	END_CASE
+	
+	IF bTriggerBlinks[i] <> bLastTriggerBlinks[i] THEN
+		bLastTriggerBlinks[i] 												:= bTriggerBlinks[i] ;
+	END_IF
+	
+	IF stDbStnVIO.bOffBtnLeds[i] THEN
+		iBtnLEDModes[stManualBtnEvent.iParam[1]]							:= 1;
+		stDbStnVIO.bOffBtnLeds[i]											:= FALSE;
+	END_IF
+	
+	//stDebugStation.fbDBStnSeq.P_stVIO									:= stDbStnVIO;
+END_FOR
+
+stDebugStation.fbDBStnSeq.P_stVIO									:= stDbStnVIO;]]></ST>
+    </Implementation>
+    <LineIds Name="FB_DBStnUpdateStatus">
+      <LineId Id="203" Count="2" />
+      <LineId Id="199" Count="1" />
+      <LineId Id="183" Count="1" />
+      <LineId Id="195" Count="2" />
+      <LineId Id="191" Count="0" />
+      <LineId Id="18" Count="2" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="37" Count="3" />
+      <LineId Id="35" Count="1" />
+      <LineId Id="44" Count="1" />
+      <LineId Id="47" Count="11" />
+      <LineId Id="43" Count="0" />
+      <LineId Id="64" Count="0" />
+      <LineId Id="62" Count="0" />
+      <LineId Id="65" Count="1" />
+      <LineId Id="69" Count="4" />
+      <LineId Id="67" Count="0" />
+      <LineId Id="76" Count="0" />
+      <LineId Id="74" Count="0" />
+      <LineId Id="77" Count="0" />
+      <LineId Id="80" Count="2" />
+      <LineId Id="89" Count="0" />
+      <LineId Id="79" Count="0" />
+      <LineId Id="78" Count="0" />
+      <LineId Id="95" Count="0" />
+      <LineId Id="97" Count="0" />
+      <LineId Id="100" Count="0" />
+      <LineId Id="102" Count="0" />
+      <LineId Id="115" Count="0" />
+      <LineId Id="106" Count="0" />
+      <LineId Id="114" Count="0" />
+      <LineId Id="133" Count="0" />
+      <LineId Id="153" Count="0" />
+      <LineId Id="137" Count="0" />
+      <LineId Id="103" Count="0" />
+      <LineId Id="140" Count="0" />
+      <LineId Id="142" Count="1" />
+      <LineId Id="151" Count="0" />
+      <LineId Id="141" Count="0" />
+      <LineId Id="131" Count="0" />
+      <LineId Id="116" Count="0" />
+      <LineId Id="118" Count="4" />
+      <LineId Id="124" Count="0" />
+      <LineId Id="96" Count="0" />
+      <LineId Id="154" Count="0" />
+      <LineId Id="156" Count="0" />
+      <LineId Id="63" Count="0" />
+      <LineId Id="201" Count="0" />
+      <LineId Id="61" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

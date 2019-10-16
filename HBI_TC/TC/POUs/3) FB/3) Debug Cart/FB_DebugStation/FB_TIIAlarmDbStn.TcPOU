@@ -9,6 +9,7 @@ VAR_INPUT
 END_VAR
 VAR_OUTPUT
 	isTIIError				: BOOL;
+	TIIAlarmLED					: BOOL;
 END_VAR
 VAR
 	DIFU					: R_TRIG;
@@ -97,7 +98,17 @@ FOR i:=1 TO NoOfTIIAlm DO
 	    E_TIIAlarm.ipCellGroundFault:
 			e															:= E_TIIAlarm.ipCellGroundFault; 
 			ArrAlmBitBefDelay[E_TIIAlarm.ipCellGroundFault]				:= vIO.ipDBStnCellGroundFault AND bENs[8] ; 
-			Arr_ms[e] 													:= 500;  //TIIAlmText[e]:='CellGroundFault'  		;       
+			Arr_ms[e] 													:= 500;  //TIIAlmText[e]:='CellGroundFault'  		;    
+
+		E_TIIAlarm.ipCellFluidLeakage1: 
+			e															:= E_TIIAlarm.ipCellFluidLeakage1; 
+			ArrAlmBitBefDelay[E_TIIAlarm.ipCellFluidLeakage1]			:= vIO.ipDBStnCellFluidLeakage1 (*AND bENs[6]*); 			
+			Arr_ms[e] 													:= 500;  (*TIIAlmText[e]:='CellFluidLeakage1' 	*);   
+			
+	    E_TIIAlarm.ipCellFluidLeakage2: 
+			e															:= E_TIIAlarm.ipCellFluidLeakage2; 
+			ArrAlmBitBefDelay[E_TIIAlarm.ipCellFluidLeakage2]			:= vIO.ipDBStnCellFluidLeakage2 (*AND bENs[7]*) ; 			
+			Arr_ms[e] 													:= 500;  (*TIIAlmText[e]:='CellFluidLeakage2'*);     
 	END_CASE
 
 	//Delay Library Alm Bit
@@ -118,17 +129,12 @@ FOR i:=1 TO NoOfTIIAlm DO
 	
 END_FOR
 
-
-
-(*
-//Alarm Reset ===========================================================================
-IF almRset THEN
-	IF ArrAlmSubModule.AlarmSubmodule[iSubMod].ArrAlarmKeepBit[bitNo] THEN
-		ArrAlmSubModule.AlarmSubmodule[iSubMod].ArrAlarmKeepBit[bitNo] := FALSE;
-	END_IF
-END_IF
-//=======================================================================================
-*)]]></ST>
+TIIAlarmLED															:=		ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipAPPowerOn 		   	   		]   OR 
+		    																ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipAPReady		       	   	]   OR
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellFluidLeakage1		   	]   OR
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellFluidLeakage2		   	]   OR
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellGroundFault 	   		];
+]]></ST>
       </Implementation>
     </Method>
     <Property Name="P_ErrClear" Id="{400cb5c4-2dc6-4fab-b5e3-d1a6a6655309}">
@@ -179,6 +185,8 @@ END_VAR
       <LineId Id="312" Count="1" />
       <LineId Id="157" Count="0" />
       <LineId Id="703" Count="2" />
+      <LineId Id="779" Count="8" />
+      <LineId Id="778" Count="0" />
       <LineId Id="162" Count="0" />
       <LineId Id="177" Count="2" />
       <LineId Id="635" Count="0" />
@@ -194,10 +202,9 @@ END_VAR
       <LineId Id="391" Count="0" />
       <LineId Id="190" Count="0" />
       <LineId Id="202" Count="0" />
+      <LineId Id="760" Count="1" />
+      <LineId Id="766" Count="2" />
       <LineId Id="733" Count="0" />
-      <LineId Id="732" Count="0" />
-      <LineId Id="204" Count="2" />
-      <LineId Id="209" Count="5" />
       <LineId Id="120" Count="0" />
     </LineIds>
     <LineIds Name="FB_TIIAlarmDbStn.P_ErrClear.Get">

@@ -149,6 +149,11 @@ VAR
 	TC_AP240ACPower_Reset				: R_TRIG;
 	TC_AP240ACPower_Precondition		: BOOL; 
 	
+	FB_opCell24VPowerEnable				: DFB_Cylinder;
+	DUT_opCell24VPowerEnable				: DUT_Cylinder;
+	Alarm_opCell24VPowerEnable			: BOOL;
+	Precondition_opCell24VPowerEnable	: BOOL;
+	Reset_opCell24VPowerEnable			: R_TRIG;
 	
 	TC_APAirSupplySol_Reset				: R_TRIG;
 	TC_TesterDrawerAirSupplySol_Reset	: R_TRIG;
@@ -287,7 +292,7 @@ END_VAR
     <Method Name="M_240APPwr" Id="{158c9825-e25a-4c2e-b234-be6bf1c15da6}">
       <Declaration><![CDATA[METHOD M_240APPwr : UDINT
 VAR_INPUT
-	iLevel:INT:=1;
+	iLevel:INT;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[
@@ -865,7 +870,8 @@ END_VAR
 	M_InterlockTII(iLevel:=iLevel);
 	M_240TstPwr(iLevel:=iLevel);
 	M_240APPwr(iLevel:=iLevel);
-
+	M_Secondary24VPower(iLevel:=iLevel);
+	
 //inPOn :=stTCMultiLevelVIO.ipAP_PresentSensor AND stTCMultiLevelVIO.ipTesterLatchesClosed;
 //delay(msec:=20000,in:=inPOn,out:=outPon);
 
@@ -879,13 +885,6 @@ END_VAR
 	AirOnOff(); // Tester Air and AP Air
 //<AirSupply>
 
-//<24VSencondaryPwr>
-	IF NOT ( isLeakage OR isGroundFault)THEN
-		stMLVIO.opCell24VPowerEnable:=TRUE;
-	ELSE
-		stMLVIO.opCell24VPowerEnable:=FALSE;
-	END_IF
-//<24VSencondaryPwr>>
 
 
 //Do not have manual command, so we can on automatically if pass permissive.
@@ -1229,6 +1228,7 @@ ELSIF stMLVIO.isTIIError OR stMLVIO.isSysError THEN
 		RETURN;
 	END_IF
 END_IF
+
 IF iSeqStep>0 THEN
 	;//Do nothing;
 ELSIF stTCMLSeqParam.bDSPPowerOff OR
@@ -1251,33 +1251,32 @@ ELSIF stTCMLSeqParam.bAP240ACPowerOff OR
 	
 END_IF
 
-
 //Sequence start
 iStkSeqCase:=arrSeqStep[iSeqStep];
 
 // State machine
 CASE iStkSeqCase OF
-E_SeqSts.eInit: //Init
-	//TDelay(IN:=FALSE);
-	sMessage:='Start Executing';
-	bStepDone:=TRUE;
+	E_SeqSts.eInit: //Init
+		//TDelay(IN:=FALSE);
+		sMessage:='Start Executing';
+		bStepDone:=TRUE;
+		
+	E_SeqSts.eSanityCheckForDPSPwr: 			//Sanity check DPS
+		sMessage:='CheckTeir2IIAlarm';
+		
+		tDPSDelayToComplete(IN:=FALSE);
+		tDPSDelayToAutoComplete(IN:=FALSE);
+		bStepDone:=TRUE;
 	
-E_SeqSts.eSanityCheckForDPSPwr: 			//Sanity check DPS
-	sMessage:='CheckTeir2IIAlarm';
-	
-	tDPSDelayToComplete(IN:=FALSE);
-	tDPSDelayToAutoComplete(IN:=FALSE);
-	bStepDone:=TRUE;
-
-E_SeqSts.eSanityCheckForAPPwr: 				//Sanity check AP
-	sMessage:='CheckTeir2IIAlarm';
-	
-	tAPACPwrDelayToComplete(IN:=FALSE);
-	tAPACPwrDelayToAutoComplete(IN:=FALSE);
-	bStepDone:=TRUE;	
-	
-	
-E_SeqSts.eDPSPwrOnOff:											// DSPPowerOnOff
+	E_SeqSts.eSanityCheckForAPPwr: 				//Sanity check AP
+		sMessage:='CheckTeir2IIAlarm';
+		
+		tAPACPwrDelayToComplete(IN:=FALSE);
+		tAPACPwrDelayToAutoComplete(IN:=FALSE);
+		bStepDone:=TRUE;	
+		
+		
+	E_SeqSts.eDPSPwrOnOff:											// DSPPowerOnOff
 		tDPSDelayToComplete(IN:=TRUE, PT:=T#2S); 				// origin T#10s
 		IF tDPSDelayToComplete.Q THEN
 			IF stTCMLSeqParam.bDSPPowerOff THEN 				(*0=Off, 1=On, 2=Auto(Off->On) *)
@@ -1298,14 +1297,14 @@ E_SeqSts.eDPSPwrOnOff:											// DSPPowerOnOff
 				END_IF
 			END_IF
 		END_IF
-IF tDPSDelayToComplete.Q AND tDPSDelayToAutoComplete.Q THEN
-	tDPSDelayToComplete(IN:=FALSE);
-	tDPSDelayToAutoComplete(IN:=FALSE);
-	bStepDone:=TRUE;
-END_IF
-	
 		
-E_SeqSts.eAP240ACPwrOnOff:										// AP240ACPowerOnOff
+		IF tDPSDelayToComplete.Q AND tDPSDelayToAutoComplete.Q THEN
+			tDPSDelayToComplete(IN:=FALSE);
+			tDPSDelayToAutoComplete(IN:=FALSE);
+			bStepDone:=TRUE;
+		END_IF
+	
+	E_SeqSts.eAP240ACPwrOnOff:										// AP240ACPowerOnOff
 		tAPACPwrDelayToComplete(IN:=TRUE, PT:=T#2S); 			// origin T#10s
 		IF tAPACPwrDelayToComplete.Q THEN
 			IF stTCMLSeqParam.bAP240ACPowerOff THEN 			(*0=Off, 1=On, 2=Auto(Off->On) *)
@@ -1330,23 +1329,20 @@ E_SeqSts.eAP240ACPwrOnOff:										// AP240ACPowerOnOff
 				END_IF
 			END_IF
 		END_IF
-IF tAPACPwrDelayToComplete.Q AND tAPACPwrDelayToAutoComplete.Q THEN
-	tAPACPwrDelayToComplete(IN:=FALSE);
-	tAPACPwrDelayToAutoComplete(IN:=FALSE);
-	bStepDone:=TRUE;
-END_IF
-
+			
+		IF tAPACPwrDelayToComplete.Q AND tAPACPwrDelayToAutoComplete.Q THEN
+			tAPACPwrDelayToComplete(IN:=FALSE);
+			tAPACPwrDelayToAutoComplete(IN:=FALSE);
+			bStepDone:=TRUE;
+		END_IF
 	
-E_SeqSts.eDone:	// Done
-	sMessage:='Done';
-	M_nDPSPowerOnOff:=10;
+	E_SeqSts.eDone:	// Done
+		sMessage:='Done';
+		M_nDPSPowerOnOff:=10;
+		
 END_CASE	
 
-(*IF _nErrorID>0 OR _bError THEN
-	_bError:=TRUE;
-ELS*)
-IF (bStep OR bBypassSingleMove OR iStkSeqCase<=E_SeqSts.eSanityCheck) 
-AND iStkSeqCase<E_SeqSts.eDone AND bStepDone THEN
+IF (bStep OR bBypassSingleMove OR iStkSeqCase<=E_SeqSts.eSanityCheck) AND iStkSeqCase<E_SeqSts.eDone AND bStepDone THEN
 	iSeqStep:=iSeqStep+1;
 END_IF
 
@@ -1385,29 +1381,29 @@ END_IF
 IF iSeqStep > 0 THEN
 	;//Do nothing;
 ELSIF stTCMLSeqParam.bDrawerUp THEN
-	iStkSeqCase := 0;
-	arrSeqStep[0]:=E_SeqSts.eInit;
-	arrSeqStep[1]:=E_SeqSts.eSanityCheck;
-	arrSeqStep[2]:=E_SeqSts.eMoveDrawerUp;
-	arrSeqStep[3]:=E_SeqSts.eDone;		
+	iStkSeqCase												:= 0;
+	arrSeqStep[0]											:= E_SeqSts.eInit;
+	arrSeqStep[1]											:= E_SeqSts.eSanityCheck;
+	arrSeqStep[2]											:= E_SeqSts.eMoveDrawerUp;
+	arrSeqStep[3]											:= E_SeqSts.eDone;		
 	
 ELSIF stTCMLSeqParam.bDrawerDown THEN 		
-	iStkSeqCase := 0; 						
-	arrSeqStep[0]:=E_SeqSts.eInit;			
-	arrSeqStep[1]:=E_SeqSts.eSanityCheck;	
-	arrSeqStep[2]:=E_SeqSts.eMoveDrawerDown;
-	arrSeqStep[3]:=E_SeqSts.eDone;	
+	iStkSeqCase 											:= 0; 						
+	arrSeqStep[0]											:= E_SeqSts.eInit;			
+	arrSeqStep[1]											:= E_SeqSts.eSanityCheck;	
+	arrSeqStep[2]											:= E_SeqSts.eMoveDrawerDown;
+	arrSeqStep[3]											:= E_SeqSts.eDone;	
 	
 ELSIF stTCMLSeqParam.bCancel THEN
 	iStkSeqCase := 0;
-	arrSeqStep[0]:=E_SeqSts.eInit;
-	arrSeqStep[1]:=E_SeqSts.eSanityCheck;
-	arrSeqStep[2]:=E_SeqSts.eTBotEAPSanityCheck;
-	arrSeqStep[3]:=E_SeqSts.eMoveDrawerUp;
-	arrSeqStep[4]:=E_SeqSts.eTBotEAPSanityCheck;
-	arrSeqStep[5]:=E_SeqSts.eMoveDrawerIn;
-	arrSeqStep[6]:=E_SeqSts.eMoveDrawerDown;
-	arrSeqStep[7]:=E_SeqSts.eDone;
+	arrSeqStep[0]											:= E_SeqSts.eInit;
+	arrSeqStep[1]											:= E_SeqSts.eSanityCheck;
+	arrSeqStep[2]											:= E_SeqSts.eTBotEAPSanityCheck;
+	arrSeqStep[3]											:= E_SeqSts.eMoveDrawerUp;
+	arrSeqStep[4]											:= E_SeqSts.eTBotEAPSanityCheck;
+	arrSeqStep[5]											:= E_SeqSts.eMoveDrawerIn;
+	arrSeqStep[6]											:= E_SeqSts.eMoveDrawerDown;
+	arrSeqStep[7]											:= E_SeqSts.eDone;
 	
 ELSIF stTCMLSeqParam.bShuttleMoveOut OR stTCMLSeqParam.bTBotbShuttleMoveOutReq THEN
 	arrSeqStep[0]											:= E_SeqSts.eInit;
@@ -2007,6 +2003,84 @@ END_VAR
 	e;]]></ST>
       </Implementation>
     </Method>
+    <Method Name="M_Secondary24VPower" Id="{3e6ef57f-d508-4f74-9216-2c66b14c555c}">
+      <Declaration><![CDATA[METHOD M_Secondary24VPower : UDINT
+VAR_INPUT
+	iLevel:INT;
+END_VAR
+VAR
+	Permissive_opCell24VPowerEnable			: WORD;
+	Shutdown_opCell24VPowerEnable			: WORD;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[FC_BitToWord(
+	BOOL_00		:= TRUE, 
+	BOOL_01		:= TRUE, 
+	BOOL_02		:= TRUE, 
+	BOOL_03		:= TRUE, 
+	BOOL_04		:= TRUE, 
+	BOOL_05		:= TRUE, 
+	BOOL_06		:= TRUE, 
+	BOOL_07		:= TRUE, 
+	BOOL_08		:= TRUE, 
+	BOOL_09		:= TRUE, 
+	BOOL_10		:= TRUE, 
+	BOOL_11		:= TRUE, 
+	BOOL_12		:= TRUE, 
+	BOOL_13		:= TRUE, 
+	BOOL_14		:= TRUE, 
+	BOOL_15		:= TRUE, 
+	Output_Word		=> Permissive_opCell24VPowerEnable);
+	
+FC_BitToWord(
+	BOOL_00		:= FALSE, 
+	BOOL_01		:= FALSE, 
+	BOOL_02		:= FALSE, 
+	BOOL_03		:= FALSE, 
+	BOOL_04		:= FALSE, 
+	BOOL_05		:= FALSE, 
+	BOOL_06		:= FALSE, 
+	BOOL_07		:= FALSE, 
+	BOOL_08		:= FALSE, 
+	BOOL_09		:= FALSE, 
+	BOOL_10		:= FALSE, 
+	BOOL_11		:= FALSE, 
+	BOOL_12		:= FALSE, 
+	BOOL_13		:= FALSE, 
+	BOOL_14		:= FALSE, 
+	BOOL_15		:= FALSE, 
+	Output_Word		=> Shutdown_opCell24VPowerEnable);
+	
+
+Precondition_opCell24VPowerEnable		:=  (NOT itl_opCell_24VPowerEnable) AND 
+											stMLVIO.bSecondary24VPowerOnOff;
+
+Reset_opCell24VPowerEnable(CLK:= Precondition_opCell24VPowerEnable);
+			
+DUT_opCell24VPowerEnable.AutInp			:= Precondition_opCell24VPowerEnable;
+DUT_TC_AP240ACPower.Reset		:= TC_AP240ACPower_Reset.Q;						
+	
+FB_opCell24VPowerEnable(
+	Sec_P:= Sec_P, 
+	ID:= 'Cell 24V Secondary Power', 
+	Simulate:= DUT_opCell24VPowerEnable.Simulate, 
+	Permissive:= Permissive_opCell24VPowerEnable,  //check before execute
+	ShutDown:= Shutdown_opCell24VPowerEnable,  //keep checking this condition 
+	AutoInp:= DUT_opCell24VPowerEnable.AutInp, 
+	Command:= DUT_opCell24VPowerEnable.CMD, //1: Retract, 2: Extend, 4: Auto
+	IExtend:= stMLVIO.opCell24VPowerEnable, 
+	IRetract:= (NOT stMLVIO.opCell24VPowerEnable), 
+	Travel_Time:= DUT_opCell24VPowerEnable.Travel_Time, //detect input after output trigger
+	SetOutput_Pulse:= FALSE,  //output rising edge
+	FailedHoldLast:= FALSE,  //remain state after failed. 1: Remain, 0: FALSE
+	OExtend=> stMLVIO.opCell24VPowerEnable,  //map to output variable
+	ORetract=> , 
+	DUT:= DUT_opCell24VPowerEnable);
+	
+]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="M_SeqAlmRset" Id="{5b34250c-a5b5-4e02-9baa-75a97529b213}">
       <Declaration><![CDATA[METHOD M_SeqAlmRset : UDINT
 VAR_INPUT
@@ -2323,6 +2397,30 @@ END_VAR
 END_CASE]]></ST>
       </Implementation>
     </Method>
+    <Method Name="R_Secondary24VPowerOnOff" Id="{5b27ece6-923e-4133-9791-5ed0b8c18038}">
+      <Declaration><![CDATA[METHOD R_Secondary24VPowerOnOff : INT
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF bPause THEN
+	RETURN;
+	
+ELSIF itl_opCell_24VPowerEnable OR stMLVIO.isSysError THEN
+	R_Secondary24VPowerOnOff					:= 20;		
+	RETURN;
+END_IF
+
+IF stTCMLSeqParam.bSecondary24VPowerOff THEN
+	stMLVIO.bSecondary24VPowerOnOff				:= FALSE;
+	R_Secondary24VPowerOnOff					:= 10;
+	
+ELSIF stTCMLSeqParam.bSecondary24VPowerOn THEN
+	stMLVIO.bSecondary24VPowerOnOff				:= TRUE;
+	R_Secondary24VPowerOnOff					:= 10;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
     <LineIds Name="FB_TCMultiLevelSeq">
       <LineId Id="162" Count="0" />
     </LineIds>
@@ -2517,8 +2615,11 @@ END_CASE]]></ST>
       <LineId Id="17475" Count="0" />
       <LineId Id="17603" Count="0" />
       <LineId Id="17602" Count="0" />
-      <LineId Id="17117" Count="11" />
-      <LineId Id="17140" Count="8" />
+      <LineId Id="17117" Count="0" />
+      <LineId Id="18059" Count="0" />
+      <LineId Id="17118" Count="10" />
+      <LineId Id="17140" Count="0" />
+      <LineId Id="17148" Count="0" />
       <LineId Id="17971" Count="1" />
       <LineId Id="17149" Count="0" />
       <LineId Id="17578" Count="0" />
@@ -2667,6 +2768,7 @@ END_CASE]]></ST>
       <LineId Id="359" Count="1" />
       <LineId Id="342" Count="0" />
       <LineId Id="361" Count="0" />
+      <LineId Id="379" Count="0" />
       <LineId Id="12" Count="1" />
       <LineId Id="189" Count="0" />
       <LineId Id="195" Count="0" />
@@ -2678,7 +2780,7 @@ END_CASE]]></ST>
       <LineId Id="281" Count="7" />
       <LineId Id="280" Count="0" />
       <LineId Id="188" Count="0" />
-      <LineId Id="40" Count="7" />
+      <LineId Id="41" Count="6" />
       <LineId Id="49" Count="1" />
       <LineId Id="57" Count="0" />
       <LineId Id="59" Count="1" />
@@ -2701,11 +2803,12 @@ END_CASE]]></ST>
       <LineId Id="264" Count="0" />
       <LineId Id="246" Count="1" />
       <LineId Id="231" Count="0" />
+      <LineId Id="377" Count="0" />
       <LineId Id="254" Count="0" />
       <LineId Id="273" Count="1" />
       <LineId Id="265" Count="1" />
       <LineId Id="214" Count="0" />
-      <LineId Id="292" Count="5" />
+      <LineId Id="293" Count="4" />
       <LineId Id="367" Count="0" />
       <LineId Id="298" Count="3" />
       <LineId Id="368" Count="0" />
@@ -2713,12 +2816,18 @@ END_CASE]]></ST>
       <LineId Id="369" Count="0" />
       <LineId Id="306" Count="3" />
       <LineId Id="370" Count="0" />
-      <LineId Id="310" Count="7" />
-      <LineId Id="290" Count="0" />
-      <LineId Id="289" Count="0" />
-      <LineId Id="94" Count="1" />
+      <LineId Id="310" Count="3" />
+      <LineId Id="375" Count="0" />
+      <LineId Id="314" Count="3" />
+      <LineId Id="94" Count="0" />
+      <LineId Id="376" Count="0" />
+      <LineId Id="95" Count="0" />
       <LineId Id="163" Count="0" />
-      <LineId Id="165" Count="10" />
+      <LineId Id="165" Count="0" />
+      <LineId Id="378" Count="0" />
+      <LineId Id="166" Count="0" />
+      <LineId Id="170" Count="1" />
+      <LineId Id="173" Count="2" />
       <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="FB_TCMultiLevelSeq.M_nShuttleMoveInOut">
@@ -3138,6 +3247,20 @@ END_CASE]]></ST>
       <LineId Id="33" Count="0" />
       <LineId Id="27" Count="0" />
     </LineIds>
+    <LineIds Name="FB_TCMultiLevelSeq.M_Secondary24VPower">
+      <LineId Id="10" Count="35" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="73" Count="1" />
+      <LineId Id="76" Count="1" />
+      <LineId Id="54" Count="0" />
+      <LineId Id="79" Count="1" />
+      <LineId Id="78" Count="0" />
+      <LineId Id="53" Count="0" />
+      <LineId Id="56" Count="14" />
+      <LineId Id="55" Count="0" />
+      <LineId Id="51" Count="1" />
+    </LineIds>
     <LineIds Name="FB_TCMultiLevelSeq.M_SeqAlmRset">
       <LineId Id="25" Count="0" />
       <LineId Id="59" Count="0" />
@@ -3223,6 +3346,21 @@ END_CASE]]></ST>
       <LineId Id="17" Count="0" />
       <LineId Id="27" Count="0" />
       <LineId Id="8" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TCMultiLevelSeq.R_Secondary24VPowerOnOff">
+      <LineId Id="8" Count="1" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="14" Count="2" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="22" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

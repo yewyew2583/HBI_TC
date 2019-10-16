@@ -17,22 +17,10 @@ END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[tim(IN:=in,PT:=INT_TO_TIME(msec));
-
-IF tim.Q THEN
-	out				:=tim.Q;
-	tim(IN			:=FALSE);
-	
-	RETURN;
-END_IF
-
-out			:=	FALSE;]]></ST>
+out:=tim.Q;]]></ST>
     </Implementation>
     <LineIds Name="FB_Delay">
-      <LineId Id="24" Count="0" />
-      <LineId Id="26" Count="0" />
-      <LineId Id="25" Count="0" />
-      <LineId Id="30" Count="3" />
-      <LineId Id="28" Count="1" />
+      <LineId Id="47" Count="0" />
       <LineId Id="9" Count="0" />
     </LineIds>
   </POU>

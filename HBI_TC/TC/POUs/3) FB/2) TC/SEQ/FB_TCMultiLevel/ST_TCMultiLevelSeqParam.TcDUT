@@ -8,7 +8,7 @@ STRUCT
 	bTCDwrSafeToMoveEAP						: BOOL;
 	bTBotAntiCollisionTriggered				: BOOL;
 	bTCCellACPwrOff							: BOOL;
-
+	
 //</EAP>
 
 //<EAPTeach>
@@ -43,6 +43,9 @@ STRUCT
 	bAP240ACPowerOff						: BOOL;
 	bAP240ACPowerOn							: BOOL;
 	bAP240ACPowerAuto						: BOOL;
+	
+	bSecondary24VPowerOff					: BOOL;
+	bSecondary24VPowerOn					: BOOL;
 	
 	bAlarmClear								: BOOL;
 	bAlarmOccur								: BOOL;

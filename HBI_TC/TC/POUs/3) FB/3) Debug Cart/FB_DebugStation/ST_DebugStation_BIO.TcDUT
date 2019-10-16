@@ -4,12 +4,16 @@
     <Declaration><![CDATA[TYPE ST_DebugStation_BIO :
 STRUCT
 		
-	ipDBStnAPPresentSensor			:E_BackdoorState;
-	ipDBStnAPPowerOn                :E_BackdoorState;
-	ipDBStnAPReady                  :E_BackdoorState;
-	ipDBStnHandlerSafeToEnterPLC          :E_BackdoorState;
-	ipDBStnHandlerSafeToEnterHwr          :E_BackdoorState;
-	ipDBStnCellGroundFault          :E_BackdoorState;
+	ipDBStnAPPresentSensor				: E_BackdoorState;
+	ipDBStnAPPowerOn                	: E_BackdoorState;
+	ipDBStnAPReady                  	: E_BackdoorState;
+	ipDBStnHandlerSafeToEnterPLC    	: E_BackdoorState;
+	ipDBStnHandlerSafeToEnterHwr    	: E_BackdoorState;
+	ipDBStnCellGroundFault          	: E_BackdoorState;
+	ipDBStnCellFluidLeakage1			: E_BackdoorState;
+	ipDBStnCellFluidLeakage2			: E_BackdoorState;
+	ipDBStnPurgeButton					: E_BackdoorState;
+	
 END_STRUCT
 END_TYPE
 ]]></Declaration>

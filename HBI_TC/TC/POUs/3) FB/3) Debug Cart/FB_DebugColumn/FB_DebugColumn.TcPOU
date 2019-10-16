@@ -5,6 +5,7 @@
 VAR_INPUT
 END_VAR
 VAR_OUTPUT
+	DBColumnAlarmLED			: BOOL;
 END_VAR
 VAR	
 	stDebugColumnDIO				: ST_DebugColumnDIO;
@@ -31,6 +32,8 @@ VAR
 	ArrAlmBitBefDelay 			: ARRAY[1..NO_OF_TII_SENSOR] OF BOOL;
 	ArrAlmBitAftDelay 			: ARRAY[1..NO_OF_TII_SENSOR] OF BOOL;
 	Arr_ms 						: ARRAY[1..NO_OF_TII_SENSOR] OF INT;
+	
+
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -143,7 +146,17 @@ IF stDebugColumnVIO.bDebugColErrClear THEN
 		ALM_DCCOL.AlarmID[stDebugColumnVIO.iAlmIDToRset]:=FALSE;
 	END_IF
 	stDebugColumnVIO.bDebugColErrClear:= FALSE;
-END_IF]]></ST>
+END_IF
+
+DBColumnAlarmLED				:= 	ALM_DCCOL.AlarmID[E_DCFACAlarm.e6BarLowOFAAirPressureAlarm] OR
+									ALM_DCCOL.AlarmID[E_DCFACAlarm.eCriticalCondensationAlarm] OR
+									ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWLeakageAlarm] OR
+									ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWReturnLeakageAlarm] OR
+									ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWSupplyLeakageAlarm];
+
+
+
+]]></ST>
       </Implementation>
     </Method>
     <Method Name="Conversion" Id="{51823aa7-0cba-4746-93d5-cd64ea2d0196}" FolderPath="Cyclic\">
@@ -550,6 +563,12 @@ END_VAR
       <LineId Id="228" Count="0" />
       <LineId Id="218" Count="9" />
       <LineId Id="216" Count="0" />
+      <LineId Id="237" Count="1" />
+      <LineId Id="242" Count="3" />
+      <LineId Id="241" Count="0" />
+      <LineId Id="240" Count="0" />
+      <LineId Id="239" Count="0" />
+      <LineId Id="236" Count="0" />
     </LineIds>
     <LineIds Name="FB_DebugColumn.Conversion">
       <LineId Id="409" Count="1" />

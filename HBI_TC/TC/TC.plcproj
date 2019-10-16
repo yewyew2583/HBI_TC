@@ -40,10 +40,16 @@
     <Compile Include="DUTs\Enum\E_Cmd.TcTLEO">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DUTs\Enum\E_DBStnLED.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="DUTs\Enum\E_LED.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DUTs\Enum\E_Pwr.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\Enum\E_Solenoid.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DUTs\Enum\E_TstPwrStep.TcDUT">
@@ -266,6 +272,30 @@
     <Compile Include="POUs\3%29 FB\1%29 Common\FB_Alarm\FB_Delay.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\3%29 FB\1%29 Common\FB_CommonFunction\FB_AnlgSIM.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\3%29 FB\1%29 Common\FB_CommonFunction\FB_Blink.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\3%29 FB\1%29 Common\FB_CommonFunction\F_ArrayInt.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\3%29 FB\1%29 Common\FB_CommonFunction\F_ArrayStr.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\3%29 FB\1%29 Common\FB_CommonFunction\F_Concat3.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\3%29 FB\1%29 Common\FB_CommonFunction\F_GetColumnID.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\3%29 FB\1%29 Common\FB_CommonFunction\F_GetModuleID.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\3%29 FB\1%29 Common\FB_CommonFunction\F_TAParamtoStr.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\3%29 FB\1%29 Common\FB_EPT\FB_TCMLevelEPTUpdate.TcPOU">
       <SubType>Code</SubType>
     </Compile>
@@ -284,22 +314,22 @@
     <Compile Include="POUs\3%29 FB\1%29 Common\FB_Logging\Logging.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\3%29 FB\1%29 Common\FB_RemoteCmdAndEvent\CmdAndEventProcess.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\3%29 FB\1%29 Common\FB_RemoteCmdAndEvent\FB_CmdAndEventUpdate.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\3%29 FB\1%29 Common\FB_RemoteCmdAndEvent\FB_DoorOpenClose.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\3%29 FB\1%29 Common\FB_RemoteCmdAndEvent\FB_TCUSafeState.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\3%29 FB\1%29 Common\FB_RemoteCmdAndEvent\FUN_CmdToEvent.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\3%29 FB\2%29 TC\SEQ\ASSIGN_COLUMN.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\3%29 FB\2%29 TC\SEQ\FB_RemoteCmdAndEvent\CmdAndEventProcess.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\3%29 FB\2%29 TC\SEQ\FB_RemoteCmdAndEvent\FB_CmdAndEventUpdate.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\3%29 FB\2%29 TC\SEQ\FB_RemoteCmdAndEvent\FB_DoorOpenClose.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\3%29 FB\2%29 TC\SEQ\FB_RemoteCmdAndEvent\FB_TCUSafeState.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\3%29 FB\2%29 TC\SEQ\FB_RemoteCmdAndEvent\FUN_CmdToEvent.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\3%29 FB\2%29 TC\SEQ\FB_TCColumn\FB_ColAlarm.TcPOU">
@@ -365,22 +395,25 @@
     <Compile Include="POUs\3%29 FB\2%29 TC\SEQ\PreInitialise.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\3) FB\2) TC\CycleTesting\CycleTest.TcPOU">
+    <Compile Include="POUs\3%29 FB\3%29 Debug Cart\FB_DebugStation\FB_DBStnUpdateStatus.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\3) FB\2) TC\CycleTesting\EAPUpdate.TcPOU">
+    <Compile Include="POUs\3) FB\2) TC\Testing\CycleTest.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\3) FB\2) TC\CycleTesting\FB_GUI_TEST.TcPOU">
+    <Compile Include="POUs\3) FB\2) TC\Testing\EAPUpdate.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\3) FB\2) TC\CycleTesting\FB_GUI_TEST_SLTC.TcPOU">
+    <Compile Include="POUs\3) FB\2) TC\Testing\FB_GUI_TEST.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\3) FB\2) TC\CycleTesting\Testing.TcPOU">
+    <Compile Include="POUs\3) FB\2) TC\Testing\FB_GUI_TEST_SLTC.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\3) FB\2) TC\CycleTesting\TestManually.TcPOU">
+    <Compile Include="POUs\3) FB\2) TC\Testing\Testing.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\3) FB\2) TC\Testing\TestManually.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\3%29 FB\3%29 Debug Cart\Facility\FB_Facility.TcPOU">
@@ -461,30 +494,6 @@
     <Compile Include="POUs\3%29 FB\9%29 Unknown\CheckRangeUnsigned.TcPOU">
       <SubType>Code</SubType>
       <ExcludeFromBuild>true</ExcludeFromBuild>
-    </Compile>
-    <Compile Include="POUs\3%29 FB\9%29 Unknown\FB_CommonFunction\FB_AnlgSIM.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\3%29 FB\9%29 Unknown\FB_CommonFunction\FB_Blink.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\3%29 FB\9%29 Unknown\FB_CommonFunction\F_ArrayInt.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\3%29 FB\9%29 Unknown\FB_CommonFunction\F_ArrayStr.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\3%29 FB\9%29 Unknown\FB_CommonFunction\F_Concat3.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\3%29 FB\9%29 Unknown\FB_CommonFunction\F_GetColumnID.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\3%29 FB\9%29 Unknown\FB_CommonFunction\F_GetModuleID.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\3%29 FB\9%29 Unknown\FB_CommonFunction\F_TAParamtoStr.TcPOU">
-      <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\3%29 FB\9%29 Unknown\FB_SLTC\FB_Man_Stepping.TcPOU">
       <SubType>Code</SubType>
@@ -600,18 +609,18 @@
     <Folder Include="POUs\2%29 DFB\Word" />
     <Folder Include="POUs\3%29 FB\1%29 Common\EAP" />
     <Folder Include="POUs\3%29 FB\1%29 Common\FB_Alarm" />
+    <Folder Include="POUs\3%29 FB\1%29 Common\FB_CommonFunction" />
     <Folder Include="POUs\3%29 FB\1%29 Common\FB_EPT" />
     <Folder Include="POUs\3%29 FB\1%29 Common\FB_Logging" />
+    <Folder Include="POUs\3%29 FB\1%29 Common\FB_RemoteCmdAndEvent" />
     <Folder Include="POUs\3%29 FB\2%29 TC\SEQ" />
-    <Folder Include="POUs\3%29 FB\2%29 TC\SEQ\FB_RemoteCmdAndEvent" />
     <Folder Include="POUs\3%29 FB\2%29 TC\SEQ\FB_TCColumn" />
     <Folder Include="POUs\3%29 FB\2%29 TC\SEQ\FB_TCMultiLevel" />
     <Folder Include="POUs\3%29 FB\2%29 TC\SEQ\FB_TCShuttlePOC" />
-    <Folder Include="POUs\3%29 FB\2%29 TC\CycleTesting" />
+    <Folder Include="POUs\3%29 FB\2%29 TC\Testing" />
     <Folder Include="POUs\3%29 FB\3%29 Debug Cart\Facility" />
     <Folder Include="POUs\3%29 FB\3%29 Debug Cart\FB_DebugColumn" />
     <Folder Include="POUs\3%29 FB\3%29 Debug Cart\FB_DebugStation" />
-    <Folder Include="POUs\3%29 FB\9%29 Unknown\FB_CommonFunction" />
     <Folder Include="POUs\3%29 FB\9%29 Unknown\FB_SLTC" />
     <Folder Include="POUs\3%29 FB\9%29 Unknown\FB_TCLevel" />
     <Folder Include="POUs\3%29 FB\9%29 Unknown\FB_TCLevel\DUTs" />

@@ -5,16 +5,16 @@
 STRUCT
 //
 	//Status	
-	iAlarmButtonLEDStatusFlag				: INT;
-	iMaintenanceButtonLEDStatusFlag     	: INT;
-	iAbortButtonLEDStatusFlag           	: INT;
-	iDoorLockButtonLEDStatusFlag        	: INT;
+	iAlarmButtonLEDStatusFlag				: INT;	//monitoring by TA 0:off 1:blink 2:solid
+	iMaintenanceButtonLEDStatusFlag     	: INT;	//monitoring by TA 0:off 1:blink 2:solid
+	iAbortButtonLEDStatusFlag           	: INT;	//monitoring by TA 0:off 1:blink 2:solid
+	iDoorLockButtonLEDStatusFlag        	: INT;	//monitoring by TA 0:off 1:blink 2:solid
 	bTCCSessionActiveStatusFlag         	: BOOL;
 	bTIUInOutStatusFlag                 	: BOOL;	
 	bTIUUpDownStatusFlag                	: BOOL;	
 	
 	//TBotEAP
-	TBOT_TC_ACPower_Signal					: BOOL;  //1: Normal, 0: OFF AC Powers
+	TBOT_TC_ACPower_Signal					: BOOL;  //0: Normal, 1: OFF AC Powers
 	
 	//opCellFrontDoorClosedStatus			:BOOL;
 	//ipTCCellFrontDoorLockedStatus		:BOOL;
@@ -22,13 +22,14 @@ STRUCT
 	bCellFrontDoorLockedStatus				: BOOL;
     bCellFrontDoorClosedStatus 				: BOOL;
 	
-	//LED_State,Freq
-	bMtnBtnLEDState							: BOOL;
-	iMtnBtnLEDBlinkFreq						: DINT;	
-	bAbtBtnLEDState							: BOOL;
-	iAbtBtnLEDBlinkFreq						: DINT;
-	bDoorUnlockBtnLEDState					: BOOL;
-	iDoorUnlockBtnLEDBlinkFreq				: DINT;
+	bMtnBtnLEDState							: BOOL;	//LED #1: button state. 0: OFF, 1: ON / Blink
+	iMtnBtnLEDBlinkFreq						: DINT; //Blink frequency. <=0: NO BLINKING, >0: Blink
+	
+	bAbtBtnLEDState							: BOOL;	//LED #2: button state. 0: OFF, 1: ON / Blink
+	iAbtBtnLEDBlinkFreq						: DINT; //Blink frequency. <=0: NO BLINKING, >0: Blink
+	
+	bDoorUnlockBtnLEDState					: BOOL; //LED #3: button state. 0: OFF, 1: ON / Blink
+	iDoorUnlockBtnLEDBlinkFreq				: DINT; //Blink frequency. <=0: NO BLINKING, >0: Blink
 	
 //<Input>
 	ipAPPresentSensor						: BOOL;	//AP //BM loopback signal
@@ -122,6 +123,7 @@ STRUCT
 	
     bDPSPowerOnOff							: BOOL;
 	bAP240ACPowerOnOff						: BOOL;
+	bSecondary24VPowerOnOff					: BOOL	:= TRUE;
 	eAPAirSupCmd							: E_Pwr; 
 	eTstAirSupCmd							: E_Pwr; 
 	eTIUSktAir1Cmd							: E_Pwr; 

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <TextList Name="CmdTxtList" Id="{223462ef-10ac-46cc-9510-ac4ce53d0ec0}">
     <XmlArchive>
       <Data>
@@ -189,6 +189,26 @@
             <o>
               <v n="TextID">"36"</v>
               <v n="TextDefault">"SetTCUSafeState"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"37"</v>
+              <v n="TextDefault">"SetSolenoidValvesON"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"38"</v>
+              <v n="TextDefault">"SetSolenoidValvesOFF"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"39"</v>
+              <v n="TextDefault">"Secondary24VPowerON"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"40"</v>
+              <v n="TextDefault">"Secondary24VPowerOFF"</v>
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>

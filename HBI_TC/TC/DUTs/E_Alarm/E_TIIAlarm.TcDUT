@@ -5,23 +5,25 @@
 {attribute 'strict'}
 TYPE E_TIIAlarm :
 (
-	ipAPPresentSensor		    := 1,
-	ipAPPowerOn	 		    	,		//:=2
-	ipAPReady				    ,		//:=3 
-	ipAPDeactuatedPLC		    ,		//:=4
-	ipAPDeactuatedHwr		    ,		//:=5
-	ipCellFluidLeakage1		    ,		//:=6
-	ipCellFluidLeakage2		  	,		//:=7
-	ipCellGroundFault 		    ,		//:=8
-	ipTesterPresent			    ,		//:=9
-	ipTesterPowerOn			    ,		//:=10
-	ipTesterReady			    ,		//:=11
-	ipTCCellDoorClosed		    ,		//:=12
-	ipTesterLatchesClosed	    ,		//:=13
-	TBOT_TC_ACPower_Signal      ,		//:=14
-	DS_Facility_EAP_ACPower_Signal,		//:=15
-	TBotSideDoorLockSignalNotDetected
-); 
+	ipAPPresentSensor		    		:= 1,
+	ipAPPowerOn	 		    			,		//:=2
+	ipAPReady				    		,		//:=3 
+	ipAPDeactuatedPLC		    		,		//:=4
+	ipAPDeactuatedHwr		    		,		//:=5
+	ipCellFluidLeakage1		    		,		//:=6
+	ipCellFluidLeakage2		  			,		//:=7
+	ipCellGroundFault 		    		,		//:=8
+	ipTesterPresent			    		,		//:=9
+	ipTesterPowerOn			    		,		//:=10
+	ipTesterReady			    		,		//:=11
+	ipTCCellDoorClosed		    		,		//:=12
+	ipTesterLatchesClosed	    		,		//:=13
+	TBOT_TC_ACPower_Signal      		,		//:=14
+	DS_Facility_EAP_ACPower_Signal		,		//:=15
+	TBotSideDoorLockSignalNotDetected	,		//:=16
+	ipTCDrawerExtendSignal				,		//:=17
+	ipTCDrawerRetractSignal						//:=18
+);
 END_TYPE
 
 

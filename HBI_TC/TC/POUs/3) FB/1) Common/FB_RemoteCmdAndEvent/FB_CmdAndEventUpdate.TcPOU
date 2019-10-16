@@ -50,9 +50,6 @@ END_IF
 
 fbDoorOpenClose(); 
 
-
-
-
 fbTCUSafeState(); // Min: Not using
 ]]></ST>
     </Implementation>
@@ -453,15 +450,6 @@ arrEvent[n].dParam													:= arrRCMD[n].dParam;
 arrEvent[n].sFailReason												:= sStatus;
 		
 arrRCMD[n]															:= CmdEmpty;]]></ST>
-      </Implementation>
-    </Method>
-    <Method Name="M_APPowerAC" Id="{3e957b0e-e17f-40de-9436-a7e8c132eff8}">
-      <Declaration><![CDATA[METHOD M_APPowerAC : BOOL
-VAR_INPUT
-END_VAR
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[]]></ST>
       </Implementation>
     </Method>
     <Method Name="M_DoorOpenClose" Id="{b5e53960-eb00-45b9-aef2-b703945bd1f9}">
@@ -2131,7 +2119,23 @@ END_VAR]]></Declaration>
 			;//eCmd2Event_EventName := E_EventName.AP240ACPwrFailed;	
 			//sCmd2Event_EventName := 'TCCellAP240ACPwrFailed';
 		END_IF	
+	E_TaskName.SetSolenoidValves:	
+		IF iCmd2Event_Result = 1 THEN		
+			eCmd2Event_EventName := E_EventName.SetSolenoidValvesCompleted;	
+			sCmd2Event_EventName := 'SetSolenoidValvesCompleted';
+		ELSE
+			;
+		END_IF	
 	
+	E_TaskName.Secondary24VPower:	
+		IF iCmd2Event_Result = 1 THEN		
+			eCmd2Event_EventName := E_EventName.Secondary24VPowerCompleted;	
+			sCmd2Event_EventName := 'Secondary24VPowerCompleted';
+		ELSE				
+			eCmd2Event_EventName := E_EventName.Secondary24VPowerFailed;	
+			sCmd2Event_EventName := 'Secondary24VPowerFailed';
+		END_IF
+		
 	ELSE
 		sCmd2Event_EventName := 'Command not found';
 END_CASE
@@ -2622,8 +2626,6 @@ END_VAR
         <ST><![CDATA[/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //	
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//nCommandNumber := INT_TO_UINT(n);
-
 bErr    																		:= FALSE;
 sStatus																			:= '';
 bFrontDoor																		:= FALSE;
@@ -2668,59 +2670,17 @@ stMLVIO																			:= arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_stTCMul
 IF bInvalidCommand = TRUE THEN
 	bErr																		:= TRUE; 
 	sStatus																		:= 'Invalid command received';
+	
 // Only cancel command allow iLevel is 0
 ELSIF iLevel = 0 AND arrRCMD[n].eTaskName <> E_TaskName.Cancel THEN
 	bErr																		:= TRUE; 
 	sStatus																		:= 'Wrong Module ID';
+	
 // IO Diagnostic Mode
 ELSIF bDiagnosticMode THEN
 	bErr																		:= TRUE; 
 	sStatus																		:= 'IO Diagnostic Mode is Enabled';
-(*
-// 1. This is not debug station
-// 2. Back door is unlock
-// 3. Task name is not door close
-// 4. Task name is not door open	
-// 5. Task name is not SetBlinkRate
-// 6. Task name is not cancel
-// 7. Task name is not alarm reset
-// 8. Task name is not TesterAirValve
-// 9. Task name is not APAirValve
-ELSIF (NOT bDebugStation) AND 
-	(NOT stMLVIO.opCellDoorClosed) AND 
-	arrRCMD[n].eTaskName <> E_TaskName.DoorClose AND 
-	arrRCMD[n].eTaskName <> E_TaskName.DoorOpen AND 
-	arrRCMD[n].eTaskName <> E_TaskName.SetBlinkRate AND 
-	arrRCMD[n].eTaskName <> E_TaskName.Cancel AND 
-	arrRCMD[n].eTaskName <> E_TaskName.AlarmReset AND 
-	arrRCMD[n].eTaskName <> E_TaskName.TesterAirValve AND 
-	arrRCMD[n].eTaskName <> E_TaskName.APAirValve THEN
-	bErr 																		:= TRUE; 
-	sStatus 																	:= 'Door(s) is not locked';	
-*)
-//**New Request from TA** for Initialize door close deletion
-// 1. This is debug cart
-// 2. Front door is not lock
-// 3. Task name is not door close
-// 4. Task name is not door open
-// 5. Task name is not SetBlinkRate
-// 6. Task name is not cancel
-// 7. Task name is not alarm reset
-// 8. Task name is not TesterAirValve
-// 9. Task name is not APAirValve
-(*
-ELSIF (bDebugCart AND 
-	NOT (stMLVIO.ipTCCellTbotSideDoorLocked01 AND stMLVIO.ipTCCellTbotSideDoorLocked02) AND 
-	arrRCMD[n].eTaskName <> E_TaskName.DoorClose AND 
-	arrRCMD[n].eTaskName <> E_TaskName.DoorOpen) AND
-	(arrRCMD[n].eTaskName <> E_TaskName.SetBlinkRate AND 
-	arrRCMD[n].eTaskName <> E_TaskName.Cancel AND 
-	arrRCMD[n].eTaskName <> E_TaskName.AlarmReset AND  
-	arrRCMD[n].eTaskName <> E_TaskName.TesterAirValve AND  
-	arrRCMD[n].eTaskName <> E_TaskName.APAirValve) THEN
-	bErr 																		:= TRUE; 
-	sStatus 																	:= 'TBot Side Door(s) is not locked';	
-*)
+	
 // Task name is TCCSessionRequest or DPSPower or TIUSlideOut
 ELSIF arrRCMD[n].eTaskName = E_TaskName.TCCSessionRequest OR arrRCMD[n].eTaskName = E_TaskName.DPSPower THEN
 	
@@ -2783,19 +2743,17 @@ END_IF
 
 IF arrRCMD[n].eTaskName <> E_TaskName.Cancel THEN 
 	IF arrTCMultiLevel[iLevel].stGblParam.bAlarmOccur = TRUE THEN
-		IF arrRCMD[n].eTaskName = E_TaskName.TIUSlideOut OR arrRCMD[n].eTaskName = E_TaskName.DrawerUp OR arrRCMD[n].eTaskName = E_TaskName.DPSPower OR
-			arrRCMD[n].eTaskName = E_TaskName.AP240ACPOWER OR (*arrRCMD[n].eTaskName = E_TaskName.Initialize OR arrRCMD[n].eTaskName = E_TaskName.DoorClose OR
-			arrRCMD[n].eTaskName = E_TaskName.DoorOpen OR*) arrRCMD[n].eTaskName = E_TaskName.TIUSlideOutRetry THEN  
-			bErr 																:= TRUE; 
-			sStatus 															:= 'Please clear alarm 1st';
-		(*ELSIF UDINT_TO_INT(arrTCVIO[iLevel].iAlarmCode) <> arrRCMD[n].iParam[1] THEN
-			bErr 																:= TRUE; 
-			sStatus 															:= concat('Alarm Code not match with current AlarmCode ', UDINT_TO_STRING(arrTCVIO[iLevel].iAlarmCode));*)
+		
+		IF 	arrRCMD[n].eTaskName = E_TaskName.TIUSlideOut 	OR arrRCMD[n].eTaskName = E_TaskName.DrawerUp 	OR	arrRCMD[n].eTaskName = E_TaskName.DPSPower 	OR
+			arrRCMD[n].eTaskName = E_TaskName.AP240ACPOWER 	OR arrRCMD[n].eTaskName = E_TaskName.TIUSlideOutRetry THEN  
+				bErr 																:= TRUE; 
+				sStatus 															:= 'Please clear alarm 1st';
 		END_IF
-	ELSIF arrTCMultiLevel[iLevel].stGblParam.iProcessState = E_ProcessState.ePAUSE AND (NOT (arrRCMD[n].eTaskName<>E_TaskName.TIUSlideOutRetry OR 
-		arrRCMD[n].eTaskName<>E_TaskName.AlarmReset)) THEN
-			bErr 																:= TRUE;
-			sStatus 															:= 'Clear Or Cancel The Command First';
+		
+	ELSIF 	arrTCMultiLevel[iLevel].stGblParam.iProcessState = E_ProcessState.ePAUSE AND 
+			(NOT (arrRCMD[n].eTaskName<>E_TaskName.TIUSlideOutRetry OR arrRCMD[n].eTaskName<>E_TaskName.AlarmReset)) THEN
+				bErr 																:= TRUE;
+				sStatus 															:= 'Clear Or Cancel The Command First';
 	END_IF
 END_IF	
 
@@ -2813,14 +2771,6 @@ ELSE
 		END_IF
 	 END_IF
 	
-	//IF bRetry THEN
-	//	 IF arrTCMultiLevel[iLevel].stGblParam.iProcessState = E_ProcessState.ePAUSE THEN
-	//		arrTCMultiLevel[iLevel].stGblParam.bResume :=TRUE;
-	//	END_IF
-	//ELSIF bCancel THEN
-	//	arrTCMultiLevel[iLevel].stGblParam.bCancel := TRUE;
-	//END_IF
-	
 	CASE arrRCMD[n].eTaskName OF
 		E_TaskName.SetBlinkRate: 
 			M_SetBlinkRate(
@@ -2835,24 +2785,30 @@ ELSE
 				JMP iSendEvent;
 			END_IF
 			
+			IF bDebugCart AND arrRCMD[n].iParam[1] <> 0 AND DS_Facility_eapShutOffAllACPower THEN
+				sStatus 														:= 'DS Facility Cell 240 AC Power OFF Signal Detected';
+				bErr															:= TRUE;
+				iSendEvent 														:= 2;
+				JMP iSendEvent;
+			END_IF
+			
 			IF bDebugStation AND iLevel = 1 THEN 
 				IF arrRCMD[n].iParam[1] = 0 THEN
 					stDebugStation.stGblDBStnParam.bAP240ACPowerOff				:= TRUE;
 				ELSIF arrRCMD[n].iParam[1] = 1 THEN
 					stDbStnVIO 													:= stDebugStation.fbDBStnSeq.P_stVIO;//.P_stTCMultiLevelVIO;
-					IF stDbStnVIO.ipDBStnAPPresentSensor THEN//AND stMLVIO.ipTesterLatchesClosed THEN
+					IF stDbStnVIO.ipDBStnAPPresentSensor THEN
 						stDebugStation.stGblDBStnParam.bAP240ACPowerOn 			:= TRUE;
 					ELSE
 						bErr													:= TRUE;
 						IF (NOT stDbStnVIO.ipDBStnAPPresentSensor) THEN 
-						 sStatus 												:= 'AP is not present';
-						//ELSIF NOT stMLVIO.ipTesterLatchesClosed THEN
-						//	sStatus:='Tester Latch is not Closed';
+							sStatus 											:= 'AP is not present';
 						END_IF
 						iSendEvent 												:= 2;
 						JMP iSendEvent;
 					END_IF
 				END_IF
+				
 			ELSE // if Not Debug station 
 				IF arrRCMD[n].iParam[1] = 0 THEN
 					arrTCMultiLevel[iLevel].stGblParam.bAP240ACPowerOff			:= TRUE;
@@ -2866,15 +2822,12 @@ ELSE
 					ELSE
 						arrTCMultiLevel[iLevel].stGblParam.bAP240ACPowerOn 		:= TRUE;
 					END_IF
-				//ELSIF arrRCMD[n].iParam[1]=2 THEN
-				//	arrTCMultiLevel[iLevel].stGblParam.bAP240ACPowerAuto := TRUE;
 				END_IF
 			END_IF
 		
-		E_TaskName.DrawerUp : 
+		E_TaskName.DrawerUp: 
 			stMLVIO																:= arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO;
-			//bTCCSessionActiveStatusFlag
-			//IF arrTCMultiLevel[iLevel].stGblParam.bTCCSessionReq THEN
+			
 			IF stMLVIO.bTCCSessionActiveStatusFlag THEN
 				bErr															:= TRUE;
 				sStatus															:= 'Module is In Manual TCC Request Operation Session';
@@ -2935,33 +2888,6 @@ ELSE
 				bFrontDoor														:= bFrontDoor, 
 				arrRCMD															:= arrRCMD,
 				arrEvent														:= arrEvent);
-			(*
-			//Check Door Closed Status
-			IF bDebugCart  THEN
-				stMLVIO:=arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO;
-				IF NOT stMLVIO.ipTCCellTbotSideDoorOpenCloseStatus01 OR NOT stMLVIO.ipTCCellTbotSideDoorOpenCloseStatus02 THEN
-						bErr:=TRUE;
-						sStatus := 'Front Door is not Closed!';
-						iSendEvent :=2;
-						JMP iSendEvent;
-				ELSE
-					M_DoorOpenClose(n:=n, bLock:=TRUE, bFrontDoor:=bFrontDoor, arrRCMD:=arrRCMD,arrEvent:=arrEvent);
-				END_IF
-				
-			ELSE
-				
-				stMLVIO:=arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO;
-				IF NOT stMLVIO.ipTCCellDoorOpenCloseStatus THEN
-						bErr:=TRUE;
-						sStatus := 'Door is not Closed!';
-						iSendEvent :=2;
-						JMP iSendEvent;
-				ELSE
-					M_DoorOpenClose(n:=n, bLock:=TRUE, bFrontDoor:=bFrontDoor, arrRCMD:=arrRCMD,arrEvent:=arrEvent);
-				END_IF
-				
-			END_IF
-			*)
 			
 		E_TaskName.DoorOpen:
 			M_DoorOpenClose(
@@ -2969,12 +2895,7 @@ ELSE
 				bLock															:= FALSE,
 				bFrontDoor														:= bFrontDoor, 
 				arrRCMD															:= arrRCMD,
-				arrEvent														:= arrEvent);
-							
-		//E_TaskName.FrontDoorOpen:	
-							//M_DoorOpenClose(n:=n, bLock:=FALSE,bFrontDoor:=TRUE, arrRCMD:=arrRCMD,arrEvent:=arrEvent);
-		//E_TaskName.FrontDoorClose:
-							//M_DoorOpenClose(n:=n, bLock:=FALSE,bFrontDoor:=TRUE, arrRCMD:=arrRCMD,arrEvent:=arrEvent);						
+				arrEvent														:= arrEvent);					
 							
 		E_TaskName.TesterAirValve:
 			M_AirOnOFF(
@@ -3015,6 +2936,13 @@ ELSE
 				sStatus															:= 'TBotEAP_TCCCellACPowerOFF_Signal_Detected';
 				bErr															:= TRUE;
 				iSendEvent														:= 2;
+				JMP iSendEvent;
+			END_IF
+			
+			IF bDebugCart AND arrRCMD[n].iParam[1] <> 0 AND DS_Facility_eapShutOffAllACPower THEN
+				sStatus 														:= 'DS Facility Cell 240 AC Power OFF Signal Detected';
+				bErr															:= TRUE;
+				iSendEvent 														:= 2;
 				JMP iSendEvent;
 			END_IF
 			
@@ -3068,7 +2996,7 @@ ELSE
 				arrTCMultiLevel[iLevel].stGblParam.bInitialise					:= TRUE;
 			END_IF
 					
-		E_TaskName.TIUSlideOutRetry : 	
+		E_TaskName.TIUSlideOutRetry: 	
 			IF arrTCShuttlePOC[iLevel].stGblParam.bAlarmOccur THEN
 				sStatus 														:= 'Clear the Alarm First!';
 				iSendEvent 														:= 2;
@@ -3081,24 +3009,16 @@ ELSE
 				iSendEvent													:= 2;
 				JMP iSendEvent;
 			END_IF
-			//END_IF
-			//IF arrTCMultiLevel[iLevel].stGblParam.iProcessState = E_ProcessState.eAWAITGCMD  THEN
+
 			IF arrRCMD[n].bParam[1] = TRUE THEN
 				arrTCMultiLevel[iLevel].stGblParam.bShuttleMoveOut			:= TRUE ;
 			ELSE
 				arrTCMultiLevel[iLevel].stGblParam.bShuttleMoveIn			:= TRUE;
 			END_IF
-			//ELSE
-			//IF arrTCMultiLevel[iLevel].stGblParam.iProcessState = E_ProcessState.ePause THEN 
 			arrTCMultiLevel[iLevel].stGblParam.bResume						:= TRUE;
-			//ELSE
-			//	sStatus := 'Nothing To Retry';
-			//	iSendEvent :=1;
-			//	JMP iSendEvent;
-			//END_IF
 			END_IF
 			
-		E_TaskName.TIUSlideOutCancel : 	
+		E_TaskName.TIUSlideOutCancel: 	
 			IF (NOT arrTCMultiLevel[iLevel].stGblParam.bTCDwrSafeToMoveEAP) THEN
 				bErr														:= TRUE;
 				sStatus														:= 'TBOT EAP Not allow Drawer Safe To Move.';
@@ -3108,14 +3028,15 @@ ELSE
 			
 			IF arrTCMultiLevel[iLevel].stGblParam.bShuttleMoveOut = TRUE OR arrTCMultiLevel[iLevel].stGblParam.bShuttleMoveIn = TRUE THEN
 				arrTCMultiLevel[iLevel].stGblParam.bCancel 						:= TRUE;
-				//arrTCMultiLevel[iLevel].stGblParam.bInternalCancel :=TRUE;
+				
 			ELSE
 				sStatus															:= 'Nothing to cancel';
+				
 			END_IF
 			iSendEvent															:= 1;
 			JMP iSendEvent;
 				
-		E_TaskName.Cancel :
+		E_TaskName.Cancel:
 			FOR i := 1 TO NO_OF_CMD_BUFFER DO
 				arrTACommands.arrTACommands[i]									:=	CmdEmpty;
 			END_FOR 
@@ -3129,17 +3050,13 @@ ELSE
 			iSendEvent															:= 1;
 			JMP iSendEvent;
 			
-		E_TaskName.AlarmReset : 
+		E_TaskName.AlarmReset: 
 			IF arrTCMultiLevel[iLevel].stGblParam.iProcessState = eALPAUSED THEN	
 				IF M_AlarmReset(
 					n															:= n, 
 					arrRCMD														:= arrRCMD, 
 					arrEvent													:= arrEvent) THEN
 					arrTCMultiLevel[iLevel].stGblParam.bAlarmClear 				:= TRUE;
-					//arrTCShuttlePOC[iLevel].stGblParam.bAlarmClear:=TRUE;
-					//Already send event inside M_AlarmReset
-					//iSendEvent :=1;
-					//JMP iSendEvent;
 				END_IF
 			
 			ELSE
@@ -3147,13 +3064,39 @@ ELSE
 					n															:= n, 
 					arrRCMD														:= arrRCMD, 
 					arrEvent													:= arrEvent);
-				//Already send event inside M_AlarmReset
-				//iSendEvent :=1;
-				//JMP iSendEvent;
 			END_IF
-			//Main Alarm reset Is Looping From Main fbTCColumn();
-
-			//arrTCMultiLevel[iLevel].stGblParam.bDoorClose :=TRUE;		
+		E_TaskName.Secondary24VPower:
+			IF bDebugStation THEN
+				IF arrRCMD[n].iParam[1] = 0 THEN
+					stDebugStation.stGblDBStnParam.bSecondary24VPowerOff 				:= TRUE;
+				ELSIF arrRCMD[n].iParam[1] = 1 THEN
+					stDebugStation.stGblDBStnParam.bSecondary24VPowerON 				:= TRUE;
+				END_IF
+				
+			ELSE
+				IF arrRCMD[n].iParam[1] = 0 THEN
+					arrTCMultiLevel[iLevel].stGblParam.bSecondary24VPowerOff			:= TRUE;
+				ELSIF arrRCMD[n].iParam[1] = 1 THEN
+					arrTCMultiLevel[iLevel].stGblParam.bSecondary24VPowerOn				:= TRUE;
+				END_IF
+			END_IF
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////// Debug Station Commands only ////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		E_TaskName.SetSolenoidValves:
+			IF bDebugStation THEN
+				M_SetSolenoidValves(
+					solenoidNumber												:= arrRCMD[n].iParam,
+					on															:= arrRCMD[n].bParam[1],
+				);
+				
+				iSendEvent														:= 1;
+				JMP iSendEvent;
+			ELSE
+				sStatus															:= 'This command only available in Debug Station mode';
+				bErr															:= TRUE;
+				JMP iSendEvent;
+			END_IF
 	END_CASE
 END_IF
 
@@ -3207,6 +3150,7 @@ VAR
 	requestedState				: E_State := E_State.eEnabled;
 	iEventName					: E_EventName;
 	stMultiLeveVIO				: ST_TCMultiLevel_VIO;
+	stDBStnVIO					: ST_DebugStation_VIO;
 END_VAR
 
 VAR_IN_OUT
@@ -3219,16 +3163,6 @@ SOLID OFF 	::State=0, 	Frequency = Don’tCare
 SOLID ON 	::State=1,	Frequency = 0
 BLINKING  	::State=1, 	Frequency = BlinkFreq
 ===========================================*)
-IF bBtnState = FALSE THEN
-	//OFFLED
-ELSE
-	IF iBtnBlinkFreq = 0 THEN
-	//ONLED
-	ELSE
-	//BLINK WITH BLINK RATE
-	END_IF
-END_IF
-
 bErr																	:= FALSE;
 sStatus																	:= '';
 
@@ -3247,37 +3181,34 @@ IF iLevel = 0 THEN
 	sStatus 															:= 'Wrong Module ID';
 ELSE	
 	stMultiLeveVIO 														:= arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO;
+	stDbStnVIO 															:= stDebugStation.fbDBStnSeq.P_stVIO;
 	CASE iBtnID OF
-		1:
+		E_LED.MaintenanceBtn:
 			stMultiLeveVIO.bMtnBtnLEDState								:= bBtnState;
     		stMultiLeveVIO.iMtnBtnLEDBlinkFreq							:= iBtnBlinkFreq;	
-		2:  
+		E_LED.AbortFlowBtn:  
 			stMultiLeveVIO.bAbtBtnLEDState								:= bBtnState;
     		stMultiLeveVIO.iAbtBtnLEDBlinkFreq							:= iBtnBlinkFreq;
-		3:  
+		E_LED.DoorUnlockBtn:  
 			stMultiLeveVIO.bDoorUnlockBtnLEDState						:= bBtnState;
     		stMultiLeveVIO.iDoorUnlockBtnLEDBlinkFreq					:= iBtnBlinkFreq;
+		E_DBStnLED.PurgeButton:	
+			stDbStnVIO.bDBStnPurgeBtnLEDState							:= bBtnState;
+			stDbStnVIO.iDBStnPurgeBtnLEDBlinkFreq						:= iBtnBlinkFreq;
 	END_CASE
 	arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO		:= stMultiLeveVIO;
+	stDebugStation.fbDBStnSeq.P_stVIO									:= stDBStnVIO;
 END_IF
-
-
-(*
-IF stMultiLeveVIO.ipTCDrawerCylExtendRS THEN
-	bErr := TRUE;
-	sStatus := 'Cannot open/unlock door, Drawer is in Out Position'; 
-END_IF
-*)
 
 //send event to TA
 iSendEvent 																:= SEL(bErr, 1, 2);
-//IF bErr THEN iSendEvent :=2; ELSE iSendEvent :=1; END_IF
 
 M_nCmdtoEvent(
 	eCmd2Event_TaskName													:= arrRCMD[n].eTaskName, 
 	iCmd2Event_Result													:= iSendEvent, 
 	eCmd2Event_EventName												:= iEventName, 
-	sCmd2Event_EventName												:= sLogName);
+	sCmd2Event_EventName												:= sLogName
+);
 	
 arrEvent[n].sLogName													:= sLogName;
 arrEvent[n].eEventName													:= iEventName; 
@@ -3354,6 +3285,53 @@ arrEvent[n].sFailReason:= sStatus;
 arrRCMD[n]:= CmdEmpty;]]></ST>
       </Implementation>
     </Method>
+    <Method Name="M_SetSolenoidValves" Id="{1092b1bf-9dd4-4277-b944-287bdc3d14c4}">
+      <Declaration><![CDATA[METHOD M_SetSolenoidValves : BOOL
+VAR_INPUT
+	solenoidNumber	: ARRAY [1..NO_OF_INT_PARAM] OF DINT;
+	on				: BOOL;
+END_VAR
+VAR 
+	i				: INT;
+	noOfSolenoids	: INT := NO_OF_INT_PARAM;
+	eSolenoid		: E_Solenoid;
+	stDbStnVIO		: ST_DebugStation_VIO;
+	iSendEvent		: INT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[stDbStnVIO 										:= stDebugStation.fbDBStnSeq.P_stVIO; //get
+
+FOR i:= 1 TO noOfSolenoids DO
+	IF solenoidNumber[i] <> 0 THEN
+		CASE solenoidNumber[i] OF
+			E_Solenoid.opDBStnMainPCWSupply:
+				stDbStnVIO.opDBStnBypassAPAirSupplySol		:= on;
+				
+			E_Solenoid.opDBStnMainPCWReturn:
+				stDbStnVIO.opDBStnMainPCWReturn				:= on;
+				
+			E_Solenoid.opDBStnPCWSupplyPurge:
+				stDbStnVIO.opDBStnPCWSupplyPurge			:= on;
+				
+			E_Solenoid.opDBStnPCWAWN:
+				stDbStnVIO.opDBStnPCWAWN					:= on;
+				
+			E_Solenoid.opDBStnSupplyAirPurge:
+				stDbStnVIO.opDBStnSupplyAirPurge			:= on;
+				
+			E_Solenoid.opDBStnLeakFlowPCWValve:
+				stDbStnVIO.opDBStnLeakFlowPCWValve			:= on;
+				
+			E_Solenoid.opDBStnLowFlowPCWValve:
+				stDbStnVIO.opDBStnLowFlowPCWValve			:= on;
+		END_CASE
+	END_IF
+END_FOR
+
+ stDebugStation.fbDBStnSeq.P_stVIO			:= stDbStnVIO;	//set]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="M_TACmdUpdate" Id="{2a8d546c-b654-40f6-8577-b878ee586620}">
       <Declaration><![CDATA[METHOD PUBLIC M_TACmdUpdate : BOOL
 VAR_INPUT
@@ -3424,69 +3402,63 @@ CASE iCmdStep OF
 			IF arrLocalRCMD[n].eTaskName = E_TaskName.EmptyTask THEN
 				; //do nothing
 			ELSE 
-				//Logging.fbDebugLog.M_nLogger(iLogLevel:= 1, sSource:= 'Cmd from TA', sMessage:= arrLocalRCMD[n].sLogName);
 				fbFormat(sFormat:= 'Cmd from TA[%d]', arg1:= F_UINT(n),  sOut=> sFormatSource);
 				Logging.fbDebugLog.M_nLogger(iLogLevel:= Logging.fbDebugLog.P_iLogVerbosity, sSource:= sFormatSource, sMessage:= arrLocalRCMD[n].sLogName);
 				
-				//IF bIODiagnosticMode THEN
-				//		M_IODiagDetected(n        := n,
-				//         				 sDiag    := 'main bIODiagnosticsMode',				
-				//         				 arrRCMD  := arrLocalRCMD,
-				//         				 arrEvent := arrLocalEvent);
-				//ELSE
 				CASE arrLocalRCMD[n].eTaskName OF		
 					E_TaskName.ActivateRecipe:	
 						M_ActivateRecipe(
 							n											:= n, 
 							arrRCMD										:= arrLocalRCMD, 
-							arrEvent									:= arrLocalEvent);
+							arrEvent									:= arrLocalEvent
+						);
 						
 					E_TaskName.ValidateRecipe:	
 						M_ValidateRecipe(
 							n											:= n, 
 							arrRCMD										:= arrLocalRCMD, 
-							arrEvent									:= arrLocalEvent);
+							arrEvent									:= arrLocalEvent
+						);
 						
 					E_TaskName.SetLogFileVerbosity:	
 						M_SetLogfileVerbosity(
 							n											:= n, 
 							arrRCMD										:= arrLocalRCMD, 
-							arrEvent									:= arrLocalEvent);
+							arrEvent									:= arrLocalEvent
+						);
 			
 					E_TaskName.EnableModule, E_TaskName.DisableModule:	
 						M_EnableModule(
 							n											:= n,
 							arrRCMD										:= arrLocalRCMD,
-							arrEvent									:= arrLocalEvent);
+							arrEvent									:= arrLocalEvent
+						);
 					
-					E_TaskName.SetBlinkRate, E_TaskName.TCCSessionRequest, E_TaskName.AlarmReset, E_TaskName.Resume, E_TaskName.Cancel,	E_TaskName.TIUSlideOutRetry,
-					E_TaskName.TIUSlideOutCancel, E_TaskName.Initialize, E_TaskName.DPSPower, E_TaskName.TIUSlideOut, E_TaskName.DoorClose, E_TaskName.DoorOpen,
-					E_TaskName.APAirValve, E_TaskName.TesterAirValve, E_TaskName.TIUSocketCoolingAir, E_TaskName.AP240ACPOWER, E_TaskName.DrawerUp:
-										//IF iPOC_ML_Selection=1 AND FALSE THEN
-										//	M_ProcessCommand(n:= n, arrRCMD:= arrLocalRCMD,arrEvent:= arrLocalEvent, bInvalidCommand:=FALSE);
-										//ELSIF iPOC_ML_Selection=2 OR TRUE THEN
+					E_TaskName.SetBlinkRate, 		E_TaskName.TCCSessionRequest, 	E_TaskName.AlarmReset, 	E_TaskName.Resume, 			E_TaskName.Cancel,		
+					E_TaskName.TIUSlideOutRetry,	E_TaskName.TIUSlideOutCancel, 	E_TaskName.Initialize, 	E_TaskName.DPSPower, 		E_TaskName.TIUSlideOut, 
+					E_TaskName.DoorClose, 			E_TaskName.DoorOpen,			E_TaskName.APAirValve, 	E_TaskName.TesterAirValve, 	E_TaskName.TIUSocketCoolingAir,		
+					E_TaskName.AP240ACPOWER,		E_TaskName.DrawerUp,			E_TaskName.Secondary24VPower,						E_TaskName.SetSolenoidValves:
+					
 						M_ProcessMLCommand(
 							n											:= n, 
 							arrRCMD										:= arrLocalRCMD,
 							arrEvent									:= arrLocalEvent,
 							bInvalidCommand								:= FALSE,
 							bRetry										:= FALSE,
-							bCancel										:= FALSE);
-										//END_IF
+							bCancel										:= FALSE
+						);
 					
-				ELSE // Similar to Default Statement;
-									//IF iPOC_ML_Selection=1 AND FALSE THEN
-									//	M_ProcessCommand(n:= n, arrRCMD:= arrLocalRCMD,arrEvent:= arrLocalEvent,bInvalidCommand:=TRUE);
-									//ELSIF iPOC_ML_Selection=2 OR TRUE THEN
+				ELSE 
 					M_ProcessMLCommand(
 						n												:= n, 
 						arrRCMD											:= arrLocalRCMD,
 						arrEvent										:= arrLocalEvent,
 						bInvalidCommand									:= TRUE,
 						bRetry											:= FALSE,
-						bCancel											:= FALSE);
-									//END_IF
+						bCancel											:= FALSE
+					);
 				END_CASE
+				
 				arrLocalRCMD[n]											:= CmdEmpty;
 			END_IF
 		END_FOR
@@ -3726,15 +3698,6 @@ M_nCmdtoEvent(eCmd2Event_TaskName:=arrRCMD[n].eTaskName , iCmd2Event_Result:=iSe
 arrRCMD[n]:= CmdEmpty;]]></ST>
       </Implementation>
     </Method>
-    <Method Name="M_TesterPowerAC" Id="{9dbcb2eb-a2ee-4479-a1e1-1f6d9f459b9e}">
-      <Declaration><![CDATA[METHOD M_TesterPowerAC : UDINT
-VAR_INPUT
-END_VAR
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[]]></ST>
-      </Implementation>
-    </Method>
     <Method Name="M_ValidateRecipe" Id="{2994feec-8ac2-4d13-81b0-be18df259cdd}">
       <Declaration><![CDATA[METHOD M_ValidateRecipe : BOOL
 VAR_INPUT
@@ -3866,9 +3829,6 @@ arrRCMD[n]										:= CmdEmpty;]]></ST>
       <LineId Id="69" Count="0" />
       <LineId Id="243" Count="0" />
       <LineId Id="263" Count="0" />
-      <LineId Id="280" Count="0" />
-      <LineId Id="259" Count="0" />
-      <LineId Id="244" Count="0" />
       <LineId Id="180" Count="0" />
       <LineId Id="106" Count="0" />
       <LineId Id="142" Count="0" />
@@ -3982,9 +3942,6 @@ arrRCMD[n]										:= CmdEmpty;]]></ST>
       <LineId Id="990" Count="2" />
       <LineId Id="989" Count="0" />
       <LineId Id="806" Count="8" />
-      <LineId Id="5" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_CmdAndEventUpdate.M_APPowerAC">
       <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="FB_CmdAndEventUpdate.M_DoorOpenClose">
@@ -4588,7 +4545,13 @@ arrRCMD[n]										:= CmdEmpty;]]></ST>
       <LineId Id="3303" Count="6" />
       <LineId Id="3302" Count="0" />
       <LineId Id="3312" Count="6" />
-      <LineId Id="3310" Count="1" />
+      <LineId Id="3310" Count="0" />
+      <LineId Id="3333" Count="3" />
+      <LineId Id="3339" Count="1" />
+      <LineId Id="3332" Count="0" />
+      <LineId Id="3311" Count="0" />
+      <LineId Id="3352" Count="6" />
+      <LineId Id="3350" Count="1" />
       <LineId Id="3248" Count="4" />
       <LineId Id="2408" Count="0" />
     </LineIds>
@@ -4763,7 +4726,7 @@ arrRCMD[n]										:= CmdEmpty;]]></ST>
     <LineIds Name="FB_CmdAndEventUpdate.M_ProcessMLCommand">
       <LineId Id="4057" Count="1" />
       <LineId Id="4056" Count="0" />
-      <LineId Id="3141" Count="9" />
+      <LineId Id="3143" Count="7" />
       <LineId Id="4013" Count="1" />
       <LineId Id="3151" Count="1" />
       <LineId Id="4015" Count="1" />
@@ -4773,38 +4736,14 @@ arrRCMD[n]										:= CmdEmpty;]]></ST>
       <LineId Id="4019" Count="0" />
       <LineId Id="4018" Count="0" />
       <LineId Id="3177" Count="2" />
+      <LineId Id="4701" Count="0" />
       <LineId Id="4020" Count="0" />
       <LineId Id="3180" Count="2" />
+      <LineId Id="4700" Count="0" />
       <LineId Id="4021" Count="0" />
-      <LineId Id="3590" Count="2" />
-      <LineId Id="4214" Count="0" />
-      <LineId Id="3925" Count="0" />
-      <LineId Id="4022" Count="0" />
-      <LineId Id="4035" Count="1" />
-      <LineId Id="4024" Count="1" />
-      <LineId Id="4030" Count="2" />
-      <LineId Id="3922" Count="0" />
-      <LineId Id="4023" Count="0" />
-      <LineId Id="4033" Count="1" />
-      <LineId Id="3927" Count="0" />
-      <LineId Id="4026" Count="3" />
-      <LineId Id="3923" Count="0" />
-      <LineId Id="3920" Count="0" />
-      <LineId Id="4215" Count="0" />
-      <LineId Id="3929" Count="0" />
-      <LineId Id="4037" Count="0" />
-      <LineId Id="4040" Count="0" />
-      <LineId Id="4042" Count="1" />
-      <LineId Id="4048" Count="4" />
-      <LineId Id="4216" Count="0" />
-      <LineId Id="3930" Count="0" />
-      <LineId Id="4038" Count="1" />
-      <LineId Id="4041" Count="0" />
-      <LineId Id="3932" Count="0" />
-      <LineId Id="4044" Count="3" />
-      <LineId Id="3933" Count="0" />
-      <LineId Id="3928" Count="0" />
+      <LineId Id="3590" Count="1" />
       <LineId Id="4217" Count="0" />
+      <LineId Id="4699" Count="0" />
       <LineId Id="4053" Count="0" />
       <LineId Id="4059" Count="0" />
       <LineId Id="4460" Count="0" />
@@ -4838,20 +4777,30 @@ arrRCMD[n]										:= CmdEmpty;]]></ST>
       <LineId Id="3222" Count="1" />
       <LineId Id="4614" Count="1" />
       <LineId Id="3226" Count="0" />
-      <LineId Id="3228" Count="3" />
+      <LineId Id="3228" Count="2" />
+      <LineId Id="4702" Count="0" />
+      <LineId Id="3231" Count="0" />
       <LineId Id="3234" Count="0" />
-      <LineId Id="3237" Count="0" />
-      <LineId Id="3239" Count="6" />
-      <LineId Id="4116" Count="0" />
-      <LineId Id="3247" Count="28" />
+      <LineId Id="3239" Count="0" />
+      <LineId Id="3243" Count="1" />
+      <LineId Id="4703" Count="0" />
+      <LineId Id="3245" Count="0" />
+      <LineId Id="4704" Count="0" />
+      <LineId Id="3247" Count="17" />
+      <LineId Id="3273" Count="2" />
       <LineId Id="4117" Count="2" />
       <LineId Id="3731" Count="0" />
       <LineId Id="3276" Count="0" />
       <LineId Id="3878" Count="4" />
       <LineId Id="3877" Count="0" />
+      <LineId Id="4712" Count="0" />
+      <LineId Id="4714" Count="4" />
+      <LineId Id="4713" Count="0" />
       <LineId Id="4173" Count="0" />
       <LineId Id="3277" Count="0" />
-      <LineId Id="3279" Count="16" />
+      <LineId Id="3279" Count="8" />
+      <LineId Id="3290" Count="5" />
+      <LineId Id="4812" Count="0" />
       <LineId Id="3297" Count="0" />
       <LineId Id="3299" Count="4" />
       <LineId Id="4340" Count="0" />
@@ -4860,8 +4809,10 @@ arrRCMD[n]										:= CmdEmpty;]]></ST>
       <LineId Id="4336" Count="0" />
       <LineId Id="3313" Count="0" />
       <LineId Id="4345" Count="0" />
-      <LineId Id="3314" Count="6" />
-      <LineId Id="3322" Count="8" />
+      <LineId Id="3316" Count="4" />
+      <LineId Id="3324" Count="0" />
+      <LineId Id="4735" Count="0" />
+      <LineId Id="3325" Count="5" />
       <LineId Id="4120" Count="0" />
       <LineId Id="3631" Count="4" />
       <LineId Id="3630" Count="0" />
@@ -4886,13 +4837,12 @@ arrRCMD[n]										:= CmdEmpty;]]></ST>
       <LineId Id="4133" Count="2" />
       <LineId Id="3370" Count="1" />
       <LineId Id="3769" Count="0" />
-      <LineId Id="4136" Count="4" />
-      <LineId Id="3770" Count="25" />
+      <LineId Id="4136" Count="3" />
       <LineId Id="3396" Count="0" />
       <LineId Id="4141" Count="0" />
       <LineId Id="3397" Count="1" />
-      <LineId Id="4126" Count="4" />
-      <LineId Id="3399" Count="7" />
+      <LineId Id="4126" Count="3" />
+      <LineId Id="3403" Count="3" />
       <LineId Id="4145" Count="3" />
       <LineId Id="4142" Count="0" />
       <LineId Id="3407" Count="1" />
@@ -4908,6 +4858,9 @@ arrRCMD[n]										:= CmdEmpty;]]></ST>
       <LineId Id="3871" Count="1" />
       <LineId Id="3874" Count="2" />
       <LineId Id="3873" Count="0" />
+      <LineId Id="4719" Count="0" />
+      <LineId Id="4721" Count="4" />
+      <LineId Id="4720" Count="0" />
       <LineId Id="4161" Count="0" />
       <LineId Id="3421" Count="23" />
       <LineId Id="3446" Count="5" />
@@ -4923,22 +4876,51 @@ arrRCMD[n]										:= CmdEmpty;]]></ST>
       <LineId Id="4512" Count="0" />
       <LineId Id="4657" Count="0" />
       <LineId Id="4513" Count="2" />
-      <LineId Id="4511" Count="0" />
-      <LineId Id="3471" Count="15" />
+      <LineId Id="3472" Count="0" />
+      <LineId Id="4734" Count="0" />
+      <LineId Id="3473" Count="4" />
+      <LineId Id="3485" Count="1" />
       <LineId Id="3489" Count="1" />
       <LineId Id="4518" Count="0" />
       <LineId Id="4658" Count="0" />
       <LineId Id="4519" Count="2" />
       <LineId Id="4516" Count="1" />
       <LineId Id="3491" Count="0" />
-      <LineId Id="3493" Count="7" />
+      <LineId Id="3493" Count="0" />
+      <LineId Id="4710" Count="0" />
+      <LineId Id="3495" Count="1" />
+      <LineId Id="4711" Count="0" />
+      <LineId Id="3497" Count="3" />
       <LineId Id="3502" Count="3" />
       <LineId Id="4162" Count="0" />
       <LineId Id="3506" Count="11" />
       <LineId Id="4166" Count="2" />
-      <LineId Id="3518" Count="8" />
-      <LineId Id="4163" Count="2" />
-      <LineId Id="3527" Count="6" />
+      <LineId Id="3522" Count="4" />
+      <LineId Id="4163" Count="1" />
+      <LineId Id="3529" Count="0" />
+      <LineId Id="3533" Count="0" />
+      <LineId Id="4799" Count="0" />
+      <LineId Id="4801" Count="0" />
+      <LineId Id="4807" Count="0" />
+      <LineId Id="4805" Count="0" />
+      <LineId Id="4808" Count="0" />
+      <LineId Id="4810" Count="0" />
+      <LineId Id="4809" Count="0" />
+      <LineId Id="4813" Count="0" />
+      <LineId Id="4802" Count="0" />
+      <LineId Id="4815" Count="3" />
+      <LineId Id="4814" Count="0" />
+      <LineId Id="4824" Count="0" />
+      <LineId Id="4729" Count="2" />
+      <LineId Id="4727" Count="0" />
+      <LineId Id="4753" Count="0" />
+      <LineId Id="4740" Count="0" />
+      <LineId Id="4743" Count="1" />
+      <LineId Id="4741" Count="0" />
+      <LineId Id="4745" Count="2" />
+      <LineId Id="4754" Count="0" />
+      <LineId Id="4756" Count="2" />
+      <LineId Id="4739" Count="0" />
       <LineId Id="3535" Count="7" />
       <LineId Id="4169" Count="3" />
       <LineId Id="3543" Count="9" />
@@ -4948,14 +4930,7 @@ arrRCMD[n]										:= CmdEmpty;]]></ST>
       <LineId Id="179" Count="0" />
       <LineId Id="177" Count="1" />
       <LineId Id="173" Count="0" />
-      <LineId Id="176" Count="0" />
-      <LineId Id="182" Count="0" />
-      <LineId Id="217" Count="0" />
-      <LineId Id="215" Count="0" />
-      <LineId Id="219" Count="3" />
-      <LineId Id="218" Count="0" />
       <LineId Id="184" Count="0" />
-      <LineId Id="80" Count="0" />
       <LineId Id="14" Count="3" />
       <LineId Id="112" Count="0" />
       <LineId Id="284" Count="0" />
@@ -4964,6 +4939,7 @@ arrRCMD[n]										:= CmdEmpty;]]></ST>
       <LineId Id="333" Count="1" />
       <LineId Id="20" Count="5" />
       <LineId Id="121" Count="0" />
+      <LineId Id="374" Count="0" />
       <LineId Id="126" Count="1" />
       <LineId Id="131" Count="1" />
       <LineId Id="129" Count="0" />
@@ -4971,21 +4947,19 @@ arrRCMD[n]										:= CmdEmpty;]]></ST>
       <LineId Id="135" Count="0" />
       <LineId Id="130" Count="0" />
       <LineId Id="136" Count="1" />
+      <LineId Id="372" Count="0" />
+      <LineId Id="375" Count="1" />
       <LineId Id="128" Count="0" />
       <LineId Id="118" Count="0" />
+      <LineId Id="377" Count="0" />
       <LineId Id="33" Count="0" />
-      <LineId Id="181" Count="0" />
-      <LineId Id="180" Count="0" />
-      <LineId Id="168" Count="0" />
-      <LineId Id="34" Count="2" />
-      <LineId Id="42" Count="0" />
-      <LineId Id="169" Count="0" />
       <LineId Id="46" Count="0" />
       <LineId Id="171" Count="0" />
       <LineId Id="170" Count="0" />
-      <LineId Id="47" Count="0" />
       <LineId Id="63" Count="1" />
-      <LineId Id="335" Count="4" />
+      <LineId Id="335" Count="3" />
+      <LineId Id="378" Count="0" />
+      <LineId Id="339" Count="0" />
       <LineId Id="65" Count="8" />
       <LineId Id="5" Count="0" />
       <LineId Id="82" Count="0" />
@@ -5012,6 +4986,29 @@ arrRCMD[n]										:= CmdEmpty;]]></ST>
       <LineId Id="257" Count="0" />
       <LineId Id="163" Count="0" />
       <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_CmdAndEventUpdate.M_SetSolenoidValves">
+      <LineId Id="112" Count="1" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="41" Count="1" />
+      <LineId Id="44" Count="0" />
+      <LineId Id="61" Count="0" />
+      <LineId Id="49" Count="1" />
+      <LineId Id="62" Count="0" />
+      <LineId Id="51" Count="1" />
+      <LineId Id="63" Count="0" />
+      <LineId Id="53" Count="1" />
+      <LineId Id="64" Count="0" />
+      <LineId Id="55" Count="1" />
+      <LineId Id="65" Count="0" />
+      <LineId Id="57" Count="1" />
+      <LineId Id="66" Count="0" />
+      <LineId Id="59" Count="1" />
+      <LineId Id="43" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="114" Count="1" />
+      <LineId Id="70" Count="0" />
     </LineIds>
     <LineIds Name="FB_CmdAndEventUpdate.M_TACmdUpdate">
       <LineId Id="327" Count="1" />
@@ -5050,49 +5047,43 @@ arrRCMD[n]										:= CmdEmpty;]]></ST>
       <LineId Id="44" Count="0" />
       <LineId Id="81" Count="1" />
       <LineId Id="84" Count="1" />
-      <LineId Id="213" Count="0" />
       <LineId Id="209" Count="0" />
       <LineId Id="86" Count="0" />
-      <LineId Id="214" Count="0" />
-      <LineId Id="227" Count="0" />
-      <LineId Id="226" Count="0" />
-      <LineId Id="223" Count="1" />
-      <LineId Id="221" Count="1" />
+      <LineId Id="222" Count="0" />
       <LineId Id="229" Count="0" />
       <LineId Id="242" Count="0" />
       <LineId Id="337" Count="0" />
       <LineId Id="373" Count="2" />
+      <LineId Id="392" Count="0" />
       <LineId Id="338" Count="0" />
       <LineId Id="262" Count="0" />
       <LineId Id="339" Count="0" />
       <LineId Id="376" Count="2" />
+      <LineId Id="393" Count="0" />
       <LineId Id="340" Count="0" />
       <LineId Id="231" Count="0" />
       <LineId Id="341" Count="0" />
       <LineId Id="344" Count="2" />
+      <LineId Id="394" Count="0" />
       <LineId Id="247" Count="0" />
       <LineId Id="245" Count="0" />
       <LineId Id="342" Count="1" />
       <LineId Id="347" Count="1" />
+      <LineId Id="395" Count="0" />
       <LineId Id="233" Count="0" />
       <LineId Id="313" Count="0" />
-      <LineId Id="241" Count="0" />
-      <LineId Id="271" Count="0" />
-      <LineId Id="166" Count="0" />
-      <LineId Id="108" Count="0" />
-      <LineId Id="167" Count="0" />
+      <LineId Id="386" Count="2" />
+      <LineId Id="385" Count="0" />
       <LineId Id="172" Count="0" />
       <LineId Id="349" Count="5" />
-      <LineId Id="173" Count="0" />
+      <LineId Id="390" Count="0" />
       <LineId Id="132" Count="0" />
-      <LineId Id="298" Count="0" />
-      <LineId Id="179" Count="0" />
-      <LineId Id="183" Count="0" />
       <LineId Id="174" Count="0" />
       <LineId Id="186" Count="0" />
       <LineId Id="355" Count="5" />
-      <LineId Id="137" Count="0" />
+      <LineId Id="391" Count="0" />
       <LineId Id="248" Count="0" />
+      <LineId Id="389" Count="0" />
       <LineId Id="114" Count="0" />
       <LineId Id="99" Count="0" />
       <LineId Id="42" Count="0" />
@@ -5171,9 +5162,6 @@ arrRCMD[n]										:= CmdEmpty;]]></ST>
       <LineId Id="46" Count="0" />
       <LineId Id="48" Count="9" />
       <LineId Id="15" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_CmdAndEventUpdate.M_TesterPowerAC">
-      <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="FB_CmdAndEventUpdate.M_ValidateRecipe">
       <LineId Id="6" Count="18" />

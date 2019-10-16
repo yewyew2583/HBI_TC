@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <DUT Name="E_Solenoid" Id="{0d538c55-1e4c-430f-b630-5393a3c4d41a}">
+    <Declaration><![CDATA[TYPE E_Solenoid :
+(
+	opDBStnMainPCWSupply	:= 1,
+	opDBStnMainPCWReturn	:= 2,
+	opDBStnPCWSupplyPurge	:= 3,
+	opDBStnPCWAWN			:= 4,
+	opDBStnSupplyAirPurge	:= 5,
+	opDBStnLeakFlowPCWValve	:= 6,
+	opDBStnLowFlowPCWValve	:= 7
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -229,16 +229,6 @@ FOR i := 1 TO NoOfTIIAlm DO
 			ArrAlmBitBefDelay[E_TIIAlarm.ipTIUPresent]					:= (NOT	vIO.ipTIUPresent) AND bENs[14]; 						
 			Arr_ms[e] 													:= 500;  (*TIIAlmText[e]:='TIUPresent'*);*)
 			
-        (*E_TIIAlarm.ipTCDrawerCylExtendRS: 
-			e															:= E_TIIAlarm.ipTCDrawerCylExtendRS; 
-			ArrAlmBitBefDelay[E_TIIAlarm.ipTCDrawerCylExtendRS]			:= (NOT	vIO.ipTCDrawerCylExtendRS) AND vIO.opTesterDrawerAirSupplySol (*AND	vIO.opCellDrawerCylExtend*) AND (NOT bDebugCart) AND lEt AND bENs[15]; 
-			Arr_ms[e] 													:= 500;  (*TIIAlmText[e]:='TCDrawerCylExtendRS'*);*)
-			
-        (*E_TIIAlarm.ipTCDrawerCylRetractRS: 
-			e															:= E_TIIAlarm.ipTCDrawerCylRetractRS; 
-			ArrAlmBitBefDelay[E_TIIAlarm.ipTCDrawerCylRetractRS]		:= (NOT	vIO.ipTCDrawerCylRetractRS) AND vIO.opTesterDrawerAirSupplySol (*AND vIO.opCellDrawerCylRetract*) AND lRt AND bENs[16]; 
-			Arr_ms[e] 													:= 500;  (*TIIAlmText[e]:='TCDrawerCylRetractRS'*);*)
-			
         E_TIIAlarm.TBOT_TC_ACPower_Signal: 
 			e															:= E_TIIAlarm.TBOT_TC_ACPower_Signal; 
 			ArrAlmBitBefDelay[E_TIIAlarm.TBOT_TC_ACPower_Signal]		:= (vIO.TBOT_TC_ACPower_Signal) AND (vIO.ipAPPresentSensor OR vIO.ipTesterPresent) AND (NOT bDebugCart) AND (NOT bDebugStation) AND bENs[14]; 
@@ -252,7 +242,17 @@ FOR i := 1 TO NoOfTIIAlm DO
       	E_TIIAlarm.TBotSideDoorLockSignalNotDetected: 
 			e																:= E_TIIAlarm.TBotSideDoorLockSignalNotDetected; 
 			ArrAlmBitBefDelay[E_TIIAlarm.TBotSideDoorLockSignalNotDetected]	:= bDebugCart AND ((NOT vIO.ipTCCellTbotSideDoorLocked01) OR (NOT vIO.ipTCCellTbotSideDoorLocked01)); //AND bENs[16]; 							
-			Arr_ms[e] 														:= 500;  (*TIIAlmText[e]:='ipTCCellTbotSideDoorLocked01' *);				
+			Arr_ms[e] 														:= 500;  (*TIIAlmText[e]:='ipTCCellTbotSideDoorLocked01' *);	
+					
+        E_TIIAlarm.ipTCDrawerExtendSignal: 
+			e																:= E_TIIAlarm.ipTCDrawerExtendSignal; 
+			ArrAlmBitBefDelay[E_TIIAlarm.ipTCDrawerExtendSignal]			:= (NOT	vIO.ipTCDrawerCylExtendRS) AND vIO.opTesterDrawerAirSupplySol (*AND	vIO.opCellDrawerCylExtend*) AND (NOT bDebugCart) AND lEt AND bENs[15]; 
+			Arr_ms[e] 														:= 500;  (*TIIAlmText[e]:='TCDrawerCylExtendRS'*);
+			
+        E_TIIAlarm.ipTCDrawerRetractSignal: 
+			e																:= E_TIIAlarm.ipTCDrawerRetractSignal; 
+			ArrAlmBitBefDelay[E_TIIAlarm.ipTCDrawerRetractSignal]			:= (NOT	vIO.ipTCDrawerCylRetractRS) AND vIO.opTesterDrawerAirSupplySol (*AND vIO.opCellDrawerCylRetract*) AND lRt AND bENs[16]; 
+			Arr_ms[e] 														:= 500;  (*TIIAlmText[e]:='TCDrawerCylRetractRS'*);			
 			
 	END_CASE
 
@@ -525,15 +525,8 @@ END_VAR
       <LineId Id="310" Count="0" />
       <LineId Id="880" Count="3" />
       <LineId Id="311" Count="0" />
-      <LineId Id="884" Count="3" />
-      <LineId Id="415" Count="0" />
-      <LineId Id="888" Count="0" />
-      <LineId Id="891" Count="0" />
-      <LineId Id="897" Count="1" />
-      <LineId Id="416" Count="0" />
-      <LineId Id="889" Count="0" />
-      <LineId Id="892" Count="0" />
-      <LineId Id="895" Count="1" />
+      <LineId Id="884" Count="2" />
+      <LineId Id="896" Count="0" />
       <LineId Id="708" Count="0" />
       <LineId Id="890" Count="0" />
       <LineId Id="893" Count="1" />
@@ -543,6 +536,8 @@ END_VAR
       <LineId Id="1280" Count="0" />
       <LineId Id="1277" Count="2" />
       <LineId Id="992" Count="0" />
+      <LineId Id="1339" Count="8" />
+      <LineId Id="1337" Count="0" />
       <LineId Id="158" Count="0" />
       <LineId Id="162" Count="0" />
       <LineId Id="177" Count="2" />
