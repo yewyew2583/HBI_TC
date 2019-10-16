@@ -244,15 +244,15 @@ FOR i := 1 TO NoOfTIIAlm DO
 			ArrAlmBitBefDelay[E_TIIAlarm.TBotSideDoorLockSignalNotDetected]	:= bDebugCart AND ((NOT vIO.ipTCCellTbotSideDoorLocked01) OR (NOT vIO.ipTCCellTbotSideDoorLocked01)); //AND bENs[16]; 							
 			Arr_ms[e] 														:= 500;  (*TIIAlmText[e]:='ipTCCellTbotSideDoorLocked01' *);	
 					
-        E_TIIAlarm.ipTCDrawerExtendSignal: 
+        (*E_TIIAlarm.ipTCDrawerExtendSignal: 
 			e																:= E_TIIAlarm.ipTCDrawerExtendSignal; 
 			ArrAlmBitBefDelay[E_TIIAlarm.ipTCDrawerExtendSignal]			:= (NOT	vIO.ipTCDrawerCylExtendRS) AND vIO.opTesterDrawerAirSupplySol (*AND	vIO.opCellDrawerCylExtend*) AND (NOT bDebugCart) AND lEt AND bENs[15]; 
-			Arr_ms[e] 														:= 500;  (*TIIAlmText[e]:='TCDrawerCylExtendRS'*);
+			Arr_ms[e] 														:= 500;  (*TIIAlmText[e]:='TCDrawerCylExtendRS'*);*)
 			
-        E_TIIAlarm.ipTCDrawerRetractSignal: 
+        (*E_TIIAlarm.ipTCDrawerRetractSignal: 
 			e																:= E_TIIAlarm.ipTCDrawerRetractSignal; 
 			ArrAlmBitBefDelay[E_TIIAlarm.ipTCDrawerRetractSignal]			:= (NOT	vIO.ipTCDrawerCylRetractRS) AND vIO.opTesterDrawerAirSupplySol (*AND vIO.opCellDrawerCylRetract*) AND lRt AND bENs[16]; 
-			Arr_ms[e] 														:= 500;  (*TIIAlmText[e]:='TCDrawerCylRetractRS'*);			
+			Arr_ms[e] 														:= 500;  (*TIIAlmText[e]:='TCDrawerCylRetractRS'*);		*)	
 			
 	END_CASE
 
