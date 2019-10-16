@@ -183,7 +183,7 @@ CASE iSeqCase OF
 			
 		ELSIF arrTCMultiLevel[iLevel].stGblParam.bSecondary24VPowerOff OR arrTCMultiLevel[iLevel].stGblParam.bSecondary24VPowerOn THEN
 			arrTCMultiLevel[iLevel].stGblParam.iProcessState 				:= E_ProcessState.eLOADG;
-			iSeqStatus 														:= arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.R_Secondary24VPowerOnOff();
+			iSeqStatus 														:= arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.M_RemoteSecondary24VPowerOnOff();
 			
 		ELSIF 	arrTCMultiLevel[iLevel].stGblParam.bAP240ACPowerOff		OR arrTCMultiLevel[iLevel].stGblParam.bAP240ACPowerOn 	OR arrTCMultiLevel[iLevel].stGblParam.bAP240ACPowerAuto OR
 				arrTCMultiLevel[iLevel].stGblParam.bDSPPowerOff			OR arrTCMultiLevel[iLevel].stGblParam.bDSPPowerOn		OR arrTCMultiLevel[iLevel].stGblParam.bDSPPowerAuto 	THEN

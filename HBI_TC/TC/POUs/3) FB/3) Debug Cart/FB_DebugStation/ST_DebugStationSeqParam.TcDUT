@@ -7,7 +7,7 @@ STRUCT
 	bAP240ACPowerOn					: BOOL;
 	bAP240ACPowerAuto				: BOOL;
 	bSecondary24VPowerOff			: BOOL;
-	bSecondary24VPowerOn				: BOOL;
+	bSecondary24VPowerOn			: BOOL;
 	bInitialise						: BOOL;
 	bAlarmClear						: BOOL;
 	bAlarmOccur						: BOOL;

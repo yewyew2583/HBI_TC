@@ -375,7 +375,7 @@ TC_AP240ACPower_Precondition		:= (
 											(NOT DS_Facility_eapShutOffAllACPower OR NOT bDebugCart) AND	//EAP shut off from debug station facility. 1: shutoff, 0: Normal
 											(NOT TBOT_TC_ACPower_Signal OR bDebugCart)				//TBOT signal to TC. 1:shutoff, 0: Normal
 										) AND			
-										Ap240AcPowerMode <> 1;								//power on and off manual command);
+										stMLVIO.bAP240ACPowerOnOff;								//power on and off manual command);
 
 TC_AP240ACPower_Reset(CLK:= TC_AP240ACPower_Precondition);
 
@@ -789,8 +789,9 @@ END_VAR
 									OR	ALMTC.Level[iLevel].AlarmID[E_AlarmID.DrawerDownError				]
 									OR	ALMTC.Level[iLevel].AlarmID[E_AlarmID.DrawerRetractError			]
 									OR	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCCellDoorClosed			]
-									
-	                            	OR	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellGroundFault 	   		] 	
+									OR 	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellGroundFault 	   		] 
+									OR	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellFluidLeakage1 	   		] 	
+	                            	OR	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellFluidLeakage2 	   		] 	
 									OR	ALMTC.Common.AlarmID[E_ColAlarm.ipColumnFluid_PCW_Leakage			]
 									OR	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.TBOT_TC_ACPower_Signal		]
 									OR	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.TBotSideDoorLockSignalNotDetected	];
@@ -894,7 +895,7 @@ IF bDebugCart THEN
 									//AND stMLVIO.ipTCCellDoorOpenCloseStatus 																//pass criteria: back door/ TC door closed : 1
 									AND	(stMLVIO.ipTCCellTbotSideDoorLocked01 AND stMLVIO.ipTCCellTbotSideDoorLocked02)						//pass criteria: front door locked1&2: 1
 									AND stMLVIO.ipTCCellDoorClosed 																			//pass criteria: back door/ TC door locked: 1
-									AND stMLVIO.opTesterDrawerAirSupplySol 																	//pass criteria: tester air 6 bar valve: 1
+									//AND stMLVIO.opTesterDrawerAirSupplySol 																	//pass criteria: tester air 6 bar valve: 1
 									AND ((NOT stMLVIO.ipTesterPresent) OR (stMLVIO.ipTesterPresent AND stMLVIO.ipTesterLatchesClosed)); 	//pass criteria: testerpresent : 0 OR tester present and tester latches closed : 1
 
 															 	
@@ -902,7 +903,7 @@ ELSE
 	stMLVIO.opAPSafeToEngage	:=	(stMLVIO.ipTCDrawerCylDownRS AND stMLVIO.ipTCDrawerCylRetractRS) 									//pass criteria: drawer retract: 1, drawer down: 1
 									//AND stMLVIO.ipTCCellDoorOpenCloseStatus 															//pass criteria: back door/ TC door closed : 1
 									AND stMLVIO.ipTCCellDoorClosed 																		//pass criteria: back door/ TC door locked: 1
-									AND stMLVIO.opTesterDrawerAirSupplySol  															//pass criteria: tester air 6 bar valve: 1
+									//AND stMLVIO.opTesterDrawerAirSupplySol  															//pass criteria: tester air 6 bar valve: 1
 									AND ((NOT stMLVIO.ipTesterPresent) OR (stMLVIO.ipTesterPresent AND stMLVIO.ipTesterLatchesClosed));	//pass criteria: testerpresent : 0 OR tester present and tester latches closed : 1
 
 	
@@ -1309,22 +1310,18 @@ CASE iStkSeqCase OF
 		IF tAPACPwrDelayToComplete.Q THEN
 			IF stTCMLSeqParam.bAP240ACPowerOff THEN 			(*0=Off, 1=On, 2=Auto(Off->On) *)
 				stMLVIO.bAP240ACPowerOnOff		:=FALSE;//TRUE;
-				Ap240AcPowerMode		:= 1;
 				tAPACPwrDelayToAutoComplete(IN:= TRUE, PT:=T#0S);
 				sMessage:='AP240AC PowerOff';
 			ELSIF stTCMLSeqParam.bAP240ACPowerOn THEN
 				stMLVIO.bAP240ACPowerOnOff		:= TRUE;//FALSE;
-				Ap240AcPowerMode		:= 2;
 				tAPACPwrDelayToAutoComplete(IN:=TRUE, PT:=T#0S);
 				sMessage:='AP240AC PowerOn';
 			ELSIF  stTCMLSeqParam.bAP240ACPowerAuto THEN
 				stMLVIO.bAP240ACPowerOnOff		:= FALSE;//TRUE;
-				Ap240AcPowerMode		:= 1;
 				sMessage:='AP240AC PowerOff';
 				tAPACPwrDelayToAutoComplete(IN:=TRUE, PT:=T#2S); // origin T#10s
 				IF tAPACPwrDelayToAutoComplete.Q THEN
 					stMLVIO.bAP240ACPowerOnOff		:= TRUE;//FALSE;
-					Ap240AcPowerMode		:= 2;	
 					sMessage:='AP240AC PowerOn';
 				END_IF
 			END_IF
@@ -2003,6 +2000,30 @@ END_VAR
 	e;]]></ST>
       </Implementation>
     </Method>
+    <Method Name="M_RemoteSecondary24VPowerOnOff" Id="{5b27ece6-923e-4133-9791-5ed0b8c18038}">
+      <Declaration><![CDATA[METHOD M_RemoteSecondary24VPowerOnOff : INT
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF bPause THEN
+	RETURN;
+	
+ELSIF itl_opCell_24VPowerEnable OR stMLVIO.isSysError THEN
+	M_RemoteSecondary24VPowerOnOff				:= 20;		
+	RETURN;
+END_IF
+
+IF stTCMLSeqParam.bSecondary24VPowerOff THEN
+	stMLVIO.bSecondary24VPowerOnOff				:= FALSE;
+	M_RemoteSecondary24VPowerOnOff				:= 10;
+	
+ELSIF stTCMLSeqParam.bSecondary24VPowerOn THEN
+	stMLVIO.bSecondary24VPowerOnOff				:= TRUE;
+	M_RemoteSecondary24VPowerOnOff				:= 10;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="M_Secondary24VPower" Id="{3e6ef57f-d508-4f74-9216-2c66b14c555c}">
       <Declaration><![CDATA[METHOD M_Secondary24VPower : UDINT
 VAR_INPUT
@@ -2059,7 +2080,7 @@ Precondition_opCell24VPowerEnable		:=  (NOT itl_opCell_24VPowerEnable) AND
 Reset_opCell24VPowerEnable(CLK:= Precondition_opCell24VPowerEnable);
 			
 DUT_opCell24VPowerEnable.AutInp			:= Precondition_opCell24VPowerEnable;
-DUT_TC_AP240ACPower.Reset		:= TC_AP240ACPower_Reset.Q;						
+DUT_TC_AP240ACPower.Reset		:= Reset_opCell24VPowerEnable.Q;						
 	
 FB_opCell24VPowerEnable(
 	Sec_P:= Sec_P, 
@@ -2397,30 +2418,6 @@ END_VAR
 END_CASE]]></ST>
       </Implementation>
     </Method>
-    <Method Name="R_Secondary24VPowerOnOff" Id="{5b27ece6-923e-4133-9791-5ed0b8c18038}">
-      <Declaration><![CDATA[METHOD R_Secondary24VPowerOnOff : INT
-VAR_INPUT
-END_VAR
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[IF bPause THEN
-	RETURN;
-	
-ELSIF itl_opCell_24VPowerEnable OR stMLVIO.isSysError THEN
-	R_Secondary24VPowerOnOff					:= 20;		
-	RETURN;
-END_IF
-
-IF stTCMLSeqParam.bSecondary24VPowerOff THEN
-	stMLVIO.bSecondary24VPowerOnOff				:= FALSE;
-	R_Secondary24VPowerOnOff					:= 10;
-	
-ELSIF stTCMLSeqParam.bSecondary24VPowerOn THEN
-	stMLVIO.bSecondary24VPowerOnOff				:= TRUE;
-	R_Secondary24VPowerOnOff					:= 10;
-END_IF]]></ST>
-      </Implementation>
-    </Method>
     <LineIds Name="FB_TCMultiLevelSeq">
       <LineId Id="162" Count="0" />
     </LineIds>
@@ -2588,6 +2585,7 @@ END_IF]]></ST>
       <LineId Id="95" Count="1" />
       <LineId Id="104" Count="0" />
       <LineId Id="106" Count="0" />
+      <LineId Id="161" Count="0" />
       <LineId Id="102" Count="0" />
       <LineId Id="108" Count="0" />
       <LineId Id="138" Count="0" />
@@ -2808,15 +2806,7 @@ END_IF]]></ST>
       <LineId Id="273" Count="1" />
       <LineId Id="265" Count="1" />
       <LineId Id="214" Count="0" />
-      <LineId Id="293" Count="4" />
-      <LineId Id="367" Count="0" />
-      <LineId Id="298" Count="3" />
-      <LineId Id="368" Count="0" />
-      <LineId Id="302" Count="3" />
-      <LineId Id="369" Count="0" />
-      <LineId Id="306" Count="3" />
-      <LineId Id="370" Count="0" />
-      <LineId Id="310" Count="3" />
+      <LineId Id="293" Count="20" />
       <LineId Id="375" Count="0" />
       <LineId Id="314" Count="3" />
       <LineId Id="94" Count="0" />
@@ -3247,6 +3237,21 @@ END_IF]]></ST>
       <LineId Id="33" Count="0" />
       <LineId Id="27" Count="0" />
     </LineIds>
+    <LineIds Name="FB_TCMultiLevelSeq.M_RemoteSecondary24VPowerOnOff">
+      <LineId Id="8" Count="1" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="14" Count="2" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="22" Count="0" />
+    </LineIds>
     <LineIds Name="FB_TCMultiLevelSeq.M_Secondary24VPower">
       <LineId Id="10" Count="35" />
       <LineId Id="5" Count="0" />
@@ -3346,21 +3351,6 @@ END_IF]]></ST>
       <LineId Id="17" Count="0" />
       <LineId Id="27" Count="0" />
       <LineId Id="8" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_TCMultiLevelSeq.R_Secondary24VPowerOnOff">
-      <LineId Id="8" Count="1" />
-      <LineId Id="20" Count="0" />
-      <LineId Id="14" Count="2" />
-      <LineId Id="5" Count="0" />
-      <LineId Id="19" Count="0" />
-      <LineId Id="18" Count="0" />
-      <LineId Id="24" Count="0" />
-      <LineId Id="27" Count="0" />
-      <LineId Id="26" Count="0" />
-      <LineId Id="23" Count="0" />
-      <LineId Id="25" Count="0" />
-      <LineId Id="28" Count="0" />
-      <LineId Id="22" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

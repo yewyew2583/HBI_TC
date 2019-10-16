@@ -60,6 +60,7 @@ STRUCT
 //<CtrlIO>
 	bAP240ACPowerOnOff					: BOOL;
 	bChkAP240On							: BOOL;
+	bSecondary24VPowerOnOff				: BOOL	:= TRUE;
 	bTstDelInt							: BOOL;
 	bTIIAP240OnError					: BOOL;
 	bTIIAPPrstError						: BOOL;

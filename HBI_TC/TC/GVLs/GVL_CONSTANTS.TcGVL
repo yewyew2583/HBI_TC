@@ -81,56 +81,65 @@
 																E_ModuleID.COLUMN_RC];										
 	TIIAlmText : ARRAY[1..NO_OF_TII_SENSOR] OF STRING :=
 	[
-	 'AP_Not_Present'				,	
-	 'APPower_Not_On'	    		,
-	 'AP_Not_Ready' 		    	,
-	 'APDeactuatedPLC_Not_On' 		,
-	 'APDeactuatedHwr_Not_On' 		,
-	 'CellFluid_Leakage1' 			,
-	 'CellFluid_Leakage2' 			,
-	 'Cell_GroundFault' 			,
-	 'Tester_Not_Present' 			,
-	 'TesterPower_Not_On' 			,
-	 'Tester_Not_Ready'       		,
-	 'TCCellDoor_Not_Locked'		,
-	 'TesterLatches_Not_Closed' 	,
-	 'TIU_Not_Present' 				,
-	 'TCDrawerCylExtendRS_Not_On' 	,
-	 'TCDrawerCylRetractRS_Not_On'	     	
+	 	'AP_Not_Present'				,	
+	 	'APPower_Not_On'	    		,
+	 	'AP_Not_Ready' 		    		,
+	 	'APDeactuatedPLC_Not_On' 		,
+	 	'APDeactuatedHwr_Not_On' 		,
+	 	'CellFluid_Leakage1' 			,
+	 	'CellFluid_Leakage2' 			,
+	 	'Cell_GroundFault' 				,
+	 	'Tester_Not_Present' 			,
+	 	'TesterPower_Not_On' 			,
+	 	'Tester_Not_Ready'       		,
+	 	'TCCellDoor_Not_Locked'			,
+	 	'TesterLatches_Not_Closed' 		,
+	 	'TIU_Not_Present' 				,
+	 	'TCDrawerCylExtendRS_Not_On' 	,
+	 	'TCDrawerCylRetractRS_Not_On'	     	
 	];
 	
 	EAPAlmText : ARRAY[1..NO_OF_LEVEL,1..NO_OF_EAP_ALARM] OF STRING :=
 	[
-	 'TBOT EAP ALARM_1'				,	
-	 'TBOT EAP ALARM_2'				,
-	 'TBOT EAP ALARM_3'				,
-	 'TBOT EAP ALARM_4'				,
-	 'TBOT EAP ALARM_5'				,
-	 'TBOT EAP ALARM_6'				,
-	 'TBOT EAP ALARM_7'				,
-	 'TBOT EAP ALARM_8'				,
-	 'TBOT EAP ALARM_9'				,
-	 'TBOT EAP ALARM_10'			
+	 	'TBOT EAP ALARM_1'				,	
+	 	'TBOT EAP ALARM_2'				,
+	 	'TBOT EAP ALARM_3'				,
+	 	'TBOT EAP ALARM_4'				,
+	 	'TBOT EAP ALARM_5'				,
+	 	'TBOT EAP ALARM_6'				,
+	 	'TBOT EAP ALARM_7'				,
+	 	'TBOT EAP ALARM_8'				,
+	 	'TBOT EAP ALARM_9'				,
+	 	'TBOT EAP ALARM_10'			
 	];
 	 
 	SysAlmText : ARRAY[1..NO_OF_COMMON_SENSOR] OF STRING :=
 	[
-	 'Column_PCWLeakage',
-	 'AllTCDrawer_Not_In_Cell',       
-	 'ipTbotDoorClosedSignal'
+	 	'Column_PCWLeakage',
+	 	'AllTCDrawer_Not_In_Cell',       
+	 	'ipTbotDoorClosedSignal'
+	];
+	
+	DBStnSysAlmText : ARRAY[1..NO_OF_DBCOL_ALARM] OF STRING :=
+	[
+	 	'SystemPCWLeakageAlarm',
+	 	'SystemPCWSupplyLeakageAlarm',       
+	 	'SystemPCWReturnLeakageAlarm',
+	 	'CriticalCondensationAlarm',
+	 	'6BarLowOFAAirPressureAlarm'
 	];
 															
-	NO_OF_COMMON_SENSOR : UINT:=3;
-	NO_OF_TII_SENSOR : UINT:=20;
-	NO_OF_ALARM_TAG : UINT :=50;
-	NO_OF_DC_CELL_LEVEL:UINT:=2;
-	NO_OF_LEVEL : UINT :=6;
-	NO_OF_COLUMN : UINT :=6;
-	NO_OF_TC_SITE:UINT:=1;
-	NO_OF_SENSORS : UINT :=20;
-	NO_OF_BTNLED:INT:=5;
-	NO_OF_EAP_ALARM:INT:=10;
-	NO_OF_DBCOL_ALARM:INT:=10;
+	NO_OF_COMMON_SENSOR 						: UINT	:= 3;
+	NO_OF_TII_SENSOR 							: UINT	:= 20;
+	NO_OF_ALARM_TAG								: UINT 	:= 50;
+	NO_OF_DC_CELL_LEVEL							: UINT	:= 2;
+	NO_OF_LEVEL 								: UINT 	:= 6;
+	NO_OF_COLUMN 								: UINT 	:= 6;
+	NO_OF_TC_SITE								: UINT	:= 1;
+	NO_OF_SENSORS 								: UINT 	:= 20;
+	NO_OF_BTNLED								: INT	:= 5;
+	NO_OF_EAP_ALARM								: INT	:= 10;
+	NO_OF_DBCOL_ALARM							: INT	:= 10;
 	
 	//Path Setting
 	LOGFILEPATHTC1 :STRING(30) := 'D:/ControllerLog/Level1/';
