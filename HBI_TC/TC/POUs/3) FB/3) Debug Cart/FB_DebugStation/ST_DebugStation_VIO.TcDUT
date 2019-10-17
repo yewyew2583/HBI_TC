@@ -25,7 +25,7 @@ STRUCT
 	ipDBStnCellFluidLeakage2			: BOOL; //debugcart3 new io
 	ipDBStnPurgeButton					: BOOL; //debugcart3 new io
 	                                
-	opDBStnAP240ACPwrEnable				: BOOL;
+	opDBStnAP30ACPwrEnable				: BOOL;
 	opAP_DIO_1							: BOOL;
 	opAP_DIO_2							: BOOL;
 	opAP_DIO_3							: BOOL;

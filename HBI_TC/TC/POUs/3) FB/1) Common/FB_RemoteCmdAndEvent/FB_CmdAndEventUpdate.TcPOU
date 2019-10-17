@@ -2977,6 +2977,15 @@ ELSE
 					JMP iSendEvent;
 				END_IF
 				
+				stColVIO														:= fbTCColumn.P_stTCColumnVIO;
+				IF (NOT stColVIO.ipTbotDoorClosedSignal) AND (NOT bDebugCart) AND (NOT bDebugStation) THEN
+					bErr														:= TRUE;
+					sStatus														:= 'Tbot Door Not Closed.';
+					ALMTC.Common.AlarmID[E_ColAlarm.ipTbotDoorClosedSignal]		:= TRUE;
+					iSendEvent													:= 2;
+					JMP iSendEvent;
+				END_IF
+				
 				IF (NOT arrTCMultiLevel[iLevel].stGblParam.bTCDwrSafeToMoveEAP) THEN
 					bErr														:= TRUE;
 					sStatus														:= 'TBOT EAP Not allow Drawer Safe To Move.';
@@ -2990,6 +2999,15 @@ ELSE
 			END_IF
 
 		E_TaskName.Initialize: 	
+			stColVIO														:= fbTCColumn.P_stTCColumnVIO;
+			IF (NOT stColVIO.ipTbotDoorClosedSignal) AND (NOT bDebugCart) AND (NOT bDebugStation) THEN
+				bErr														:= TRUE;
+				sStatus														:= 'Tbot Door Not Closed.';
+				ALMTC.Common.AlarmID[E_ColAlarm.ipTbotDoorClosedSignal]		:= TRUE;
+				iSendEvent													:= 2;
+				JMP iSendEvent;
+			END_IF
+			
 			IF bDebugStation AND iLevel = 1 THEN 
 				stDebugStation.stGblDBStnParam.bInitialise						:= TRUE;
 			ELSE
@@ -3002,6 +3020,15 @@ ELSE
 				iSendEvent 														:= 2;
 				JMP iSendEvent;
 			ELSE
+			
+			stColVIO														:= fbTCColumn.P_stTCColumnVIO;
+			IF (NOT stColVIO.ipTbotDoorClosedSignal) AND (NOT bDebugCart) AND (NOT bDebugStation) THEN
+				bErr														:= TRUE;
+				sStatus														:= 'Tbot Door Not Closed.';
+				ALMTC.Common.AlarmID[E_ColAlarm.ipTbotDoorClosedSignal]		:= TRUE;
+				iSendEvent													:= 2;
+				JMP iSendEvent;
+			END_IF
 			
 			IF (NOT arrTCMultiLevel[iLevel].stGblParam.bTCDwrSafeToMoveEAP) THEN
 				bErr														:= TRUE;
@@ -3018,7 +3045,16 @@ ELSE
 			arrTCMultiLevel[iLevel].stGblParam.bResume						:= TRUE;
 			END_IF
 			
-		E_TaskName.TIUSlideOutCancel: 	
+		E_TaskName.TIUSlideOutCancel: 
+			stColVIO														:= fbTCColumn.P_stTCColumnVIO;	
+			IF (NOT stColVIO.ipTbotDoorClosedSignal) AND (NOT bDebugCart) AND (NOT bDebugStation) THEN
+				bErr														:= TRUE;
+				sStatus														:= 'Tbot Door Not Closed.';
+				ALMTC.Common.AlarmID[E_ColAlarm.ipTbotDoorClosedSignal]		:= TRUE;
+				iSendEvent													:= 2;
+				JMP iSendEvent;
+			END_IF
+		
 			IF (NOT arrTCMultiLevel[iLevel].stGblParam.bTCDwrSafeToMoveEAP) THEN
 				bErr														:= TRUE;
 				sStatus														:= 'TBOT EAP Not allow Drawer Safe To Move.';
@@ -4864,14 +4900,27 @@ arrRCMD[n]										:= CmdEmpty;]]></ST>
       <LineId Id="4161" Count="0" />
       <LineId Id="3421" Count="23" />
       <LineId Id="3446" Count="5" />
-      <LineId Id="4501" Count="1" />
+      <LineId Id="4501" Count="0" />
+      <LineId Id="4915" Count="0" />
+      <LineId Id="4909" Count="5" />
+      <LineId Id="4908" Count="0" />
+      <LineId Id="4907" Count="0" />
+      <LineId Id="4502" Count="0" />
       <LineId Id="4656" Count="0" />
       <LineId Id="4503" Count="0" />
-      <LineId Id="4507" Count="1" />
-      <LineId Id="4504" Count="0" />
-      <LineId Id="4509" Count="0" />
-      <LineId Id="3452" Count="11" />
+      <LineId Id="4507" Count="2" />
+      <LineId Id="4906" Count="0" />
+      <LineId Id="3452" Count="5" />
+      <LineId Id="4917" Count="0" />
+      <LineId Id="4881" Count="5" />
+      <LineId Id="4880" Count="0" />
+      <LineId Id="4887" Count="0" />
+      <LineId Id="3458" Count="5" />
       <LineId Id="3465" Count="5" />
+      <LineId Id="4888" Count="0" />
+      <LineId Id="4916" Count="0" />
+      <LineId Id="4890" Count="5" />
+      <LineId Id="4889" Count="0" />
       <LineId Id="4510" Count="0" />
       <LineId Id="4512" Count="0" />
       <LineId Id="4657" Count="0" />
@@ -4881,6 +4930,9 @@ arrRCMD[n]										:= CmdEmpty;]]></ST>
       <LineId Id="3473" Count="4" />
       <LineId Id="3485" Count="1" />
       <LineId Id="3489" Count="1" />
+      <LineId Id="4918" Count="0" />
+      <LineId Id="4900" Count="5" />
+      <LineId Id="4898" Count="1" />
       <LineId Id="4518" Count="0" />
       <LineId Id="4658" Count="0" />
       <LineId Id="4519" Count="2" />

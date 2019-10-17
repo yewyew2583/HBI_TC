@@ -22,7 +22,9 @@ TYPE E_TIIAlarm :
 	DS_Facility_EAP_ACPower_Signal		,		//:=15
 	TBotSideDoorLockSignalNotDetected	,		//:=16
 	ipTCDrawerExtendSignal				,		//:=17
-	ipTCDrawerRetractSignal						//:=18
+	ipTCDrawerRetractSignal				,		//:=18
+	ipTCDrawerUpSignal					,		//:=19
+	ipTCDrawerDownSignal						//:=20
 );
 END_TYPE
 

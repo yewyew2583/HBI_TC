@@ -4011,7 +4011,7 @@
                     </o>
                     <o>
                       <v n="Id">390574330L</v>
-                      <v n="Value">"opCellTBotSideDoorClosed2(DC)"</v>
+                      <v n="Value">"opFrontDoorLock2 (DC)"</v>
                     </o>
                     <o>
                       <v n="Id">2597686782L</v>
@@ -4019,7 +4019,7 @@
                     </o>
                     <o>
                       <v n="Id">823443203L</v>
-                      <v n="Value">"3551"</v>
+                      <v n="Value">"4695"</v>
                     </o>
                   </l>
                 </o>
@@ -13328,7 +13328,7 @@
                     </o>
                     <o>
                       <v n="Id">390574330L</v>
-                      <v n="Value">"opCellTBotSideDoorClosed1(DC)"</v>
+                      <v n="Value">"opFrontDoorLock1 (DC)"</v>
                     </o>
                     <o>
                       <v n="Id">2597686782L</v>
@@ -13336,7 +13336,7 @@
                     </o>
                     <o>
                       <v n="Id">823443203L</v>
-                      <v n="Value">"468"</v>
+                      <v n="Value">"1695"</v>
                     </o>
                   </l>
                 </o>
@@ -17383,7 +17383,7 @@
                     </o>
                     <o>
                       <v n="Id">390574330L</v>
-                      <v n="Value">"ipTCCellDoorClosed"</v>
+                      <v n="Value">"ipTCCellDoorLocked"</v>
                     </o>
                     <o>
                       <v n="Id">2597686782L</v>
@@ -17391,7 +17391,7 @@
                     </o>
                     <o>
                       <v n="Id">823443203L</v>
-                      <v n="Value">"161"</v>
+                      <v n="Value">"1318"</v>
                     </o>
                   </l>
                 </o>
@@ -17535,7 +17535,7 @@
                     </o>
                     <o>
                       <v n="Id">390574330L</v>
-                      <v n="Value">"ipTCCellDoorOpenCloseStatus"</v>
+                      <v n="Value">"ipTCCellDoorClosed"</v>
                     </o>
                     <o>
                       <v n="Id">2597686782L</v>
@@ -17543,7 +17543,7 @@
                     </o>
                     <o>
                       <v n="Id">823443203L</v>
-                      <v n="Value">"42"</v>
+                      <v n="Value">"161"</v>
                     </o>
                   </l>
                 </o>
@@ -24860,7 +24860,7 @@
                     </o>
                     <o>
                       <v n="Id">390574330L</v>
-                      <v n="Value">"ipTCCellTbotSideDoorOpenCloseStatus01"</v>
+                      <v n="Value">"ipFrontDoorClosed01"</v>
                     </o>
                     <o>
                       <v n="Id">2597686782L</v>
@@ -24868,7 +24868,7 @@
                     </o>
                     <o>
                       <v n="Id">823443203L</v>
-                      <v n="Value">"2696"</v>
+                      <v n="Value">"6047"</v>
                     </o>
                   </l>
                 </o>
@@ -25012,7 +25012,7 @@
                     </o>
                     <o>
                       <v n="Id">390574330L</v>
-                      <v n="Value">"ipTCCellTbotSideDoorOpenCloseStatus02"</v>
+                      <v n="Value">"ipFrontDoorClosed02"</v>
                     </o>
                     <o>
                       <v n="Id">2597686782L</v>
@@ -25020,7 +25020,7 @@
                     </o>
                     <o>
                       <v n="Id">823443203L</v>
-                      <v n="Value">"2935"</v>
+                      <v n="Value">"4595"</v>
                     </o>
                   </l>
                 </o>
@@ -25164,7 +25164,7 @@
                     </o>
                     <o>
                       <v n="Id">390574330L</v>
-                      <v n="Value">"ipTCCellTbotSideDoorLocked01"</v>
+                      <v n="Value">"ipFrontDoorLocked01"</v>
                     </o>
                     <o>
                       <v n="Id">2597686782L</v>
@@ -25172,7 +25172,7 @@
                     </o>
                     <o>
                       <v n="Id">823443203L</v>
-                      <v n="Value">"3873"</v>
+                      <v n="Value">"3678"</v>
                     </o>
                   </l>
                 </o>
@@ -25316,7 +25316,7 @@
                     </o>
                     <o>
                       <v n="Id">390574330L</v>
-                      <v n="Value">"ipTCCellTbotSideDoorLocked02"</v>
+                      <v n="Value">"ipFrontDoorLocked02"</v>
                     </o>
                     <o>
                       <v n="Id">2597686782L</v>
@@ -25324,7 +25324,7 @@
                     </o>
                     <o>
                       <v n="Id">823443203L</v>
-                      <v n="Value">"2955"</v>
+                      <v n="Value">"3016"</v>
                     </o>
                   </l>
                 </o>
@@ -28092,12 +28092,12 @@
                               <d n="TypeNodeAttributesData" t="CaseInsensitiveHashtable" ckt="String" cvt="String">
                                 <v>Visible</v>
                                 <v>False</v>
-                                <v>ieccodeconversion_array</v>
-                                <v></v>
-                                <v>VisibleChildren</v>
-                                <v>True</v>
                                 <v>DefaultArraySize</v>
                                 <v>5</v>
+                                <v>VisibleChildren</v>
+                                <v>True</v>
+                                <v>ieccodeconversion_array</v>
+                                <v></v>
                                 <v>''NORMAL__COMMENT</v>
                                 <v> We hide this node to prevent having two References nodes
  Nevertheless we want to make sure that the children are displayed</v>
@@ -28153,8 +28153,8 @@
                         <o n="TypeNodeAttributes" t="TypeNodeAttributes2">
                           <v n="AttrFlags">81920UL</v>
                           <d n="TypeNodeAttributesData" t="CaseInsensitiveHashtable" ckt="String" cvt="String">
-                            <v>conditionalshow</v>
-                            <v>visu_elemdev</v>
+                            <v>DisplayFrameReferencesConfiguration</v>
+                            <v></v>
                             <v>DescriptionTextId</v>
                             <v>TL_ElementProperties.Desc_ReferencedVisus</v>
                             <v>SortFlag</v>
@@ -28165,14 +28165,14 @@
                             <v>Simple|Standard</v>
                             <v>DynamicArray</v>
                             <v></v>
-                            <v>DisplayFrameReferencesConfiguration</v>
-                            <v></v>
+                            <v>conditionalshow</v>
+                            <v>visu_elemdev</v>
                             <v>FrameReferences</v>
                             <v></v>
-                            <v>Storable</v>
-                            <v>True</v>
                             <v>DisplayTextId</v>
                             <v>TL_ElementProperties.References</v>
+                            <v>Storable</v>
+                            <v>True</v>
                           </d>
                           <v n="ConvDone">true</v>
                         </o>
@@ -33055,10 +33055,10 @@
               <d n="FbMethods" t="CaseInsensitiveHashtable_1" ckt="String" cvt="Guid">
                 <v>FB_Init</v>
                 <v>5e1c85ec-a8f2-4693-8dc1-cab186333c0a</v>
-                <v>FB_Reinit</v>
-                <v>0d20abea-9b90-4c93-9151-4d5806628a77</v>
                 <v>FB_Exit</v>
                 <v>77daf1c1-1e7d-4cda-856a-b41add02c61d</v>
+                <v>FB_Reinit</v>
+                <v>0d20abea-9b90-4c93-9151-4d5806628a77</v>
               </d>
               <v n="FbName">"NotImportant"</v>
               <v n="FbGuid">{acf41e65-090f-4e92-8d31-63801081ce9c}</v>

@@ -407,7 +407,7 @@ iSendEvent :
 			arrTCMultiLevel[iLevel].stGblParam.bSecondary24VPowerOff						:= 
 			arrTCMultiLevel[iLevel].stGblParam.bDoorRecovery 								:= FALSE;	//  Door Recovery
 
-			arrTCMultiLevel[iLevel].stGblParam.iProcessState :=E_ProcessState.eAWAITGCMD;
+			arrTCMultiLevel[iLevel].stGblParam.iProcessState 								:= E_ProcessState.eAWAITGCMD;
 		END_IF
 	END_IF
 	

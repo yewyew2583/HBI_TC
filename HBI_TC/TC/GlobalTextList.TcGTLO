@@ -175,6 +175,11 @@
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
+              <v n="TextID">"3416"</v>
+              <v n="TextDefault">" : ipTCDrawerCylDown signal not detected"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
               <v n="TextID">"3147"</v>
               <v n="TextDefault">" : ipTCDrawerCylExtendRS Signal not detected"</v>
               <l n="LanguageTexts" t="ArrayList" />
@@ -197,6 +202,11 @@
             <o>
               <v n="TextID">"7"</v>
               <v n="TextDefault">" : ipTCDrawerCylRetractRSError"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"2361"</v>
+              <v n="TextDefault">" : ipTCDrawerCylUp signal not detected"</v>
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
@@ -2010,6 +2020,26 @@ Dew point – PCW temperature above critical control limit, condensation alarm
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
+              <v n="TextID">"6047"</v>
+              <v n="TextDefault">"ipFrontDoorClosed01"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"4595"</v>
+              <v n="TextDefault">"ipFrontDoorClosed02"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"3678"</v>
+              <v n="TextDefault">"ipFrontDoorLocked01"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"3016"</v>
+              <v n="TextDefault">"ipFrontDoorLocked02"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
               <v n="TextID">"502"</v>
               <v n="TextDefault">"ipSpare_1"</v>
               <l n="LanguageTexts" t="ArrayList" />
@@ -2062,6 +2092,11 @@ Dew point – PCW temperature above critical control limit, condensation alarm
             <o>
               <v n="TextID">"161"</v>
               <v n="TextDefault">"ipTCCellDoorClosed"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"1318"</v>
+              <v n="TextDefault">"ipTCCellDoorLocked"</v>
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
@@ -2620,6 +2655,11 @@ Dew point – PCW temperature above critical control limit, condensation alarm
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
+              <v n="TextID">"6059"</v>
+              <v n="TextDefault">"opDBStnAP30ACPwrEnable"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
               <v n="TextID">"689"</v>
               <v n="TextDefault">"opDBStnAPSafeToMoveSignal    "</v>
               <l n="LanguageTexts" t="ArrayList" />
@@ -2712,6 +2752,21 @@ Dew point – PCW temperature above critical control limit, condensation alarm
             <o>
               <v n="TextID">"1230"</v>
               <v n="TextDefault">"opDrawerMaintenanceModeBtnLED"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"1081"</v>
+              <v n="TextDefault">"opFrontDoorLock (DC)"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"1695"</v>
+              <v n="TextDefault">"opFrontDoorLock1 (DC)"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"4695"</v>
+              <v n="TextDefault">"opFrontDoorLock2 (DC)"</v>
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
@@ -3650,6 +3705,11 @@ Dew point – PCW temperature above critical control limit, condensation alarm
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
+              <v n="TextID">"2080"</v>
+              <v n="TextDefault">"[ 41]:"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
               <v n="TextID">"1751"</v>
               <v n="TextDefault">"[ 42 ]:"</v>
               <l n="LanguageTexts" t="ArrayList" />
@@ -3667,6 +3727,56 @@ Dew point – PCW temperature above critical control limit, condensation alarm
             <o>
               <v n="TextID">"1511"</v>
               <v n="TextDefault">"[ 45 ]:"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"2429"</v>
+              <v n="TextDefault">"[ 46 ]:"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"4935"</v>
+              <v n="TextDefault">"[ 47 ]:"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"5024"</v>
+              <v n="TextDefault">"[ 48 ]:"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"7540"</v>
+              <v n="TextDefault">"[ 49 ]:"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"5360"</v>
+              <v n="TextDefault">"[ 50 ]:"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"799"</v>
+              <v n="TextDefault">"[ 51 ]:"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"5358"</v>
+              <v n="TextDefault">"[ 52 ]:"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"5316"</v>
+              <v n="TextDefault">"[ 53 ]:"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"7608"</v>
+              <v n="TextDefault">"[ 54 ]:"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"6453"</v>
+              <v n="TextDefault">"[ 55 ]:"</v>
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>

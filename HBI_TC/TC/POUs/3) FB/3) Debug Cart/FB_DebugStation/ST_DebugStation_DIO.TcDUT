@@ -22,7 +22,7 @@ STRUCT
 	ipDBStnCellFluidLeakage2				AT %I* :BOOL; //debugcart3 new io
 	ipDBStnPurgeButton						AT %I* :BOOL; //debugcart3 new io
 	
-	opDBStnAP240ACPwrEnable					AT %Q* :BOOL;
+	opDBStnAP30ACPwrEnable					AT %Q* :BOOL;
 	opAP_DIO_1								AT %Q* :BOOL;
 	opAP_DIO_2								AT %Q* :BOOL;
 	opAP_DIO_3								AT %Q* :BOOL;

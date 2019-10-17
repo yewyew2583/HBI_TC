@@ -19,8 +19,8 @@ ipSpare_2 								AT %I*: BOOL; // Spare
 ipSpare_3 								AT %I*: BOOL; // Spare
 ipSpare_4 								AT %I*: BOOL; // Spare
 
-ipCellFluidLeakage1						AT %I*: BOOL; // Cell fluid leakage sensor 1, 0: No leak, 1: Leak
-ipCellFluidLeakage2						AT %I*: BOOL; // Cell fluid leakage sensor 2, 0: No leak, 1: Leak
+ipCellFluidLeakage1						AT %I*: BOOL; // Cell fluid leakage sensor 1, 1: normal, 0: leak
+ipCellFluidLeakage2						AT %I*: BOOL; // Cell fluid leakage sensor 2, 1: normal, 0: leak
 ipCellGroundFault						AT %I*: BOOL; // Cell ground fault sensor, 0: No fault, 1: Fault
 
 ipSpare_5 								AT %I*: BOOL; // Spare

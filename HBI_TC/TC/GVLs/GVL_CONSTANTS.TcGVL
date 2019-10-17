@@ -96,7 +96,9 @@
 	 	'TesterLatches_Not_Closed' 		,
 	 	'TIU_Not_Present' 				,
 	 	'TCDrawerCylExtendRS_Not_On' 	,
-	 	'TCDrawerCylRetractRS_Not_On'	     	
+	 	'TCDrawerCylRetractRS_Not_On'	,
+		'TCDrawerUpSignal_not_on'		,
+		'TCDrawerDownSignal_not_on'		    	
 	];
 	
 	EAPAlmText : ARRAY[1..NO_OF_LEVEL,1..NO_OF_EAP_ALARM] OF STRING :=
@@ -130,7 +132,7 @@
 	];
 															
 	NO_OF_COMMON_SENSOR 						: UINT	:= 3;
-	NO_OF_TII_SENSOR 							: UINT	:= 20;
+	NO_OF_TII_SENSOR 							: UINT	:= 30;
 	NO_OF_ALARM_TAG								: UINT 	:= 50;
 	NO_OF_DC_CELL_LEVEL							: UINT	:= 2;
 	NO_OF_LEVEL 								: UINT 	:= 6;

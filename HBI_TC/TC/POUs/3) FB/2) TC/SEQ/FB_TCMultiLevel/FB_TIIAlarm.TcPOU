@@ -35,6 +35,8 @@ VAR
 	bTest						: BOOL;
 	delayExtTimeOut				: FB_Delay;
 	delayRetTimeOut				: FB_Delay;
+	delayDrawerUpTimeOut		: FB_Delay;
+	delayDrawerDownTimeOut		: FB_Delay;
 	//iUnBlock:INT;
 	alarmReset					: BOOL;  //1: reset timer when alarm reset, 0: do not reset timer
 END_VAR
@@ -86,8 +88,11 @@ VAR
 	bChkTstOn 				: BOOL;
 	bAPOnCmd				: BOOL;
 	bChkAPOn 				: BOOL;
-	lRt						: BOOL; // Condition
-	lEt						: BOOL; // Condition
+	drawerExtendOutput		: BOOL; // Condition
+	drawerRetractOutput		: BOOL; // Condition
+	drawerUpOutput			: BOOL;
+	drawerDownOutput		: BOOL;
+	
 	
 	i						: INT;
 	j						: INT;
@@ -119,12 +124,24 @@ delay(
 delayExtTimeOut(                                    	
 	msec																:= TIME_TO_INT(tDwrCylExtRetTimeOut),
 	in																	:= vIO.opCellDrawerCylExtend,
-	out																	:= lEt);
+	out																	:= drawerExtendOutput);
 	                                                					
 delayRetTimeOut(                                    					
 	msec																:= TIME_TO_INT(tDwrCylExtRetTimeOut),
 	in																	:= vIO.opCellDrawerCylRetract,
-	out																	:= lRt);
+	out																	:= drawerRetractOutput);
+	
+
+delayDrawerUpTimeOut(
+	msec																:= TIME_TO_INT(tDwrCylUpDownTimeOut),
+	in																	:= vIO.opCellDrawerCylUp,
+	out																	:= drawerUpOutput);
+
+delayDrawerDownTimeOut(
+	msec																:= TIME_TO_INT(tDwrCylUpDownTimeOut),
+	in																	:= vIO.opCellDrawerCylDown,
+	out																	:= drawerDownOutput);
+	
 
 //lRt:= FALSE; //:=AP_Deactuated(if AP Down Can Retract)
 //lEt:= FALSE;
@@ -244,15 +261,25 @@ FOR i := 1 TO NoOfTIIAlm DO
 			ArrAlmBitBefDelay[E_TIIAlarm.TBotSideDoorLockSignalNotDetected]	:= bDebugCart AND ((NOT vIO.ipTCCellTbotSideDoorLocked01) OR (NOT vIO.ipTCCellTbotSideDoorLocked01)); //AND bENs[16]; 							
 			Arr_ms[e] 														:= 500;  (*TIIAlmText[e]:='ipTCCellTbotSideDoorLocked01' *);	
 					
-        (*E_TIIAlarm.ipTCDrawerExtendSignal: 
+        E_TIIAlarm.ipTCDrawerExtendSignal: 
 			e																:= E_TIIAlarm.ipTCDrawerExtendSignal; 
-			ArrAlmBitBefDelay[E_TIIAlarm.ipTCDrawerExtendSignal]			:= (NOT	vIO.ipTCDrawerCylExtendRS) AND vIO.opTesterDrawerAirSupplySol (*AND	vIO.opCellDrawerCylExtend*) AND (NOT bDebugCart) AND lEt AND bENs[15]; 
-			Arr_ms[e] 														:= 500;  (*TIIAlmText[e]:='TCDrawerCylExtendRS'*);*)
+			ArrAlmBitBefDelay[E_TIIAlarm.ipTCDrawerExtendSignal]			:= (NOT	vIO.ipTCDrawerCylExtendRS) AND (*vIO.opTesterDrawerAirSupplySol AND	vIO.opCellDrawerCylExtend AND*) (NOT bDebugCart) AND drawerExtendOutput AND bENs[15]; 
+			Arr_ms[e] 														:= 500;  (*TIIAlmText[e]:='TCDrawerCylExtendRS'*);
 			
-        (*E_TIIAlarm.ipTCDrawerRetractSignal: 
+        E_TIIAlarm.ipTCDrawerRetractSignal: 
 			e																:= E_TIIAlarm.ipTCDrawerRetractSignal; 
-			ArrAlmBitBefDelay[E_TIIAlarm.ipTCDrawerRetractSignal]			:= (NOT	vIO.ipTCDrawerCylRetractRS) AND vIO.opTesterDrawerAirSupplySol (*AND vIO.opCellDrawerCylRetract*) AND lRt AND bENs[16]; 
-			Arr_ms[e] 														:= 500;  (*TIIAlmText[e]:='TCDrawerCylRetractRS'*);		*)	
+			ArrAlmBitBefDelay[E_TIIAlarm.ipTCDrawerRetractSignal]			:= (NOT	vIO.ipTCDrawerCylRetractRS) AND (*vIO.opTesterDrawerAirSupplySol AND vIO.opCellDrawerCylRetract AND*) drawerRetractOutput AND bENs[16]; 
+			Arr_ms[e] 														:= 500;  (*TIIAlmText[e]:='TCDrawerCylRetractRS'*);	
+		
+		E_TIIAlarm.ipTCDrawerUpSignal:
+			e																:= E_TIIAlarm.ipTCDrawerUpSignal;
+			ArrAlmBitBefDelay[E_TIIAlarm.ipTCDrawerUpSignal]				:= (NOT	vIO.ipTCDrawerCylUpRS) AND drawerUpOutput AND bENs[16]; 
+			Arr_ms[e] 														:= 500;  (*TIIAlmText[e]:='TCDrawerCylupRS'*);	
+		
+		E_TIIAlarm.ipTCDrawerDownSignal:
+			e																:= E_TIIAlarm.ipTCDrawerUpSignal;
+			ArrAlmBitBefDelay[E_TIIAlarm.ipTCDrawerDownSignal]				:= (NOT	vIO.ipTCDrawerCylDownRS) AND drawerDownOutput AND bENs[16]; 
+			Arr_ms[e] 														:= 500;  (*TIIAlmText[e]:='TCDrawerCyldownRS'*);
 			
 	END_CASE
 
@@ -392,7 +419,12 @@ TIIAlarmLED															:=		ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipAPPowerOn
 																			ALMTC.Common.AlarmID[E_ColAlarm.ipColumnFluid_PCW_Leakage			]	OR
 																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.TBotSideDoorLockSignalNotDetected	]	OR
 																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.TBOT_TC_ACPower_Signal   	]  OR	
-																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.DS_Facility_EAP_ACPower_Signal]; 
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.DS_Facility_EAP_ACPower_Signal]	OR
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCDrawerExtendSignal		]	OR
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCDrawerRetractSignal		]	OR
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCDrawerUpSignal		]	OR
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCDrawerDownSignal		];
+																			
 																			
 TIIAlarmEPT															:= 		ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipAPPowerOn					]	OR
 																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipAPReady					]	OR
@@ -406,7 +438,11 @@ TIIAlarmEPT															:= 		ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipAPPowerO
 																			ALMTC.Common.AlarmID[E_ColAlarm.ipColumnFluid_PCW_Leakage			]	OR
 																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.TBotSideDoorLockSignalNotDetected	]	OR
 																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.TBOT_TC_ACPower_Signal   	]	OR
-																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.DS_Facility_EAP_ACPower_Signal]; 
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.DS_Facility_EAP_ACPower_Signal]	OR
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCDrawerExtendSignal		]	OR
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCDrawerRetractSignal		]	OR
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCDrawerUpSignal		]	OR
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCDrawerDownSignal		];
 																			
 
 (*
@@ -478,6 +514,14 @@ END_VAR
       <LineId Id="792" Count="3" />
       <LineId Id="337" Count="0" />
       <LineId Id="797" Count="2" />
+      <LineId Id="1388" Count="0" />
+      <LineId Id="1390" Count="0" />
+      <LineId Id="1389" Count="0" />
+      <LineId Id="1393" Count="1" />
+      <LineId Id="1392" Count="0" />
+      <LineId Id="1397" Count="3" />
+      <LineId Id="1396" Count="0" />
+      <LineId Id="1395" Count="0" />
       <LineId Id="796" Count="0" />
       <LineId Id="143" Count="0" />
       <LineId Id="335" Count="0" />
@@ -538,6 +582,9 @@ END_VAR
       <LineId Id="992" Count="0" />
       <LineId Id="1339" Count="8" />
       <LineId Id="1337" Count="0" />
+      <LineId Id="1375" Count="6" />
+      <LineId Id="1383" Count="1" />
+      <LineId Id="1382" Count="0" />
       <LineId Id="158" Count="0" />
       <LineId Id="162" Count="0" />
       <LineId Id="177" Count="2" />
@@ -646,11 +693,15 @@ END_VAR
       <LineId Id="1051" Count="0" />
       <LineId Id="1022" Count="0" />
       <LineId Id="1309" Count="0" />
+      <LineId Id="1402" Count="3" />
+      <LineId Id="1401" Count="0" />
       <LineId Id="1053" Count="1" />
       <LineId Id="1057" Count="7" />
       <LineId Id="1069" Count="1" />
       <LineId Id="1067" Count="0" />
       <LineId Id="1308" Count="0" />
+      <LineId Id="1407" Count="2" />
+      <LineId Id="1406" Count="0" />
       <LineId Id="1066" Count="0" />
       <LineId Id="1055" Count="0" />
       <LineId Id="205" Count="1" />

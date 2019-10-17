@@ -793,7 +793,6 @@ END_VAR
 									OR	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellFluidLeakage1 	   		] 	
 	                            	OR	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellFluidLeakage2 	   		] 	
 									OR	ALMTC.Common.AlarmID[E_ColAlarm.ipColumnFluid_PCW_Leakage			]
-									OR	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.TBOT_TC_ACPower_Signal		]
 									OR	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.TBotSideDoorLockSignalNotDetected	];
 										
 									
@@ -989,6 +988,7 @@ END_IF]]></ST>
       <Declaration><![CDATA[METHOD M_IsSanityCheckFailed : INT
 VAR_INPUT
 	stMultiLevelVIO	: ST_TCMultiLevel_VIO;
+	stColVIO		: ST_TCCOLUMN_VIO;
 END_VAR
 VAR_OUTPUT
 	sMsg:STRING;
@@ -1018,6 +1018,7 @@ END_IF*)
 		M_IsSanityCheckFailed									:=E_TIIAlarm.TBotSideDoorLockSignalNotDetected;//34;
 	END_IF
 END_IF*)
+
 //Check AP Up
 IF stMultiLevelVIO.ipAPPresentSensor THEN
 	IF (NOT stMultiLevelVIO.ipHandlerSafeToEnterHwr) OR (NOT stMultiLevelVIO.ipHandlerSafeToEnterPLC) THEN
@@ -1485,7 +1486,7 @@ CASE iStkSeqCase OF
 	E_SeqSts.eSanityCheck: //Sanity sheck for 
 		sMessage											:= 'Sanity Check ';
 		stColVIO											:= fbTCColumn.P_stTCColumnVIO;
-		_nErrorID											:= INT_TO_UDINT(M_IsSanityCheckFailed(stMultiLevelVIO:= stMLVIO, sMsg=> sMessage)) ;
+		_nErrorID											:= INT_TO_UDINT(M_IsSanityCheckFailed(stMultiLevelVIO:= stMLVIO, stColVIO:= stColVIO, sMsg=> sMessage)) ;
 		IF _nErrorID = 0 THEN
 			bStepDone										:= TRUE;
 		END_IF
@@ -1783,6 +1784,7 @@ E_SeqSts.eSanityCheck: //Sanity sheck
 	stColVIO														:= fbTCColumn.P_stTCColumnVIO;
 	_nErrorID														:= INT_TO_UDINT(M_IsSanityCheckFailed(
 																					stMultiLevelVIO:= stMLVIO, 
+																					stColVIO:= stColVIO,
 																					sMsg=> sMessage));
 	IF _nErrorID=0 THEN
 		bStepDone:=TRUE;
@@ -2588,7 +2590,6 @@ END_CASE]]></ST>
       <LineId Id="161" Count="0" />
       <LineId Id="102" Count="0" />
       <LineId Id="108" Count="0" />
-      <LineId Id="138" Count="0" />
       <LineId Id="98" Count="0" />
       <LineId Id="101" Count="0" />
       <LineId Id="100" Count="0" />
@@ -2688,7 +2689,8 @@ END_CASE]]></ST>
       <LineId Id="150" Count="1" />
       <LineId Id="158" Count="0" />
       <LineId Id="178" Count="0" />
-      <LineId Id="159" Count="0" />
+      <LineId Id="190" Count="0" />
+      <LineId Id="186" Count="0" />
       <LineId Id="23" Count="2" />
       <LineId Id="27" Count="0" />
       <LineId Id="162" Count="0" />
@@ -3114,6 +3116,7 @@ END_CASE]]></ST>
       <LineId Id="852" Count="0" />
       <LineId Id="878" Count="0" />
       <LineId Id="1114" Count="0" />
+      <LineId Id="1124" Count="0" />
       <LineId Id="1113" Count="0" />
       <LineId Id="892" Count="1" />
       <LineId Id="877" Count="0" />

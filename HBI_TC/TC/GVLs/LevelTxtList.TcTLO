@@ -43,9 +43,9 @@
             </o>
           </l>
           <l n="Languages" t="ArrayList" />
-          <v n="GuidInit">{9fdcfaa3-645d-426f-bb50-f6f0d8af463f}</v>
-          <v n="GuidReInit">{58df19a2-b994-49db-9739-0c6f6c80c1b4}</v>
-          <v n="GuidExitX">{48655ae6-f07b-40a7-a8a3-f2c6f7e39968}</v>
+          <v n="GuidInit">{df3bf00a-6fcd-484f-9e00-16f697f414b8}</v>
+          <v n="GuidReInit">{8b20c587-3549-43ac-9503-84aca74d5de9}</v>
+          <v n="GuidExitX">{4a188383-13dc-4e9b-8ec5-9d866e3378a8}</v>
         </o>
       </Data>
       <TypeList>

@@ -13187,7 +13187,7 @@
                     </o>
                     <o>
                       <v n="Id">390574330L</v>
-                      <v n="Value">"opDBStnAP240ACPwrEnable"</v>
+                      <v n="Value">"opDBStnAP30ACPwrEnable"</v>
                     </o>
                     <o>
                       <v n="Id">2597686782L</v>
@@ -13195,7 +13195,7 @@
                     </o>
                     <o>
                       <v n="Id">823443203L</v>
-                      <v n="Value">"1720"</v>
+                      <v n="Value">"6059"</v>
                     </o>
                   </l>
                 </o>
@@ -28814,8 +28814,8 @@
                 <v>6e2e6084-955d-47ce-a7fa-75d138aa4100</v>
                 <v>ContainsPoint</v>
                 <v>4d6d8051-496f-40e5-86a6-a293a357dd6c</v>
-                <v>SetStaticState</v>
-                <v>fe33c513-1c21-47e0-a4c1-2263d23bb5f0</v>
+                <v>HasInputAccess</v>
+                <v>a091b1c6-e755-4f7a-a4aa-61b6ce16d01d</v>
                 <v>HasInputAccessIntern</v>
                 <v>3b1d84dd-f31b-4a70-b1ce-f4ca5bae0340</v>
                 <v>GetTooltip</v>
@@ -28834,6 +28834,8 @@
                 <v>9a5b43eb-ae3e-4349-9971-d94027a135d4</v>
                 <v>SetClientData</v>
                 <v>54b5b5ad-0a58-49a2-bca7-dd8322b8f6d7</v>
+                <v>HasVisibilityAccessIntern</v>
+                <v>5893b687-06bf-4adb-a4ae-383aceee50b0</v>
                 <v>GetInstance</v>
                 <v>8cf6ed72-f33a-433e-8a94-4b8d304e468a</v>
                 <v>GetClientData</v>
@@ -28850,14 +28852,12 @@
                 <v>298e24d8-e169-4771-9e57-c59f90b77136</v>
                 <v>Initialize</v>
                 <v>4d29e9a1-dc94-498a-b40e-a3fa4c931ad4</v>
-                <v>HasInputAccess</v>
-                <v>a091b1c6-e755-4f7a-a4aa-61b6ce16d01d</v>
-                <v>HasVisibilityAccessIntern</v>
-                <v>5893b687-06bf-4adb-a4ae-383aceee50b0</v>
+                <v>Destruct</v>
+                <v>e7002945-26a3-47ef-b190-516bbf565d00</v>
+                <v>SetStaticState</v>
+                <v>fe33c513-1c21-47e0-a4c1-2263d23bb5f0</v>
                 <v>GetSurroundingRect</v>
                 <v>c8c5d957-7ddf-4425-9d44-18fee4f2efa4</v>
-                <v>ElementInfo</v>
-                <v>37aee8d4-676c-4989-90ad-b5f42589d17c</v>
                 <v>GetResult</v>
                 <v>94ff3dbf-9c0f-4246-abb3-e827be274d69</v>
                 <v>GetLocalUsergroup</v>
@@ -28880,8 +28880,8 @@
                 <v>4bc18a5e-ce51-4964-a8aa-0cccb491037e</v>
                 <v>HandleInput</v>
                 <v>06ba937a-3be5-4f44-ae40-8bc84f2d9c05</v>
-                <v>Destruct</v>
-                <v>e7002945-26a3-47ef-b190-516bbf565d00</v>
+                <v>ElementInfo</v>
+                <v>37aee8d4-676c-4989-90ad-b5f42589d17c</v>
               </d>
               <v n="FbName">"NotImportant"</v>
               <v n="FbGuid">{917bb58c-27c4-422a-8496-349c295d05aa}</v>
@@ -28894,10 +28894,10 @@
               <d n="FbMethods" t="CaseInsensitiveHashtable_1" ckt="String" cvt="Guid">
                 <v>FB_Init</v>
                 <v>23650379-64e3-45fe-bb31-7a485cd93d88</v>
-                <v>FB_Reinit</v>
-                <v>822413b7-0fe4-4308-be43-ee18879c90eb</v>
                 <v>FB_Exit</v>
                 <v>04753788-a44a-4973-abe3-c5431ce2018a</v>
+                <v>FB_Reinit</v>
+                <v>822413b7-0fe4-4308-be43-ee18879c90eb</v>
               </d>
               <v n="FbName">"NotImportant"</v>
               <v n="FbGuid">{118f9573-609d-4105-a502-5bc3e383aa83}</v>

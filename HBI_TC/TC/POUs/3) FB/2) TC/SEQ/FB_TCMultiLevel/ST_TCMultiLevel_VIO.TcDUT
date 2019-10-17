@@ -121,8 +121,8 @@ STRUCT
 	bEnableTstPwrSupOnInit					: BOOL;
     bEnableDwrAirSupOnInit					: BOOL;	//Set From En_Pwr()
 	
-    bDPSPowerOnOff							: BOOL;
-	bAP240ACPowerOnOff						: BOOL;
+    bDPSPowerOnOff							: BOOL	:= TRUE;
+	bAP240ACPowerOnOff						: BOOL	:= TRUE;
 	bSecondary24VPowerOnOff					: BOOL	:= TRUE;
 	eAPAirSupCmd							: E_Pwr; 
 	eTstAirSupCmd							: E_Pwr; 

@@ -221,6 +221,9 @@
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
+    <Compile Include="GVLs\LevelTxtList.TcTLO">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Image\ImageCollection.TcIPO">
       <SubType>Code</SubType>
     </Compile>
@@ -529,9 +532,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\3%29 FB\9%29 Unknown\FB_TCLevel\ST_TCLevel_VIO.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\3%29 FB\9%29 Unknown\LevelTxtList.TcTLO">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Visualization Manager.TcVMO">
