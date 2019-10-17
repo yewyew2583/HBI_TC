@@ -2315,6 +2315,11 @@ Dew point – PCW temperature above critical control limit, condensation alarm
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
+              <v n="TextID">"4489"</v>
+              <v n="TextDefault">"Manual Button Number"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
               <v n="TextID">"1985"</v>
               <v n="TextDefault">"Manual Command Simulation From PLC"</v>
               <l n="LanguageTexts" t="ArrayList" />
@@ -2327,6 +2332,11 @@ Dew point – PCW temperature above critical control limit, condensation alarm
             <o>
               <v n="TextID">"625"</v>
               <v n="TextDefault">"Manual Mode"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"1640"</v>
+              <v n="TextDefault">"Manual Solenoid Number"</v>
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>

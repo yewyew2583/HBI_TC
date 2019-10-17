@@ -26,12 +26,12 @@ VAR
 	DIFDAPPresent			: F_TRIG;
 	DIFUSet_bChkAP240On		: R_TRIG; 	//
 	
-	FB_opDBStnAP30ACPwrEnable					: DFB_Cylinder;
-	DUT_opDBStnAP30ACPwrEnable					: DUT_Cylinder;
-	Permissive_opDBStnAP30ACPwrEnable			: WORD;
-	Shutdown_opDBStnAP30ACPwrEnable			: WORD;
-	Reset_opDBStnAP30ACPwrEnable				: R_TRIG;
-	Precondition_opDBStnAP30ACPwrEnable		: BOOL;
+	FB_opDBStnAP240ACPwrEnable					: DFB_Cylinder;
+	DUT_opDBStnAP240ACPwrEnable					: DUT_Cylinder;
+	Permissive_opDBStnAP240ACPwrEnable			: WORD;
+	Shutdown_opDBStnAP240ACPwrEnable			: WORD;
+	Reset_opDBStnAP240ACPwrEnable				: R_TRIG;
+	Precondition_opDBStnAP240ACPwrEnable		: BOOL;
 	_Alarm										: BOOL;
 	
 	FB_opDBStn24VPowerEnable					: DFB_Cylinder;
@@ -80,7 +80,7 @@ VAR
 	//TiiInterlock
 	itl_opDBStn24VPowerEnable			: BOOL;
 	itl_opDBStnPCWValve					: BOOL;
-	itl_opDBStnAP30ACPwrEnable			: BOOL;
+	itl_opDBStnAP240ACPwrEnable			: BOOL;
 	itl_opDBStnBypassAPAirSupplySol		: BOOL;
 	itl_opDBStnAPSafeToEngage			: BOOL;
 END_VAR
@@ -243,35 +243,35 @@ ELSIF (NOT ALM_DCCOL.AlarmID[E_DCFACAlarm.eCriticalCondensationAlarm]) AND (NOT 
 	_Alarm		:= FALSE;
 END_IF
 
-Precondition_opDBStnAP30ACPwrEnable	:= (stDebugStationVIO.ipDBStnAPPresentSensor AND (NOT itl_opDBStnAP30ACPwrEnable) AND (NOT _Alarm))
+Precondition_opDBStnAP240ACPwrEnable	:= (stDebugStationVIO.ipDBStnAPPresentSensor AND (NOT itl_opDBStnAP240ACPwrEnable) AND (NOT _Alarm))
 											AND stDebugStationVIO.bAP240ACPowerOnOff;
 
-Reset_opDBStnAP30ACPwrEnable(CLK:= precondition_opDBStnAP30ACPwrEnable);
+Reset_opDBStnAP240ACPwrEnable(CLK:= precondition_opDBStnAP240ACPwrEnable);
 
-DUT_opDBStnAP30ACPwrEnable.AutInp		:= Precondition_opDBStnAP30ACPwrEnable;
-DUT_opDBStnAP30ACPwrEnable.Reset		:= Reset_opDBStnAP30ACPwrEnable.Q;
-DUT_opDBStnAP30ACPwrEnable.Travel_Time	:= 5;
+DUT_opDBStnAP240ACPwrEnable.AutInp		:= Precondition_opDBStnAP240ACPwrEnable;
+DUT_opDBStnAP240ACPwrEnable.Reset		:= Reset_opDBStnAP240ACPwrEnable.Q;
+DUT_opDBStnAP240ACPwrEnable.Travel_Time	:= 5;
 											
 											
-FB_opDBStnAP30ACPwrEnable(
+FB_opDBStnAP240ACPwrEnable(
 	Sec_P		:= Sec_P, 
 	ID		:= 'DebugCart AP240Power', 
-	Simulate		:= DUT_opDBStnAP30ACPwrEnable.Simulate, 
-	Permissive		:= Permissive_opDBStnAP30ACPwrEnable, 
-	ShutDown		:= Shutdown_opDBStnAP30ACPwrEnable, 
-	AutoInp		:= DUT_opDBStnAP30ACPwrEnable.AutInp, 
-	Command		:= DUT_opDBStnAP30ACPwrEnable.CMD, 
+	Simulate		:= DUT_opDBStnAP240ACPwrEnable.Simulate, 
+	Permissive		:= Permissive_opDBStnAP240ACPwrEnable, 
+	ShutDown		:= Shutdown_opDBStnAP240ACPwrEnable, 
+	AutoInp		:= DUT_opDBStnAP240ACPwrEnable.AutInp, 
+	Command		:= DUT_opDBStnAP240ACPwrEnable.CMD, 
 	IExtend		:= stDebugStationVIO.ipDBStnAPPowerOn, 
 	IRetract		:= (NOT stDebugStationVIO.ipDBStnAPPowerOn), 
-	Travel_Time		:= DUT_opDBStnAP30ACPwrEnable.Travel_Time, 
+	Travel_Time		:= DUT_opDBStnAP240ACPwrEnable.Travel_Time, 
 	SetOutput_Pulse		:= FALSE, 
 	FailedHoldLast		:= FALSE,
-	OExtend		=> stDebugStationVIO.opDBStnAP30ACPwrEnable, 
+	OExtend		=> stDebugStationVIO.opDBStnAP240ACPwrEnable, 
 	ORetract		=> , 
-	DUT		:= DUT_opDBStnAP30ACPwrEnable);
+	DUT		:= DUT_opDBStnAP240ACPwrEnable);
 //</APPowerOn>
 
-GVL_DUT_DC_AP240ACPower		:= DUT_opDBStnAP30ACPwrEnable;]]></ST>
+GVL_DUT_DC_AP240ACPower		:= DUT_opDBStnAP240ACPwrEnable;]]></ST>
       </Implementation>
     </Method>
     <Method Name="M_InputBackDoor" Id="{54fd951e-6cc1-4e59-88f8-e89efea4a997}">
@@ -348,7 +348,7 @@ itl_opDBStnPCWValve			:=		ALMTC.Level[1].ALarmID[E_TIIAlarm.ipCellFluidLeakage1	
 								OR	ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWSupplyLeakageAlarm	] 
 								OR 	ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWReturnLeakageAlarm	]	;
 								
-itl_opDBStnAP30ACPwrEnable		:=		ALMTC.Level[1].ALarmID[E_TIIAlarm.ipAPReady					]
+itl_opDBStnAP240ACPwrEnable		:=		ALMTC.Level[1].ALarmID[E_TIIAlarm.ipAPReady					]
 									OR	ALMTC.Level[1].AlarmID[E_TIIAlarm.ipAPPowerOn				]
 									OR 	ALMTC.Level[1].ALarmID[E_TIIAlarm.ipCellFluidLeakage1		] 
 	                            	OR	ALMTC.Level[1].ALarmID[E_TIIAlarm.ipCellFluidLeakage2		] 
@@ -410,7 +410,7 @@ IF NOT stDebugStationVIO.bDiagnosticMode	THEN
 	stDebugStationDIO.ipDBStnAPAirLeakFlowSensor 		:= 												stDebugStationVIO.ipDBStnAPAirLeakFlowSensor;
 	stDebugStationDIO.ipDBStnPCWLeakFlowSensor 			:= 												stDebugStationVIO.ipDBStnPCWLeakFlowSensor;
 	stDebugStationDIO.ipDBStnPCWLowFlowSensor 			:= 												stDebugStationVIO.ipDBStnPCWLowFlowSensor;
-	stDebugStationDIO.opDBStnAP30ACPwrEnable			:= NOT itl_opDBStnAP30ACPwrEnable		AND		stDebugStationVIO.opDBStnAP30ACPwrEnable;			
+	stDebugStationDIO.opDBStnAP240ACPwrEnable			:= NOT itl_opDBStnAP240ACPwrEnable		AND		stDebugStationVIO.opDBStnAP240ACPwrEnable;			
 	stDebugStationDIO.opAP_DIO_1						:= 												stDebugStationVIO.opAP_DIO_1;
 	stDebugStationDIO.opAP_DIO_2						:= 												stDebugStationVIO.opAP_DIO_2;
 	stDebugStationDIO.opAP_DIO_3						:= 												stDebugStationVIO.opAP_DIO_3;
@@ -498,7 +498,7 @@ END_VAR]]></Declaration>
 IF bPause THEN
 	RETURN;
 
-ELSIF itl_opDBStnAP30ACPwrEnable THEN  
+ELSIF itl_opDBStnAP240ACPwrEnable THEN  
 	M_nDPSPowerOnOff:=20;		
 	RETURN;
 END_IF
@@ -784,7 +784,7 @@ END_VAR
 	BOOL_13		:= TRUE, 
 	BOOL_14		:= TRUE, 
 	BOOL_15		:= TRUE, 
-	Output_Word		=> Permissive_opDBStnAP30ACPwrEnable);
+	Output_Word		=> Permissive_opDBStnAP240ACPwrEnable);
 	
 FC_BitToWord(
 	BOOL_00		:= FALSE, 
@@ -803,7 +803,7 @@ FC_BitToWord(
 	BOOL_13		:= FALSE, 
 	BOOL_14		:= FALSE, 
 	BOOL_15		:= FALSE, 
-	Output_Word		=> Shutdown_opDBStnAP30ACPwrEnable);]]></ST>
+	Output_Word		=> Shutdown_opDBStnAP240ACPwrEnable);]]></ST>
       </Implementation>
     </Action>
     <LineIds Name="FB_DebugStationSeq">

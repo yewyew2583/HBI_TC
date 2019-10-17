@@ -5552,7 +5552,7 @@
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.opDBStnAP30ACPwrEnable</Name>
+							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.opDBStnAP240ACPwrEnable</Name>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
@@ -5721,7 +5721,7 @@
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_TC.fbDebugColumn.stDebugStationDIO.opDBStnAP30ACPwrEnable</Name>
+							<Name>GVL_TC.fbDebugColumn.stDebugStationDIO.opDBStnAP240ACPwrEnable</Name>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>

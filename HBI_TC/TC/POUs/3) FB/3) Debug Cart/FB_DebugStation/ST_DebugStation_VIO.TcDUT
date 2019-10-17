@@ -25,7 +25,7 @@ STRUCT
 	ipDBStnCellFluidLeakage2			: BOOL; //debugcart3 new io
 	ipDBStnPurgeButton					: BOOL; //debugcart3 new io
 	                                
-	opDBStnAP30ACPwrEnable				: BOOL;
+	opDBStnAP240ACPwrEnable				: BOOL;
 	opAP_DIO_1							: BOOL;
 	opAP_DIO_2							: BOOL;
 	opAP_DIO_3							: BOOL;
@@ -58,7 +58,7 @@ STRUCT
 //</CIO>
 
 //<CtrlIO>
-	bAP240ACPowerOnOff					: BOOL;
+	bAP240ACPowerOnOff					: BOOL	:= TRUE;
 	bChkAP240On							: BOOL;
 	bSecondary24VPowerOnOff				: BOOL	:= TRUE;
 	bTstDelInt							: BOOL;
