@@ -793,7 +793,8 @@ END_VAR
 									OR	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellFluidLeakage1 	   		] 	
 	                            	OR	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellFluidLeakage2 	   		] 	
 									OR	ALMTC.Common.AlarmID[E_ColAlarm.ipColumnFluid_PCW_Leakage			]
-									OR	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.TBotSideDoorLockSignalNotDetected	];
+									OR	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.TBotSideDoorLockSignalNotDetected	]
+									OR	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.TBOT_TC_ACPower_Signal		];
 										
 									
 //</TII_Interlock_Bit>
@@ -2591,6 +2592,7 @@ END_CASE]]></ST>
       <LineId Id="102" Count="0" />
       <LineId Id="108" Count="0" />
       <LineId Id="98" Count="0" />
+      <LineId Id="166" Count="0" />
       <LineId Id="101" Count="0" />
       <LineId Id="100" Count="0" />
       <LineId Id="68" Count="0" />
