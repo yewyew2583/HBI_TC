@@ -2819,6 +2819,11 @@ ELSE
 						sStatus													:= 'Tester power is not ON';
 						iSendEvent 												:= 2;
 						JMP iSendEvent;
+					ELSIF (NOT stMLVIO.ipAPPresentSensor) THEN
+						bErr													:= TRUE;
+						sStatus													:= 'AP is not present';
+						iSendEvent 												:= 2;
+						JMP iSendEvent;
 					ELSE
 						arrTCMultiLevel[iLevel].stGblParam.bAP240ACPowerOn 		:= TRUE;
 					END_IF
@@ -3103,16 +3108,16 @@ ELSE
 			END_IF
 		E_TaskName.Secondary24VPower:
 			IF bDebugStation THEN
-				IF arrRCMD[n].iParam[1] = 0 THEN
+				IF arrRCMD[n].bParam[1] = 0 THEN
 					stDebugStation.stGblDBStnParam.bSecondary24VPowerOff 				:= TRUE;
-				ELSIF arrRCMD[n].iParam[1] = 1 THEN
+				ELSIF arrRCMD[n].bParam[1] = 1 THEN
 					stDebugStation.stGblDBStnParam.bSecondary24VPowerON 				:= TRUE;
 				END_IF
 				
 			ELSE
-				IF arrRCMD[n].iParam[1] = 0 THEN
+				IF arrRCMD[n].bParam[1] = 0 THEN
 					arrTCMultiLevel[iLevel].stGblParam.bSecondary24VPowerOff			:= TRUE;
-				ELSIF arrRCMD[n].iParam[1] = 1 THEN
+				ELSIF arrRCMD[n].bParam[1] = 1 THEN
 					arrTCMultiLevel[iLevel].stGblParam.bSecondary24VPowerOn				:= TRUE;
 				END_IF
 			END_IF
@@ -4843,6 +4848,9 @@ arrRCMD[n]										:= CmdEmpty;]]></ST>
       <LineId Id="4342" Count="0" />
       <LineId Id="4344" Count="0" />
       <LineId Id="4336" Count="0" />
+      <LineId Id="4959" Count="0" />
+      <LineId Id="4961" Count="2" />
+      <LineId Id="4960" Count="0" />
       <LineId Id="3313" Count="0" />
       <LineId Id="4345" Count="0" />
       <LineId Id="3316" Count="4" />
@@ -4951,7 +4959,7 @@ arrRCMD[n]										:= CmdEmpty;]]></ST>
       <LineId Id="4163" Count="1" />
       <LineId Id="3529" Count="0" />
       <LineId Id="3533" Count="0" />
-      <LineId Id="4799" Count="0" />
+      <LineId Id="4965" Count="0" />
       <LineId Id="4801" Count="0" />
       <LineId Id="4807" Count="0" />
       <LineId Id="4805" Count="0" />
