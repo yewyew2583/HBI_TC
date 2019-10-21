@@ -250,7 +250,7 @@ Reset_opDBStnAP240ACPwrEnable(CLK:= precondition_opDBStnAP240ACPwrEnable);
 
 DUT_opDBStnAP240ACPwrEnable.AutInp		:= Precondition_opDBStnAP240ACPwrEnable;
 DUT_opDBStnAP240ACPwrEnable.Reset		:= Reset_opDBStnAP240ACPwrEnable.Q;
-DUT_opDBStnAP240ACPwrEnable.Travel_Time	:= 5;
+DUT_opDBStnAP240ACPwrEnable.Travel_Time	:= 2;
 											
 											
 FB_opDBStnAP240ACPwrEnable(
@@ -367,11 +367,12 @@ itl_opDBStnBypassAPAirSupplySol	:=		ALMTC.Level[1].ALarmID[E_TIIAlarm.ipCellFlui
 									
 itl_opDBStnAPSafeToEngage		:=	 	ALMTC.Level[1].AlarmID[E_TIIAlarm.ipCellGroundFault 	   		] 
 									OR	ALMTC.Level[1].AlarmID[E_TIIAlarm.ipCellFluidLeakage1 	   		] 	
-	                            	OR	ALMTC.Level[1].AlarmID[E_TIIAlarm.ipCellFluidLeakage2 	   		] 
+	                            	OR	ALMTC.Level[1].AlarmID[E_TIIAlarm.ipCellFluidLeakage2 	   		]
+									OR	ALM_DCCOL.AlarmID[E_DCFACAlarm.eCriticalCondensationAlarm		]	
+									OR	ALM_DCCOL.AlarmID[E_DCFACAlarm.e6BarLowOFAAirPressureAlarm		]	
 									OR	ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWLeakageAlarm			]	
 									OR	ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWSupplyLeakageAlarm		] 
-									OR 	ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWReturnLeakageAlarm		]	;
-									
+									OR 	ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWReturnLeakageAlarm		]	;			
 ]]></ST>
       </Implementation>
     </Method>
@@ -888,9 +889,10 @@ FC_BitToWord(
       <LineId Id="28" Count="0" />
       <LineId Id="30" Count="1" />
       <LineId Id="29" Count="0" />
+      <LineId Id="52" Count="1" />
       <LineId Id="42" Count="1" />
       <LineId Id="41" Count="0" />
-      <LineId Id="44" Count="1" />
+      <LineId Id="45" Count="0" />
     </LineIds>
     <LineIds Name="FB_DebugStationSeq.M_IOMapping">
       <LineId Id="1516" Count="0" />

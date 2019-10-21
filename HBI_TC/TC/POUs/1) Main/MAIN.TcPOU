@@ -30,6 +30,7 @@ VAR
 	_TIIAlarmEPT					: ARRAY[1..NO_OF_LEVEL] OF BOOL;
 	bAlarmBlock						: ARRAY[1..NO_OF_LEVEL] OF BOOL;
 	
+	DbStnTIIAlarmLED				: BOOL;
 	
 	_iSubModToRset					: INT;	//Get From TA Command
 	_iAlmIDToRset					: INT;	//Get From TA Command
@@ -112,7 +113,14 @@ ELSE
 			vIO																:= stDbStnVIO, 
 			NoOfTIIAlm														:= NO_OF_TII_SENSOR, 
 			iLevel															:= 1, (*stAlmMod:= ALMTC,*) 
-			isTIIError														=> isDbStnTIIAlarm);
+			isTIIError														=> isDbStnTIIAlarm,
+			TIIAlarmLED														=> DbStnTIIAlarmLED
+		);
+		
+		IF stDbStnVIO.TIIAlarmLED <> DbStnTIIAlarmLED THEN
+			stDbStnVIO.TIIAlarmLED											:= DbStnTIIAlarmLED;
+			stDebugStation.fbDBStnSeq.P_stVIO								:= stDbStnVIO;
+		END_IF
 		
 		DbStnDIFU(CLK:=isDbStnTIIAlarm);
 		IF DbStnDIFU.Q THEN 
@@ -318,6 +326,10 @@ fb_Testing();
       <LineId Id="3146" Count="0" />
       <LineId Id="2114" Count="0" />
       <LineId Id="2683" Count="3" />
+      <LineId Id="3535" Count="1" />
+      <LineId Id="3538" Count="0" />
+      <LineId Id="3548" Count="2" />
+      <LineId Id="3539" Count="0" />
       <LineId Id="1689" Count="0" />
       <LineId Id="1691" Count="3" />
       <LineId Id="1696" Count="1" />

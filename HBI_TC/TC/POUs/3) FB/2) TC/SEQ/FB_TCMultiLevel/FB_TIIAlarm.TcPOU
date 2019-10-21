@@ -166,9 +166,9 @@ IF bDebugCart THEN
 	END_IF
 	
 	//auto clear alarm if door is locked
-	IF ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.TBotSideDoorLockSignalNotDetected] THEN
+	IF ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.FrontDoorLockSignalNotDetected] THEN
 		IF VIO.ipTCCellTbotSideDoorLocked01 AND VIO.ipTCCellTbotSideDoorLocked02 THEN
-			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.TBotSideDoorLockSignalNotDetected]		:= FALSE;
+			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.FrontDoorLockSignalNotDetected]		:= FALSE;
 		END_IF
 	END_IF
 END_IF
@@ -226,10 +226,10 @@ FOR i := 1 TO NoOfTIIAlm DO
 			ArrAlmBitBefDelay[E_TIIAlarm.ipTesterPowerOn]				:= (NOT	vIO.ipTesterPowerOn) AND vIO.ipTesterPresent AND bChkTstOn AND bENs[10]; 			
 			Arr_ms[e] 													:= 500;  (*TIIAlmText[e]:='TesterPowerOn'*);
     
-        E_TIIAlarm.ipTesterReady: 
+        (*E_TIIAlarm.ipTesterReady: 
 			e															:= E_TIIAlarm.ipTesterReady; 
 			ArrAlmBitBefDelay[E_TIIAlarm.ipTesterReady]					:= (NOT	vIO.ipTesterReady) AND vIO.ipTesterPresent AND bENs[11]; 	
-			Arr_ms[e] 													:= 500;  (*TIIAlmText[e]:='TesterReady'*);
+			Arr_ms[e] 													:= 500;  (*TIIAlmText[e]:='TesterReady'*);*)
 			   
        	E_TIIAlarm.ipTCCellDoorClosed: 
 			e															:= E_TIIAlarm.ipTCCellDoorClosed; 
@@ -256,9 +256,9 @@ FOR i := 1 TO NoOfTIIAlm DO
 			ArrAlmBitBefDelay[E_TIIAlarm.DS_Facility_EAP_ACPower_Signal]	:= bDebugCart AND DS_Facility_eapShutOffAllACPower AND bENs[15]; 							
 			Arr_ms[e] 														:= 500;  (*TIIAlmText[e]:='DS_Facility_EAP_ACPower_Signal' *);
 			
-      	E_TIIAlarm.TBotSideDoorLockSignalNotDetected: 
-			e																:= E_TIIAlarm.TBotSideDoorLockSignalNotDetected; 
-			ArrAlmBitBefDelay[E_TIIAlarm.TBotSideDoorLockSignalNotDetected]	:= bDebugCart AND ((NOT vIO.ipTCCellTbotSideDoorLocked01) OR (NOT vIO.ipTCCellTbotSideDoorLocked01)); //AND bENs[16]; 							
+      	E_TIIAlarm.FrontDoorLockSignalNotDetected: 
+			e																:= E_TIIAlarm.FrontDoorLockSignalNotDetected; 
+			ArrAlmBitBefDelay[E_TIIAlarm.FrontDoorLockSignalNotDetected]	:= bDebugCart AND ((NOT vIO.ipTCCellTbotSideDoorLocked01) OR (NOT vIO.ipTCCellTbotSideDoorLocked02)); //AND bENs[16]; 							
 			Arr_ms[e] 														:= 500;  (*TIIAlmText[e]:='ipTCCellTbotSideDoorLocked01' *);	
 					
         E_TIIAlarm.ipTCDrawerExtendSignal: 
@@ -417,7 +417,7 @@ TIIAlarmLED															:=		ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipAPPowerOn
 																			ALMTC.Level[iLevel].ALarmID[E_AlarmID.DrawerRetractError			]	OR
 																			ALMTC.Level[iLevel].ALarmID[E_AlarmID.APIsNotInUPPosition			]	OR
 																			ALMTC.Common.AlarmID[E_ColAlarm.ipColumnFluid_PCW_Leakage			]	OR
-																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.TBotSideDoorLockSignalNotDetected	]	OR
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.FrontDoorLockSignalNotDetected	]	OR
 																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.TBOT_TC_ACPower_Signal   	]  OR	
 																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.DS_Facility_EAP_ACPower_Signal]	OR
 																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCDrawerExtendSignal		]	OR
@@ -436,7 +436,7 @@ TIIAlarmEPT															:= 		ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipAPPowerO
 																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellFluidLeakage1			]	OR
 																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellFluidLeakage2			]	OR
 																			ALMTC.Common.AlarmID[E_ColAlarm.ipColumnFluid_PCW_Leakage			]	OR
-																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.TBotSideDoorLockSignalNotDetected	]	OR
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.FrontDoorLockSignalNotDetected	]	OR
 																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.TBOT_TC_ACPower_Signal   	]	OR
 																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.DS_Facility_EAP_ACPower_Signal]	OR
 																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCDrawerExtendSignal		]	OR

@@ -39,22 +39,22 @@ IF iLevel>0 THEN
 	
 	//Level
 	//Alarm[1..20]
-	F_AlarmLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','APPresentSensor'), 					bNew:=newAlm.Level[iLevel].AlarmID[E_TIIAlarm.ipAPPresentSensor], 					bOld:=oldAlm.Level[iLevel].AlarmID[E_TIIAlarm.ipAPPresentSensor]);
+	//F_AlarmLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','APPresentSensor'), 					bNew:=newAlm.Level[iLevel].AlarmID[E_TIIAlarm.ipAPPresentSensor], 					bOld:=oldAlm.Level[iLevel].AlarmID[E_TIIAlarm.ipAPPresentSensor]);
 	F_AlarmLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','APPowerOn'), 							bNew:=newAlm.Level[iLevel].AlarmID[E_TIIAlarm.ipAPPowerOn], 						bOld:=oldAlm.Level[iLevel].AlarmID[E_TIIAlarm.ipAPPowerOn]);
 	F_AlarmLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','APReady'), 							bNew:=newAlm.Level[iLevel].AlarmID[E_TIIAlarm.ipAPReady], 							bOld:=oldAlm.Level[iLevel].AlarmID[E_TIIAlarm.ipAPReady]);
-	F_AlarmLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','APDeactuatedPLC'), 					bNew:=newAlm.Level[iLevel].AlarmID[E_TIIAlarm.ipAPDeactuatedPLC], 					bOld:=oldAlm.Level[iLevel].AlarmID[E_TIIAlarm.ipAPDeactuatedPLC]);
-	F_AlarmLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','APDeactuatedHwr'), 					bNew:=newAlm.Level[iLevel].AlarmID[E_TIIAlarm.ipAPDeactuatedHwr], 					bOld:=oldAlm.Level[iLevel].AlarmID[E_TIIAlarm.ipAPDeactuatedHwr]);
+	//F_AlarmLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','APDeactuatedPLC'), 					bNew:=newAlm.Level[iLevel].AlarmID[E_TIIAlarm.ipAPDeactuatedPLC], 					bOld:=oldAlm.Level[iLevel].AlarmID[E_TIIAlarm.ipAPDeactuatedPLC]);
+	//F_AlarmLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','APDeactuatedHwr'), 					bNew:=newAlm.Level[iLevel].AlarmID[E_TIIAlarm.ipAPDeactuatedHwr], 					bOld:=oldAlm.Level[iLevel].AlarmID[E_TIIAlarm.ipAPDeactuatedHwr]);
 	F_AlarmLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','CellFluidLeakage1'), 					bNew:=newAlm.Level[iLevel].AlarmID[E_TIIAlarm.ipCellFluidLeakage1], 				bOld:=oldAlm.Level[iLevel].AlarmID[E_TIIAlarm.ipCellFluidLeakage1]);
 	F_AlarmLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','CellFluidLeakage2'), 					bNew:=newAlm.Level[iLevel].AlarmID[E_TIIAlarm.ipCellFluidLeakage2], 				bOld:=oldAlm.Level[iLevel].AlarmID[E_TIIAlarm.ipCellFluidLeakage2]);
 	F_AlarmLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','CellGroundFault'), 					bNew:=newAlm.Level[iLevel].AlarmID[E_TIIAlarm.ipCellGroundFault], 					bOld:=oldAlm.Level[iLevel].AlarmID[E_TIIAlarm.ipCellGroundFault]);
-	F_AlarmLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','TesterPresent'), 						bNew:=newAlm.Level[iLevel].AlarmID[E_TIIAlarm.ipTesterPresent], 					bOld:=oldAlm.Level[iLevel].AlarmID[E_TIIAlarm.ipTesterPresent]);
+	//F_AlarmLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','TesterPresent'), 						bNew:=newAlm.Level[iLevel].AlarmID[E_TIIAlarm.ipTesterPresent], 					bOld:=oldAlm.Level[iLevel].AlarmID[E_TIIAlarm.ipTesterPresent]);
 	F_AlarmLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','TesterPowerOn'), 						bNew:=newAlm.Level[iLevel].AlarmID[E_TIIAlarm.ipTesterPowerOn], 					bOld:=oldAlm.Level[iLevel].AlarmID[E_TIIAlarm.ipTesterPowerOn]);
-	F_AlarmLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','TesterReady'), 						bNew:=newAlm.Level[iLevel].AlarmID[E_TIIAlarm.ipTesterReady], 						bOld:=oldAlm.Level[iLevel].AlarmID[E_TIIAlarm.ipTesterReady]);
+	//F_AlarmLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','TesterReady'), 						bNew:=newAlm.Level[iLevel].AlarmID[E_TIIAlarm.ipTesterReady], 						bOld:=oldAlm.Level[iLevel].AlarmID[E_TIIAlarm.ipTesterReady]);
 	F_AlarmLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','TCCellDoorClosed'), 					bNew:=newAlm.Level[iLevel].AlarmID[E_TIIAlarm.ipTCCellDoorClosed], 					bOld:=oldAlm.Level[iLevel].AlarmID[E_TIIAlarm.ipTCCellDoorClosed]);
 	F_AlarmLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','TesterLatchesClosed'), 				bNew:=newAlm.Level[iLevel].AlarmID[E_TIIAlarm.ipTesterLatchesClosed], 				bOld:=oldAlm.Level[iLevel].AlarmID[E_TIIAlarm.ipTesterLatchesClosed]);
 	F_AlarmLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','TBOTTCEAPACPowerOFF'), 				bNew:=newAlm.Level[iLevel].AlarmID[E_TIIAlarm.TBOT_TC_ACPower_Signal], 				bOld:=oldAlm.Level[iLevel].AlarmID[E_TIIAlarm.TBOT_TC_ACPower_Signal]);
 	F_AlarmLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','DSFacilityEAPACPowerOFF'), 			bNew:=newAlm.Level[iLevel].AlarmID[E_TIIAlarm.DS_Facility_EAP_ACPower_Signal], 		bOld:=oldAlm.Level[iLevel].AlarmID[E_TIIAlarm.DS_Facility_EAP_ACPower_Signal]);
-	F_AlarmLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','FrontSideDoorLocked'), 				bNew:=newAlm.Level[iLevel].AlarmID[E_TIIAlarm.TBotSideDoorLockSignalNotDetected], 	bOld:=oldAlm.Level[iLevel].AlarmID[E_TIIAlarm.TBotSideDoorLockSignalNotDetected]);
+	F_AlarmLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','FrontSideDoorLocked'), 				bNew:=newAlm.Level[iLevel].AlarmID[E_TIIAlarm.FrontDoorLockSignalNotDetected], 	bOld:=oldAlm.Level[iLevel].AlarmID[E_TIIAlarm.FrontDoorLockSignalNotDetected]);
 	
 	//Alarm[21-100]
 	F_AlarmLog(iLevel:=iLevel,sName:=F_Concat3(lStr,'.','DrawerExtendError'), 					bNew:=newAlm.Level[iLevel].AlarmID[E_AlarmID.DrawerExtendError], 					bOld:=oldAlm.Level[iLevel].AlarmID[E_AlarmID.DrawerExtendError]);

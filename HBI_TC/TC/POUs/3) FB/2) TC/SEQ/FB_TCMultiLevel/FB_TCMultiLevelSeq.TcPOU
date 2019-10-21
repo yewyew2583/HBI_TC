@@ -381,7 +381,7 @@ TC_AP240ACPower_Reset(CLK:= TC_AP240ACPower_Precondition);
 
 DUT_TC_AP240ACPower.AutInp		:= TC_AP240ACPower_Precondition;
 DUT_TC_AP240ACPower.Reset		:= TC_AP240ACPower_Reset.Q;
-DUT_TC_AP240ACPower.Travel_Time	:= 5;
+DUT_TC_AP240ACPower.Travel_Time	:= 2;
 
 
 FB_TC_AP240ACPower(
@@ -793,7 +793,8 @@ END_VAR
 									OR	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellFluidLeakage1 	   		] 	
 	                            	OR	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellFluidLeakage2 	   		] 	
 									OR	ALMTC.Common.AlarmID[E_ColAlarm.ipColumnFluid_PCW_Leakage			]
-									OR	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.TBotSideDoorLockSignalNotDetected	]
+									OR	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.FrontDoorLockSignalNotDetected	]
+									OR	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.DS_Facility_EAP_ACPower_Signal	]
 									OR	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.TBOT_TC_ACPower_Signal		];
 										
 									
@@ -2592,6 +2593,7 @@ END_CASE]]></ST>
       <LineId Id="102" Count="0" />
       <LineId Id="108" Count="0" />
       <LineId Id="98" Count="0" />
+      <LineId Id="171" Count="0" />
       <LineId Id="166" Count="0" />
       <LineId Id="101" Count="0" />
       <LineId Id="100" Count="0" />

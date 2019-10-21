@@ -20,7 +20,7 @@ TYPE E_TIIAlarm :
 	ipTesterLatchesClosed	    		,		//:=13
 	TBOT_TC_ACPower_Signal      		,		//:=14
 	DS_Facility_EAP_ACPower_Signal		,		//:=15
-	TBotSideDoorLockSignalNotDetected	,		//:=16
+	FrontDoorLockSignalNotDetected		,		//:=16
 	ipTCDrawerExtendSignal				,		//:=17
 	ipTCDrawerRetractSignal				,		//:=18
 	ipTCDrawerUpSignal					,		//:=19
