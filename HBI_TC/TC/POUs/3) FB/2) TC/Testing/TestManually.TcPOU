@@ -113,7 +113,7 @@ END_CASE
 
 
 IF bInitialiseAll THEN
-	FOR i:=1 TO CycleTest.iNoOfLevel DO
+	FOR i:=1 TO NO_OF_LEVEL DO
 		arrTACommands.arrTACommands[i].sLogName := CONCAT(CONCAT('Initialise Level[',INT_TO_STRING(i)),']');
 		arrTACommands.arrTACommands[i].eTaskName := E_TaskName.Initialize;
 		arrTACommands.arrTACommands[i].eModuleID := LevelModuleID[i];

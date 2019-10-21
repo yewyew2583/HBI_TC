@@ -460,6 +460,11 @@
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
+              <v n="TextID">"5400"</v>
+              <v n="TextDefault">"%D"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
               <v n="TextID">"311"</v>
               <v n="TextDefault">"%f"</v>
               <l n="LanguageTexts" t="ArrayList" />
@@ -1730,6 +1735,11 @@ Dew point – PCW temperature above critical control limit, condensation alarm
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
+              <v n="TextID">"2517"</v>
+              <v n="TextDefault">"EPT : "</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
               <v n="TextID">"314"</v>
               <v n="TextDefault">"Error Code"</v>
               <l n="LanguageTexts" t="ArrayList" />
@@ -2220,8 +2230,43 @@ Dew point – PCW temperature above critical control limit, condensation alarm
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
+              <v n="TextID">"2252"</v>
+              <v n="TextDefault">"Level 1  : "</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"5610"</v>
+              <v n="TextDefault">"Level 1 : "</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
               <v n="TextID">"865"</v>
               <v n="TextDefault">"Level 1 IO Diagnostic Mode"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"5436"</v>
+              <v n="TextDefault">"Level 2 : "</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"374"</v>
+              <v n="TextDefault">"Level 3 : "</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"6242"</v>
+              <v n="TextDefault">"Level 4 : "</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"7414"</v>
+              <v n="TextDefault">"Level 5 : "</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"6758"</v>
+              <v n="TextDefault">"Level 6 : "</v>
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>

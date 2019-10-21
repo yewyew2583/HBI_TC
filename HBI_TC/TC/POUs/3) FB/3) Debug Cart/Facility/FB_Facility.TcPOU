@@ -27,7 +27,7 @@ END_VAR
 fb_AIN_InletTemp(
 	AIN_ID		:= 'Inlet Temperature', 
 	Simulate		:= _DUT_AIN_InletTemp.Simulate, 
-	RAW		:= GVL_TC.fbDebugColumn.stDebugColumnDIO.ipAnlgDBColumnTempSensor, 
+	RAW		:= GVL_TC.fbDebugColumn.stDebugColumnDIO.ipAnlgDBColumnPCWSupplyTemperature, 
 	Hi_RAW		:= 16384, 
 	Lo_RAW		:= 3276, 
 	Hi_PV		:= 60, 
