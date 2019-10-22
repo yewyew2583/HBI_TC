@@ -1398,9 +1398,9 @@ END_VAR]]></Declaration>
 IF (bPause) THEN
 	RETURN;
 ELSIF
-	stMLVIO.bAlarmBlock OR
+	(stMLVIO.bAlarmBlock OR
 	stMLVIO.iSysUnBlockAlm = 2 OR 
-	stMLVIO.iSysUnBlockAlm = 10
+	stMLVIO.iSysUnBlockAlm = 10)
 THEN
 	M_nShuttleMoveInOut:=20;		//return fail event
 	RETURN;
