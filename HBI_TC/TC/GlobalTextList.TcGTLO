@@ -2990,6 +2990,16 @@ Dew point – PCW temperature above critical control limit, condensation alarm
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
+              <v n="TextID">"4112"</v>
+              <v n="TextDefault">"Process State"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"4472"</v>
+              <v n="TextDefault">"Process States"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
               <v n="TextID">"3611"</v>
               <v n="TextDefault">"PV"</v>
               <l n="LanguageTexts" t="ArrayList" />
