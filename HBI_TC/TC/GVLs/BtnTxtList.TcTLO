@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <TextList Name="BtnTxtList" Id="{e47ce87d-c264-4eb7-9235-4ffdbc3c5bcc}">
     <XmlArchive>
       <Data>
@@ -7,18 +7,28 @@
           <v n="UniqueIdGenerator">"0"</v>
           <l n="TextList" t="ArrayList" cet="TextListRow">
             <o>
-              <v n="TextID">"0"</v>
-              <v n="TextDefault">"MaintenanceButton"</v>
-              <l n="LanguageTexts" t="ArrayList" />
-            </o>
-            <o>
               <v n="TextID">"1"</v>
-              <v n="TextDefault">"AbortFlowButton"</v>
+              <v n="TextDefault">"1. MaintenanceButton"</v>
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
               <v n="TextID">"2"</v>
-              <v n="TextDefault">"DoorUnlockButton"</v>
+              <v n="TextDefault">"2. AbortFlowButton"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"3"</v>
+              <v n="TextDefault">"3. DoorUnlockButton"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"4"</v>
+              <v n="TextDefault">"emtpy"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"5"</v>
+              <v n="TextDefault">"5. PurgeFlowbutton"</v>
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>

@@ -48,7 +48,7 @@ VAR
 	TestInteger			: ARRAY[1..10] OF DINT;
 	TestString 			: STRING;
 	TestBool 			: BOOL;
-	iBtnNo				: INT		:= 5;
+	iBtnNo				: INT		:= 1;
 	i					: INT;
 	
 	bInitialiseAll 		: BOOL;

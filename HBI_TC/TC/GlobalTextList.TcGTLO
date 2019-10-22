@@ -1275,6 +1275,16 @@
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
+              <v n="TextID">"6219"</v>
+              <v n="TextDefault">"Button"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"787"</v>
+              <v n="TextDefault">"Button: "</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
               <v n="TextID">"1293"</v>
               <v n="TextDefault">"ButtonModeConditionSimulation"</v>
               <l n="LanguageTexts" t="ArrayList" />
@@ -1737,6 +1747,11 @@ Dew point – PCW temperature above critical control limit, condensation alarm
             <o>
               <v n="TextID">"2517"</v>
               <v n="TextDefault">"EPT : "</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"3022"</v>
+              <v n="TextDefault">"EPT States"</v>
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>

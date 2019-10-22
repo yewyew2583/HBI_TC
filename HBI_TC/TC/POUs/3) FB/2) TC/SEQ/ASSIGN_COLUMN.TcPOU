@@ -113,6 +113,10 @@ END_VAR
 				END_IF
 			END_FOR
 			
+			IF (NOT bProductionMode) THEN
+				IsNetIDReadOK										:= TRUE;
+			END_IF
+			
 			IF (NOT IsNetIDReadOK) THEN
 				Logging.fbDebugLog.M_nLogger(iLogLevel:= Logging.fbDebugLog.P_iLogVerbosity, sSource:= '', sMessage:= 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX');
 				Logging.fbDebugLog.M_nLogger(iLogLevel:= Logging.fbDebugLog.P_iLogVerbosity, sSource:= '', sMessage:= CONCAT('Invalid Local AMS Net ID ::', AddrString));			
@@ -166,6 +170,7 @@ END_VAR
       <LineId Id="40" Count="13" />
       <LineId Id="55" Count="0" />
       <LineId Id="156" Count="0" />
+      <LineId Id="174" Count="3" />
       <LineId Id="56" Count="4" />
       <LineId Id="62" Count="0" />
       <LineId Id="153" Count="1" />
