@@ -3000,6 +3000,16 @@ Dew point – PCW temperature above critical control limit, condensation alarm
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
+              <v n="TextID">"52"</v>
+              <v n="TextDefault">"Production Mode"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"4008"</v>
+              <v n="TextDefault">"Production Mode: "</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
               <v n="TextID">"3611"</v>
               <v n="TextDefault">"PV"</v>
               <l n="LanguageTexts" t="ArrayList" />
@@ -3155,6 +3165,11 @@ Dew point – PCW temperature above critical control limit, condensation alarm
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
+              <v n="TextID">"4852"</v>
+              <v n="TextDefault">"Simulation Mode"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
               <v n="TextID">"233"</v>
               <v n="TextDefault">"SOFT EAP SIGNAL STATUS"</v>
               <l n="LanguageTexts" t="ArrayList" />
@@ -3217,6 +3232,11 @@ Dew point – PCW temperature above critical control limit, condensation alarm
             <o>
               <v n="TextID">"720"</v>
               <v n="TextDefault">"System Alarm"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"7074"</v>
+              <v n="TextDefault">"System Mode:"</v>
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>

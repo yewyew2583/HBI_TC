@@ -33,12 +33,12 @@ tim(IN:=TRUE,PT:=T#500MS);
 //Uncomment if AlarmUpdateCyclicTaskProgram is not used//
 //<SysAlarmUpdate>
 	IF NOT bSimulation AND tim.Q THEN
-		fbColAlarm(vIO:=fbTCColumn.P_stTCColumnVIO,
-										isRsetAll:=bHMIResetAllAlarm,
-										(*stAlmMod:= ALMTC,*)
-										isColError=>isSysAlarm[iLevel], 
-										iSysUnBlockAlm =>iSysUnBlockAlm[iLevel],
-										SysAlmCleared:=SysAlmCleared);
+		fbColAlarm(	stTCColVIO		:= fbTCColumn.P_stTCColumnVIO,
+					isRsetAll		:= bHMIResetAllAlarm,
+					isColError		=> isSysAlarm[iLevel], 
+					iSysUnBlockAlm 	=> iSysUnBlockAlm[iLevel],
+					SysAlmCleared	:= SysAlmCleared
+		);
 		
 		stTCMLevelVIO:=arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO;
 		IF stTCMLevelVIO.iSysUnBlockAlm<>iSysUnBlockAlm[iLevel] THEN
@@ -86,7 +86,7 @@ stTCColumnVIO.opHotAirExhaustFan:=FunONOFF;
 IF bDebugCart THEN
 	stTCColumnVIO.ipColumnFluid_PCW_Leakage 		:=  stTCColumnDIO.eapDColumnPCWLeakage OR  stTCColumnDIO.eapDColumnPCWSupplyLeakage OR  stTCColumnDIO.eapDColumnPCWReturnLeakage; 									
 	stTCColumnVIO.ipAllTCDrawerRetractedinCell 		:= FALSE;  //No Alarm if debug cart
-	stTCColumnVIO.ipTbotDoorClosedSignal	 		:= FALSE;  //No Alarm if debug cart
+	stTCColumnVIO.ipTbotDoorClosedSignal	 		:= TRUE;   //No Alarm if debug cart
 ELSE
 	stTCColumnVIO.ipColumnFluid_PCW_Leakage 		:= NOT fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode AND bColSenSimArray[1] , 
 																						bActual:= (*NOT*) stTCColumnDIO.ipColumnFluid_PCW_Leakage , 
@@ -103,12 +103,17 @@ ELSE
 	   																					  bSimu:=TRUE, 
 																					  iBackDoor:=stTCColumnBIO.ipTbotDoorClosedSignal );																		  
 END_IF
-																				  
+												  
 IF NOT bColIODiagnosticsMode THEN
 	stTCColumnDIO.opHotAirExhaustFan				:= stTCColumnVIO.opHotAirExhaustFan	;																						  
 END_IF
 
-]]></ST>
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////// Input mapping simulation in VISU //////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+IF NOT bProductionMode THEN
+	stTCColumnDIO.ipTbotDoorClosedSignal			:= stTCColumnVIO.ipTbotDoorClosedSignal;
+END_IF]]></ST>
       </Implementation>
     </Method>
     <Method Name="M_UpdateSysAlarmFlag" Id="{0e8087c4-4888-4729-952d-608575731e09}">
@@ -164,9 +169,9 @@ END_VAR
       <LineId Id="221" Count="0" />
       <LineId Id="112" Count="0" />
       <LineId Id="127" Count="0" />
-      <LineId Id="114" Count="0" />
       <LineId Id="31" Count="0" />
       <LineId Id="249" Count="1" />
+      <LineId Id="306" Count="0" />
       <LineId Id="280" Count="1" />
       <LineId Id="253" Count="2" />
       <LineId Id="163" Count="0" />
@@ -195,11 +200,14 @@ END_VAR
       <LineId Id="154" Count="1" />
       <LineId Id="69" Count="11" />
       <LineId Id="111" Count="0" />
-      <LineId Id="126" Count="0" />
+      <LineId Id="168" Count="0" />
       <LineId Id="112" Count="0" />
       <LineId Id="65" Count="1" />
+      <LineId Id="167" Count="0" />
+      <LineId Id="165" Count="1" />
       <LineId Id="63" Count="0" />
       <LineId Id="38" Count="0" />
+      <LineId Id="169" Count="1" />
     </LineIds>
     <LineIds Name="FB_TCColumn.M_UpdateSysAlarmFlag">
       <LineId Id="8" Count="4" />

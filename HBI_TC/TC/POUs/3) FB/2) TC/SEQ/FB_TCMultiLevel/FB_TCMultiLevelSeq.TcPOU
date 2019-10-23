@@ -564,174 +564,204 @@ stTCLevelVIO.ipStopPB:=fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProduction
 								bSimu:=TRUE , iBackDoor:=stTCLevelBIO.ipStopPB );*)
 								
 //<HMI_TII_Sensor_Simulation>
-	IF bHMIEnTIISenSimulation THEN
-		//bTIISenSimArray:= stHMITIISenSimArray[iLevel].bHMITIIByPassArray;
-		FOR i:=1 TO NO_OF_TII_SENSOR DO
-			bTIISenSimArray[i]:= NOT stHMITIISenSimArray[iLevel].bHMITIIByPassArray[i];
-		END_FOR
-	ELSE
-		FOR i:=1 TO NO_OF_TII_SENSOR DO
-			bTIISenSimArray[i]:=TRUE;
-		END_FOR
-	END_IF
+IF bHMIEnTIISenSimulation THEN
+	//bTIISenSimArray:= stHMITIISenSimArray[iLevel].bHMITIIByPassArray;
+	FOR i:=1 TO NO_OF_TII_SENSOR DO
+		bTIISenSimArray[i]:= NOT stHMITIISenSimArray[iLevel].bHMITIIByPassArray[i];
+	END_FOR
+ELSE
+	FOR i:=1 TO NO_OF_TII_SENSOR DO
+		bTIISenSimArray[i]:=TRUE;
+	END_FOR
+END_IF
 //</HMI_TII_Sensor_Simulation>	
 
 //<HMI_ManualBtnPress_Simulation>
-	IF bHMIBtnSimulation THEN
-		//bTIISenSimArray:= stHMITIISenSimArray[iLevel].bHMITIIByPassArray;
-		FOR i:=1 TO NO_OF_BTNLED DO
-			bBtnSimArray[i]:= NOT stHMIBtnSimArray[iLevel].bHMITIIByPassArray[i];
-		END_FOR
-	ELSE
-		FOR i:=1 TO NO_OF_BTNLED DO
-			bBtnSimArray[i]:=TRUE;
-		END_FOR
-	END_IF
+IF bHMIBtnSimulation THEN
+	//bTIISenSimArray:= stHMITIISenSimArray[iLevel].bHMITIIByPassArray;
+	FOR i:=1 TO NO_OF_BTNLED DO
+		bBtnSimArray[i]:= NOT stHMIBtnSimArray[iLevel].bHMITIIByPassArray[i];
+	END_FOR
+ELSE
+	FOR i:=1 TO NO_OF_BTNLED DO
+		bBtnSimArray[i]:=TRUE;
+	END_FOR
+END_IF
 //</HMI_ManualBtnPress_Simulation>	
 
 //<Input_BackDoor>														
-	stMLVIO.ipAPPresentSensor 		:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode AND bTIISenSimArray[E_TIIAlarm.ipAPPresentSensor] , 
-																	bActual:=stMLDIO.ipAPPresentSensor , 
-	   																bSimu:=TRUE, 
-																	iBackDoor:=stMLBIO.ipAPPresentSensor );
-																	//stTCMultiLevelBIO.ipAP_PresentSensor 
-											
-	stMLVIO.ipAPPowerOn				:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode AND bTIISenSimArray[E_TIIAlarm.ipAPPowerOn] , 
-	                                            					bActual:=stMLDIO.ipAPPowerOn , 
-	                                            					bSimu:=TRUE , 
-	                                            					iBackDoor:=stMLBIO.ipAPPowerOn );
-	
-	stMLVIO.ipAPReady				:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode AND bTIISenSimArray[E_TIIAlarm.ipAPReady] , 
-	                                            					bActual:=stMLDIO.ipAPReady , 
-	                                            					bSimu:=TRUE , 
-	                                            					iBackDoor:=stMLBIO.ipAPReady );
-				
-	stMLVIO.ipHandlerSafeToEnterPLC		:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , 
-	                                            					bActual:=stMLDIO.ipHandlerSafeToEnterPLC , 
-	                                            					bSimu:=TRUE , 
-	                                            					iBackDoor:=stMLBIO.ipHandlerSafeToEnterPLC );
-	
-	stMLVIO.ipHandlerSafeToEnterHwr		:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , 
-	                                            					bActual:=stMLDIO.ipHandlerSafeToEnterHwr , 
-	                                            					bSimu:=TRUE , 
-	                                            					iBackDoor:=stMLBIO.ipHandlerSafeToEnterHwr );
+stMLVIO.ipAPPresentSensor 		:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode AND bTIISenSimArray[E_TIIAlarm.ipAPPresentSensor] , 
+																bActual:=stMLDIO.ipAPPresentSensor , 
+   																bSimu:=TRUE, 
+																iBackDoor:=stMLBIO.ipAPPresentSensor );
+																//stTCMultiLevelBIO.ipAP_PresentSensor 
+										
+stMLVIO.ipAPPowerOn				:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode AND bTIISenSimArray[E_TIIAlarm.ipAPPowerOn] , 
+                                            					bActual:=stMLDIO.ipAPPowerOn , 
+                                            					bSimu:=TRUE , 
+                                            					iBackDoor:=stMLBIO.ipAPPowerOn );
+
+stMLVIO.ipAPReady				:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode AND bTIISenSimArray[E_TIIAlarm.ipAPReady] , 
+                                            					bActual:=stMLDIO.ipAPReady , 
+                                            					bSimu:=TRUE , 
+                                            					iBackDoor:=stMLBIO.ipAPReady );
 			
-	stMLVIO.ipCellFluidLeakage1		:= NOT fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode AND bTIISenSimArray[E_TIIAlarm.ipCellFluidLeakage1] , 
-	                                            						bActual:=stMLDIO.ipCellFluidLeakage1 , 
-	                                            						bSimu:=TRUE , 
-	                                            						iBackDoor:=stMLBIO.ipCellFluidLeakage1 );
-				
-	stMLVIO.ipCellFluidLeakage2		:= NOT fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode AND bTIISenSimArray[E_TIIAlarm.ipCellFluidLeakage2] , 
-	                                            						bActual:=stMLDIO.ipCellFluidLeakage2 , 
-	                                            						bSimu:=TRUE , 
-	                                            						iBackDoor:=stMLBIO.ipCellFluidLeakage2 );
-				
-	stMLVIO.ipCellGroundFault 		:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode AND bTIISenSimArray[E_TIIAlarm.ipCellGroundFault] , 
-	                                            					bActual:=stMLDIO.ipCellGroundFault , 
-	                                            					bSimu:=FALSE , 
-	                                            					iBackDoor:=stMLBIO.ipCellGroundFault );
-				
-	stMLVIO.ipTesterPresent			:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode AND bTIISenSimArray[E_TIIAlarm.ipTesterPresent] , 
-	                                            					bActual:=stMLDIO.ipTesterPresent , 
-	                                            					bSimu:=TRUE , 
-	                                            					iBackDoor:=stMLBIO.ipTesterPresent );
-	
-	stMLVIO.ipTesterPowerOn			:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode AND bTIISenSimArray[E_TIIAlarm.ipTesterPowerOn], 
-	                                            					bActual:=stMLDIO.ipTesterPowerOn , 
-	                                            					bSimu:=TRUE , 
-	                                            					iBackDoor:=stMLBIO.ipTesterPowerOn );
-	
-	stMLVIO.ipTesterReady				:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode, 
-	                                            						bActual:=stMLDIO.ipTesterReady , 
-	                                            						bSimu:=TRUE , 
-	                                            						iBackDoor:=stMLBIO.ipTesterReady );
-																					  
-																					  
-	stMLVIO.ipTCCellDoorOpenReqBtn				:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode AND bBtnSimArray[2+1], 
-	                                            								bActual:=stMLDIO.ipTCCellDoorOpenReqBtn , 
-	                                            								bSimu:=FALSE , 
-	                                            								iBackDoor:=stMLBIO.ipTCCellDoorOpenReqBtn );
-	
-	stMLVIO.ipDrawerMaintenanceModeBtn			:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode AND bBtnSimArray[0+1], 
-	                                            								bActual:=stMLDIO.ipDrawerMaintenanceModeBtn , 
-	                                            								bSimu:=FALSE , 
-	                                            								iBackDoor:=stMLBIO.ipDrawerMaintenanceModeBtn );
-	
-	stMLVIO.ipTCCellAbortFlowBtn				:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode AND bBtnSimArray[1+1], 
-	                                            								bActual:=stMLDIO.ipTCCellAbortFlowBtn , 
-	                                            								bSimu:=FALSE , 
-	                                            								iBackDoor:=stMLBIO.ipTCCellAbortFlowBtn );																				  
-																					  
-	//===
-	IF (stMLVIO.bPLCRebootStatusForExtRetRs AND fbTCDrawerExtRet.P_opRetract) OR fbTCDrawerExtRet.P_opExtend THEN //(stMLVIO.ipTCDrawerCylExtendRS OR stMLVIO.ipTCDrawerCylRetractRS) THEN
-		stMLVIO.bPLCRebootStatusForExtRetRs :=FALSE;
-	END_IF
-	IF (stMLVIO.bPLCRebootStatusForUpDownRs AND fbTCDrawerUpDn.P_opRetract) OR fbTCDrawerUpDn.P_opExtend  THEN //(stMLVIO.ipTCDrawerCylUpRS OR stMLVIO.ipTCDrawerCylDownRS)  THEN
-		stMLVIO.bPLCRebootStatusForUpDownRs :=FALSE;
-	END_IF
-	inTCDrawerExtRet.P_ipExtend:=stMLVIO.ipTCDrawerCylExtendRS	:=fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , 
-																							 	bActual:=stMLDIO.ipTCDrawerCylExtendRS,
-																								bSimu:=fbTCDrawerExtRet.P_opExtend , 
-																								iBackDoor:=stMLBIO.ipTCDrawerCylExtendRS );
-	
-	inTCDrawerExtRet.P_ipRetract:=stMLVIO.ipTCDrawerCylRetractRS	:=fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , 
-																									bActual:=stMLDIO.ipTCDrawerCylRetractRS,
-																									bSimu:=stMLVIO.bPLCRebootStatusForExtRetRs OR fbTCDrawerExtRet.P_opRetract , 
-																									iBackDoor:=stMLBIO.ipTCDrawerCylRetractRS );
-	
-	inTCDrawerUpDn.P_ipExtend:=stMLVIO.ipTCDrawerCylUpRS			:=fbBD_ipBdoor.M_bBackDoorCtrl(	bProductionMode:=bProductionMode , 
-																									bActual:=stMLDIO.ipTCDrawerCylUpRS , 
-																									bSimu:=fbTCDrawerUpDn.P_opExtend , 
-																									iBackDoor:=stMLBIO.ipTCDrawerCylUpRS );
-																									  
-	inTCDrawerUpDn.P_ipRetract:=stMLVIO.ipTCDrawerCylDownRS		:=fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , 
-																								bActual:=stMLDIO.ipTCDrawerCylDownRS , 
-																								bSimu:=stMLVIO.bPLCRebootStatusForUpDownRs OR fbTCDrawerUpDn.P_opRetract , 
-																								iBackDoor:=stMLBIO.ipTCDrawerCylDownRS );
-	//===
-	//Lock status//																				  
-	stMLVIO.ipTCCellDoorClosed		:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode AND bTIISenSimArray[E_TIIAlarm.ipTCCellDoorClosed], 
-	                                            					bActual:=stMLDIO.ipTCCellDoorClosed , 
-	                                            					bSimu:=stMLDIO.opCellDoorClosed , 
-	                                            					iBackDoor:=stMLBIO.ipTCCellDoorClosed );
-																	
-	stMLVIO.ipTCCellTbotSideDoorLocked01		:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode, 
-	                                            					bActual:=stMLDIO.ipTCCellTbotSideDoorLocked01 , 
-	                                            					bSimu:=stMLDIO.opCellTBOtSideDoorClosed1 , 
-	                                            					iBackDoor:=stMLBIO.ipTCCellTbotSideDoorLocked01 );
+stMLVIO.ipHandlerSafeToEnterPLC		:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , 
+                                            					bActual:=stMLDIO.ipHandlerSafeToEnterPLC , 
+                                            					bSimu:=TRUE , 
+                                            					iBackDoor:=stMLBIO.ipHandlerSafeToEnterPLC );
 
-	stMLVIO.ipTCCellTbotSideDoorLocked02		:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , 
-	                                            					bActual:=stMLDIO.ipTCCellTbotSideDoorLocked02 , 
-	                                            					bSimu:=stMLDIO.opCellTBOtSideDoorClosed2 , 
-	                                            					iBackDoor:=stMLBIO.ipTCCellTbotSideDoorLocked02 );	
-																
-	//Close status//			
-	stMLVIO.ipTCCellDoorOpenCloseStatus	:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , 
-	                                                					bActual:=stMLDIO.ipTCCellDoorOpenCloseStatus , 
-	                                                					bSimu:=TRUE , 
-	                                                					iBackDoor:=stMLBIO.ipTCCellDoorOpenCloseStatus );
-																		
-	stMLVIO.ipTCCellTbotSideDoorOpenCloseStatus01		:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode, 
-	                                            					bActual:=stMLDIO.ipTCCellTbotSideDoorOpenCloseStatus01 , 
-	                                            					bSimu:=TRUE , 
-	                                            					iBackDoor:=stMLBIO.ipTCCellTbotSideDoorOpenCloseStatus01 );
-
-	stMLVIO.ipTCCellTbotSideDoorOpenCloseStatus02		:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , 
-	                                            					bActual:=stMLDIO.ipTCCellTbotSideDoorOpenCloseStatus02 , 
-	                                            					bSimu:=TRUE , 
-	                                            					iBackDoor:=stMLBIO.ipTCCellTbotSideDoorOpenCloseStatus02 );	
+stMLVIO.ipHandlerSafeToEnterHwr		:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , 
+                                            					bActual:=stMLDIO.ipHandlerSafeToEnterHwr , 
+                                            					bSimu:=TRUE , 
+                                            					iBackDoor:=stMLBIO.ipHandlerSafeToEnterHwr );
 		
-	stMLVIO.ipTesterLatchesClosed		:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode AND bTIISenSimArray[E_TIIAlarm.ipTesterLatchesClosed], 
-	                                            						bActual:=stMLDIO.ipTesterLatchesClosed , 
-	                                            						bSimu:=TRUE, 
-	                                            						iBackDoor:=stMLBIO.ipTesterLatchesClosed );
+stMLVIO.ipCellFluidLeakage1		:= NOT fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode AND bTIISenSimArray[E_TIIAlarm.ipCellFluidLeakage1] , 
+                                            						bActual:=stMLDIO.ipCellFluidLeakage1 , 
+                                            						bSimu:=TRUE , 
+                                            						iBackDoor:=stMLBIO.ipCellFluidLeakage1 );
+			
+stMLVIO.ipCellFluidLeakage2		:= NOT fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode AND bTIISenSimArray[E_TIIAlarm.ipCellFluidLeakage2] , 
+                                            						bActual:=stMLDIO.ipCellFluidLeakage2 , 
+                                            						bSimu:=TRUE , 
+                                            						iBackDoor:=stMLBIO.ipCellFluidLeakage2 );
+			
+stMLVIO.ipCellGroundFault 		:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode AND bTIISenSimArray[E_TIIAlarm.ipCellGroundFault] , 
+                                            					bActual:=stMLDIO.ipCellGroundFault , 
+                                            					bSimu:=FALSE , 
+                                            					iBackDoor:=stMLBIO.ipCellGroundFault );
+			
+stMLVIO.ipTesterPresent			:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode AND bTIISenSimArray[E_TIIAlarm.ipTesterPresent] , 
+                                            					bActual:=stMLDIO.ipTesterPresent , 
+                                            					bSimu:=TRUE , 
+                                            					iBackDoor:=stMLBIO.ipTesterPresent );
+
+stMLVIO.ipTesterPowerOn			:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode AND bTIISenSimArray[E_TIIAlarm.ipTesterPowerOn], 
+                                            					bActual:=stMLDIO.ipTesterPowerOn , 
+                                            					bSimu:=TRUE , 
+                                            					iBackDoor:=stMLBIO.ipTesterPowerOn );
+
+stMLVIO.ipTesterReady				:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode, 
+                                            						bActual:=stMLDIO.ipTesterReady , 
+                                            						bSimu:=TRUE , 
+                                            						iBackDoor:=stMLBIO.ipTesterReady );
+																				  
+																				  
+stMLVIO.ipTCCellDoorOpenReqBtn				:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode AND bBtnSimArray[2+1], 
+                                            								bActual:=stMLDIO.ipTCCellDoorOpenReqBtn , 
+                                            								bSimu:=FALSE , 
+                                            								iBackDoor:=stMLBIO.ipTCCellDoorOpenReqBtn );
+
+stMLVIO.ipDrawerMaintenanceModeBtn			:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode AND bBtnSimArray[0+1], 
+                                            								bActual:=stMLDIO.ipDrawerMaintenanceModeBtn , 
+                                            								bSimu:=FALSE , 
+                                            								iBackDoor:=stMLBIO.ipDrawerMaintenanceModeBtn );
+
+stMLVIO.ipTCCellAbortFlowBtn				:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode AND bBtnSimArray[1+1], 
+                                            								bActual:=stMLDIO.ipTCCellAbortFlowBtn , 
+                                            								bSimu:=FALSE , 
+                                            								iBackDoor:=stMLBIO.ipTCCellAbortFlowBtn );																				  
+																				  
+//===
+IF (stMLVIO.bPLCRebootStatusForExtRetRs AND fbTCDrawerExtRet.P_opRetract) OR fbTCDrawerExtRet.P_opExtend THEN //(stMLVIO.ipTCDrawerCylExtendRS OR stMLVIO.ipTCDrawerCylRetractRS) THEN
+	stMLVIO.bPLCRebootStatusForExtRetRs :=FALSE;
+END_IF
+IF (stMLVIO.bPLCRebootStatusForUpDownRs AND fbTCDrawerUpDn.P_opRetract) OR fbTCDrawerUpDn.P_opExtend  THEN //(stMLVIO.ipTCDrawerCylUpRS OR stMLVIO.ipTCDrawerCylDownRS)  THEN
+	stMLVIO.bPLCRebootStatusForUpDownRs :=FALSE;
+END_IF
+inTCDrawerExtRet.P_ipExtend:=stMLVIO.ipTCDrawerCylExtendRS	:=fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , 
+																						 	bActual:=stMLDIO.ipTCDrawerCylExtendRS,
+																							bSimu:=fbTCDrawerExtRet.P_opExtend , 
+																							iBackDoor:=stMLBIO.ipTCDrawerCylExtendRS );
+
+inTCDrawerExtRet.P_ipRetract:=stMLVIO.ipTCDrawerCylRetractRS	:=fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , 
+																								bActual:=stMLDIO.ipTCDrawerCylRetractRS,
+																								bSimu:=stMLVIO.bPLCRebootStatusForExtRetRs OR fbTCDrawerExtRet.P_opRetract , 
+																								iBackDoor:=stMLBIO.ipTCDrawerCylRetractRS );
+
+inTCDrawerUpDn.P_ipExtend:=stMLVIO.ipTCDrawerCylUpRS			:=fbBD_ipBdoor.M_bBackDoorCtrl(	bProductionMode:=bProductionMode , 
+																								bActual:=stMLDIO.ipTCDrawerCylUpRS , 
+																								bSimu:=fbTCDrawerUpDn.P_opExtend , 
+																								iBackDoor:=stMLBIO.ipTCDrawerCylUpRS );
+																								  
+inTCDrawerUpDn.P_ipRetract:=stMLVIO.ipTCDrawerCylDownRS		:=fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , 
+																							bActual:=stMLDIO.ipTCDrawerCylDownRS , 
+																							bSimu:=stMLVIO.bPLCRebootStatusForUpDownRs OR fbTCDrawerUpDn.P_opRetract , 
+																							iBackDoor:=stMLBIO.ipTCDrawerCylDownRS );
+//===
+//Lock status//																				  
+stMLVIO.ipTCCellDoorClosed		:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode AND bTIISenSimArray[E_TIIAlarm.ipTCCellDoorClosed], 
+                                            					bActual:=stMLDIO.ipTCCellDoorClosed , 
+                                            					bSimu:=stMLDIO.opCellDoorClosed , 
+                                            					iBackDoor:=stMLBIO.ipTCCellDoorClosed );
+																
+stMLVIO.ipTCCellTbotSideDoorLocked01		:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode, 
+                                            					bActual:=stMLDIO.ipTCCellTbotSideDoorLocked01 , 
+                                            					bSimu:=stMLDIO.opCellTBOtSideDoorClosed1 , 
+                                            					iBackDoor:=stMLBIO.ipTCCellTbotSideDoorLocked01 );
+
+stMLVIO.ipTCCellTbotSideDoorLocked02		:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , 
+                                            					bActual:=stMLDIO.ipTCCellTbotSideDoorLocked02 , 
+                                            					bSimu:=stMLDIO.opCellTBOtSideDoorClosed2 , 
+                                            					iBackDoor:=stMLBIO.ipTCCellTbotSideDoorLocked02 );	
+															
+//Close status//			
+stMLVIO.ipTCCellDoorOpenCloseStatus	:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , 
+                                                					bActual:=stMLDIO.ipTCCellDoorOpenCloseStatus , 
+                                                					bSimu:=TRUE , 
+                                                					iBackDoor:=stMLBIO.ipTCCellDoorOpenCloseStatus );
+																	
+stMLVIO.ipTCCellTbotSideDoorOpenCloseStatus01		:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode, 
+                                            					bActual:=stMLDIO.ipTCCellTbotSideDoorOpenCloseStatus01 , 
+                                            					bSimu:=TRUE , 
+                                            					iBackDoor:=stMLBIO.ipTCCellTbotSideDoorOpenCloseStatus01 );
+
+stMLVIO.ipTCCellTbotSideDoorOpenCloseStatus02		:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , 
+                                            					bActual:=stMLDIO.ipTCCellTbotSideDoorOpenCloseStatus02 , 
+                                            					bSimu:=TRUE , 
+                                            					iBackDoor:=stMLBIO.ipTCCellTbotSideDoorOpenCloseStatus02 );	
 	
-	(*stMLVIO.ipTIUPresent				:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , 
+stMLVIO.ipTesterLatchesClosed		:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode AND bTIISenSimArray[E_TIIAlarm.ipTesterLatchesClosed], 
+                                            						bActual:=stMLDIO.ipTesterLatchesClosed , 
+                                            						bSimu:=TRUE, 
+                                            						iBackDoor:=stMLBIO.ipTesterLatchesClosed );
+
+(*stMLVIO.ipTIUPresent				:= fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , 
 	                                            						bActual:=stMLDIO.ipTIUPresent , 
 	                                            						bSimu:=TRUE,
 	                                            						iBackDoor:=stMLBIO.ipTIUPresent );*)	
-//</Input_BackDoor>
-]]></ST>
+																		
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////// Input mapping simulation in VISU //////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+IF (NOT bProductionMode) THEN
+	stMLDIO.ipAPPresentSensor							:= stMLVIO.ipAPPresentSensor;
+	stMLDIO.ipAPPowerOn									:= stMLVIO.ipAPPowerOn;
+	stMLDIO.ipAPReady									:= stMLVIO.ipAPReady;
+	stMLDIO.ipHandlerSafeToEnterPLC						:= stMLVIO.ipHandlerSafeToEnterPLC;
+	stMLDIO.ipHandlerSafeToEnterHwr						:= stMLVIO.ipHandlerSafeToEnterHwr;
+	stMLDIO.ipCellFluidLeakage1							:= stMLVIO.ipCellFluidLeakage1;
+	stMLDIO.ipCellFluidLeakage2							:= stMLVIO.ipCellFluidLeakage2;
+	stMLDIO.ipCellGroundFault							:= stMLVIO.ipCellGroundFault;
+	stMLDIO.ipTesterPresent								:= stMLVIO.ipTesterPresent;
+	stMLDIO.ipTesterPowerOn								:= stMLVIO.ipTesterPowerOn;
+	stMLDIO.ipTesterReady								:= stMLVIO.ipTesterReady;
+	stMLDIO.ipTCCellDoorOpenReqBtn						:= stMLVIO.ipTCCellDoorOpenReqBtn;
+	stMLDIO.ipDrawerMaintenanceModeBtn					:= stMLVIO.ipDrawerMaintenanceModeBtn;
+	stMLDIO.ipTCCellAbortFlowBtn						:= stMLVIO.ipTCCellAbortFlowBtn;
+	stMLDIO.ipTCDrawerCylExtendRS						:= stMLVIO.ipTCDrawerCylExtendRS;
+	stMLDIO.ipTCDrawerCylRetractRS						:= stMLVIO.ipTCDrawerCylRetractRS;
+	stMLDIO.ipTCDrawerCylUpRS							:= stMLVIO.ipTCDrawerCylUpRS;
+	stMLDIO.ipTCDrawerCylDownRS							:= stMLVIO.ipTCDrawerCylDownRS;
+	stMLDIO.ipTCCellDoorClosed							:= stMLVIO.ipTCCellDoorClosed;
+	stMLDIO.ipTCCellTbotSideDoorLocked01				:= stMLVIO.ipTCCellTbotSideDoorLocked01;
+	stMLDIO.ipTCCellTbotSideDoorLocked02				:= stMLVIO.ipTCCellTbotSideDoorLocked02;
+	stMLDIO.ipTCCellDoorOpenCloseStatus					:= stMLVIO.ipTCCellDoorOpenCloseStatus;
+	stMLDIO.ipTCCellTbotSideDoorOpenCloseStatus01		:= stMLVIO.ipTCCellTbotSideDoorOpenCloseStatus01;
+	stMLDIO.ipTCCellTbotSideDoorOpenCloseStatus02		:= stMLVIO.ipTCCellTbotSideDoorOpenCloseStatus02;
+	stMLDIO.ipTesterLatchesClosed						:= stMLVIO.ipTesterLatchesClosed;
+	
+END_IF]]></ST>
       </Implementation>
     </Method>
     <Method Name="M_InterlockTII" Id="{88edcd8a-14ef-48d8-99bb-1f383da7f5f2}">
@@ -820,9 +850,10 @@ END_VAR
 									OR	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCDrawerRetractSignal		]
 									OR	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCDrawerDownSignal			]
 									OR	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCCellDoorClosed			]
+									OR	ALMTC.Common.AlarmID[E_ColAlarm.ipTbotDoorClosedSignal				]
 									OR 	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellGroundFault 	   		] 
 									OR	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellFluidLeakage1 	   		] 	
-	                            	OR	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellFluidLeakage2 	   		] 	
+	                            	OR	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellFluidLeakage2 	   		]
 									OR	ALMTC.Common.AlarmID[E_ColAlarm.ipColumnFluid_PCW_Leakage			]
 									OR	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.FrontDoorLockSignalNotDetected	]
 									OR	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.DS_Facility_EAP_ACPower_Signal	]
@@ -2581,8 +2612,14 @@ END_CASE]]></ST>
       <LineId Id="16" Count="4" />
     </LineIds>
     <LineIds Name="FB_TCMultiLevelSeq.M_InputBackDoor">
-      <LineId Id="6" Count="178" />
-      <LineId Id="5" Count="0" />
+      <LineId Id="6" Count="177" />
+      <LineId Id="190" Count="3" />
+      <LineId Id="189" Count="0" />
+      <LineId Id="194" Count="0" />
+      <LineId Id="198" Count="22" />
+      <LineId Id="197" Count="0" />
+      <LineId Id="196" Count="0" />
+      <LineId Id="195" Count="0" />
     </LineIds>
     <LineIds Name="FB_TCMultiLevelSeq.M_InterlockTII">
       <LineId Id="176" Count="1" />
@@ -2622,6 +2659,7 @@ END_CASE]]></ST>
       <LineId Id="185" Count="0" />
       <LineId Id="96" Count="0" />
       <LineId Id="104" Count="0" />
+      <LineId Id="190" Count="0" />
       <LineId Id="106" Count="0" />
       <LineId Id="161" Count="0" />
       <LineId Id="102" Count="0" />

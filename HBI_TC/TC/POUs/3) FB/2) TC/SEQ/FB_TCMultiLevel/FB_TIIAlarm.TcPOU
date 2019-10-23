@@ -4,6 +4,7 @@
     <Declaration><![CDATA[FUNCTION_BLOCK FB_TIIAlarm
 VAR_INPUT
 	vIO							: ST_TCMultiLevel_VIO;
+	stTCColVIO					: ST_TCColumn_VIO;
 	NoOfTIIAlm					: INT	:= NO_OF_TII_SENSOR;
 	iLevel						: INT	:= 1;
 END_VAR
@@ -93,7 +94,6 @@ VAR
 	drawerRetractOutput		: BOOL; // Condition
 	drawerUpOutput			: BOOL;
 	drawerDownOutput		: BOOL;
-	
 	
 	i						: INT;
 	j						: INT;
@@ -232,8 +232,9 @@ FOR i := 1 TO NoOfTIIAlm DO
 			Arr_ms[e] 													:= 500;  (*TIIAlmText[e]:='TesterReady'*);*)
 			   
        	E_TIIAlarm.ipTCCellDoorClosed: 
+			stTCColVIO													:= fbTCColumn.P_stTCColumnVIO;
 			e															:= E_TIIAlarm.ipTCCellDoorClosed; 
-			ArrAlmBitBefDelay[E_TIIAlarm.ipTCCellDoorClosed]			:= (NOT	vIO.ipTCCellDoorClosed); //AND bENs[12]; 							
+			ArrAlmBitBefDelay[E_TIIAlarm.ipTCCellDoorClosed]			:= (NOT	vIO.ipTCCellDoorClosed) AND stTCColVIO.ipTbotDoorClosedSignal; //AND bENs[12]; 							
 			Arr_ms[e] 													:= 500;  (*TIIAlmText[e]:='TCCellDoorClosed' *);
 			
         E_TIIAlarm.ipTesterLatchesClosed: 
@@ -389,51 +390,54 @@ bAlarmBlockDrawer														:=	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTeste
 																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCDrawerExtendSignal	   	]	OR
 																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCDrawerRetractSignal	   	]	OR
 																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCCellDoorClosed	   		]   OR
+																			ALMTC.Common.AlarmID[E_ColAlarm.ipTbotDoorClosedSignal				]	OR
 																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCDrawerUpSignal		   	];
 																				
 
-TIIAlarmLED																:=	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipAPPowerOn 		   	   		]   OR 
-		    																ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipAPReady		       	   	]   OR
-																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTesterLatchesClosed    	]	OR
-																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTesterPowerOn	       		]   OR
-																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTesterReady	           	]   OR
-																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCCellDoorClosed	   		]   OR
-																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellFluidLeakage1	   		]   OR
-																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellFluidLeakage2	   		]   OR
-																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellGroundFault 	   		]   OR
-																			ALMTC.Level[iLevel].ALarmID[E_AlarmID.DrawerDownError				]	OR
-																			ALMTC.Level[iLevel].ALarmID[E_AlarmID.DrawerUpError					]	OR
-																			ALMTC.Level[iLevel].ALarmID[E_AlarmID.DrawerExtendError				]	OR
-																			ALMTC.Level[iLevel].ALarmID[E_AlarmID.DrawerRetractError			]	OR
-																			ALMTC.Level[iLevel].ALarmID[E_AlarmID.APIsNotInUPPosition			]	OR
-																			ALMTC.Common.AlarmID[E_ColAlarm.ipColumnFluid_PCW_Leakage			]	OR
+TIIAlarmLED																:=	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipAPPowerOn 		   	   			]   OR 
+		    																ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipAPReady		       	   		]   OR
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTesterLatchesClosed    		]	OR
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTesterPowerOn	       			]   OR
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTesterReady	           		]   OR
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCCellDoorClosed	   			]   OR
+																			ALMTC.Common.AlarmID[E_ColAlarm.ipTbotDoorClosedSignal					]	OR
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellFluidLeakage1	   			]   OR
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellFluidLeakage2	   			]   OR
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellGroundFault 	   			]   OR
+																			ALMTC.Level[iLevel].ALarmID[E_AlarmID.DrawerDownError					]	OR
+																			ALMTC.Level[iLevel].ALarmID[E_AlarmID.DrawerUpError						]	OR
+																			ALMTC.Level[iLevel].ALarmID[E_AlarmID.DrawerExtendError					]	OR
+																			ALMTC.Level[iLevel].ALarmID[E_AlarmID.DrawerRetractError				]	OR
+																			ALMTC.Level[iLevel].ALarmID[E_AlarmID.APIsNotInUPPosition				]	OR
+																			ALMTC.Common.AlarmID[E_ColAlarm.ipColumnFluid_PCW_Leakage				]	OR
 																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.FrontDoorLockSignalNotDetected	]	OR
-																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.TBOT_TC_ACPower_Signal   	]  OR	
-																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.DS_Facility_EAP_ACPower_Signal]	OR
-																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCDrawerExtendSignal		]	OR
-																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCDrawerRetractSignal		]	OR
-																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCDrawerUpSignal		]	OR
-																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCDrawerDownSignal		]	OR
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.TBOT_TC_ACPower_Signal   		] 	OR	
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.DS_Facility_EAP_ACPower_Signal	]	OR
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCDrawerExtendSignal			]	OR
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCDrawerRetractSignal			]	OR
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCDrawerUpSignal				]	OR
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCDrawerDownSignal				]	OR
 																			isAboveCellLeakage;
 																			
 																			
-TIIAlarmEPT																:= 	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipAPPowerOn					]	OR
-																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipAPReady					]	OR
-																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTesterLatchesClosed		]	OR
-																			ALMTC.Level[iLevel].AlarmID[E_AlarmID.DrawerRetractError			]	OR
-																			ALMTC.Level[iLevel].AlarmID[E_AlarmID.DrawerExtendError				]	OR
-																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCCellDoorClosed			]	OR
-																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellGroundFault			]	OR
-																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellFluidLeakage1			]	OR
-																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellFluidLeakage2			]	OR
-																			ALMTC.Common.AlarmID[E_ColAlarm.ipColumnFluid_PCW_Leakage			]	OR
+TIIAlarmEPT																:= 	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipAPPowerOn						]	OR
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipAPReady						]	OR
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTesterLatchesClosed			]	OR
+																			ALMTC.Level[iLevel].AlarmID[E_AlarmID.DrawerRetractError				]	OR
+																			ALMTC.Level[iLevel].AlarmID[E_AlarmID.DrawerExtendError					]	OR
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCCellDoorClosed				]	OR
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellGroundFault				]	OR
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellFluidLeakage1				]	OR
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellFluidLeakage2				]	OR
+																			ALMTC.Common.AlarmID[E_ColAlarm.ipColumnFluid_PCW_Leakage				]	OR
+																			ALMTC.Common.AlarmID[E_ColAlarm.ipTbotDoorClosedSignal					]	OR
 																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.FrontDoorLockSignalNotDetected	]	OR
-																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.TBOT_TC_ACPower_Signal   	]	OR
-																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.DS_Facility_EAP_ACPower_Signal]	OR
-																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCDrawerExtendSignal		]	OR
-																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCDrawerRetractSignal		]	OR
-																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCDrawerUpSignal		]	OR
-																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCDrawerDownSignal		]	OR
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.TBOT_TC_ACPower_Signal   		]	OR
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.DS_Facility_EAP_ACPower_Signal	]	OR
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCDrawerExtendSignal			]	OR
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCDrawerRetractSignal			]	OR
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCDrawerUpSignal				]	OR
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCDrawerDownSignal				]	OR
 																			isAboveCellLeakage;
 																			]]></ST>
       </Implementation>
@@ -573,6 +577,7 @@ END_VAR
       <LineId Id="306" Count="0" />
       <LineId Id="872" Count="3" />
       <LineId Id="309" Count="0" />
+      <LineId Id="1543" Count="0" />
       <LineId Id="876" Count="3" />
       <LineId Id="310" Count="0" />
       <LineId Id="880" Count="3" />
@@ -692,6 +697,7 @@ END_VAR
       <LineId Id="738" Count="0" />
       <LineId Id="745" Count="0" />
       <LineId Id="1508" Count="2" />
+      <LineId Id="1550" Count="0" />
       <LineId Id="1513" Count="0" />
       <LineId Id="1507" Count="0" />
       <LineId Id="203" Count="0" />
@@ -699,6 +705,7 @@ END_VAR
       <LineId Id="1027" Count="0" />
       <LineId Id="1039" Count="1" />
       <LineId Id="1045" Count="1" />
+      <LineId Id="1549" Count="0" />
       <LineId Id="1028" Count="2" />
       <LineId Id="1210" Count="4" />
       <LineId Id="1048" Count="0" />
@@ -710,7 +717,9 @@ END_VAR
       <LineId Id="1401" Count="0" />
       <LineId Id="1053" Count="1" />
       <LineId Id="1057" Count="7" />
-      <LineId Id="1069" Count="1" />
+      <LineId Id="1069" Count="0" />
+      <LineId Id="1544" Count="0" />
+      <LineId Id="1070" Count="0" />
       <LineId Id="1067" Count="0" />
       <LineId Id="1308" Count="0" />
       <LineId Id="1407" Count="2" />

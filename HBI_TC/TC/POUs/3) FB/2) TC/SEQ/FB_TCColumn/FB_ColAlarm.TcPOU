@@ -3,7 +3,7 @@
   <POU Name="FB_ColAlarm" Id="{288f9db0-7522-4a39-ba2c-8cb3e0accfe7}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_ColAlarm
 VAR_INPUT
-	vIO : ST_TCColumn_VIO;
+	stTCColVIO : ST_TCColumn_VIO;
 	isRsetAll : BOOL;
 END_VAR
 VAR_OUTPUT
@@ -69,16 +69,27 @@ VAR_IN_OUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[FOR i:=1 TO NO_OF_COMMON_SENSOR DO	
+        <ST><![CDATA[//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////// Auto Clear Alarm Area ///////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+IF ALMTC.Common.AlarmID[E_ColAlarm.ipTbotDoorClosedSignal] AND stTCColVIO.ipTbotDoorClosedSignal THEN
+	ALMTC.Common.AlarmID[E_ColAlarm.ipTbotDoorClosedSignal]			:= FALSE;
+END_IF
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////// Trigger Alarm Area ///////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+FOR i:=1 TO NO_OF_COMMON_SENSOR DO	
 	CASE i OF
 		E_ColAlarm.ipColumnFluid_PCW_Leakage	: 
 						IF NOT bSLTC THEN
-							e:=E_ColAlarm.ipColumnFluid_PCW_Leakage; 	  ArrAlmBitBefDelay[e]:=vIO.ipColumnFluid_PCW_Leakage  		(*AND bENs[1]*)		; Arr_ms[e] := 500;  //SysAlmText[e]:= 'ColumnFluid_PCW_Leakage';
+							e:=E_ColAlarm.ipColumnFluid_PCW_Leakage; 	  ArrAlmBitBefDelay[e]:= stTCColVIO.ipColumnFluid_PCW_Leakage  		(*AND bENs[1]*)		; Arr_ms[e] := 500;  //SysAlmText[e]:= 'ColumnFluid_PCW_Leakage';
 						END_IF 
 		   
-	    (*E_ColAlarm.ipTbotDoorClosedSignal	: 
-						e:=E_ColAlarm.ipTbotDoorClosedSignal; 		ArrAlmBitBefDelay[e]:= (NOT vIO.ipTbotDoorClosedSignal) AND (NOT bDebugCart) AND (NOT bDebugStation)	AND bENs[2]		; Arr_ms[e] := 500;  //SysAlmText[e]:= 'ipTbotDoorClosed';
-		*)
+	    E_ColAlarm.ipTbotDoorClosedSignal	: 
+						e:=E_ColAlarm.ipTbotDoorClosedSignal; 		ArrAlmBitBefDelay[e]:= (NOT stTCColVIO.ipTbotDoorClosedSignal) AND (NOT bDebugCart) AND (NOT bDebugStation)	AND bENs[2]		; Arr_ms[e] := 500;  //SysAlmText[e]:= 'ipTbotDoorClosed';
 
 		//E_ColAlarm.ipAllTCDrawerRetractedinCell	: e:=E_ColAlarm.ipAllTCDrawerRetractedinCell; ArrAlmBitBefDelay[e]:=vIO.ipAllTCDrawerRetractedinCell 	AND bENs[3]		; Arr_ms[e] := 500;  SysAlmText[e]:= 'AllTCDrawerRetractedinCell';  
 
@@ -116,7 +127,7 @@ END_VAR
 END_FOR
 isColError := _bError ; 
 
-IF vIO.bColumnErrClear THEN
+IF stTCColVIO.bColumnErrClear THEN
 	IF isRsetAll THEN
 		FOR i:=1 TO NO_OF_COMMON_SENSOR DO
 			//stAlmMod.Common.AlarmID[i]:=FALSE;
@@ -124,7 +135,7 @@ IF vIO.bColumnErrClear THEN
 		END_FOR
 	ELSE
 		//stAlmMod.Common.AlarmID[vIO.iAlmIDToRset]:=FALSE;
-		ALMTC.Common.AlarmID[vIO.iAlmIDToRset]:=FALSE;
+		ALMTC.Common.AlarmID[stTCColVIO.iAlmIDToRset]:=FALSE;
 	END_IF
 	SysAlmCleared:=TRUE;
 END_IF]]></ST>
@@ -137,13 +148,19 @@ END_IF]]></ST>
       <LineId Id="27" Count="0" />
     </LineIds>
     <LineIds Name="FB_ColAlarm.AlarmUpdate">
-      <LineId Id="269" Count="2" />
+      <LineId Id="563" Count="2" />
+      <LineId Id="569" Count="0" />
+      <LineId Id="561" Count="0" />
+      <LineId Id="570" Count="2" />
+      <LineId Id="577" Count="2" />
+      <LineId Id="562" Count="0" />
+      <LineId Id="269" Count="1" />
+      <LineId Id="580" Count="0" />
       <LineId Id="434" Count="0" />
       <LineId Id="433" Count="0" />
       <LineId Id="435" Count="1" />
       <LineId Id="273" Count="0" />
       <LineId Id="438" Count="0" />
-      <LineId Id="437" Count="0" />
       <LineId Id="520" Count="0" />
       <LineId Id="519" Count="0" />
       <LineId Id="274" Count="1" />

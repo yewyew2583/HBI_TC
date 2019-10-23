@@ -48,7 +48,7 @@ VAR
 	DIFD							: ARRAY[1..NO_OF_LEVEL] OF F_TRIG;
 	UnblockTIIDIFD					: ARRAY[1..NO_OF_LEVEL] OF F_TRIG;
 	
-	stTCMainVIO						: ST_TCColumn_VIO;
+	stTCColVIO						: ST_TCColumn_VIO;
 	stTCShuttlePOC_VIO				: ST_TCShuttlePOC_VIO;
 	stTCMLevelVIO					: ST_TCMultiLevel_VIO;
 	stDbStnVIO						: ST_DebugStation_VIO;
