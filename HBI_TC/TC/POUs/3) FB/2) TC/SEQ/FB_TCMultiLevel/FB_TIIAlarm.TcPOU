@@ -13,7 +13,7 @@ VAR_OUTPUT
 	TIIAlarmLED					: BOOL;
 	TIIAlarmEPT					: BOOL;
 	iUnBlock					: DINT;
-	bAlarmBlock					: BOOL;
+	bAlarmBlockDrawer					: BOOL;
 	isAboveCellLeakage			: BOOL;
 END_VAR
 
@@ -385,15 +385,14 @@ alarmReset			:= FALSE;	//false back and wait for next alarm reset to reset alarm
 
 isAboveCellLeakage		:= M_AboveLeakageChecking(currentLevel	:= iLevel);
 
-bAlarmBlock 																:=	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipAPReady		       	   	]   OR
-																				ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellFluidLeakage1	   		]   OR
-																				ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellFluidLeakage2	   		]   OR
-																				ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellGroundFault 	   		]   OR
-																				ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCCellDoorClosed	   		]   OR
-																				ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTesterLatchesClosed    	]	OR
-																				isAboveCellLeakage;
+bAlarmBlockDrawer														:=	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTesterLatchesClosed    	]	OR
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCDrawerExtendSignal	   	]	OR
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCDrawerRetractSignal	   	]	OR
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCCellDoorClosed	   		]   OR
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCDrawerUpSignal		   	];
+																				
 
-TIIAlarmLED															:=		ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipAPPowerOn 		   	   		]   OR 
+TIIAlarmLED																:=	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipAPPowerOn 		   	   		]   OR 
 		    																ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipAPReady		       	   	]   OR
 																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTesterLatchesClosed    	]	OR
 																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTesterPowerOn	       		]   OR
@@ -418,7 +417,7 @@ TIIAlarmLED															:=		ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipAPPowerOn
 																			isAboveCellLeakage;
 																			
 																			
-TIIAlarmEPT															:= 		ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipAPPowerOn					]	OR
+TIIAlarmEPT																:= 	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipAPPowerOn					]	OR
 																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipAPReady					]	OR
 																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTesterLatchesClosed		]	OR
 																			ALMTC.Level[iLevel].AlarmID[E_AlarmID.DrawerRetractError			]	OR
@@ -436,17 +435,7 @@ TIIAlarmEPT															:= 		ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipAPPowerO
 																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCDrawerUpSignal		]	OR
 																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCDrawerDownSignal		]	OR
 																			isAboveCellLeakage;
-																			
-
-(*
-//Alarm Reset ===========================================================================
-IF almRset THEN
-	IF ArrAlmSubModule.AlarmSubmodule[iSubMod].ArrAlarmKeepBit[bitNo] THEN
-		ArrAlmSubModule.AlarmSubmodule[iSubMod].ArrAlarmKeepBit[bitNo] := FALSE;
-	END_IF
-END_IF
-//=======================================================================================
-*)]]></ST>
+																			]]></ST>
       </Implementation>
     </Method>
     <Method Name="M_AboveLeakageChecking" Id="{0b729bd7-55a1-4289-91e6-7b49f3713973}">
@@ -701,10 +690,10 @@ END_VAR
       <LineId Id="1441" Count="0" />
       <LineId Id="1440" Count="0" />
       <LineId Id="738" Count="0" />
-      <LineId Id="1476" Count="1" />
       <LineId Id="745" Count="0" />
-      <LineId Id="749" Count="2" />
-      <LineId Id="737" Count="0" />
+      <LineId Id="1508" Count="2" />
+      <LineId Id="1513" Count="0" />
+      <LineId Id="1507" Count="0" />
       <LineId Id="203" Count="0" />
       <LineId Id="1023" Count="0" />
       <LineId Id="1027" Count="0" />
@@ -728,10 +717,6 @@ END_VAR
       <LineId Id="1406" Count="0" />
       <LineId Id="1446" Count="0" />
       <LineId Id="1066" Count="0" />
-      <LineId Id="1055" Count="0" />
-      <LineId Id="205" Count="1" />
-      <LineId Id="209" Count="5" />
-      <LineId Id="120" Count="0" />
     </LineIds>
     <LineIds Name="FB_TIIAlarm.M_AboveLeakageChecking">
       <LineId Id="5" Count="0" />

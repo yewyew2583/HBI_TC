@@ -817,8 +817,8 @@ END_VAR
 									OR	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTIUPresent					];	*)
 									
 	itl_opAP_SafeToMoveSignal:=			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTesterLatchesClosed		]
-									OR	ALMTC.Level[iLevel].AlarmID[E_AlarmID.DrawerDownError				]
-									OR	ALMTC.Level[iLevel].AlarmID[E_AlarmID.DrawerRetractError			]
+									OR	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCDrawerRetractSignal		]
+									OR	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCDrawerDownSignal			]
 									OR	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCCellDoorClosed			]
 									OR 	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellGroundFault 	   		] 
 									OR	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellFluidLeakage1 	   		] 	
@@ -1256,13 +1256,12 @@ END_VAR]]></Declaration>
 IF bPause THEN
 	RETURN;
 
-ELSIF stMLVIO.isTIIError OR stMLVIO.isSysError THEN  
-	IF FALSE (*DIFU Cyl Tii Err*) THEN
-	;
-	ELSE
-		M_nDPSPowerOnOff:=20;		
-		RETURN;
-	END_IF
+ELSIF itl_opTst240VACPwrEnable AND stTCMLSeqParam.bDSPPowerOn THEN  
+	M_nDPSPowerOnOff						:= 20;		
+	RETURN;
+ELSIF itl_opAP_240ACPwrEnable AND stTCMLSeqParam.bAP240ACPowerOn THEN
+	M_nDPSPowerOnOff						:= 20;
+	RETURN;
 END_IF
 
 IF iSeqStep>0 THEN
@@ -1397,11 +1396,7 @@ END_VAR]]></Declaration>
 
 IF (bPause) THEN
 	RETURN;
-ELSIF
-	(stMLVIO.bAlarmBlock OR
-	stMLVIO.iSysUnBlockAlm = 2 OR 
-	stMLVIO.iSysUnBlockAlm = 10)
-THEN
+ELSIF stMLVIO.bAlarmBlockDrawer THEN
 	M_nShuttleMoveInOut:=20;		//return fail event
 	RETURN;
 END_IF
@@ -1445,7 +1440,7 @@ ELSIF stTCMLSeqParam.bShuttleMoveOut OR stTCMLSeqParam.bTBotbShuttleMoveOutReq T
 	arrSeqStep[4]											:= E_SeqSts.eTBotEAPSanityCheck;
 	arrSeqStep[5]											:= E_SeqSts.eMoveDrawerOut;
 	arrSeqStep[6]											:= E_SeqSts.eDone;
-	
+
 ELSIF stTCMLSeqParam.bDrawerUpBefFrtDoorOpen THEN
 	arrSeqStep[0]											:= E_SeqSts.eInit;
 	arrSeqStep[1]											:= E_SeqSts.eFrontDoorOpenConditionCheck;
@@ -1760,14 +1755,8 @@ END_VAR
 
 IF bPause THEN
 	RETURN;
-//ELSIF stMLVIO.isTIIError OR stMLVIO.isSysError THEN 
-ELSIF 
-	stMLVIO.bAlarmBlock 		OR
-	stMLVIO.iSysUnBlockAlm = 2 	OR 
-	stMLVIO.iSysUnBlockAlm = 10
-THEN
-	pwrOnChkTim(
-		In													:= FALSE);
+ELSIF stMLVIO.bAlarmBlockDrawer THEN
+	pwrOnChkTim(In:= FALSE);
 	M_nSystemReset											:= 20;		//return fail event
 	RETURN;
 END_IF
@@ -2812,11 +2801,8 @@ END_CASE]]></ST>
     <LineIds Name="FB_TCMultiLevelSeq.M_nDPSPowerOnOff">
       <LineId Id="6" Count="3" />
       <LineId Id="337" Count="0" />
-      <LineId Id="343" Count="1" />
-      <LineId Id="358" Count="0" />
-      <LineId Id="362" Count="0" />
-      <LineId Id="359" Count="1" />
-      <LineId Id="342" Count="0" />
+      <LineId Id="358" Count="2" />
+      <LineId Id="384" Count="2" />
       <LineId Id="361" Count="0" />
       <LineId Id="379" Count="0" />
       <LineId Id="12" Count="1" />
@@ -2878,10 +2864,6 @@ END_CASE]]></ST>
       <LineId Id="139" Count="0" />
       <LineId Id="2206" Count="0" />
       <LineId Id="2287" Count="0" />
-      <LineId Id="2489" Count="0" />
-      <LineId Id="2503" Count="0" />
-      <LineId Id="2502" Count="0" />
-      <LineId Id="2504" Count="0" />
       <LineId Id="2093" Count="0" />
       <LineId Id="1293" Count="0" />
       <LineId Id="1458" Count="0" />
@@ -3134,11 +3116,8 @@ END_CASE]]></ST>
     </LineIds>
     <LineIds Name="FB_TCMultiLevelSeq.M_nSystemReset">
       <LineId Id="6" Count="3" />
-      <LineId Id="378" Count="0" />
       <LineId Id="1016" Count="0" />
-      <LineId Id="1091" Count="2" />
-      <LineId Id="983" Count="1" />
-      <LineId Id="1071" Count="0" />
+      <LineId Id="984" Count="0" />
       <LineId Id="986" Count="0" />
       <LineId Id="985" Count="0" />
       <LineId Id="395" Count="0" />
