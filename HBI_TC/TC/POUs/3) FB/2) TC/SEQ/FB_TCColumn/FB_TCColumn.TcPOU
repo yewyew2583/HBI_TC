@@ -71,7 +71,7 @@ VAR
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[	IF bHMIEnTIISenSimulation THEN
-		//bTIISenSimArray:= stHMITIISenSimArray[iLevel].bHMITIIByPassArray;
+		//abc
 		FOR i:=1 TO NO_OF_COMMON_SENSOR DO
 			bColSenSimArray[i]:= NOT bHMIColSenSimArray[i];
 		END_FOR
