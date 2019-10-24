@@ -5,15 +5,15 @@
 STRUCT
 
 	
-	lrTBOT_XPos				AT %I*: LREAL;
-	lrTBOT_YPos				AT %I*: LREAL;
-	lrTBOT_ZPos				AT %I*: LREAL;
-	iTBOT_HeartBeat			AT %I*: INT;
-	bAntiCollisionTriggered	AT %I*: BOOL :=TRUE;
-	iTCDwrSafeToMoveEAP AT %I*: INT:=65535;
-	bTCCellACPwrOff	AT %I*:  BOOL :=FALSE ;
+	lrTBOT_XPos					AT %I*: LREAL;
+	lrTBOT_YPos					AT %I*: LREAL;
+	lrTBOT_ZPos					AT %I*: LREAL;
+	iTBOT_HeartBeat				AT %I*: INT;
+	bAntiCollisionTriggered		AT %I*: BOOL 	:= TRUE;
+	iTCDwrSafeToMoveEAP 		AT %I*: INT		:= 65535;
+	bTCCellACPwrOff				AT %I*:  BOOL 	:= FALSE ;
 	
-	bTC_HeartBeat 			AT %Q*:INT;
+	bTC_HeartBeat 				AT %Q*:INT;
 	iTCDrawerCylExtendRS_EAP	AT %Q*: INT;
     iTCDrawerCylRetractRS_EAP	AT %Q*: INT;
 	
