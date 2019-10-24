@@ -67,10 +67,11 @@
 							<Type>LREAL</Type>
 						</Var>
 						<Var>
+							<Name>GVL_EAP.stEAP.stTBOT_TC_EAP[1].iTBOT_HeartBeat</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
 							<Name>GVL_EAP.stEAP.stTBOT_TC_EAP[1].bAntiCollisionTriggered</Name>
-							<Comment>
-								<![CDATA[iTBOT_HeartBeat			AT %I*: INT;]]>
-							</Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
@@ -94,10 +95,11 @@
 							<Type>LREAL</Type>
 						</Var>
 						<Var>
+							<Name>GVL_EAP.stEAP.stTBOT_TC_EAP[2].iTBOT_HeartBeat</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
 							<Name>GVL_EAP.stEAP.stTBOT_TC_EAP[2].bAntiCollisionTriggered</Name>
-							<Comment>
-								<![CDATA[iTBOT_HeartBeat			AT %I*: INT;]]>
-							</Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
@@ -121,10 +123,11 @@
 							<Type>LREAL</Type>
 						</Var>
 						<Var>
+							<Name>GVL_EAP.stEAP.stTBOT_TC_EAP[3].iTBOT_HeartBeat</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
 							<Name>GVL_EAP.stEAP.stTBOT_TC_EAP[3].bAntiCollisionTriggered</Name>
-							<Comment>
-								<![CDATA[iTBOT_HeartBeat			AT %I*: INT;]]>
-							</Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
@@ -148,10 +151,11 @@
 							<Type>LREAL</Type>
 						</Var>
 						<Var>
+							<Name>GVL_EAP.stEAP.stTBOT_TC_EAP[4].iTBOT_HeartBeat</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
 							<Name>GVL_EAP.stEAP.stTBOT_TC_EAP[4].bAntiCollisionTriggered</Name>
-							<Comment>
-								<![CDATA[iTBOT_HeartBeat			AT %I*: INT;]]>
-							</Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
@@ -175,10 +179,11 @@
 							<Type>LREAL</Type>
 						</Var>
 						<Var>
+							<Name>GVL_EAP.stEAP.stTBOT_TC_EAP[5].iTBOT_HeartBeat</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
 							<Name>GVL_EAP.stEAP.stTBOT_TC_EAP[5].bAntiCollisionTriggered</Name>
-							<Comment>
-								<![CDATA[iTBOT_HeartBeat			AT %I*: INT;]]>
-							</Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
@@ -202,10 +207,11 @@
 							<Type>LREAL</Type>
 						</Var>
 						<Var>
+							<Name>GVL_EAP.stEAP.stTBOT_TC_EAP[6].iTBOT_HeartBeat</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
 							<Name>GVL_EAP.stEAP.stTBOT_TC_EAP[6].bAntiCollisionTriggered</Name>
-							<Comment>
-								<![CDATA[iTBOT_HeartBeat			AT %I*: INT;]]>
-							</Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
@@ -3739,10 +3745,11 @@
 					<Vars VarGrpType="2">
 						<Name>PlcTask Outputs</Name>
 						<Var>
+							<Name>GVL_EAP.stEAP.stTBOT_TC_EAP[1].bTC_HeartBeat</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
 							<Name>GVL_EAP.stEAP.stTBOT_TC_EAP[1].iTCDrawerCylExtendRS_EAP</Name>
-							<Comment>
-								<![CDATA[bTC_HeartBeat 			AT %Q*:INT;]]>
-							</Comment>
 							<Type>INT</Type>
 						</Var>
 						<Var>
@@ -3750,10 +3757,11 @@
 							<Type>INT</Type>
 						</Var>
 						<Var>
+							<Name>GVL_EAP.stEAP.stTBOT_TC_EAP[2].bTC_HeartBeat</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
 							<Name>GVL_EAP.stEAP.stTBOT_TC_EAP[2].iTCDrawerCylExtendRS_EAP</Name>
-							<Comment>
-								<![CDATA[bTC_HeartBeat 			AT %Q*:INT;]]>
-							</Comment>
 							<Type>INT</Type>
 						</Var>
 						<Var>
@@ -3761,10 +3769,11 @@
 							<Type>INT</Type>
 						</Var>
 						<Var>
+							<Name>GVL_EAP.stEAP.stTBOT_TC_EAP[3].bTC_HeartBeat</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
 							<Name>GVL_EAP.stEAP.stTBOT_TC_EAP[3].iTCDrawerCylExtendRS_EAP</Name>
-							<Comment>
-								<![CDATA[bTC_HeartBeat 			AT %Q*:INT;]]>
-							</Comment>
 							<Type>INT</Type>
 						</Var>
 						<Var>
@@ -3772,10 +3781,11 @@
 							<Type>INT</Type>
 						</Var>
 						<Var>
+							<Name>GVL_EAP.stEAP.stTBOT_TC_EAP[4].bTC_HeartBeat</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
 							<Name>GVL_EAP.stEAP.stTBOT_TC_EAP[4].iTCDrawerCylExtendRS_EAP</Name>
-							<Comment>
-								<![CDATA[bTC_HeartBeat 			AT %Q*:INT;]]>
-							</Comment>
 							<Type>INT</Type>
 						</Var>
 						<Var>
@@ -3783,10 +3793,11 @@
 							<Type>INT</Type>
 						</Var>
 						<Var>
+							<Name>GVL_EAP.stEAP.stTBOT_TC_EAP[5].bTC_HeartBeat</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
 							<Name>GVL_EAP.stEAP.stTBOT_TC_EAP[5].iTCDrawerCylExtendRS_EAP</Name>
-							<Comment>
-								<![CDATA[bTC_HeartBeat 			AT %Q*:INT;]]>
-							</Comment>
 							<Type>INT</Type>
 						</Var>
 						<Var>
@@ -3794,10 +3805,11 @@
 							<Type>INT</Type>
 						</Var>
 						<Var>
+							<Name>GVL_EAP.stEAP.stTBOT_TC_EAP[6].bTC_HeartBeat</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
 							<Name>GVL_EAP.stEAP.stTBOT_TC_EAP[6].iTCDrawerCylExtendRS_EAP</Name>
-							<Comment>
-								<![CDATA[bTC_HeartBeat 			AT %Q*:INT;]]>
-							</Comment>
 							<Type>INT</Type>
 						</Var>
 						<Var>

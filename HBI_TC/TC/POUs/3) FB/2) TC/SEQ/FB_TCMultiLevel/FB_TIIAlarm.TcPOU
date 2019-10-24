@@ -249,7 +249,7 @@ FOR i := 1 TO NoOfTIIAlm DO
 			
         E_TIIAlarm.TBOT_TC_ACPower_Signal: 
 			e															:= E_TIIAlarm.TBOT_TC_ACPower_Signal; 
-			ArrAlmBitBefDelay[E_TIIAlarm.TBOT_TC_ACPower_Signal]		:= (vIO.TBOT_TC_ACPower_Signal) AND (vIO.ipAPPresentSensor OR vIO.ipTesterPresent) AND (NOT bDebugCart) AND (NOT bDebugStation) AND bENs[14]; 
+			ArrAlmBitBefDelay[E_TIIAlarm.TBOT_TC_ACPower_Signal]		:= (vIO.TBOT_TC_ACPower_Signal) AND (NOT bDebugCart) AND (NOT bDebugStation) AND bENs[14]; 
 			Arr_ms[e] 													:= 500;  (*TIIAlmText[e]:='TCDrawerCylRetractRS'*);
 			
 		E_TIIAlarm.DS_Facility_EAP_ACPower_Signal: 
