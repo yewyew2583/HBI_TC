@@ -740,8 +740,8 @@ IF (NOT bProductionMode) THEN
 	stMLDIO.ipAPReady									:= stMLVIO.ipAPReady;
 	stMLDIO.ipHandlerSafeToEnterPLC						:= stMLVIO.ipHandlerSafeToEnterPLC;
 	stMLDIO.ipHandlerSafeToEnterHwr						:= stMLVIO.ipHandlerSafeToEnterHwr;
-	stMLDIO.ipCellFluidLeakage1							:= stMLVIO.ipCellFluidLeakage1;
-	stMLDIO.ipCellFluidLeakage2							:= stMLVIO.ipCellFluidLeakage2;
+	stMLDIO.ipCellFluidLeakage1							:= NOT stMLVIO.ipCellFluidLeakage1;
+	stMLDIO.ipCellFluidLeakage2							:= NOT stMLVIO.ipCellFluidLeakage2;
 	stMLDIO.ipCellGroundFault							:= stMLVIO.ipCellGroundFault;
 	stMLDIO.ipTesterPresent								:= stMLVIO.ipTesterPresent;
 	stMLDIO.ipTesterPowerOn								:= stMLVIO.ipTesterPowerOn;

@@ -112,6 +112,7 @@ END_IF
 ////////////////////////// Input mapping simulation in VISU //////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 IF NOT bProductionMode THEN
+	stTCColumnDIO.ipColumnFluid_PCW_Leakage			:= NOT stTCColumnVIO.ipColumnFluid_PCW_Leakage;
 	stTCColumnDIO.ipTbotDoorClosedSignal			:= stTCColumnVIO.ipTbotDoorClosedSignal;
 END_IF]]></ST>
       </Implementation>
@@ -207,6 +208,7 @@ END_VAR
       <LineId Id="165" Count="1" />
       <LineId Id="63" Count="0" />
       <LineId Id="38" Count="0" />
+      <LineId Id="178" Count="0" />
       <LineId Id="169" Count="1" />
     </LineIds>
     <LineIds Name="FB_TCColumn.M_UpdateSysAlarmFlag">
