@@ -155,6 +155,11 @@
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
+              <v n="TextID">"6407"</v>
+              <v n="TextDefault">" : eSystemPCWLeakage2Alarm"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
               <v n="TextID">"1774"</v>
               <v n="TextDefault">" : eSystemPCWLeakageAlarm"</v>
               <l n="LanguageTexts" t="ArrayList" />
@@ -1425,6 +1430,11 @@
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
+              <v n="TextID">"5977"</v>
+              <v n="TextDefault">"ColumnPCWLeakage2EAP"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
               <v n="TextID">"4652"</v>
               <v n="TextDefault">"ColumnPCWLeakageEAP"</v>
               <l n="LanguageTexts" t="ArrayList" />
@@ -1472,6 +1482,11 @@
             <o>
               <v n="TextID">"4645"</v>
               <v n="TextDefault">"DB"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"4543"</v>
+              <v n="TextDefault">"DBColumnPCWLeakage2EAP"</v>
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>

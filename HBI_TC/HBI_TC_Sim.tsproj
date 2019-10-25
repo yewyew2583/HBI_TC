@@ -1236,6 +1236,10 @@
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[1].fbTCMultiLevelSeq.stTCColDIO.eapDColumnPCWLeakage2</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
 							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stMLDIO.ipAPPresentSensor</Name>
 							<Comment>
 								<![CDATA[//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1655,6 +1659,10 @@
 						</Var>
 						<Var>
 							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stTCColDIO.eapDColumnPCWReturnLeakage</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[2].fbTCMultiLevelSeq.stTCColDIO.eapDColumnPCWLeakage2</Name>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
@@ -2080,6 +2088,10 @@
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[3].fbTCMultiLevelSeq.stTCColDIO.eapDColumnPCWLeakage2</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
 							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stMLDIO.ipAPPresentSensor</Name>
 							<Comment>
 								<![CDATA[//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2499,6 +2511,10 @@
 						</Var>
 						<Var>
 							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stTCColDIO.eapDColumnPCWReturnLeakage</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[4].fbTCMultiLevelSeq.stTCColDIO.eapDColumnPCWLeakage2</Name>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
@@ -2924,6 +2940,10 @@
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[5].fbTCMultiLevelSeq.stTCColDIO.eapDColumnPCWLeakage2</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
 							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stMLDIO.ipAPPresentSensor</Name>
 							<Comment>
 								<![CDATA[//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -3346,6 +3366,10 @@
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
+							<Name>GVL_TC.arrTCMultiLevel[6].fbTCMultiLevelSeq.stTCColDIO.eapDColumnPCWLeakage2</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
 							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDebugStationDIO.ipDBStnAPPresentSensor</Name>
 							<Comment>
 								<![CDATA[ Actuate pan present signal, 0: Not present, 1: Present]]>
@@ -3695,6 +3719,10 @@
 						</Var>
 						<Var>
 							<Name>GVL_TC.fbTCColumn.stTCColumnDIO.eapDColumnPCWReturnLeakage</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbTCColumn.stTCColumnDIO.eapDColumnPCWLeakage2</Name>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
@@ -5681,6 +5709,10 @@
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
+							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDbColVIO.eapDBColumnPCWLeakage2</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
 							<Name>GVL_TC.stDebugStation.fbDBStnSeq.stDbColVIO.eapShutOffAllACPower</Name>
 							<Type>BOOL</Type>
 						</Var>
@@ -5714,6 +5746,10 @@
 						</Var>
 						<Var>
 							<Name>GVL_TC.fbDebugColumn.stDebugColumnDIO.eapDBColumnPCWReturnLeakage</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_TC.fbDebugColumn.stDebugColumnDIO.eapDBColumnPCWLeakage2</Name>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>

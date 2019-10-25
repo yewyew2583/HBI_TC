@@ -84,7 +84,11 @@ END_VAR]]></Declaration>
 stTCColumnVIO.opHotAirExhaustFan:=FunONOFF;
 
 IF bDebugCart THEN
-	stTCColumnVIO.ipColumnFluid_PCW_Leakage 		:=  stTCColumnDIO.eapDColumnPCWLeakage OR  stTCColumnDIO.eapDColumnPCWSupplyLeakage OR  stTCColumnDIO.eapDColumnPCWReturnLeakage; 									
+	stTCColumnVIO.ipColumnFluid_PCW_Leakage 		:=  stTCColumnDIO.eapDColumnPCWLeakage 			OR  
+														stTCColumnDIO.eapDColumnPCWSupplyLeakage 	OR  
+														stTCColumnDIO.eapDColumnPCWReturnLeakage 	OR 
+														stTCColumnDIO.eapDColumnPCWLeakage2;
+ 									
 	stTCColumnVIO.ipAllTCDrawerRetractedinCell 		:= FALSE;  //No Alarm if debug cart
 	stTCColumnVIO.ipTbotDoorClosedSignal	 		:= TRUE;   //No Alarm if debug cart
 ELSE
@@ -195,6 +199,7 @@ END_VAR
       <LineId Id="121" Count="0" />
       <LineId Id="87" Count="0" />
       <LineId Id="153" Count="0" />
+      <LineId Id="186" Count="3" />
       <LineId Id="138" Count="0" />
       <LineId Id="143" Count="0" />
       <LineId Id="122" Count="0" />

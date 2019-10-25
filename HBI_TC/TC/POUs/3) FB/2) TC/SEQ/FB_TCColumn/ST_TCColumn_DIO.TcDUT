@@ -10,9 +10,10 @@ STRUCT
 	opHotAirExhaustFan 						AT %Q*: BOOL; // Exhaust fan
 	
 	//Debug EAP Status ---------------------------------------//
-	eapDColumnPCWLeakage					AT %I* :BOOL;
-	eapDColumnPCWSupplyLeakage    			AT %I* :BOOL;
-	eapDColumnPCWReturnLeakage    			AT %I* :BOOL;
+	eapDColumnPCWLeakage					AT %I* : BOOL;
+	eapDColumnPCWSupplyLeakage    			AT %I* : BOOL;
+	eapDColumnPCWReturnLeakage    			AT %I* : BOOL;
+	eapDColumnPCWLeakage2					AT %I* : BOOL;
 END_STRUCT
 END_TYPE
 ]]></Declaration>

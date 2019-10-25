@@ -4,22 +4,23 @@
     <Declaration><![CDATA[TYPE ST_DebugColumnDIO :
 STRUCT
 //<DIO>
-	ipDBColumnPCWLeakage				AT %I* :BOOL; //debugcart3 new io
-	ipDBColumnPCWLeakage2				AT %I* :BOOL; //debugcart3 new io
-	ipDBColumnPCWSupplyLeakage    		AT %I* :BOOL;
-	ipDBColumnPCWReturnLeakage    		AT %I* :BOOL;
-	
-	opDBColumnHotAirExhaustFan 			AT %Q* :BOOL;
-	opDBColumnPCWValve         			AT %Q* :BOOL;
-	opDBColumnTstAirSol        			AT %Q* :BOOL;
-	opDBColumnAPAirSol         			AT %Q* :BOOL;
+	ipDBColumnPCWLeakage				AT %I* : BOOL; //debugcart3 new io
+	ipDBColumnPCWLeakage2				AT %I* : BOOL; //debugcart3 new io
+	ipDBColumnPCWSupplyLeakage    		AT %I* : BOOL;
+	ipDBColumnPCWReturnLeakage    		AT %I* : BOOL;
+	                                             
+	opDBColumnHotAirExhaustFan 			AT %Q* : BOOL;
+	opDBColumnPCWValve         			AT %Q* : BOOL;
+	opDBColumnTstAirSol        			AT %Q* : BOOL;
+	opDBColumnAPAirSol         			AT %Q* : BOOL;
 //</DIO>
 
 //<EAP>
-	eapDBColumnPCWLeakage				AT %Q* :BOOL;
-	eapDBColumnPCWSupplyLeakage    		AT %Q* :BOOL;
-	eapDBColumnPCWReturnLeakage    		AT %Q* :BOOL;
-	eapShutOffAllACPower				AT %Q* :BOOL;
+	eapDBColumnPCWLeakage				AT %Q* : BOOL;
+	eapDBColumnPCWSupplyLeakage    		AT %Q* : BOOL;
+	eapDBColumnPCWReturnLeakage    		AT %Q* : BOOL;
+	eapDBColumnPCWLeakage2				AT %Q* : BOOL;
+	eapShutOffAllACPower				AT %Q* : BOOL;
 //</EAP>
 
 //<AIO>
@@ -35,37 +36,37 @@ STRUCT
 //</AIO>
 
 //<CVTIO>
-	ipDBColumnPCWRegularFlowSensor		:REAL;
-	ipDBColumnPCWSupplyPressure       	:REAL;
-	ipDBColumnPCWReturnPressure       	:REAL;
-	ipDBColumnTstAirPressure          	:REAL;
-	ipDBColumnAPAirPressure           	:REAL;
-	ipDBColumnDewPointSensor          	:REAL;
-	ipDBColumnTempSensor			    :REAL;          
-	ipDBColumnPCWSupplyTemperature    	:REAL;
-	ipDBColumnPCWReturnTemperature    	:REAL;
-//</CVTIO>
-
-//<SIMIO>
-	simDBColumnPCWRegularFlowSensor		:REAL;
-	simDBColumnPCWSupplyPressure       	:REAL;
-	simDBColumnPCWReturnPressure       	:REAL;
-	simDBColumnTstAirPressure          	:REAL;
-	simDBColumnAPAirPressure           	:REAL;
-	simDBColumnDewPointSensor          	:REAL;
-	simDBColumnTempSensor			    :REAL;
-	simDBColumnPCWSupplyTemperature    	:REAL;
-	simDBColumnPCWReturnTemperature    	:REAL;
+	ipDBColumnPCWRegularFlowSensor		: REAL;
+	ipDBColumnPCWSupplyPressure       	: REAL;
+	ipDBColumnPCWReturnPressure       	: REAL;
+	ipDBColumnTstAirPressure          	: REAL;
+	ipDBColumnAPAirPressure           	: REAL;
+	ipDBColumnDewPointSensor          	: REAL;
+	ipDBColumnTempSensor			    : REAL;          
+	ipDBColumnPCWSupplyTemperature    	: REAL;
+	ipDBColumnPCWReturnTemperature    	: REAL;
+//</CVTIO>                                
+                                          
+//<SIMIO>                                 
+	simDBColumnPCWRegularFlowSensor		: REAL;
+	simDBColumnPCWSupplyPressure       	: REAL;
+	simDBColumnPCWReturnPressure       	: REAL;
+	simDBColumnTstAirPressure          	: REAL;
+	simDBColumnAPAirPressure           	: REAL;
+	simDBColumnDewPointSensor          	: REAL;
+	simDBColumnTempSensor			    : REAL;
+	simDBColumnPCWSupplyTemperature    	: REAL;
+	simDBColumnPCWReturnTemperature    	: REAL;
 	
-	fbSimDBColumnPCWRegularFlowSensor		:FB_AnlgSIM;
-	fbSimDBColumnPCWSupplyPressure       	:FB_AnlgSIM;
-	fbSimDBColumnPCWReturnPressure       	:FB_AnlgSIM;
-	fbSimDBColumnTstAirPressure          	:FB_AnlgSIM;
-	fbSimDBColumnAPAirPressure           	:FB_AnlgSIM;
-	fbSimDBColumnDewPointSensor          	:FB_AnlgSIM;
-	fbSimDBColumnTempSensor			    	:FB_AnlgSIM;
-	fbSimDBColumnPCWSupplyTemperature    	:FB_AnlgSIM;
-	fbSimDBColumnPCWReturnTemperature    	:FB_AnlgSIM;
+	fbSimDBColumnPCWRegularFlowSensor		: FB_AnlgSIM;
+	fbSimDBColumnPCWSupplyPressure       	: FB_AnlgSIM;
+	fbSimDBColumnPCWReturnPressure       	: FB_AnlgSIM;
+	fbSimDBColumnTstAirPressure          	: FB_AnlgSIM;
+	fbSimDBColumnAPAirPressure           	: FB_AnlgSIM;
+	fbSimDBColumnDewPointSensor          	: FB_AnlgSIM;
+	fbSimDBColumnTempSensor			    	: FB_AnlgSIM;
+	fbSimDBColumnPCWSupplyTemperature    	: FB_AnlgSIM;
+	fbSimDBColumnPCWReturnTemperature    	: FB_AnlgSIM;
 //</SIMIO>
 	
 

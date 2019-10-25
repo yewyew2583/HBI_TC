@@ -110,16 +110,23 @@ FOR i:=1 TO noDBColAlarm DO
                    
 	    E_DCFACAlarm.eSystemPCWLeakageAlarm:
 			eAlarm															:= E_DCFACAlarm.eSystemPCWLeakageAlarm; 
-			ArrAlmBitBefDelay[E_DCFACAlarm.eSystemPCWLeakageAlarm]			:= stDebugColumnDIO.eapDBColumnPCWLeakage; 
+			ArrAlmBitBefDelay[E_DCFACAlarm.eSystemPCWLeakageAlarm]			:= stDebugColumnVIO.ipDBColumnPCWLeakage; 
 			Arr_ms[eAlarm] 													:= 500;  //TIIAlmText[e]:='CellGroundFault'  		;
+			
 		E_DCFACAlarm.eSystemPCWReturnLeakageAlarm:
 			eAlarm															:= E_DCFACAlarm.eSystemPCWReturnLeakageAlarm; 
-			ArrAlmBitBefDelay[E_DCFACAlarm.eSystemPCWReturnLeakageAlarm]	:= stDebugColumnDIO.eapDBColumnPCWReturnLeakage; 
+			ArrAlmBitBefDelay[E_DCFACAlarm.eSystemPCWReturnLeakageAlarm]	:= stDebugColumnVIO.ipDBColumnPCWReturnLeakage; 
 			Arr_ms[eAlarm] 													:= 500;  //TIIAlmText[e]:='CellGroundFault'  		;  
+			
 		E_DCFACAlarm.eSystemPCWSupplyLeakageAlarm:
 			eAlarm															:= E_DCFACAlarm.eSystemPCWSupplyLeakageAlarm; 
-			ArrAlmBitBefDelay[E_DCFACAlarm.eSystemPCWSupplyLeakageAlarm]	:= stDebugColumnDIO.eapDBColumnPCWSupplyLeakage; 
+			ArrAlmBitBefDelay[E_DCFACAlarm.eSystemPCWSupplyLeakageAlarm]	:= stDebugColumnVIO.ipDBColumnPCWSupplyLeakage; 
 			Arr_ms[eAlarm] 													:= 500;  //TIIAlmText[e]:='CellGroundFault'  		;  
+			
+		E_DCFACAlarm.eSystemPCWLeakage2Alarm:
+			eAlarm															:= E_DCFACAlarm.eSystemPCWLeakage2Alarm; 
+			ArrAlmBitBefDelay[E_DCFACAlarm.eSystemPCWLeakage2Alarm]			:= stDebugColumnVIO.ipDBColumnPCWLeakage2; 
+			Arr_ms[eAlarm] 													:= 500;  //TIIAlmText[e]:='CellGroundFault'  		;
 	END_CASE
 	
 	//Delay Library Alm Bit
@@ -148,11 +155,12 @@ IF stDebugColumnVIO.bDebugColErrClear THEN
 	stDebugColumnVIO.bDebugColErrClear:= FALSE;
 END_IF
 
-DBColumnAlarmLED				:= 	ALM_DCCOL.AlarmID[E_DCFACAlarm.e6BarLowOFAAirPressureAlarm] OR
-									ALM_DCCOL.AlarmID[E_DCFACAlarm.eCriticalCondensationAlarm] OR
-									ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWLeakageAlarm] OR
-									ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWReturnLeakageAlarm] OR
-									ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWSupplyLeakageAlarm];
+DBColumnAlarmLED				:= 	ALM_DCCOL.AlarmID[E_DCFACAlarm.e6BarLowOFAAirPressureAlarm] 	OR
+									ALM_DCCOL.AlarmID[E_DCFACAlarm.eCriticalCondensationAlarm] 		OR
+									ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWLeakageAlarm] 			OR
+									ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWReturnLeakageAlarm] 	OR
+									ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWSupplyLeakageAlarm]	OR
+									ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWLeakage2Alarm];
 
 
 
@@ -373,12 +381,30 @@ END_VAR
 	                                            					bActual:=stDebugColumnDIO.ipDBColumnPCWReturnLeakage , 
 	                                            					bSimu:=TRUE , 
 	                                            					iBackDoor:=stDebugColumnBIO.ipDBColumnPCWReturnLeakage );
+																	
+	stDebugColumnVIO.ipDBColumnPCWLeakage2		:= NOT fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , 
+	                                            					bActual:=stDebugColumnDIO.ipDBColumnPCWLeakage2 , 
+	                                            					bSimu:=TRUE , 
+	                                            					iBackDoor:=stDebugColumnBIO.ipDBColumnPCWLeakage2 );											
 																				
 //EAP===========================================================================================																	
-	stDebugColumnDIO.eapDBColumnPCWLeakage := 			stDebugColumnVIO.ipDBColumnPCWLeakage;		
-	stDebugColumnDIO.eapDBColumnPCWSupplyLeakage :=		stDebugColumnVIO.ipDBColumnPCWSupplyLeakage;															
-	stDebugColumnDIO.eapDBColumnPCWReturnLeakage 	:=	stDebugColumnVIO.ipDBColumnPCWReturnLeakage;															
+	stDebugColumnDIO.eapDBColumnPCWLeakage 					:= stDebugColumnVIO.ipDBColumnPCWLeakage;		
+	stDebugColumnDIO.eapDBColumnPCWSupplyLeakage 			:= stDebugColumnVIO.ipDBColumnPCWSupplyLeakage;															
+	stDebugColumnDIO.eapDBColumnPCWReturnLeakage 			:= stDebugColumnVIO.ipDBColumnPCWReturnLeakage;					
+	stDebugColumnDIO.eapDBColumnPCWLeakage2					:= stDebugColumnVIO.ipDBColumnPCWLeakage2;					
 //=============================================================================================
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////// Simulation Input Mapping ///////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+IF (NOT bProductionMode) THEN
+	
+	stDebugColumnDIO.ipDBColumnPCWLeakage			:= stDebugColumnVIO.ipDBColumnPCWLeakage;
+	stDebugColumnDIO.ipDBColumnPCWSupplyLeakage		:= stDebugColumnVIO.ipDBColumnPCWSupplyLeakage;
+	stDebugColumnDIO.ipDBColumnPCWReturnLeakage		:= stDebugColumnVIO.ipDBColumnPCWReturnLeakage;
+	stDebugColumnDIO.ipDBColumnPCWLeakage2			:= stDebugColumnVIO.ipDBColumnPCWLeakage2;
+END_IF
+
 
 
 IF stDebugColumnVIO.bShutOffAllACPower THEN
@@ -405,7 +431,7 @@ IF NOT stDebugColumnVIO.bDiagnosticMode	THEN
 	stDebugColumnDIO.opDBColumnTstAirSol        := stDebugColumnVIO.opDBColumnTstAirSol;				
 	stDebugColumnDIO.opDBColumnAPAirSol         := stDebugColumnVIO.opDBColumnAPAirSol;
 	stDebugColumnDIO.eapShutOffAllACPower		:= stDebugColumnVIO.eapShutOffAllACPower;
-END_IF			]]></ST>
+END_IF		]]></ST>
       </Implementation>
     </Method>
     <Method Name="Logic_opDBColumnPCWValve" Id="{658180df-680a-49e5-a1b7-2dfb39bc8345}" FolderPath="OutputLogic\">
@@ -456,15 +482,17 @@ FC_BitToWord(
 
 IF 	DewPoint_Abort OR 
 	OFA6Bar_Abort OR 
-	ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWLeakageAlarm] OR 
-	ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWSupplyLeakageAlarm] OR  
-	ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWReturnLeakageAlarm] THEN
+	ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWLeakageAlarm] 			OR 
+	ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWSupplyLeakageAlarm]	OR  
+	ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWReturnLeakageAlarm] 	OR 
+	ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWLeakage2Alarm] 		THEN
 	Alarm_opDBColumnPCWValve				:= TRUE;
-ELSIF 	(NOT ALM_DCCOL.AlarmID[E_DCFACAlarm.eCriticalCondensationAlarm]) AND 
-		(NOT ALM_DCCOL.AlarmID[E_DCFACAlarm.e6BarLowOFAAirPressureAlarm]) AND
-		(NOT ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWLeakageAlarm]) AND
-		(NOT ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWSupplyLeakageAlarm]) AND 
-		(NOT ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWReturnLeakageAlarm]) THEN
+ELSIF 	(NOT ALM_DCCOL.AlarmID[E_DCFACAlarm.eCriticalCondensationAlarm]) 	AND 
+		(NOT ALM_DCCOL.AlarmID[E_DCFACAlarm.e6BarLowOFAAirPressureAlarm]) 	AND
+		(NOT ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWLeakageAlarm]) 		AND
+		(NOT ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWSupplyLeakageAlarm]) 	AND 
+		(NOT ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWReturnLeakageAlarm])	AND
+		(NOT ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWLeakage2Alarm])		THEN
 	Alarm_opDBColumnPCWValve				:= FALSE;
 END_IF
 
@@ -547,10 +575,15 @@ END_VAR
       <LineId Id="106" Count="0" />
       <LineId Id="136" Count="2" />
       <LineId Id="145" Count="14" />
+      <LineId Id="257" Count="0" />
       <LineId Id="161" Count="2" />
       <LineId Id="160" Count="0" />
+      <LineId Id="256" Count="0" />
       <LineId Id="165" Count="2" />
       <LineId Id="164" Count="0" />
+      <LineId Id="255" Count="0" />
+      <LineId Id="252" Count="2" />
+      <LineId Id="251" Count="0" />
       <LineId Id="143" Count="0" />
       <LineId Id="199" Count="4" />
       <LineId Id="189" Count="1" />
@@ -565,6 +598,7 @@ END_VAR
       <LineId Id="216" Count="0" />
       <LineId Id="237" Count="1" />
       <LineId Id="242" Count="3" />
+      <LineId Id="258" Count="0" />
       <LineId Id="241" Count="0" />
       <LineId Id="240" Count="0" />
       <LineId Id="239" Count="0" />
@@ -625,11 +659,22 @@ END_VAR
       <LineId Id="214" Count="10" />
       <LineId Id="54" Count="0" />
       <LineId Id="123" Count="11" />
+      <LineId Id="230" Count="0" />
+      <LineId Id="232" Count="2" />
+      <LineId Id="231" Count="0" />
       <LineId Id="204" Count="0" />
       <LineId Id="108" Count="0" />
       <LineId Id="120" Count="2" />
+      <LineId Id="254" Count="0" />
       <LineId Id="53" Count="0" />
+      <LineId Id="237" Count="0" />
       <LineId Id="38" Count="0" />
+      <LineId Id="238" Count="2" />
+      <LineId Id="248" Count="0" />
+      <LineId Id="243" Count="0" />
+      <LineId Id="245" Count="2" />
+      <LineId Id="244" Count="0" />
+      <LineId Id="241" Count="1" />
       <LineId Id="162" Count="0" />
       <LineId Id="167" Count="0" />
       <LineId Id="179" Count="0" />
@@ -647,7 +692,7 @@ END_VAR
       <LineId Id="27" Count="0" />
       <LineId Id="29" Count="3" />
       <LineId Id="191" Count="0" />
-      <LineId Id="81" Count="0" />
+      <LineId Id="235" Count="0" />
     </LineIds>
     <LineIds Name="FB_DebugColumn.Logic_opDBColumnPCWValve">
       <LineId Id="38" Count="35" />
@@ -655,10 +700,12 @@ END_VAR
       <LineId Id="96" Count="0" />
       <LineId Id="99" Count="0" />
       <LineId Id="104" Count="3" />
+      <LineId Id="118" Count="0" />
       <LineId Id="100" Count="1" />
       <LineId Id="108" Count="0" />
       <LineId Id="112" Count="0" />
       <LineId Id="109" Count="1" />
+      <LineId Id="119" Count="0" />
       <LineId Id="102" Count="0" />
       <LineId Id="97" Count="1" />
       <LineId Id="12" Count="0" />

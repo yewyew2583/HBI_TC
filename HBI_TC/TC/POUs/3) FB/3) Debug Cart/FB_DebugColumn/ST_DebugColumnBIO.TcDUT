@@ -8,6 +8,7 @@ STRUCT
 	ipDBColumnPCWLeakage				: E_BackdoorState;
 	ipDBColumnPCWSupplyLeakage    		: E_BackdoorState;
 	ipDBColumnPCWReturnLeakage    		: E_BackdoorState;
+	ipDBColumnPCWLeakage2				: E_BackdoorState;
 	                                    
 	opDBColumnHotAirExhaustFan 			:BOOL;
 	opDBColumnPCWValve         			:BOOL;

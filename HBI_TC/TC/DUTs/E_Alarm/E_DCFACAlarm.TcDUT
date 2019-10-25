@@ -24,6 +24,7 @@ TYPE E_DCFACAlarm :
 	eSystemPCWReturnLeakageAlarm     	:= 3    ,
 	eCriticalCondensationAlarm       	:= 4    ,
 	e6BarLowOFAAirPressureAlarm			:= 5	,
+	eSystemPCWLeakage2Alarm				:= 6	,
 	ePCWSupplyHighTempWarning 			:= 11   ,
 	e6BarLowOFAAirPressureWarning    	:= 12   ,
 	e9BarLowOFAAirPressureWarning    	:= 13   ,

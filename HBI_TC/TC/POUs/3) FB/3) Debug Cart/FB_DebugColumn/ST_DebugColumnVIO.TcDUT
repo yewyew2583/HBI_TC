@@ -4,39 +4,40 @@
     <Declaration><![CDATA[TYPE ST_DebugColumnVIO :
 STRUCT
 //<CtrlBit>
-	bDiagnosticMode						:BOOL;
-	bShutOffAir							:BOOL;
-	bShutOffPCW							:BOOL;
-	bShutOffAllACPower					:BOOL;
-	bDebugColErrClear					:BOOL;
-	iAlmIDToRset						:DINT;
+	bDiagnosticMode						: BOOL;
+	bShutOffAir							: BOOL;
+	bShutOffPCW							: BOOL;
+	bShutOffAllACPower					: BOOL;
+	bDebugColErrClear					: BOOL;
+	iAlmIDToRset						: DINT;
 //</CtrlBit>
 	
 //<DIO>
-	ipDBColumnPCWLeakage				:BOOL;
-	ipDBColumnPCWSupplyLeakage    		:BOOL;
-	ipDBColumnPCWReturnLeakage    		:BOOL;
+	ipDBColumnPCWLeakage				: BOOL;
+	ipDBColumnPCWSupplyLeakage    		: BOOL;
+	ipDBColumnPCWReturnLeakage    		: BOOL;
+	ipDBColumnPCWLeakage2				: BOOL;
 	                                    
-	opDBColumnHotAirExhaustFan 			:BOOL;
-	opDBColumnPCWValve         			:BOOL;
-	opDBColumnTstAirSol        			:BOOL;
-	opDBColumnAPAirSol         			:BOOL;
-//</DIO>
-
-//<EAP>
-	eapShutOffAllACPower				:BOOL;
-//<EAP>
-
-//<CVTIO>
-	ipDBColumnPCWRegularFlowSensor		:REAL;
-	ipDBColumnPCWSupplyPressure       	:REAL;
-	ipDBColumnPCWReturnPressure       	:REAL;
-	ipDBColumnTstAirPressure          	:REAL;
-	ipDBColumnAPAirPressure           	:REAL;
-	ipDBColumnDewPointSensor          	:REAL;
-	ipDBColumnTempSensor			    :REAL;    
-	ipDBColumnPCWSupplyTemperature    	:REAL;
-	ipDBColumnPCWReturnTemperature    	:REAL;
+	opDBColumnHotAirExhaustFan 			: BOOL;
+	opDBColumnPCWValve         			: BOOL;
+	opDBColumnTstAirSol        			: BOOL;
+	opDBColumnAPAirSol         			: BOOL;
+//</DIO>                                  
+                                          
+//<EAP>                                   
+	eapShutOffAllACPower				: BOOL;
+//<EAP>                                   
+                                          
+//<CVTIO>                                 
+	ipDBColumnPCWRegularFlowSensor		: REAL;
+	ipDBColumnPCWSupplyPressure       	: REAL;
+	ipDBColumnPCWReturnPressure       	: REAL;
+	ipDBColumnTstAirPressure          	: REAL;
+	ipDBColumnAPAirPressure           	: REAL;
+	ipDBColumnDewPointSensor          	: REAL;
+	ipDBColumnTempSensor			    : REAL;    
+	ipDBColumnPCWSupplyTemperature    	: REAL;
+	ipDBColumnPCWReturnTemperature    	: REAL;
 //</CVTIO>
 
 END_STRUCT
