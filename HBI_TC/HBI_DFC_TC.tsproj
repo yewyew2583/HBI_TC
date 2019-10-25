@@ -7488,7 +7488,7 @@ Bit1: Value smaller than Limit2]]>
 								</Var>
 							</Vars>
 						</EapVar>
-						<EapVar Id="5" NvId="1001" NvLength="1">
+						<EapVar Id="5" NvId="1004" NvLength="1">
 							<Name>ColPCWLeakage2</Name>
 							<ImageId>98</ImageId>
 							<Vars VarGrpType="1">
