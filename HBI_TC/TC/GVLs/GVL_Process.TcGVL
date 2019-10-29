@@ -11,11 +11,11 @@ VAR_GLOBAL
 	OFA6Bar_Alarm				: BOOL;
 	OFA6Bar_Abort				: BOOL;
 	
-	DewPoint_Warning_Timer		: UDINT	:= 10;
-	DewPoint_Alarm_Timer		: UDINT	:= 10;
+	DewPoint_Warning_Timer		: UDINT	:= 300;
+	DewPoint_Alarm_Timer		: UDINT	:= 60;
 	DewPoint_Abort_Timer		: UDINT	:= 60;
-	OFA6Bar_Warning_Timer		: UDINT	:= 10;
-	OFA6Bar_Alarm_Timer			: UDINT	:= 10;
+	OFA6Bar_Warning_Timer		: UDINT	:= 300;
+	OFA6Bar_Alarm_Timer			: UDINT	:= 60;
 	OFA6Bar_Abort_Timer			: UDINT	:= 60;
 	
 	DewPoint_LowSP				: LREAL	:= 2;
