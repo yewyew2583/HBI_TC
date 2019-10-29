@@ -43,6 +43,9 @@
     <Compile Include="DUTs\Enum\E_DBStnLED.TcDUT">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DUTs\Enum\E_FacilityState.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="DUTs\Enum\E_LED.TcDUT">
       <SubType>Code</SubType>
     </Compile>
@@ -245,7 +248,16 @@
     <Compile Include="POUs\2%29 DFB\DFB_Switch.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\2%29 DFB\Facility\DFB_FacilityAlarm.TcPOU">
+    <Compile Include="POUs\2) DFB\Facility\DFB_FacilityAlarmAnlg.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\2) DFB\Facility\DFB_FacilityAlarm.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\2%29 DFB\Facility\DFB_FacilityAlarmBool.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\2) DFB\Facility\DFB_FacilityAlarm_1.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\2%29 DFB\Word\FC_BitToWord.TcPOU">

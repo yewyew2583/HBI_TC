@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <DUT Name="E_FacilityState" Id="{63ac7b41-3c28-43b5-b969-7f8b6a2ec7c6}">
+    <Declaration><![CDATA[TYPE E_FacilityState :
+(
+	idle			:= 1,
+	warningDelay,
+	alarmDelay,
+	warningDelayExpired,
+	alarmDelayExpired,
+	abortDelay,
+	abortDelayExpired
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

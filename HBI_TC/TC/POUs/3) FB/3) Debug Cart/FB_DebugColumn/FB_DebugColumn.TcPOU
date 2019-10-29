@@ -357,44 +357,40 @@ VAR
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[
-
-//stDebugColDIO.ipDBColumnPCWRegularFlowSensor  :=  stDebugColDIO.ipAnlgDBColumnPCWRegularFlowSensor	; //Do Some Conversion
-//stDebugColDIO.ipDBColumnPCWSupplyPressure     :=  stDebugColDIO.ipAnlgDBColumnPCWSupplyPressure     ;
-//stDebugColDIO.ipDBColumnPCWReturnPressure     :=  stDebugColDIO.ipAnlgDBColumnPCWReturnPressure     ;
-//stDebugColDIO.ipDBColumnTstAirPressure        :=  stDebugColDIO.ipAnlgDBColumnTstAirPressure        ;
-//stDebugColDIO.ipDBColumnAPAirPressure         :=  stDebugColDIO.ipAnlgDBColumnAPAirPressure         ;
-//stDebugColDIO.ipDBColumnDewPointSensor        :=  stDebugColDIO.ipAnlgDBColumnDewPointSensor        ;
-//stDebugColDIO.ipDBColumnPCWSupplyTemperature  :=  stDebugColDIO.ipAnlgDBColumnPCWSupplyTemperature  ;
-//stDebugColDIO.ipDBColumnPCWReturnTemperature  :=  stDebugColDIO.ipAnlgDBColumnPCWReturnTemperature  ;
-
-
-	stDebugColumnVIO.ipDBColumnPCWLeakage		:= NOT fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , 
-	                                            					bActual:=stDebugColumnDIO.ipDBColumnPCWLeakage , 
-	                                            					bSimu:=TRUE , 
-	                                            					iBackDoor:=stDebugColumnBIO.ipDBColumnPCWLeakage );
-	stDebugColumnVIO.ipDBColumnPCWSupplyLeakage		:= NOT fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , 
-	                                            					bActual:=stDebugColumnDIO.ipDBColumnPCWSupplyLeakage , 
-	                                            					bSimu:=TRUE , 
-	                                            					iBackDoor:=stDebugColumnBIO.ipDBColumnPCWSupplyLeakage );
-	stDebugColumnVIO.ipDBColumnPCWReturnLeakage		:= NOT fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , 
-	                                            					bActual:=stDebugColumnDIO.ipDBColumnPCWReturnLeakage , 
-	                                            					bSimu:=TRUE , 
-	                                            					iBackDoor:=stDebugColumnBIO.ipDBColumnPCWReturnLeakage );
+        <ST><![CDATA[//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////// Inputs Mapping ///////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
+stDebugColumnVIO.ipDBColumnPCWLeakage			:= NOT fbBD_ipBdoor.M_bBackDoorCtrl(
+																		bProductionMode				:= bProductionMode , 
+	                                            						bActual						:= stDebugColumnDIO.ipDBColumnPCWLeakage , 
+	                                            						bSimu						:= TRUE , 
+	                                            						iBackDoor					:= stDebugColumnBIO.ipDBColumnPCWLeakage );
+stDebugColumnVIO.ipDBColumnPCWSupplyLeakage		:= NOT fbBD_ipBdoor.M_bBackDoorCtrl(
+																		bProductionMode				:= bProductionMode , 
+	                                            						bActual						:= stDebugColumnDIO.ipDBColumnPCWSupplyLeakage , 
+	                                            						bSimu						:= TRUE , 
+	                                            						iBackDoor					:= stDebugColumnBIO.ipDBColumnPCWSupplyLeakage );
+stDebugColumnVIO.ipDBColumnPCWReturnLeakage		:= NOT fbBD_ipBdoor.M_bBackDoorCtrl(
+																		bProductionMode				:= bProductionMode , 
+	                                            						bActual						:= stDebugColumnDIO.ipDBColumnPCWReturnLeakage , 
+	                                            						bSimu						:= TRUE , 
+	                                            						iBackDoor					:= stDebugColumnBIO.ipDBColumnPCWReturnLeakage );
 																	
-	stDebugColumnVIO.ipDBColumnPCWLeakage2		:= NOT fbBD_ipBdoor.M_bBackDoorCtrl(bProductionMode:=bProductionMode , 
-	                                            					bActual:=stDebugColumnDIO.ipDBColumnPCWLeakage2 , 
-	                                            					bSimu:=TRUE , 
-	                                            					iBackDoor:=stDebugColumnBIO.ipDBColumnPCWLeakage2 );											
+stDebugColumnVIO.ipDBColumnPCWLeakage2			:= NOT fbBD_ipBdoor.M_bBackDoorCtrl(
+																		bProductionMode				:= bProductionMode , 
+	                                            						bActual						:= stDebugColumnDIO.ipDBColumnPCWLeakage2 , 
+	                                            						bSimu						:= TRUE , 
+	                                            						iBackDoor					:= stDebugColumnBIO.ipDBColumnPCWLeakage2 );											
 																				
-//EAP===========================================================================================																	
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////// EAPs Mapping ///////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////																	
 	stDebugColumnDIO.eapDBColumnPCWLeakage 					:= stDebugColumnVIO.ipDBColumnPCWLeakage;		
 	stDebugColumnDIO.eapDBColumnPCWSupplyLeakage 			:= stDebugColumnVIO.ipDBColumnPCWSupplyLeakage;															
 	stDebugColumnDIO.eapDBColumnPCWReturnLeakage 			:= stDebugColumnVIO.ipDBColumnPCWReturnLeakage;					
-	stDebugColumnDIO.eapDBColumnPCWLeakage2					:= stDebugColumnVIO.ipDBColumnPCWLeakage2;					
-//=============================================================================================
+	stDebugColumnDIO.eapDBColumnPCWLeakage2					:= stDebugColumnVIO.ipDBColumnPCWLeakage2;	
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////// Simulation Input Mapping ///////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 IF (NOT bProductionMode) THEN
@@ -405,7 +401,9 @@ IF (NOT bProductionMode) THEN
 	stDebugColumnDIO.ipDBColumnPCWLeakage2			:= NOT stDebugColumnVIO.ipDBColumnPCWLeakage2;
 END_IF
 
-
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////// Cyclic Conditions //////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 IF stDebugColumnVIO.bShutOffAllACPower THEN
 	stDebugColumnVIO.eapShutOffAllACPower					:= TRUE;	//control eap to shut off AC power in debug cart full cell
@@ -414,23 +412,26 @@ ELSE
 END_IF
 
 IF stDebugColumnVIO.bShutOffAir THEN
-	stDebugColumnVIO.opDBColumnTstAirSol:=FALSE;
-	stDebugColumnVIO.opDBColumnAPAirSol:=FALSE;
+	stDebugColumnVIO.opDBColumnTstAirSol					:= FALSE;
+	stDebugColumnVIO.opDBColumnAPAirSol						:= FALSE;
 ELSE
-	stDebugColumnVIO.opDBColumnTstAirSol := TRUE;
-	stDebugColumnVIO.opDBColumnAPAirSol := TRUE;
+	stDebugColumnVIO.opDBColumnTstAirSol					:= TRUE;
+	stDebugColumnVIO.opDBColumnAPAirSol						:= TRUE;
 END_IF
 
-	stDebugColumnVIO.opDBColumnHotAirExhaustFan := FunONOFF; //TRUE;
+stDebugColumnVIO.opDBColumnHotAirExhaustFan 				:= FunONOFF;
 
+	
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////// Outputs Mapping ////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-IF NOT stDebugColumnVIO.bDiagnosticMode	THEN		
-//Colum DIO is Control by PLC, Not Direct accessed by TA
-	stDebugColumnDIO.opDBColumnHotAirExhaustFan := stDebugColumnVIO.opDBColumnHotAirExhaustFan;		
-	stDebugColumnDIO.opDBColumnPCWValve       	:= stDebugColumnVIO.opDBColumnPCWValve;
-	stDebugColumnDIO.opDBColumnTstAirSol        := stDebugColumnVIO.opDBColumnTstAirSol;				
-	stDebugColumnDIO.opDBColumnAPAirSol         := stDebugColumnVIO.opDBColumnAPAirSol;
-	stDebugColumnDIO.eapShutOffAllACPower		:= stDebugColumnVIO.eapShutOffAllACPower;
+IF NOT stDebugColumnVIO.bDiagnosticMode	THEN
+	stDebugColumnDIO.opDBColumnHotAirExhaustFan 			:= stDebugColumnVIO.opDBColumnHotAirExhaustFan;		
+	stDebugColumnDIO.opDBColumnPCWValve       				:= stDebugColumnVIO.opDBColumnPCWValve;
+	stDebugColumnDIO.opDBColumnTstAirSol        			:= stDebugColumnVIO.opDBColumnTstAirSol;				
+	stDebugColumnDIO.opDBColumnAPAirSol         			:= stDebugColumnVIO.opDBColumnAPAirSol;
+	stDebugColumnDIO.eapShutOffAllACPower					:= stDebugColumnVIO.eapShutOffAllACPower;
 END_IF		]]></ST>
       </Implementation>
     </Method>
@@ -656,17 +657,25 @@ END_VAR
       <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="FB_DebugColumn.IOMapping">
-      <LineId Id="214" Count="10" />
+      <LineId Id="273" Count="1" />
       <LineId Id="54" Count="0" />
-      <LineId Id="123" Count="11" />
+      <LineId Id="123" Count="0" />
+      <LineId Id="268" Count="0" />
+      <LineId Id="124" Count="3" />
+      <LineId Id="269" Count="0" />
+      <LineId Id="128" Count="3" />
+      <LineId Id="270" Count="0" />
+      <LineId Id="132" Count="2" />
       <LineId Id="230" Count="0" />
-      <LineId Id="232" Count="2" />
+      <LineId Id="232" Count="0" />
+      <LineId Id="271" Count="0" />
+      <LineId Id="233" Count="1" />
       <LineId Id="231" Count="0" />
       <LineId Id="204" Count="0" />
+      <LineId Id="266" Count="1" />
       <LineId Id="108" Count="0" />
       <LineId Id="120" Count="2" />
       <LineId Id="254" Count="0" />
-      <LineId Id="53" Count="0" />
       <LineId Id="237" Count="0" />
       <LineId Id="38" Count="0" />
       <LineId Id="238" Count="2" />
@@ -675,6 +684,7 @@ END_VAR
       <LineId Id="245" Count="2" />
       <LineId Id="244" Count="0" />
       <LineId Id="241" Count="1" />
+      <LineId Id="260" Count="1" />
       <LineId Id="162" Count="0" />
       <LineId Id="167" Count="0" />
       <LineId Id="179" Count="0" />
@@ -686,11 +696,12 @@ END_VAR
       <LineId Id="151" Count="1" />
       <LineId Id="143" Count="0" />
       <LineId Id="92" Count="0" />
-      <LineId Id="90" Count="1" />
+      <LineId Id="90" Count="0" />
+      <LineId Id="262" Count="0" />
+      <LineId Id="91" Count="0" />
+      <LineId Id="263" Count="2" />
       <LineId Id="34" Count="0" />
-      <LineId Id="28" Count="0" />
-      <LineId Id="27" Count="0" />
-      <LineId Id="29" Count="3" />
+      <LineId Id="28" Count="4" />
       <LineId Id="191" Count="0" />
       <LineId Id="235" Count="0" />
     </LineIds>

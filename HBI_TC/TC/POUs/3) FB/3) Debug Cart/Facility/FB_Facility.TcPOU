@@ -8,8 +8,8 @@ VAR_OUTPUT
 END_VAR
 
 VAR
-	fb_DewPoint_Alarm					: DFB_FacilityAlarm;
-	fb_6BarOFA_Alarm					: DFB_FacilityAlarm;
+	fb_DewPoint_Alarm					: DFB_FacilityAlarmAnlg;
+	fb_6BarOFA_Alarm					: DFB_FacilityAlarmAnlg;
 	fb_AIN_InletTemp					: DFB_AIN;
 	fb_AIN_DewPoint						: DFB_AIN;
 	fb_AIN_6BarOFA						: DFB_AIN;
@@ -25,79 +25,79 @@ END_VAR
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 fb_AIN_InletTemp(
-	AIN_ID		:= 'Inlet Temperature', 
+	AIN_ID			:= 'Inlet Temperature', 
 	Simulate		:= _DUT_AIN_InletTemp.Simulate, 
-	RAW		:= GVL_TC.fbDebugColumn.stDebugColumnDIO.ipAnlgDBColumnPCWSupplyTemperature, 
-	Hi_RAW		:= 2500, 
-	Lo_RAW		:= -400, 
-	Hi_PV		:= 250, 
-	Lo_PV		:= -40, 
+	RAW				:= GVL_TC.fbDebugColumn.stDebugColumnDIO.ipAnlgDBColumnPCWSupplyTemperature, 
+	Hi_RAW			:= 2500, 
+	Lo_RAW			:= -400, 
+	Hi_PV			:= 250, 
+	Lo_PV			:= -40, 
 	AHH_Enable		:= _DUT_AIN_InletTemp.AHH_Enable, 
-	AHH_SP		:= _DUT_AIN_InletTemp.AHH_SP, 
+	AHH_SP			:= _DUT_AIN_InletTemp.AHH_SP, 
 	AH_Enable		:= _DUT_AIN_InletTemp.AH_Enable, 
-	AH_SP		:= _DUT_AIN_InletTemp.AH_SP, 
+	AH_SP			:= _DUT_AIN_InletTemp.AH_SP, 
 	AL_Enable		:= _DUT_AIN_InletTemp.AL_Enable, 
-	AL_SP		:= _DUT_AIN_InletTemp.AL_SP, 
+	AL_SP			:= _DUT_AIN_InletTemp.AL_SP, 
 	ALL_Enable		:= _DUT_AIN_InletTemp.ALL_Enable, 
-	ALL_SP		:= _DUT_AIN_InletTemp.ALL_SP, 
-	DB		:= _DUT_AIN_InletTemp.DB, 
-	HTY		=> _DUT_AIN_InletTemp.Healthy, 
-	PV		=> _DUT_AIN_InletTemp.PV, 
-	AHH		=> _DUT_AIN_InletTemp.AHH, 
-	AH		=> _DUT_AIN_InletTemp.AH, 
-	AL		=> _DUT_AIN_InletTemp.AL,
-	ALL		=> _DUT_AIN_InletTemp.ALL, 
-	DUT		:= _DUT_AIN_InletTemp);
+	ALL_SP			:= _DUT_AIN_InletTemp.ALL_SP, 
+	DB				:= _DUT_AIN_InletTemp.DB, 
+	HTY				=> _DUT_AIN_InletTemp.Healthy, 
+	PV				=> _DUT_AIN_InletTemp.PV, 
+	AHH				=> _DUT_AIN_InletTemp.AHH, 
+	AH				=> _DUT_AIN_InletTemp.AH, 
+	AL				=> _DUT_AIN_InletTemp.AL,
+	ALL				=> _DUT_AIN_InletTemp.ALL, 
+	DUT				:= _DUT_AIN_InletTemp);
 	
 fb_AIN_DewPoint(
-	AIN_ID		:= 'DewPoint Temperature', 
+	AIN_ID			:= 'DewPoint Temperature', 
 	Simulate		:= _DUT_AIN_DewPoint.Simulate, 
-	RAW		:= GVL_TC.fbDebugColumn.stDebugColumnDIO.ipAnlgDBColumnDewPointSensor, 
-	Hi_RAW		:= 16384, 
-	Lo_RAW		:= 3276, 
-	Hi_PV		:= 60, 
-	Lo_PV		:= -40, 
+	RAW				:= GVL_TC.fbDebugColumn.stDebugColumnDIO.ipAnlgDBColumnDewPointSensor, 
+	Hi_RAW			:= 16384, 
+	Lo_RAW			:= 3276, 
+	Hi_PV			:= 60, 
+	Lo_PV			:= -40, 
 	AHH_Enable		:= _DUT_AIN_DewPoint.AHH_Enable, 
-	AHH_SP		:= _DUT_AIN_DewPoint.AHH_SP, 
+	AHH_SP			:= _DUT_AIN_DewPoint.AHH_SP, 
 	AH_Enable		:= _DUT_AIN_DewPoint.AH_Enable, 
-	AH_SP		:= _DUT_AIN_DewPoint.AH_SP, 
+	AH_SP			:= _DUT_AIN_DewPoint.AH_SP, 
 	AL_Enable		:= _DUT_AIN_DewPoint.AL_Enable, 
-	AL_SP		:= _DUT_AIN_DewPoint.AL_SP, 
+	AL_SP			:= _DUT_AIN_DewPoint.AL_SP, 
 	ALL_Enable		:= _DUT_AIN_DewPoint.ALL_Enable, 
-	ALL_SP		:= _DUT_AIN_DewPoint.ALL_SP, 
-	DB		:= _DUT_AIN_DewPoint.DB, 
-	HTY		=> _DUT_AIN_DewPoint.Healthy, 
-	PV		=> _DUT_AIN_DewPoint.PV, 
-	AHH		=> _DUT_AIN_DewPoint.AHH, 
-	AH		=> _DUT_AIN_DewPoint.AH, 
-	AL		=> _DUT_AIN_DewPoint.AL, 
-	ALL		=> _DUT_AIN_DewPoint.ALL, 
-	DUT		:= _DUT_AIN_DewPoint);
+	ALL_SP			:= _DUT_AIN_DewPoint.ALL_SP, 
+	DB				:= _DUT_AIN_DewPoint.DB, 
+	HTY				=> _DUT_AIN_DewPoint.Healthy, 
+	PV				=> _DUT_AIN_DewPoint.PV, 
+	AHH				=> _DUT_AIN_DewPoint.AHH, 
+	AH				=> _DUT_AIN_DewPoint.AH, 
+	AL				=> _DUT_AIN_DewPoint.AL, 
+	ALL				=> _DUT_AIN_DewPoint.ALL, 
+	DUT				:= _DUT_AIN_DewPoint);
 
 fb_AIN_6BarOFA(
-	AIN_ID		:= '6Bar OFA', 
+	AIN_ID			:= '6Bar OFA', 
 	Simulate		:= _DUT_AIN_6BarOFA.Simulate, 
-	RAW		:= GVL_TC.fbDebugColumn.stDebugColumnDIO.ipAnlgDBColumnTstAirPressure, 
-	Hi_RAW		:= 16384, 
-	Lo_RAW		:= 1966, 
-	Hi_PV		:= 1000, // kPA
-	Lo_PV		:= -100, // kPA 
+	RAW				:= GVL_TC.fbDebugColumn.stDebugColumnDIO.ipAnlgDBColumnTstAirPressure, 
+	Hi_RAW			:= 16384, 
+	Lo_RAW			:= 1966, 
+	Hi_PV			:= 1000, // kPA
+	Lo_PV			:= -100, // kPA 
 	AHH_Enable		:= _DUT_AIN_6BarOFA.AHH_Enable, 
-	AHH_SP		:= _DUT_AIN_6BarOFA.AHH_SP, 
+	AHH_SP			:= _DUT_AIN_6BarOFA.AHH_SP, 
 	AH_Enable		:= _DUT_AIN_6BarOFA.AH_Enable, 
-	AH_SP		:= _DUT_AIN_6BarOFA.AH_SP, 
+	AH_SP			:= _DUT_AIN_6BarOFA.AH_SP, 
 	AL_Enable		:= _DUT_AIN_6BarOFA.AL_Enable, 
-	AL_SP		:= _DUT_AIN_6BarOFA.AL_SP, 
+	AL_SP			:= _DUT_AIN_6BarOFA.AL_SP, 
 	ALL_Enable		:= _DUT_AIN_6BarOFA.ALL_Enable, 
-	ALL_SP		:= _DUT_AIN_6BarOFA.ALL_SP, 
-	DB		:= _DUT_AIN_6BarOFA.DB, 
-	HTY		=> _DUT_AIN_6BarOFA.Healthy, 
-	PV		=> _DUT_AIN_6BarOFA.PV, 
-	AHH		=> _DUT_AIN_6BarOFA.AHH, 
-	AH		=> _DUT_AIN_6BarOFA.AH, 
-	AL		=> _DUT_AIN_6BarOFA.AL, 
-	ALL		=> _DUT_AIN_6BarOFA.ALL, 
-	DUT		:= _DUT_AIN_6BarOFA);
+	ALL_SP			:= _DUT_AIN_6BarOFA.ALL_SP, 
+	DB				:= _DUT_AIN_6BarOFA.DB, 
+	HTY				=> _DUT_AIN_6BarOFA.Healthy, 
+	PV				=> _DUT_AIN_6BarOFA.PV, 
+	AHH				=> _DUT_AIN_6BarOFA.AHH, 
+	AH				=> _DUT_AIN_6BarOFA.AH, 
+	AL				=> _DUT_AIN_6BarOFA.AL, 
+	ALL				=> _DUT_AIN_6BarOFA.ALL, 
+	DUT				:= _DUT_AIN_6BarOFA);
 
 	
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -105,36 +105,36 @@ fb_AIN_6BarOFA(
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 fb_DewPoint_Alarm(
-	Sec_P		:= Sec_P, 
-	PV		:= _DUT_AIN_InletTemp.PV - _DUT_AIN_DewPoint.PV, 
-	WarningTimer		:= DewPoint_Warning_Timer, 
+	Sec_P			:= Sec_P, 
+	PV				:= _DUT_AIN_InletTemp.PV - _DUT_AIN_DewPoint.PV, 
+	WarningTimer	:= DewPoint_Warning_Timer, 
 	AlarmTimer		:= DewPoint_Alarm_Timer, 
 	AbortTimer		:= DewPoint_Abort_Timer, 
-	DB		:= 0.2, //When recover, need extra 0.2 degree celsius
-	LogName		:= 'DewPoint Abort In Progess', 
+	DB				:= 0.2, //When recover, need extra 0.2 degree celsius
+	LogName			:= 'DewPoint Abort In Progess', 
 	ModuleID		:= LevelModuleID[1], 
 	EventName		:= E_EventName.DewPointAbortInProgress, 
-	Warning		=> DewPoint_Warning, 
-	Alarm		=> DewPoint_Alarm, 
-	Abort		=> DewPoint_Abort, 
-	LowSP		:= DewPoint_LowSP, 
+	Warning			=> DewPoint_Warning, 
+	Alarm			=> DewPoint_Alarm, 
+	Abort			=> DewPoint_Abort, 
+	LowSP			:= DewPoint_LowSP, 
 	LowLowSP		:= DewPoint_LowLowSP);
 	
 	
 fb_6BarOFA_Alarm(
-	Sec_P		:= Sec_P, 
-	PV			:= _DUT_AIN_6BarOFA.PV, 
-	WarningTimer:= OFA6Bar_Warning_Timer, 
-	AlarmTimer	:= OFA6Bar_Alarm_Timer, 
-	AbortTimer	:= OFA6Bar_Abort_Timer, 
-	DB		:= 5,  //when recover, need extra 5KPa
-	LogName		:= 'OFA 6Bar Abort In Progress', 
+	Sec_P			:= Sec_P, 
+	PV				:= _DUT_AIN_6BarOFA.PV, 
+	WarningTimer	:= OFA6Bar_Warning_Timer, 
+	AlarmTimer		:= OFA6Bar_Alarm_Timer, 
+	AbortTimer		:= OFA6Bar_Abort_Timer, 
+	DB				:= 5,  //when recover, need extra 5KPa
+	LogName			:= 'OFA 6Bar Abort In Progress', 
 	ModuleID		:= LevelModuleID[1], 
 	EventName		:= E_EventName.SixbarOFAAbortInProgress, 
-	Warning		=> OFA6Bar_Warning, 
-	Alarm		=> OFA6Bar_Alarm, 
-	Abort		=> OFA6Bar_Abort, 
-	LowSP		:= OFA6Bar_LowSP, 
+	Warning			=> OFA6Bar_Warning, 
+	Alarm			=> OFA6Bar_Alarm, 
+	Abort			=> OFA6Bar_Abort, 
+	LowSP			:= OFA6Bar_LowSP, 
 	LowLowSP		:= OFA6Bar_LowLowSP);]]></ST>
     </Implementation>
     <LineIds Name="FB_Facility">

@@ -402,8 +402,8 @@ itl_opDBStnBypassAPAirSupplySol	:=		ALMTC.Level[1].ALarmID[E_TIIAlarm.ipCellFlui
 itl_opDBStnAPSafeToEngage		:=	 	ALMTC.Level[1].AlarmID[E_TIIAlarm.ipCellGroundFault 	   		]	OR	
 										ALMTC.Level[1].AlarmID[E_TIIAlarm.ipCellFluidLeakage1 	   		]	OR	
 										ALMTC.Level[1].AlarmID[E_TIIAlarm.ipCellFluidLeakage2 	   		]	OR	
-										ALM_DCCOL.AlarmID[E_DCFACAlarm.eCriticalCondensationAlarm		]	OR	
-										ALM_DCCOL.AlarmID[E_DCFACAlarm.e6BarLowOFAAirPressureAlarm		]	OR	
+										//ALM_DCCOL.AlarmID[E_DCFACAlarm.eCriticalCondensationAlarm		]	OR	
+										//ALM_DCCOL.AlarmID[E_DCFACAlarm.e6BarLowOFAAirPressureAlarm		]	OR	
 										ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWLeakageAlarm			]	OR	
 										ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWSupplyLeakageAlarm		]	OR 	
 										ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWReturnLeakageAlarm		]	OR	

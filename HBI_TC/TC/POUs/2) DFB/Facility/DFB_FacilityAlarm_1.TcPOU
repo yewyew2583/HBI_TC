@@ -1,9 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
-  <POU Name="DFB_FacilityAlarm" Id="{b8b02350-2da1-4747-bfe1-a76fdd5c319f}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK DFB_FacilityAlarm
+  <POU Name="DFB_FacilityAlarm_1" Id="{3342c78a-600c-4bb8-80f5-0ed514ce7eee}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK DFB_FacilityAlarm_1
 VAR_INPUT
 	Sec_P					: BOOL; // Second pulse
+	TbotNo					: INT; // 1: Tbot left, 2: Tbot right
 	PV						: LREAL; // Process Value
 	WarningTimer			: UDINT;
 	AlarmTimer				: UDINT;
@@ -12,7 +13,6 @@ VAR_INPUT
 	LogName					: STRING;
 	ModuleID				: E_ModuleID;
 	EventName				: E_EventName;
-	E_FacilityState			: E_FacilityState;
 END_VAR
 
 VAR_OUTPUT
@@ -34,11 +34,12 @@ VAR
 	_TLast_State			: INT;
 	
 	_State_Timer			: UDINT;
-	_WarningStateTimer		: UDINT;
-	_AlarmStateTimer		: UDINT;
 	
 	
 	_EmptyEvent				: ST_Event;
+	
+	_TON_Warning			: TON;
+	_TON_Alarm				: TON;		
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -81,11 +82,14 @@ CASE _State OF
 		Warning									:= FALSE;
 		Alarm									:= FALSE;
 		Abort									:= FALSE;
+		_TON_Warning(IN:= FALSE, PT:= UDINT_TO_TIME(WarningTimer * 1000));
 		
 		(*Transition*)
 		IF PV < LowLowSP THEN
+			_TON_Warning(IN:= TRUE, PT:= UDINT_TO_TIME(WarningTimer * 1000));
 			_State								:= 21; // Low Low Alarm - Delay
 		ELSIF PV < LowSP THEN
+			_TON_Warning(IN:= TRUE, PT:= UDINT_TO_TIME(WarningTimer * 1000));
 			_State								:= 11; // Low Alarm - Delay
 		END_IF
 		
@@ -110,7 +114,7 @@ CASE _State OF
 		_Last_State								:= 21;
 		
 		(*Action*)
-		Warning									:= TRUE;
+		Warning									:= FALSE;
 		Alarm									:= TRUE;
 		Abort									:= FALSE;
 		
@@ -141,13 +145,13 @@ CASE _State OF
 			sFailReason							:= '');
 		
 		(*Transition*)
-		_State									:= 25; // Low Low Alarm - Check abort time
+		_State									:= 25; // Low Alarm - Check abort time
 		
 	24: (*Low Low Alarm - Send Event*)
 		_Last_State								:= 24;
 		
 		(*Action*)
-		Warning									:= TRUE;
+		Warning									:= FALSE;
 		Alarm									:= TRUE;
 		Abort									:= FALSE;
 		
@@ -189,6 +193,10 @@ CASE _State OF
 		(*Transition*)
 		IF _State_Timer >= AbortTimer THEN
 			_State								:= 41; // Abort
+		(*ELSIF PV >= LowLowSP + DB THEN
+			_State								:= 21; // Low Low Alarm - Delay
+		ELSIF PV >= LowSP + DB THEN
+			_State								:= 11; // Low Alarm - Delay*)
 		END_IF
 		
 	40: (*Abort*)
@@ -218,7 +226,7 @@ CASE _State OF
 		END_IF
 END_CASE]]></ST>
     </Implementation>
-    <LineIds Name="DFB_FacilityAlarm">
+    <LineIds Name="DFB_FacilityAlarm_1">
       <LineId Id="9" Count="0" />
       <LineId Id="26" Count="1" />
       <LineId Id="29" Count="0" />
@@ -246,9 +254,14 @@ END_CASE]]></ST>
       <LineId Id="48" Count="1" />
       <LineId Id="53" Count="1" />
       <LineId Id="99" Count="0" />
+      <LineId Id="406" Count="0" />
       <LineId Id="50" Count="1" />
-      <LineId Id="55" Count="1" />
-      <LineId Id="58" Count="1" />
+      <LineId Id="55" Count="0" />
+      <LineId Id="407" Count="0" />
+      <LineId Id="56" Count="0" />
+      <LineId Id="58" Count="0" />
+      <LineId Id="408" Count="0" />
+      <LineId Id="59" Count="0" />
       <LineId Id="57" Count="0" />
       <LineId Id="52" Count="0" />
       <LineId Id="60" Count="0" />
@@ -273,14 +286,16 @@ END_CASE]]></ST>
       <LineId Id="228" Count="0" />
       <LineId Id="232" Count="2" />
       <LineId Id="229" Count="1" />
-      <LineId Id="235" Count="11" />
+      <LineId Id="323" Count="0" />
+      <LineId Id="457" Count="7" />
+      <LineId Id="244" Count="2" />
       <LineId Id="231" Count="0" />
       <LineId Id="222" Count="0" />
       <LineId Id="105" Count="5" />
       <LineId Id="103" Count="0" />
       <LineId Id="139" Count="1" />
-      <LineId Id="150" Count="7" />
-      <LineId Id="149" Count="0" />
+      <LineId Id="449" Count="7" />
+      <LineId Id="311" Count="0" />
       <LineId Id="111" Count="0" />
       <LineId Id="113" Count="1" />
       <LineId Id="116" Count="1" />
@@ -289,6 +304,8 @@ END_CASE]]></ST>
       <LineId Id="124" Count="4" />
       <LineId Id="247" Count="0" />
       <LineId Id="249" Count="10" />
+      <LineId Id="363" Count="2" />
+      <LineId Id="362" Count="0" />
       <LineId Id="248" Count="0" />
       <LineId Id="129" Count="0" />
       <LineId Id="131" Count="5" />

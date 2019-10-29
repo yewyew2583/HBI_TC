@@ -1,29 +1,24 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
-  <POU Name="DFB_FacilityAlarm" Id="{b8b02350-2da1-4747-bfe1-a76fdd5c319f}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK DFB_FacilityAlarm
+  <POU Name="DFB_FacilityAlarmBool" Id="{20e65b03-5745-4832-829b-b3227b33dae5}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK DFB_FacilityAlarmBool
 VAR_INPUT
 	Sec_P					: BOOL; // Second pulse
-	PV						: LREAL; // Process Value
+	TbotNo					: INT; // 1: Tbot left, 2: Tbot right
+	InputWarning			: BOOL;
+	InputAlarm				: BOOL;
 	WarningTimer			: UDINT;
 	AlarmTimer				: UDINT;
 	AbortTimer				: UDINT;
-	DB						: LREAL	:= 0.2; // Deadband
 	LogName					: STRING;
 	ModuleID				: E_ModuleID;
 	EventName				: E_EventName;
-	E_FacilityState			: E_FacilityState;
 END_VAR
 
 VAR_OUTPUT
-	Warning					: BOOL;
-	Alarm					: BOOL;
-	Abort					: BOOL;
-END_VAR
-
-VAR_IN_OUT
-	LowSP					: LREAL; // Low Alarm Set Point
-	LowLowSP				: LREAL; // Low Low Alarm Set Point
+	OutputWarning			: BOOL;
+	OutputAlarm				: BOOL;
+	OutputAbort				: BOOL;
 END_VAR
 
 VAR
@@ -34,11 +29,11 @@ VAR
 	_TLast_State			: INT;
 	
 	_State_Timer			: UDINT;
-	_WarningStateTimer		: UDINT;
-	_AlarmStateTimer		: UDINT;
-	
 	
 	_EmptyEvent				: ST_Event;
+	
+	_TON_Warning			: TON;
+	_TON_Alarm				: TON;				
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -51,7 +46,7 @@ _TLast_State									:= _State;
 
 IF _State_Changed THEN
 	_State_Timer								:= 0;
-	Logging.fbDebugLog.M_nLogger(iLogLevel:= iLogVerbosity, sSource:= 'AIN Log', 
+	Logging.fbDebugLog.M_nLogger(iLogLevel:= iLogVerbosity, sSource:= ' SEQ Log ', 
 		sMessage								:= CONCAT(CONCAT(LogName, 'current state['),
 														 CONCAT(INT_TO_STRING(_State), ']'))); 
 	
@@ -59,15 +54,6 @@ ELSE
 	IF Sec_P THEN
 		_State_Timer							:= _State_Timer + 1;
 	END_IF
-END_IF
-
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//	Safety clamp
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-IF LowSP < LowLowSP THEN
-	LowSP										:= LowLowSP;
 END_IF
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -78,56 +64,64 @@ CASE _State OF
 	0: (*Idle*)
 	
 		(*Action*)
-		Warning									:= FALSE;
-		Alarm									:= FALSE;
-		Abort									:= FALSE;
+		OutputWarning							:= FALSE;
+		OutputAlarm								:= FALSE;
+		OutputAbort								:= FALSE;
+		_TON_Warning(IN:= FALSE, PT:= UDINT_TO_TIME(WarningTimer * 1000));
 		
 		(*Transition*)
-		IF PV < LowLowSP THEN
-			_State								:= 21; // Low Low Alarm - Delay
-		ELSIF PV < LowSP THEN
-			_State								:= 11; // Low Alarm - Delay
+		IF InputAlarm THEN
+			_TON_Warning(IN:= TRUE, PT:= UDINT_TO_TIME(WarningTimer * 1000));
+			_State								:= 21; // Alarm - Delay
+		ELSIF InputWarning THEN
+			_TON_Warning(IN:= TRUE, PT:= UDINT_TO_TIME(WarningTimer * 1000));
+			_State								:= 11; // Warning - Delay
 		END_IF
 		
-	11: (*Low Alarm - Delay*)
+	11: (*Warning - Delay*)
 		_Last_State								:= 11;
 		
 		(*Action*)
-		Warning									:= TRUE;
-		Alarm									:= FALSE;
-		Abort									:= FALSE;
+		OutputWarning							:= FALSE;
+		OutputAlarm								:= FALSE;
+		OutputAbort								:= FALSE;
+		_TON_Warning(IN:= TRUE, PT:= UDINT_TO_TIME(WarningTimer * 1000));
 		
 		(*Transition*)
-		IF PV >= LowSP + DB THEN
+		IF (NOT InputWarning) THEN
 			_State								:= 0; // Idle
-		ELSIF PV < LowLowSP THEN
-			_State								:= 21; // Low Low Alarm - Delay
+		ELSIF InputAlarm THEN
+			_State								:= 21; // Alarm - Delay
 		ELSIF _State_Timer >= WarningTimer THEN
-			_State								:= 22; // Low Alarm - Send Event
+			_State								:= 22; // Warning - Send Event
 		END_IF
 	
-	21: (*Low Low Alarm - Delay*)
+	21: (*Alarm - Delay*)
 		_Last_State								:= 21;
 		
 		(*Action*)
-		Warning									:= TRUE;
-		Alarm									:= TRUE;
-		Abort									:= FALSE;
+		OutputWarning							:= FALSE;
+		OutputAlarm								:= FALSE;
+		OutputAbort								:= FALSE;
 		
 		(*Transition*)
-		IF PV >= LowSP + DB THEN
-			_State								:= 0; // Idle
+		IF (NOT InputAlarm) THEN
+			IF InputWarning THEN
+				_State							:= 11; // Warning - Delay
+			ELSE
+				_State							:= 0; // Idle
+			END_IF
 		ELSIF _State_Timer >= AlarmTimer THEN
-			_State								:= 24; // Low Low Alarm - Send Event
+			_State								:= 24; // Alarm - Send Event
 		END_IF
 	
-	22:	(*Low Alarm - Send Event*)
+	22:	(*Warning - Send Event*)
 		_Last_State								:= 22;
 		
 		(*Action*)
-		Warning									:= TRUE;
-		Alarm									:= FALSE;
-		Abort									:= FALSE;
+		OutputWarning							:= TRUE;
+		OutputAlarm								:= FALSE;
+		OutputAbort								:= FALSE;
 		
 		// Event - AbortInProgress
 		CmdAndEventProcess.fbCmdAndEventUpdate.M_AddEvent(
@@ -141,15 +135,15 @@ CASE _State OF
 			sFailReason							:= '');
 		
 		(*Transition*)
-		_State									:= 25; // Low Low Alarm - Check abort time
+		_State									:= 25; // Warning - Check abort time
 		
-	24: (*Low Low Alarm - Send Event*)
+	24: (*Alarm - Send Event*)
 		_Last_State								:= 24;
 		
 		(*Action*)
-		Warning									:= TRUE;
-		Alarm									:= TRUE;
-		Abort									:= FALSE;
+		OutputWarning							:= FALSE;
+		OutputAlarm								:= TRUE;
+		OutputAbort								:= FALSE;
 		
 		// Event - AbortInProgress
 		CmdAndEventProcess.fbCmdAndEventUpdate.M_AddEvent(
@@ -163,62 +157,62 @@ CASE _State OF
 			sFailReason							:= '');
 		
 		(*Transition*)
-		_State									:= 26; // Low Low Alarm - Check abort time
+		_State									:= 26; // Alarm - Check abort time
 		
-	25: (*Low Alarm - Check abort time*)
+	25: (*Warning - Check abort time*)
 		_Last_State								:= 25;
 		
 		(*Action*)
-		Warning									:= TRUE;
-		Alarm									:= FALSE;
-		Abort									:= FALSE;
+		OutputWarning							:= TRUE;
+		OutputAlarm								:= FALSE;
+		OutputAbort								:= FALSE;
 		
 		(*Transition*)
 		IF _State_Timer >= AbortTimer THEN
-			_State								:= 40; // Abort
+			_State								:= 40; // Abort - Warning
 		END_IF
 		
-	26: (*Low Low Alarm - Check abort time*)
+	26: (*Alarm - Check abort time*)
 		_Last_State								:= 26;
 		
 		(*Action*)
-		Warning									:= TRUE;
-		Alarm									:= TRUE;
-		Abort									:= FALSE;
+		OutputWarning							:= FALSE;
+		OutputAlarm								:= TRUE;
+		OutputAbort								:= FALSE;
 		
 		(*Transition*)
 		IF _State_Timer >= AbortTimer THEN
-			_State								:= 41; // Abort
+			_State								:= 41; // Abort - Alarm
 		END_IF
 		
-	40: (*Abort*)
+	40: (*Abort - Warning*)
 		_Last_State								:= 40;
 		
 		(*Action*)
-		Warning									:= TRUE;
-		Alarm									:= FALSE;
-		Abort									:= TRUE;
+		OutputWarning							:= TRUE;
+		OutputAlarm								:= FALSE;
+		OutputAbort								:= TRUE;
 		
 		(*Transition*)
-		IF PV >= LowSP + DB THEN
+		IF (NOT InputWarning) THEN
 			_State								:= 0; // Idle
 		END_IF
 		
-	41: (*Abort*)
+	41: (*Abort - Alarm*)
 		_Last_State								:= 41;
 		
 		(*Action*)
-		Warning									:= TRUE;
-		Alarm									:= TRUE;
-		Abort									:= TRUE;
+		OutputWarning							:= FALSE;
+		OutputAlarm								:= TRUE;
+		OutputAbort								:= TRUE;
 		
 		(*Transition*)
-		IF PV >= LowSP + DB THEN
+		IF (NOT InputWarning) THEN
 			_State								:= 0; // Idle
 		END_IF
 END_CASE]]></ST>
     </Implementation>
-    <LineIds Name="DFB_FacilityAlarm">
+    <LineIds Name="DFB_FacilityAlarmBool">
       <LineId Id="9" Count="0" />
       <LineId Id="26" Count="1" />
       <LineId Id="29" Count="0" />
@@ -231,13 +225,7 @@ END_CASE]]></ST>
       <LineId Id="178" Count="0" />
       <LineId Id="38" Count="0" />
       <LineId Id="34" Count="3" />
-      <LineId Id="163" Count="0" />
-      <LineId Id="167" Count="0" />
-      <LineId Id="164" Count="2" />
-      <LineId Id="33" Count="0" />
-      <LineId Id="174" Count="0" />
-      <LineId Id="40" Count="0" />
-      <LineId Id="175" Count="1" />
+      <LineId Id="176" Count="0" />
       <LineId Id="41" Count="2" />
       <LineId Id="39" Count="0" />
       <LineId Id="45" Count="0" />
@@ -246,57 +234,77 @@ END_CASE]]></ST>
       <LineId Id="48" Count="1" />
       <LineId Id="53" Count="1" />
       <LineId Id="99" Count="0" />
+      <LineId Id="395" Count="0" />
       <LineId Id="50" Count="1" />
-      <LineId Id="55" Count="1" />
-      <LineId Id="58" Count="1" />
+      <LineId Id="55" Count="0" />
+      <LineId Id="431" Count="0" />
+      <LineId Id="56" Count="0" />
+      <LineId Id="58" Count="0" />
+      <LineId Id="432" Count="0" />
+      <LineId Id="59" Count="0" />
       <LineId Id="57" Count="0" />
       <LineId Id="52" Count="0" />
       <LineId Id="60" Count="0" />
       <LineId Id="67" Count="1" />
-      <LineId Id="72" Count="1" />
-      <LineId Id="69" Count="0" />
+      <LineId Id="363" Count="2" />
       <LineId Id="100" Count="0" />
+      <LineId Id="396" Count="0" />
       <LineId Id="70" Count="1" />
       <LineId Id="75" Count="3" />
       <LineId Id="80" Count="0" />
       <LineId Id="82" Count="0" />
       <LineId Id="74" Count="0" />
       <LineId Id="66" Count="0" />
-      <LineId Id="84" Count="5" />
+      <LineId Id="84" Count="2" />
+      <LineId Id="366" Count="2" />
       <LineId Id="101" Count="0" />
       <LineId Id="90" Count="2" />
-      <LineId Id="95" Count="2" />
+      <LineId Id="369" Count="0" />
+      <LineId Id="373" Count="0" />
+      <LineId Id="371" Count="0" />
+      <LineId Id="95" Count="0" />
+      <LineId Id="370" Count="0" />
+      <LineId Id="96" Count="1" />
       <LineId Id="83" Count="0" />
       <LineId Id="225" Count="0" />
       <LineId Id="227" Count="0" />
       <LineId Id="226" Count="0" />
       <LineId Id="228" Count="0" />
-      <LineId Id="232" Count="2" />
+      <LineId Id="374" Count="2" />
       <LineId Id="229" Count="1" />
-      <LineId Id="235" Count="11" />
+      <LineId Id="323" Count="0" />
+      <LineId Id="467" Count="7" />
+      <LineId Id="244" Count="2" />
       <LineId Id="231" Count="0" />
       <LineId Id="222" Count="0" />
-      <LineId Id="105" Count="5" />
+      <LineId Id="105" Count="2" />
+      <LineId Id="377" Count="2" />
       <LineId Id="103" Count="0" />
       <LineId Id="139" Count="1" />
-      <LineId Id="150" Count="7" />
-      <LineId Id="149" Count="0" />
+      <LineId Id="475" Count="7" />
+      <LineId Id="311" Count="0" />
       <LineId Id="111" Count="0" />
       <LineId Id="113" Count="1" />
       <LineId Id="116" Count="1" />
-      <LineId Id="119" Count="4" />
+      <LineId Id="119" Count="1" />
+      <LineId Id="380" Count="2" />
       <LineId Id="118" Count="0" />
       <LineId Id="124" Count="4" />
       <LineId Id="247" Count="0" />
-      <LineId Id="249" Count="10" />
+      <LineId Id="249" Count="2" />
+      <LineId Id="383" Count="2" />
+      <LineId Id="255" Count="4" />
       <LineId Id="248" Count="0" />
       <LineId Id="129" Count="0" />
-      <LineId Id="131" Count="5" />
+      <LineId Id="131" Count="2" />
+      <LineId Id="389" Count="2" />
       <LineId Id="130" Count="0" />
       <LineId Id="137" Count="1" />
       <LineId Id="145" Count="2" />
       <LineId Id="260" Count="0" />
-      <LineId Id="262" Count="10" />
+      <LineId Id="262" Count="2" />
+      <LineId Id="386" Count="2" />
+      <LineId Id="268" Count="4" />
       <LineId Id="261" Count="0" />
       <LineId Id="47" Count="0" />
     </LineIds>
