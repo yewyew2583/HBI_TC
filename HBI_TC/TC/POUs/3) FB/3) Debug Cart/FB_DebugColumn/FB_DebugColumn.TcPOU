@@ -399,10 +399,10 @@ END_VAR
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 IF (NOT bProductionMode) THEN
 	
-	stDebugColumnDIO.ipDBColumnPCWLeakage			:= stDebugColumnVIO.ipDBColumnPCWLeakage;
-	stDebugColumnDIO.ipDBColumnPCWSupplyLeakage		:= stDebugColumnVIO.ipDBColumnPCWSupplyLeakage;
-	stDebugColumnDIO.ipDBColumnPCWReturnLeakage		:= stDebugColumnVIO.ipDBColumnPCWReturnLeakage;
-	stDebugColumnDIO.ipDBColumnPCWLeakage2			:= stDebugColumnVIO.ipDBColumnPCWLeakage2;
+	stDebugColumnDIO.ipDBColumnPCWLeakage			:= NOT stDebugColumnVIO.ipDBColumnPCWLeakage;
+	stDebugColumnDIO.ipDBColumnPCWSupplyLeakage		:= NOT stDebugColumnVIO.ipDBColumnPCWSupplyLeakage;
+	stDebugColumnDIO.ipDBColumnPCWReturnLeakage		:= NOT stDebugColumnVIO.ipDBColumnPCWReturnLeakage;
+	stDebugColumnDIO.ipDBColumnPCWLeakage2			:= NOT stDebugColumnVIO.ipDBColumnPCWLeakage2;
 END_IF
 
 
