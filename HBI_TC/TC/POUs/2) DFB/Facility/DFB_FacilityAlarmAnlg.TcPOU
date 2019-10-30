@@ -149,6 +149,8 @@ CASE _State OF
 			_State								:= 0; // Idle
 		ELSIF _AlarmStateTimer >= AlarmTimer THEN
 			_State								:= 24; // Low Low Alarm - Send Event
+		ELSIF _WarningStateTimer >= WarningTimer THEN
+			_State								:= 24; // Low Alarm - Send Event (to prevent warning timer is shorter than Alarm timer when both alarm and warning are active)
 		END_IF
 	
 	22:	(*Low Alarm - Send Event*)
@@ -279,6 +281,7 @@ END_CASE]]></ST>
       <LineId Id="500" Count="0" />
       <LineId Id="249" Count="15" />
       <LineId Id="415" Count="0" />
+      <LineId Id="542" Count="1" />
       <LineId Id="266" Count="22" />
       <LineId Id="437" Count="0" />
       <LineId Id="289" Count="21" />
