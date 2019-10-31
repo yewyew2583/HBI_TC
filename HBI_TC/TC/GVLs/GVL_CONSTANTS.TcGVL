@@ -4,7 +4,7 @@
     <Declaration><![CDATA[VAR_GLOBAL CONSTANT
 
 	// This function has been automatically generated from the project information.
-	stLibVersion_TC : ST_LibVersion := (iMajor := 0, iMinor := 0, iBuild := 0, iRevision := 0, sVersion := '2.0.2');
+	stLibVersion_TC : ST_LibVersion := (iMajor := 0, iMinor := 0, iBuild := 0, iRevision := 0, sVersion := '2.0.4');
 
 	LA_LEVEL_MODULE_ID : ARRAY [1..NO_OF_LEVEL] OF E_ModuleID  := [	E_ModuleID.CELL_LA101_TESTER, E_ModuleID.CELL_LA201_TESTER, E_ModuleID.CELL_LA301_TESTER,
 																	E_ModuleID.CELL_LA401_TESTER, E_ModuleID.CELL_LA501_TESTER, E_ModuleID.CELL_LA601_TESTER];

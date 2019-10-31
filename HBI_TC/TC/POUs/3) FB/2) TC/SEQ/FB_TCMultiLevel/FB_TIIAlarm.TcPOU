@@ -226,10 +226,10 @@ FOR i := 1 TO NoOfTIIAlm DO
 			ArrAlmBitBefDelay[E_TIIAlarm.ipTesterPowerOn]				:= (NOT	vIO.ipTesterPowerOn) AND vIO.ipTesterPresent AND bChkTstOn AND bENs[10]; 			
 			Arr_ms[e] 													:= 500;  (*TIIAlmText[e]:='TesterPowerOn'*);
     
-        E_TIIAlarm.ipTesterReady: 
+        (*E_TIIAlarm.ipTesterReady: 
 			e															:= E_TIIAlarm.ipTesterReady; 
 			ArrAlmBitBefDelay[E_TIIAlarm.ipTesterReady]					:= (NOT	vIO.ipTesterReady) AND vIO.ipTesterPresent AND bENs[11]; 	
-			Arr_ms[e] 													:= 500;  (*TIIAlmText[e]:='TesterReady'*);
+			Arr_ms[e] 													:= 500;  (*TIIAlmText[e]:='TesterReady'*);*)
 			   
        	E_TIIAlarm.ipTCCellDoorClosed: 
 			stTCColVIO													:= fbTCColumn.P_stTCColumnVIO;
