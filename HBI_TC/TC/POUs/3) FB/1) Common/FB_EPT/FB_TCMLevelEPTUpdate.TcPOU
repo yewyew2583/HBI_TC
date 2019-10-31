@@ -29,26 +29,25 @@ END_VAR
 //	bEptIdle 	:= 	arrTCShuttlePOC[iLevel].stGblParam.iProcessState = E_ProcessState.ePAUSE OR
 //					arrTCShuttlePOC[iLevel].stGblParam.iProcessState = E_ProcessState.eAWAITGCMD;	
 //ELSE
-	stMLVIO:=arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO;
-	
-	bEptBlocked := 	(arrTCMultiLevel[iLevel].stGblParam.iProcessState = E_ProcessState.eALPAUSED)	OR	//All alarms besides TIIAlarm block the EPT, Door Recovery executing
-					(arrTCMultiLevel[iLevel].stGblParam.iProcessState = E_ProcessState.eUNKNOWN)	OR
-					(arrTCMultiLevel[iLevel].stGblParam.bInitialise)								OR //initialization
-					(arrTCMultiLevel[iLevel].stGblParam.bDoorRecovery)								OR //Door recovery
-					(TC_ModuleState[iLevel].Tester = E_State.eDisabled) 							OR	//tester Modules disabled
-					(TC_ModuleState[iLevel].TCSite[1].TCU = E_State.eDisabled) 						OR	//tcu Modules disabled
-					 //(TC_ModuleState[iLevel].TCSite[1].TIERII = E_State.eDisabled)				OR	//tier 2 Modules disabled
-					(stMLVIO.isSysError) 															OR	//System Facilities OR Column Alarms
-					(stMLVIO.TIIAlarmEPT)															OR	//Some TIIAlarms block the EPT
-					(NOT stMLVIO.ipTCCellDoorClosed);
-				
-	bEptBusy 	:= 	(arrTCMultiLevel[iLevel].stGblParam.iProcessState = E_ProcessState.eLOADG)											OR	//executing tasks
-					(stMLVIO.ipAPPresentSensor AND (NOT stMLVIO.ipHandlerSafeToEnterHwr OR NOT stMLVIO.ipHandlerSafeToEnterPLC))		OR	//actuate pan actuated with ap present
-					(stMLVIO.ipTCDrawerCylUpRS OR stMLVIO.ipTCDrawerCylExtendRS);															//tc drawer up/ out position
-	
-	bEptIdle 	:= 	arrTCMultiLevel[iLevel].stGblParam.iProcessState = E_ProcessState.ePAUSE OR	
+stMLVIO:=arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO;
+
+bEptBlocked := 	(arrTCMultiLevel[iLevel].stGblParam.iProcessState = E_ProcessState.eALPAUSED)	OR	//All alarms besides TIIAlarm block the EPT, Door Recovery executing
+				(arrTCMultiLevel[iLevel].stGblParam.iProcessState = E_ProcessState.eUNKNOWN)	OR
+				(arrTCMultiLevel[iLevel].stGblParam.bInitialise)								OR //initialization
+				(arrTCMultiLevel[iLevel].stGblParam.bDoorRecovery)								OR //Door recovery
+				(TC_ModuleState[iLevel].Tester = E_State.eDisabled) 							OR	//tester Modules disabled
+				(TC_ModuleState[iLevel].TCSite[1].TCU = E_State.eDisabled) 						OR	//tcu Modules disabled
+				 //(TC_ModuleState[iLevel].TCSite[1].TIERII = E_State.eDisabled)				OR	//tier 2 Modules disabled
+				(stMLVIO.isSysError) 															OR	//System Facilities OR Column Alarms
+				(stMLVIO.TIIAlarmEPT)															OR	//Some TIIAlarms block the EPT
+				(NOT stMLVIO.ipTCCellDoorClosed);
+			
+bEptBusy 	:= 	(arrTCMultiLevel[iLevel].stGblParam.iProcessState = E_ProcessState.eLOADG)											OR	//executing tasks
+				(stMLVIO.ipAPPresentSensor AND (NOT stMLVIO.ipHandlerSafeToEnterHwr OR NOT stMLVIO.ipHandlerSafeToEnterPLC))		OR	//actuate pan actuated with ap present
+				(stMLVIO.ipTCDrawerCylUpRS OR stMLVIO.ipTCDrawerCylExtendRS);															//tc drawer up/ out position
+
+bEptIdle 	:= 	arrTCMultiLevel[iLevel].stGblParam.iProcessState = E_ProcessState.ePAUSE OR	
 					arrTCMultiLevel[iLevel].stGblParam.iProcessState = E_ProcessState.eAWAITGCMD;	
-//END_IF	
 	 
 IF bEptBlocked THEN 
 	//arrTCMLevelEpt[iLevel]:= E_EPT.eBlocked;
@@ -88,7 +87,7 @@ END_IF
       <LineId Id="234" Count="0" />
       <LineId Id="70" Count="0" />
       <LineId Id="66" Count="0" />
-      <LineId Id="40" Count="2" />
+      <LineId Id="41" Count="1" />
       <LineId Id="75" Count="0" />
       <LineId Id="96" Count="0" />
       <LineId Id="43" Count="0" />

@@ -8,6 +8,7 @@ VAR
 	fbDebugStationProcess			: FB_DebugStationProcess;
 	fbDBStnUpdateStatus				: FB_DBStnUpdateStatus;
 	fbTCMLevelEPTUpdate				: FB_TCMLevelEPTUpdate;
+	fbDbStnEPTUpdate				: FB_DebugStationEPTUpdate;
 	fbGUI_TEST						: ARRAY [1..NO_OF_LEVEL] OF FB_GUI_TEST;
 	fbGUI_TEST_SLTC					: ARRAY [1..NO_OF_LEVEL] OF FB_GUI_TEST_SLTC;
 	fbUpdateStatus					: ARRAY [1..NO_OF_LEVEL] OF FB_UpdateStatus;
@@ -22,15 +23,17 @@ VAR
 	bTemp							: BOOL;
 	bForceFalse						: BOOL	:= FALSE;
 	bErrorTemp						: BOOL;
-	isDbStnTIIAlarm					: BOOL;
+	
 	DBColumnAlarmLED				: BOOL;
+	isDbStnTIIAlarm					: BOOL;
+	DbStnTIIAlarmLED				: BOOL;
+	DbStnTIIAlarmEPT				: BOOL;
 	
 	isTIIAlarms						: ARRAY[1..NO_OF_LEVEL] OF BOOL;
 	_TIIAlarmLED					: ARRAY[1..NO_OF_LEVEL] OF BOOL;
 	_TIIAlarmEPT					: ARRAY[1..NO_OF_LEVEL] OF BOOL;
 	bAlarmBlockDrawer				: ARRAY[1..NO_OF_LEVEL] OF BOOL;
 	
-	DbStnTIIAlarmLED				: BOOL;
 	
 	_iSubModToRset					: INT;	//Get From TA Command
 	_iAlmIDToRset					: INT;	//Get From TA Command
@@ -53,25 +56,11 @@ VAR
 	stTCMLevelVIO					: ST_TCMultiLevel_VIO;
 	stDbStnVIO						: ST_DebugStation_VIO;
 	
-	//fbCommandEventMonitor : FB_CommandEventMonitor;
-	
-	
-	
-	
-	
-	
-	
 	fbTCMain						: INT;
-	
 	TestDIFU						: R_TRIG;
-	
 	iTestIntIndex					: INT;
 	varBool							: BOOL;
-
-
-	
 	stDbColVIO						: ST_DebugColumnVIO;
-	
 	fb_Testing						: Testing;
 END_VAR
 ]]></Declaration>
@@ -101,12 +90,8 @@ ELSE
 /////////////////////////////// Debug Station /////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	IF bDebugStation THEN
-		fbDBStnUpdateStatus(
-			DBColumnAlarmLED			:= DBColumnAlarmLED
-		);
-		fbDebugColumn(
-			DBColumnAlarmLED			=> DBColumnAlarmLED
-		);	//Facility
+		fbDBStnUpdateStatus();
+		fbDebugColumn();	//Facility
 		fbDebugStationProcess();	//Debug Station
 		
 		fbDbStnTIIAlarm(
@@ -114,11 +99,19 @@ ELSE
 			NoOfTIIAlm														:= NO_OF_TII_SENSOR, 
 			iLevel															:= 1, (*stAlmMod:= ALMTC,*) 
 			isTIIError														=> isDbStnTIIAlarm,
-			TIIAlarmLED														=> DbStnTIIAlarmLED
+			TIIAlarmLED														=> DbStnTIIAlarmLED,
+			TIIAlarmEPT														=> DbstnTIIAlarmEPT
 		);
+		
+		fbDbStnEPTUpdate();
 		
 		IF stDbStnVIO.TIIAlarmLED <> DbStnTIIAlarmLED THEN
 			stDbStnVIO.TIIAlarmLED											:= DbStnTIIAlarmLED;
+			stDebugStation.fbDBStnSeq.P_stVIO								:= stDbStnVIO;
+		END_IF
+		
+		IF stDbStnVIO.TIIAlarmEPT <> DbstnTIIAlarmEPT THEN
+			stDbStnVIO.TIIAlarmEPT											:= DbStnTIIAlarmLED;
 			stDebugStation.fbDBStnSeq.P_stVIO								:= stDbStnVIO;
 		END_IF
 		
@@ -317,19 +310,21 @@ fb_Testing();
       <LineId Id="3151" Count="0" />
       <LineId Id="3380" Count="0" />
       <LineId Id="3383" Count="0" />
-      <LineId Id="3462" Count="0" />
-      <LineId Id="3460" Count="0" />
       <LineId Id="3382" Count="0" />
-      <LineId Id="3459" Count="0" />
-      <LineId Id="3458" Count="0" />
       <LineId Id="2681" Count="0" />
       <LineId Id="3146" Count="0" />
       <LineId Id="2114" Count="0" />
       <LineId Id="2683" Count="3" />
-      <LineId Id="3535" Count="1" />
+      <LineId Id="3535" Count="0" />
+      <LineId Id="3627" Count="0" />
+      <LineId Id="3536" Count="0" />
       <LineId Id="3538" Count="0" />
+      <LineId Id="3624" Count="1" />
       <LineId Id="3548" Count="2" />
       <LineId Id="3539" Count="0" />
+      <LineId Id="3634" Count="0" />
+      <LineId Id="3636" Count="2" />
+      <LineId Id="3635" Count="0" />
       <LineId Id="1689" Count="0" />
       <LineId Id="1691" Count="3" />
       <LineId Id="1696" Count="1" />

@@ -9,7 +9,8 @@ VAR_INPUT
 END_VAR
 VAR_OUTPUT
 	isTIIError				: BOOL;
-	TIIAlarmLED					: BOOL;
+	TIIAlarmLED				: BOOL;
+	TIIAlarmEPT				: BOOL;
 END_VAR
 VAR
 	DIFU					: R_TRIG;
@@ -107,7 +108,7 @@ FOR i:=1 TO NoOfTIIAlm DO
 			
 	    E_TIIAlarm.ipCellFluidLeakage2: 
 			e															:= E_TIIAlarm.ipCellFluidLeakage2; 
-			ArrAlmBitBefDelay[E_TIIAlarm.ipCellFluidLeakage2]			:= vIO.ipDBStnCellFluidLeakage2 (*AND bENs[7]*) ; 			
+			ArrAlmBitBefDelay[E_TIIAlarm.ipCellFluidLeakage2]			:= vIO.ipDBStnCellFluidLeakage2 (*AND bENs[7]*) ;	
 			Arr_ms[e] 													:= 500;  (*TIIAlmText[e]:='CellFluidLeakage2'*);     
 	END_CASE
 
@@ -133,8 +134,32 @@ TIIAlarmLED															:=		ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipAPPowerOn
 		    																ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipAPReady		       	   	]   OR
 																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellFluidLeakage1		   	]   OR
 																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellFluidLeakage2		   	]   OR
-																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellGroundFault 	   		];
-]]></ST>
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellGroundFault 	   		]	OR
+																			ALM_DCCOL.AlarmID[E_DCFACAlarm.e6BarLowOFAAirPressureAlarm			]	OR
+																			ALM_DCCOL.AlarmID[E_DCFACAlarm.eCriticalCondensationAlarm			]	OR
+																			ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWLeakageAlarm				]	OR
+																			ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWLeakage2Alarm				]	OR
+																			ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWSupplyLeakageAlarm			]	OR
+																			ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWReturnLeakageAlarm			];
+																			
+TIIAlarmEPT															:=		ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipAPPowerOn 		   	   		]   OR 
+		    																ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipAPReady		       	   	]   OR
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellFluidLeakage1		   	]   OR
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellFluidLeakage2		   	]   OR
+																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellGroundFault 	   		]	OR
+																			ALM_DCCOL.AlarmID[E_DCFACAlarm.e6BarLowOFAAirPressureAlarm			]	OR
+																			ALM_DCCOL.AlarmID[E_DCFACAlarm.eCriticalCondensationAlarm			]	OR
+																			ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWLeakageAlarm				]	OR
+																			ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWLeakage2Alarm				]	OR
+																			ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWSupplyLeakageAlarm			]	OR
+																			ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWReturnLeakageAlarm			];
+
+																			
+																			
+																			
+																			
+																			
+																			]]></ST>
       </Implementation>
     </Method>
     <Property Name="P_ErrClear" Id="{400cb5c4-2dc6-4fab-b5e3-d1a6a6655309}">
@@ -204,8 +229,19 @@ END_VAR
       <LineId Id="202" Count="0" />
       <LineId Id="760" Count="1" />
       <LineId Id="766" Count="2" />
+      <LineId Id="841" Count="0" />
+      <LineId Id="846" Count="0" />
+      <LineId Id="842" Count="3" />
       <LineId Id="733" Count="0" />
+      <LineId Id="814" Count="0" />
+      <LineId Id="816" Count="3" />
+      <LineId Id="815" Count="0" />
       <LineId Id="120" Count="0" />
+      <LineId Id="836" Count="4" />
+      <LineId Id="831" Count="0" />
+      <LineId Id="829" Count="0" />
+      <LineId Id="832" Count="3" />
+      <LineId Id="830" Count="0" />
     </LineIds>
     <LineIds Name="FB_TIIAlarmDbStn.P_ErrClear.Get">
       <LineId Id="2" Count="0" />

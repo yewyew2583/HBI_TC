@@ -74,6 +74,7 @@ STRUCT
 	iAlarmCode 		: UDINT;
 	isTIIError 		: BOOL; 
 	TIIAlarmLED		: BOOL;
+	TIIAlarmEPT		: BOOL;
 	isSysError 		: BOOL;
 //</CtrlIO>
 

@@ -5,7 +5,6 @@
 VAR_INPUT
 END_VAR
 VAR_OUTPUT
-	DBColumnAlarmLED			: BOOL;
 END_VAR
 VAR	
 	stDebugColumnDIO				: ST_DebugColumnDIO;
@@ -154,13 +153,6 @@ IF stDebugColumnVIO.bDebugColErrClear THEN
 	END_IF
 	stDebugColumnVIO.bDebugColErrClear:= FALSE;
 END_IF
-
-DBColumnAlarmLED				:= 	ALM_DCCOL.AlarmID[E_DCFACAlarm.e6BarLowOFAAirPressureAlarm] 	OR
-									ALM_DCCOL.AlarmID[E_DCFACAlarm.eCriticalCondensationAlarm] 		OR
-									ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWLeakageAlarm] 			OR
-									ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWReturnLeakageAlarm] 	OR
-									ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWSupplyLeakageAlarm]	OR
-									ALM_DCCOL.AlarmID[E_DCFACAlarm.eSystemPCWLeakage2Alarm];
 
 
 
@@ -596,9 +588,6 @@ END_VAR
       <LineId Id="229" Count="1" />
       <LineId Id="228" Count="0" />
       <LineId Id="218" Count="9" />
-      <LineId Id="216" Count="0" />
-      <LineId Id="237" Count="1" />
-      <LineId Id="242" Count="3" />
       <LineId Id="258" Count="0" />
       <LineId Id="241" Count="0" />
       <LineId Id="240" Count="0" />

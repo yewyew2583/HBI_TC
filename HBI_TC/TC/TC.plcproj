@@ -311,6 +311,9 @@
     <Compile Include="POUs\3%29 FB\1%29 Common\FB_CommonFunction\F_TAParamtoStr.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\3%29 FB\1%29 Common\FB_EPT\FB_DebugStationEPTUpdate.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\3%29 FB\1%29 Common\FB_EPT\FB_TCMLevelEPTUpdate.TcPOU">
       <SubType>Code</SubType>
     </Compile>

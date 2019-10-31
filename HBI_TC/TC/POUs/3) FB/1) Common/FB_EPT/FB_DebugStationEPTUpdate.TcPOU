@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <POU Name="FB_DebugStationEPTUpdate" Id="{f26b07cd-a0b2-4425-bff3-ee966f91e6f3}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_DebugStationEPTUpdate
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	bBlocked 			: BOOL := FALSE;
+	bLevelBlocked 		: BOOL := FALSE;
+	bEptBlocked 		: BOOL := FALSE;
+	bEptBusy 			: BOOL := FALSE;
+	bEptIdle 			: BOOL := FALSE;
+	stDbStnVIO			: ST_DebugStation_VIO;
+	i					: INT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[stDbStnVIO						:= stDebugStation.fbDBStnSeq.P_stVIO;
+
+bEptBlocked						:= 	(stDebugStation.stGblDBStnParam.iProcessState = E_ProcessState.eALPAUSED)	OR	//All alarms besides TIIAlarm block the EPT, Door Recovery executing
+									(stDebugStation.stGblDBStnParam.iProcessState = E_ProcessState.eUNKNOWN)	OR
+									(TC_ModuleState[1].Tester = E_State.eDisabled) 								OR	//tester Modules disabled
+									(TC_ModuleState[1].TCSite[1].TCU = E_State.eDisabled) 						OR	//tcu Modules disabled
+									(stDebugStation.stGblDBStnParam.bInitialise)								OR //initialization
+									(stDbStnVIO.TIIAlarmEPT);													//OR // Tier 2 Alarm (including facility)
+									//(stMLVIO.isSysError) 														OR	//System Facilities OR Column Alarms
+			
+bEptBusy 						:= 	(stDebugStation.stGblDBStnParam.iProcessState = E_ProcessState.eLOADG) OR	//executing tasks
+									(stDbStnVIO.ipDBStnAPPresentSensor AND (NOT stDbStnVIO.ipDBStnHandlerSafeToEnterHwr OR NOT stDbStnVIO.ipDBStnHandlerSafeToEnterPLC));
+
+bEptIdle 						:= 	stDebugStation.stGblDBStnParam.iProcessState = E_ProcessState.ePAUSE 		OR	
+									stDebugStation.stGblDBStnParam.iProcessState = E_ProcessState.eAWAITGCMD;	
+	 
+IF bEptBlocked THEN 
+	TC_EPT[1].TCSite[1].TCU		:= E_EPT.eBlocked;
+ELSIF bEptBusy THEN 
+	TC_EPT[1].TCSite[1].TCU		:= E_EPT.eBusy;  
+ELSIF bEptIdle THEN 
+	TC_EPT[1].TCSite[1].TCU		:= E_EPT.eIdle;
+END_IF
+]]></ST>
+    </Implementation>
+    <LineIds Name="FB_DebugStationEPTUpdate">
+      <LineId Id="10" Count="3" />
+      <LineId Id="47" Count="1" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="22" Count="2" />
+      <LineId Id="26" Count="4" />
+      <LineId Id="32" Count="1" />
+      <LineId Id="35" Count="1" />
+      <LineId Id="38" Count="1" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
