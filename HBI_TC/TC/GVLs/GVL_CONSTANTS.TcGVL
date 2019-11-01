@@ -91,7 +91,7 @@
 	 	'Cell_GroundFault' 					,
 	 	'Tester_Not_Present' 				,
 	 	'TesterPower_Not_On' 				,
-	 	''					       			,
+	 	'Tester_not_ready'					,
 	 	'TCCellDoor_Not_Locked'				,
 	 	'TesterLatches_Not_Closed' 			,
 	 	'TBOT_TC_ACPower_Off_Signal' 		,
