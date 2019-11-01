@@ -182,7 +182,7 @@ CASE iSeqCase OF
 			  	arrTCMultiLevel[iLevel].stGblParam.bTBotbShuttleMoveInReq 	OR arrTCMultiLevel[iLevel].stGblParam.bDrawerUp					OR arrTCMultiLevel[iLevel].stGblParam.bDrawerDown				OR
 			  	arrTCMultiLevel[iLevel].stGblParam.bDrawerUpBefFrtDoorOpen	THEN
 					arrTCMultiLevel[iLevel].stGblParam.iProcessState 		:= E_ProcessState.eLOADG;
-					iSeqStatus 												:= arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.M_nShuttleMoveInOut();	
+					iSeqStatus 												:= arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.M_nShuttleMoveInOut();
 		END_IF
 	
 		IF iSeqStatus = 10 THEN

@@ -139,7 +139,7 @@ STRUCT
 	iAlarmCode								: UDINT;
 	isTIIError								: BOOL;
 	iUnBlock								: DINT; 
-	bAlarmBlockDrawer						: BOOL;
+	bAlarmBlockDrawerExtRtt					: BOOL;
 	TIIAlarmLED								: BOOL;
 	TIIAlarmEPT								: BOOL;
 	iSysUnBlockAlm							: DINT;

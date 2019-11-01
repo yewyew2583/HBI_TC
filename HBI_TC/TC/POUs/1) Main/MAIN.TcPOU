@@ -32,7 +32,7 @@ VAR
 	isTIIAlarms						: ARRAY[1..NO_OF_LEVEL] OF BOOL;
 	_TIIAlarmLED					: ARRAY[1..NO_OF_LEVEL] OF BOOL;
 	_TIIAlarmEPT					: ARRAY[1..NO_OF_LEVEL] OF BOOL;
-	bAlarmBlockDrawer				: ARRAY[1..NO_OF_LEVEL] OF BOOL;
+	bAlarmBlockDrawerExtRtt			: ARRAY[1..NO_OF_LEVEL] OF BOOL;
 	
 	
 	_iSubModToRset					: INT;	//Get From TA Command
@@ -171,7 +171,7 @@ ELSE
 				iLevel																		:= iLevel, (*stAlmMod:= ALMTC,*)
 				isTIIError																	=> isTIIAlarms[iLevel],
 				iUnBlock																	=> iUnBlock[iLevel], 
-				bAlarmBlockDrawer															=> bAlarmBlockDrawer[iLevel],
+				bAlarmBlockDrawerExtRtt														=> bAlarmBlockDrawerExtRtt[iLevel],
 				TIIAlarmLED																	=> _TIIAlarmLED[iLevel],
 				TIIAlarmEPT																	=> _TIIAlarmEPT[iLevel]
 			);
@@ -183,8 +183,8 @@ ELSE
 				arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO			:= stTCMLevelVIO;
 			END_IF
 			
-			IF stTCMLevelVIO.bAlarmBlockDrawer <> bAlarmBlockDrawer[iLevel] THEN
-				stTCMLevelVIO.bAlarmBlockDrawer											:= bAlarmBlockDrawer[iLevel];
+			IF stTCMLevelVIO.bAlarmBlockDrawerExtRtt <> bAlarmBlockDrawerExtRtt[iLevel] THEN
+				stTCMLevelVIO.bAlarmBlockDrawerExtRtt									:= bAlarmBlockDrawerExtRtt[iLevel];
 				arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.P_stTCMultiLevelVIO			:= stTCMLevelVIO;
 			END_IF
 			

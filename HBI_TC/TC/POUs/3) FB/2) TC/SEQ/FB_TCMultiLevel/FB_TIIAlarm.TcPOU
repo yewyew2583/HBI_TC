@@ -14,7 +14,7 @@ VAR_OUTPUT
 	TIIAlarmLED					: BOOL;
 	TIIAlarmEPT					: BOOL;
 	iUnBlock					: DINT;
-	bAlarmBlockDrawer					: BOOL;
+	bAlarmBlockDrawerExtRtt		: BOOL;
 	isAboveCellLeakage			: BOOL;
 END_VAR
 
@@ -386,13 +386,16 @@ alarmReset			:= FALSE;	//false back and wait for next alarm reset to reset alarm
 
 isAboveCellLeakage		:= M_AboveLeakageChecking(currentLevel	:= iLevel);
 
-bAlarmBlockDrawer														:=	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTesterLatchesClosed    	]	OR
-																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCDrawerExtendSignal	   	]	OR
-																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCDrawerRetractSignal	   	]	OR
-																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCCellDoorClosed	   		]   OR
-																			ALMTC.Common.AlarmID[E_ColAlarm.ipTbotDoorClosedSignal				]	OR
-																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCDrawerUpSignal		   	];
-																				
+bAlarmBlockDrawerExtRtt														:=	(NOT bDebugCart)															AND
+																			(
+																				ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTesterLatchesClosed    	]	OR //not need in DC
+																				ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCDrawerExtendSignal	   	]	OR //not need in DC
+																				ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCDrawerRetractSignal	   	]	OR //not need in DC
+																				ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCCellDoorClosed	   		]   OR //not need in DC
+																				ALMTC.Common.AlarmID[E_ColAlarm.ipTbotDoorClosedSignal				]	OR //not need in DC
+																				ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCDrawerUpSignal		   	] 	   //not need in DC
+																			);
+																			
 
 TIIAlarmLED																:=	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipAPPowerOn 		   	   			]   OR 
 		    																ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipAPReady		       	   		]   OR
@@ -696,10 +699,12 @@ END_VAR
       <LineId Id="1440" Count="0" />
       <LineId Id="738" Count="0" />
       <LineId Id="745" Count="0" />
+      <LineId Id="1580" Count="1" />
       <LineId Id="1508" Count="2" />
       <LineId Id="1550" Count="0" />
       <LineId Id="1513" Count="0" />
-      <LineId Id="1507" Count="0" />
+      <LineId Id="1582" Count="0" />
+      <LineId Id="1579" Count="0" />
       <LineId Id="203" Count="0" />
       <LineId Id="1023" Count="0" />
       <LineId Id="1027" Count="0" />

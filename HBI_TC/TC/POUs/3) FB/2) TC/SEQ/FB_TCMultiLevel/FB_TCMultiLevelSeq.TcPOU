@@ -1404,7 +1404,7 @@ END_VAR]]></Declaration>
 
 IF (bPause) THEN
 	RETURN;
-ELSIF stMLVIO.bAlarmBlockDrawer THEN
+ELSIF stMLVIO.bAlarmBlockDrawerExtRtt THEN
 	M_nShuttleMoveInOut:=20;		//return fail event
 	RETURN;
 END_IF
@@ -1763,7 +1763,7 @@ END_VAR
 
 IF bPause THEN
 	RETURN;
-ELSIF stMLVIO.bAlarmBlockDrawer THEN
+ELSIF stMLVIO.bAlarmBlockDrawerExtRtt THEN
 	pwrOnChkTim(In:= FALSE);
 	M_nSystemReset											:= 20;		//return fail event
 	RETURN;
