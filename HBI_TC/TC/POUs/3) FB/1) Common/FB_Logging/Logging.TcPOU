@@ -32,25 +32,31 @@ IF bRunOnce THEN
 	//fbLogDir.P_sSubDirPath := 'AEM\Data\ControllerLog';
 	fbDebugLog.P_sDirectoryPath:='C:\';
 	fbDebugLog.P_sSubDirPath:='AEM\Data\ControllerLog';
-	fbDebugLog.sFileName :='DebugLog';
+	fbDebugLog.sFileName :='DebugLog_';
 	fbDebugLog.P_iLogVerbosity :=  iLogVerbosity;
 	//fbMtrLog[iLevel].P_sFileName:='Motor';
 	
-	fbAlarmLog.P_sDirectoryPath:='C:\';
+	(*fbAlarmLog.P_sDirectoryPath:='C:\';
 	fbAlarmLog.P_sSubDirPath:='AEM\Data\ControllerLog';
 	fbAlarmLog.sFileName :='AlarmLog';
-	fbAlarmLog.P_iLogVerbosity :=  iLogVerbosity;
+	fbAlarmLog.P_iLogVerbosity :=  iLogVerbosity;*)
 		
 	FOR nI:=0 TO NO_OF_LEVEL DO
 		fbSensorLog.P_sDirectoryPath:='C:\';
 		fbSensorLog.P_sSubDirPath:='AEM\Data\ControllerLog';
-
-		fbSensorLog.sFileName :='SensorLog';
+		fbSensorLog.sFileName :='SensorLog_';
 		fbSensorLog.P_iLogVerbosity :=  iLogVerbosity;
+		
 		fbSensorLog.M_nDirectory(bExecute:=TRUE);
 		IF fbSensorLog.P_bError THEN
 			errorID:=fbSensorLog.P_nErrorID;
 		END_IF
+		
+		fbAlarmLog.P_sDirectoryPath:='C:\';
+		fbAlarmLog.P_sSubDirPath:='AEM\Data\ControllerLog';
+		fbAlarmLog.sFileName :='AlarmLog_';
+		fbAlarmLog.P_iLogVerbosity :=  iLogVerbosity;
+		fbAlarmLog.M_nDirectory(bExecute:=TRUE);
 	END_FOR
 	(*
 	FOR nI:=0 TO NO_OF_LEVEL DO
@@ -75,13 +81,17 @@ END_IF
 
 fbLogDir.M_nDirectory(bExecute:=TRUE); //create directory
 fbDebugLog.M_nCyclic();
-
 fbSensorLog.M_nCyclic();  //fbSensorLog[1].M_nLogger('test', bTest);
+fbAlarmLog.M_nCyclic();
+
+
 FOR iLevel:=0 TO NO_OF_LEVEL DO
 	IF iLevel=0 THEN
 		fbSensorMonitor(iLevel:=iLevel,newVIO:=arrTCMultiLevel[1].fbTCMultiLevelSeq.stMLVIO,oldVIO:=arrTCMultiLevel[1].fbTCMultiLevelSeq.stOldMLVIO);
+		fbAlarmMonitor(iLevel:=iLevel, newAlm:=ALMTC, oldAlm:=arrTCMultiLevel[1].fbTCMultiLevelSeq.stOldAlarm);
 	END_IF
-	fbSensorMonitor(iLevel:=iLevel,newVIO:=arrTCMultiLevel[ilevel].fbTCMultiLevelSeq.stMLVIO,oldVIO:=arrTCMultiLevel[ilevel].fbTCMultiLevelSeq.stOldMLVIO);
+	fbSensorMonitor(iLevel:=iLevel,newVIO:=arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.stMLVIO,oldVIO:=arrTCMultiLevel[ilevel].fbTCMultiLevelSeq.stOldMLVIO);
+	fbAlarmMonitor(iLevel:=iLevel, newAlm:=ALMTC, oldAlm:=arrTCMultiLevel[ilevel].fbTCMultiLevelSeq.stOldAlarm);
 END_FOR             
 
 //FOR nI:=1 TO 1000 DO
@@ -116,11 +126,15 @@ END_FOR
       <LineId Id="91" Count="0" />
       <LineId Id="152" Count="0" />
       <LineId Id="236" Count="0" />
-      <LineId Id="219" Count="0" />
       <LineId Id="165" Count="0" />
       <LineId Id="162" Count="0" />
+      <LineId Id="332" Count="0" />
       <LineId Id="230" Count="1" />
       <LineId Id="233" Count="1" />
+      <LineId Id="343" Count="0" />
+      <LineId Id="340" Count="2" />
+      <LineId Id="339" Count="0" />
+      <LineId Id="344" Count="0" />
       <LineId Id="154" Count="0" />
       <LineId Id="252" Count="0" />
       <LineId Id="238" Count="13" />
@@ -130,10 +144,16 @@ END_FOR
       <LineId Id="53" Count="0" />
       <LineId Id="90" Count="0" />
       <LineId Id="186" Count="2" />
-      <LineId Id="213" Count="1" />
+      <LineId Id="214" Count="0" />
+      <LineId Id="347" Count="1" />
+      <LineId Id="346" Count="0" />
       <LineId Id="274" Count="0" />
-      <LineId Id="278" Count="2" />
-      <LineId Id="275" Count="1" />
+      <LineId Id="278" Count="1" />
+      <LineId Id="349" Count="0" />
+      <LineId Id="280" Count="0" />
+      <LineId Id="275" Count="0" />
+      <LineId Id="351" Count="0" />
+      <LineId Id="276" Count="0" />
       <LineId Id="226" Count="3" />
       <LineId Id="86" Count="0" />
       <LineId Id="47" Count="0" />

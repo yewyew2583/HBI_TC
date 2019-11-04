@@ -35,11 +35,14 @@ VAR
 	stMLVIO 							: ST_TCMultiLevel_VIO;
 	stDbStnVIO							: ST_DebugStation_VIO; // For Debug Sation VIO; 
 	stMLDIO 							: ST_TCMultiLevel_DIO;
-	stOldMLVIO 							: ST_TCMultiLevel_VIO;
 	stMLBIO								: ST_TCMultiLevel_BIO;
 	stTCMLSeqParam 						: ST_TCMultiLevelSeqParam;
 	stTCColVIO							: ST_TCColumn_VIO;
 	stTCColDIO							: ST_TCColumn_DIO;
+	
+	//for log purpose
+	stOldMLVIO 							: ST_TCMultiLevel_VIO;
+	stOldAlarm							: ST_AlarmModules;
 	
 	FB_M_nCyclic_tSensorDelay			: TIME	:= T#200MS; // By default
 	FB_M_nCyclic_tSensorTimeOut			: TIME	:= T#10S;
