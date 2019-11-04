@@ -3,27 +3,27 @@
   <POU Name="Logging" Id="{cdb76e7e-d4b1-49bd-bbd2-b82ea7f66603}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM Logging
 VAR_INPUT
-	fbDebugLog: Tc3_HBI_DataLogger.FB_DataLogger;
-	fbMtrLog: ARRAY [1..NO_OF_LEVEL] OF Tc3_HBI_DataLogger.FB_MotorLogger;
+	fbDebugLog			: Tc3_HBI_DataLogger.FB_DataLogger;
+	fbMtrLog			: ARRAY [1..NO_OF_LEVEL] OF Tc3_HBI_DataLogger.FB_MotorLogger;
 	
-	fbSensorLog: Tc3_HBI_DataLogger.FB_DataLogger; //Tc3_HBI_DataLogger.FB_SensorLogger;
-	fbAlarmLog: Tc3_HBI_DataLogger.FB_DataLogger;
+	fbSensorLog			: Tc3_HBI_DataLogger.FB_DataLogger; //Tc3_HBI_DataLogger.FB_SensorLogger;
+	fbAlarmLog			: Tc3_HBI_DataLogger.FB_DataLogger;
 	
-	fbSensorMonitor : FB_SensorMonitor;
-	fbAlarmMonitor : FB_AlarmMonitor;
+	fbSensorMonitor 	: FB_SensorMonitor;
+	fbAlarmMonitor 		: FB_AlarmMonitor;
 	//iLevel : UINT;
-	bRunOnce : BOOL :=TRUE;
+	bRunOnce 			: BOOL :=TRUE;
 END_VAR
 
 VAR
-	iLevel : UINT;
-	bTest: BOOL;
-	fbLogDir : FB_FileAccess;
+	iLevel 				: UINT;
+	bTest				: BOOL;
+	fbLogDir 			: FB_FileAccess;
 	
-	nI: INT;
-	str:STRING;
-	isError : BOOL;
-	errorID: UDINT;
+	nI					: INT;
+	str					: STRING;
+	isError 			: BOOL;
+	errorID				: UDINT;
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[//set logging information
@@ -54,27 +54,10 @@ IF bRunOnce THEN
 		
 		fbAlarmLog.P_sDirectoryPath:='C:\';
 		fbAlarmLog.P_sSubDirPath:='AEM\Data\ControllerLog';
-		fbAlarmLog.sFileName :='AlarmLog_';
+		fbAlarmLog.sFileName :='DebugLog_';
 		fbAlarmLog.P_iLogVerbosity :=  iLogVerbosity;
 		fbAlarmLog.M_nDirectory(bExecute:=TRUE);
 	END_FOR
-	(*
-	FOR nI:=0 TO NO_OF_LEVEL DO
-		fbSensorLog[nI].P_sDirectoryPath:='C:\';
-		fbSensorLog[nI].P_sSubDirPath:='AEM\Data\SensorLog';
-		IF nI=0 THEN
-			str:='SensorLogColumn';
-		ELSE
-			str:=CONCAT(CONCAT(CONCAT('Level[',INT_TO_STRING(nI)),']'),'SensorLog'); 
-		END_IF
-		fbSensorLog[nI].sFileName :=str;
-		fbSensorLog[nI].P_iLogVerbosity :=  iLogVerbosity;
-		fbSensorLog[nI].M_nDirectory(bExecute:=TRUE);
-		IF fbSensorLog[nI].P_bError THEN
-			errorID:=fbSensorLog[nI].P_nErrorID;
-		END_IF
-	END_FOR
-	*)
 	bRunOnce := FALSE;
 END_IF
 
@@ -93,16 +76,6 @@ FOR iLevel:=0 TO NO_OF_LEVEL DO
 	fbSensorMonitor(iLevel:=iLevel,newVIO:=arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.stMLVIO,oldVIO:=arrTCMultiLevel[ilevel].fbTCMultiLevelSeq.stOldMLVIO);
 	fbAlarmMonitor(iLevel:=iLevel, newAlm:=ALMTC, oldAlm:=arrTCMultiLevel[ilevel].fbTCMultiLevelSeq.stOldAlarm);
 END_FOR             
-
-//FOR nI:=1 TO 1000 DO
-//	fbSensorLog.M_nLogger(iLogLevel:= 1, sSource:= '1', INT_TO_STRING(nI));
-//	//fbDebugLog[1].M_nLogger(iLogLevel:= 1, sSource:= '1', INT_TO_STRING(nI));
-//END_FOR
-//FOR iLevel:=0 TO NO_OF_LEVEL DO
-//	//fbMtrLog[iLevel].M_nCyclic();
-//	fbSensorMonitor(iLevel:=iLevel);
-//END_FOR
-
 
 
 
@@ -135,10 +108,6 @@ END_FOR
       <LineId Id="340" Count="2" />
       <LineId Id="339" Count="0" />
       <LineId Id="344" Count="0" />
-      <LineId Id="154" Count="0" />
-      <LineId Id="252" Count="0" />
-      <LineId Id="238" Count="13" />
-      <LineId Id="237" Count="0" />
       <LineId Id="253" Count="0" />
       <LineId Id="157" Count="0" />
       <LineId Id="53" Count="0" />
@@ -154,13 +123,6 @@ END_FOR
       <LineId Id="275" Count="0" />
       <LineId Id="351" Count="0" />
       <LineId Id="276" Count="0" />
-      <LineId Id="226" Count="3" />
-      <LineId Id="86" Count="0" />
-      <LineId Id="47" Count="0" />
-      <LineId Id="109" Count="0" />
-      <LineId Id="112" Count="0" />
-      <LineId Id="108" Count="0" />
-      <LineId Id="132" Count="0" />
       <LineId Id="110" Count="0" />
       <LineId Id="64" Count="0" />
       <LineId Id="63" Count="0" />
