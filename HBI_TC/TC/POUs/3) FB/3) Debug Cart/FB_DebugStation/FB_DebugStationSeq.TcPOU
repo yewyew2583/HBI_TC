@@ -39,6 +39,11 @@ VAR
 	Reset_opDBStn24VPowerEnable					: R_TRIG;
 	Precondition_opDBStn24VPowerEnable			: BOOL;
 	
+	FB_opDBStnPCWValve							: DFB_Cylinder;
+	DUT_opDBStnPCWValve							: DUT_Cylinder;
+	Reset_opDBStnPCWValve						: R_TRIG;
+	Precondition_opDBStnPCWValve				: BOOL;
+	
 	tstOnCheckTim				: TON;		//delay to check TesterOnFeedback
 	ap240OnCheckTim				: TON;		//delay to check AP240OnFeedback
 	tstPresentTim				: TON;		//delay to On Tester Air Valve after Tester Present
@@ -418,7 +423,7 @@ VAR_INPUT
 END_VAR
 
 VAR
-bSimu:BOOL:=FALSE;
+	bSimu:BOOL:=FALSE;
 	stMLVIO: INT;
 	ipDBStnAPPowerOn: INT;
 END_VAR]]></Declaration>
@@ -434,8 +439,9 @@ M_InputBackDoor();
 M_InterlockTII();		
 M_AP240Power();
 M_Secondary24VPower();
+M_opDbStnPCWValve();
 
-stDebugStationVIO.opDBStnPCWValve			:= (stDebugStationVIO.ipDBStnAPPresentSensor);
+//stDebugStationVIO.opDBStnPCWValve			:= (stDebugStationVIO.ipDBStnAPPresentSensor);
 stDebugStationVIO.opDBStnAPSafeToEngage 	:= 	stDebugStationVIO.ipDBStnAPPresentSensor;														
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -529,13 +535,13 @@ END_VAR
 VAR
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[M_nDPSPowerOnOff:=iStkSingStackUp;
+        <ST><![CDATA[M_nDPSPowerOnOff					:= iStkSingStackUp;
 
 IF bPause THEN
 	RETURN;
 
 ELSIF itl_opDBStnAP240ACPwrEnable THEN  
-	M_nDPSPowerOnOff:=20;		
+	M_nDPSPowerOnOff				:= 20;		
 	RETURN;
 END_IF
 IF iSeqStep>0 THEN
@@ -557,20 +563,19 @@ iStkSeqCase:=arrSeqStep[iSeqStep];
 
 // State machine
 CASE iStkSeqCase OF
-E_SeqSts.eInit: //Init
-	//TDelay(IN:=FALSE);
-	sMessage					:= 'Start Executing';
-	bStepDone					:= TRUE;
-
-
-E_SeqSts.eSanityCheckForAPPwr: 				//Sanity check AP
-	sMessage					:= 'CheckTeir2IIAlarm';
+	E_SeqSts.eInit: //Init
+		//TDelay(IN:=FALSE);
+		sMessage					:= 'Start Executing';
+		bStepDone					:= TRUE;
 	
-	tAPACPwrDelayToComplete(IN:=FALSE);
-	tAPACPwrDelayToAutoComplete(IN:=FALSE);
-	bStepDone					:= TRUE;	
-	
-E_SeqSts.eAP240ACPwrOnOff:										// AP240ACPowerOnOff
+	E_SeqSts.eSanityCheckForAPPwr: 				//Sanity check AP
+		sMessage					:= 'CheckTeir2IIAlarm';
+		
+		tAPACPwrDelayToComplete(IN:=FALSE);
+		tAPACPwrDelayToAutoComplete(IN:=FALSE);
+		bStepDone					:= TRUE;	
+		
+	E_SeqSts.eAP240ACPwrOnOff:										// AP240ACPowerOnOff
 		tAPACPwrDelayToComplete(IN:=TRUE, PT:=T#2S); 			// origin T#10s
 		IF tAPACPwrDelayToComplete.Q THEN
 			IF stDbStnParam.bAP240ACPowerOff THEN 			(*0=Off, 1=On, 2=Auto(Off->On) *)
@@ -591,17 +596,16 @@ E_SeqSts.eAP240ACPwrOnOff:										// AP240ACPowerOnOff
 				END_IF
 			END_IF
 		END_IF
+			
+		IF tAPACPwrDelayToComplete.Q AND tAPACPwrDelayToAutoComplete.Q THEN
+			tAPACPwrDelayToComplete(IN:=FALSE);
+			tAPACPwrDelayToAutoComplete(IN:=FALSE);
+			bStepDone														:= TRUE;
+		END_IF
 		
-IF tAPACPwrDelayToComplete.Q AND tAPACPwrDelayToAutoComplete.Q THEN
-	tAPACPwrDelayToComplete(IN:=FALSE);
-	tAPACPwrDelayToAutoComplete(IN:=FALSE);
-	bStepDone														:= TRUE;
-END_IF
-
-	
-E_SeqSts.eDone:	// Done
-	sMessage							:= 'Done';
-	M_nDPSPowerOnOff					:= 10;
+	E_SeqSts.eDone:	// Done
+		sMessage							:= 'Done';
+		M_nDPSPowerOnOff					:= 10;
 END_CASE	
 
 (*IF _nErrorID>0 OR _bError THEN
@@ -626,6 +630,81 @@ END_VAR
 M_nSystemReset:=10;]]></ST>
       </Implementation>
     </Method>
+    <Method Name="M_opDbStnPCWValve" Id="{2ee84258-4512-4a13-b99c-44cb19440d6c}">
+      <Declaration><![CDATA[METHOD M_opDbStnPCWValve : UDINT
+VAR
+	Permissive_opDbStnPCWValve			: WORD;
+	Shutdown_opDbStnPCWValve			: WORD;
+END_VAR
+
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[FC_BitToWord(
+	BOOL_00		:= TRUE, 
+	BOOL_01		:= TRUE, 
+	BOOL_02		:= TRUE, 
+	BOOL_03		:= TRUE, 
+	BOOL_04		:= TRUE, 
+	BOOL_05		:= TRUE, 
+	BOOL_06		:= TRUE, 
+	BOOL_07		:= TRUE, 
+	BOOL_08		:= TRUE, 
+	BOOL_09		:= TRUE, 
+	BOOL_10		:= TRUE, 
+	BOOL_11		:= TRUE, 
+	BOOL_12		:= TRUE, 
+	BOOL_13		:= TRUE, 
+	BOOL_14		:= TRUE, 
+	BOOL_15		:= TRUE, 
+	Output_Word		=> Permissive_opDbStnPCWValve);
+	
+FC_BitToWord(
+	BOOL_00		:= FALSE, 
+	BOOL_01		:= FALSE, 
+	BOOL_02		:= FALSE, 
+	BOOL_03		:= FALSE, 
+	BOOL_04		:= FALSE, 
+	BOOL_05		:= FALSE, 
+	BOOL_06		:= FALSE, 
+	BOOL_07		:= FALSE, 
+	BOOL_08		:= FALSE, 
+	BOOL_09		:= FALSE, 
+	BOOL_10		:= FALSE, 
+	BOOL_11		:= FALSE, 
+	BOOL_12		:= FALSE, 
+	BOOL_13		:= FALSE, 
+	BOOL_14		:= FALSE, 
+	BOOL_15		:= FALSE, 
+	Output_Word		=> Shutdown_opDbStnPCWValve);
+
+Precondition_opDbStnPCWValve		:=  (NOT itl_opDbStnPCWValve) AND 
+										stDebugStationVIO.ipDBStnAPPresentSensor AND
+										stDebugStationVIO.bSolenoidValvesOnOff;
+											
+Reset_opDbStnPCWValve(CLK:= Precondition_opDbStnPCWValve);
+			
+DUT_opDbStnPCWValve.AutInp			:= Precondition_opDbStnPCWValve;
+DUT_opDbStnPCWValve.Reset			:= Reset_opDbStnPCWValve.Q;						
+	
+FB_opDbStnPCWValve(
+	Sec_P:= Sec_P, 
+	ID:= 'DbStn Main PCW Valve', 
+	Simulate:= DUT_opDbStnPCWValve.Simulate, 
+	Permissive:= Permissive_opDbStnPCWValve,  //check before execute
+	ShutDown:= Shutdown_opDbStnPCWValve,  //keep checking this condition 
+	AutoInp:= DUT_opDbStnPCWValve.AutInp, 
+	Command:= DUT_opDbStnPCWValve.CMD, //1: Retract, 2: Extend, 4: Auto
+	IExtend:= stDebugStationVIO.opDbStnPCWValve, 
+	IRetract:= (NOT stDebugStationVIO.opDbStnPCWValve), 
+	Travel_Time:= DUT_opDbStnPCWValve.Travel_Time, //detect input after output trigger
+	SetOutput_Pulse:= FALSE,  //output rising edge
+	FailedHoldLast:= FALSE,  //remain state after failed. 1: Remain, 0: FALSE
+	OExtend=> stDebugStationVIO.opDbStnPCWValve,  //map to output variable
+	ORetract=> , 
+	DUT:= DUT_opDbStnPCWValve);
+	]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="M_RemoteSecondary24VPowerOnOff" Id="{0938c17f-e4eb-4b4c-83fd-fceaee6cab97}">
       <Declaration><![CDATA[METHOD M_RemoteSecondary24VPowerOnOff : INT
 VAR_INPUT
@@ -648,6 +727,82 @@ ELSIF stDbStnParam.bSecondary24VPowerOn THEN
 	stDebugStationVIO.bSecondary24VPowerOnOff		:= TRUE;
 	M_RemoteSecondary24VPowerOnOff					:= 10;
 END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_RemoteSolenoidValves" Id="{6a064ceb-6458-4b2a-bd50-fd789142adf8}">
+      <Declaration><![CDATA[METHOD M_RemoteSolenoidValves : INT
+VAR_INPUT
+END_VAR
+VAR 
+	i				: INT;
+	On				: BOOL;
+	solenoidNumber	: ARRAY [1..NO_OF_INT_PARAM] OF DINT;
+	noOfSolenoids	: INT := NO_OF_INT_PARAM;
+	solenoidNames	: ARRAY [1..NO_OF_INT_PARAM] OF STRING := 
+						[
+							'opDBStnPCWValve',
+							'opDBStnMainPCWReturn',
+							'opDBStnPCWSupplyPurge',
+							'opDBStnPCWAWN',
+							'opDBStnSupplyAirPurge',
+							'opDBStnLeakFlowPCWValve',
+							'opDBStnLowFlowPCWValve'
+						];
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[solenoidNumber									:= stDebugStation.stGblDBStnParam.iSolenoidValves;
+
+IF bPause THEN
+	RETURN;
+END_IF
+
+IF stDbStnParam.bSolenoidValvesOff THEN
+	stDebugStationVIO.bSolenoidValvesOnOff			:= FALSE;
+ELSIF stDbStnParam.bSolenoidValvesOn THEN
+	stDebugStationVIO.bSolenoidValvesOnOff			:= TRUE;
+END_IF
+
+
+
+FOR i:= 1 TO noOfSolenoids DO
+	IF solenoidNumber[i] <> 0 THEN
+		Logging.fbDebugLog.M_nLogger(
+					iLogLevel			:= iLogVerbosity, sSource:= CONCAT('Turn Solenoid ', SEL(stDebugStationVIO.bSolenoidValvesOnOff, 'Off', 'On')), 
+					sMessage			:= CONCAT(CONCAT(DINT_TO_STRING(solenoidNumber[i]), '. '), solenoidNames[solenoidNumber[i]])
+		);
+		
+		CASE solenoidNumber[i] OF
+			E_Solenoid.opDBStnPCWValve:
+				IF itl_opDbStnPCWValve AND stDebugStationVIO.bSolenoidValvesOnOff THEN
+					M_RemoteSolenoidValves							:= 20;
+					RETURN;
+				ELSE
+					stDebugStationVIO.opDBStnPCWValve 				:= stDebugStationVIO.bSolenoidValvesOnOff;
+				END_IF
+				
+			E_Solenoid.opDBStnMainPCWReturn:
+				stDebugStationVIO.opDBStnMainPCWReturn				:= stDebugStationVIO.bSolenoidValvesOnOff;
+				
+			E_Solenoid.opDBStnPCWSupplyPurge:
+				stDebugStationVIO.opDBStnPCWSupplyPurge				:= stDebugStationVIO.bSolenoidValvesOnOff;
+				
+			E_Solenoid.opDBStnPCWAWN:
+				stDebugStationVIO.opDBStnPCWAWN						:= stDebugStationVIO.bSolenoidValvesOnOff;
+				
+			E_Solenoid.opDBStnSupplyAirPurge:
+				stDebugStationVIO.opDBStnSupplyAirPurge				:= stDebugStationVIO.bSolenoidValvesOnOff;
+				
+			E_Solenoid.opDBStnLeakFlowPCWValve:
+				stDebugStationVIO.opDBStnLeakFlowPCWValve			:= stDebugStationVIO.bSolenoidValvesOnOff;
+				
+			E_Solenoid.opDBStnLowFlowPCWValve:
+				stDebugStationVIO.opDBStnLowFlowPCWValve			:= stDebugStationVIO.bSolenoidValvesOnOff;
+		END_CASE
+	END_IF
+END_FOR
+
+M_RemoteSolenoidValves			:= 10; //completed
+]]></ST>
       </Implementation>
     </Method>
     <Method Name="M_Secondary24VPower" Id="{182d2a69-b07b-4b03-9784-5939144db8ba}">
@@ -955,6 +1110,7 @@ FC_BitToWord(
       <LineId Id="1464" Count="0" />
       <LineId Id="1371" Count="0" />
       <LineId Id="1465" Count="0" />
+      <LineId Id="1535" Count="0" />
       <LineId Id="1467" Count="1" />
       <LineId Id="1470" Count="0" />
       <LineId Id="1523" Count="2" />
@@ -1007,7 +1163,6 @@ FC_BitToWord(
       <LineId Id="49" Count="1" />
       <LineId Id="57" Count="0" />
       <LineId Id="229" Count="0" />
-      <LineId Id="322" Count="0" />
       <LineId Id="325" Count="4" />
       <LineId Id="61" Count="0" />
       <LineId Id="323" Count="0" />
@@ -1015,7 +1170,6 @@ FC_BitToWord(
       <LineId Id="388" Count="0" />
       <LineId Id="314" Count="3" />
       <LineId Id="290" Count="0" />
-      <LineId Id="289" Count="0" />
       <LineId Id="94" Count="1" />
       <LineId Id="163" Count="0" />
       <LineId Id="165" Count="10" />
@@ -1025,9 +1179,46 @@ FC_BitToWord(
       <LineId Id="9" Count="1" />
       <LineId Id="5" Count="0" />
     </LineIds>
+    <LineIds Name="FB_DebugStationSeq.M_opDbStnPCWValve">
+      <LineId Id="6" Count="36" />
+      <LineId Id="59" Count="0" />
+      <LineId Id="83" Count="0" />
+      <LineId Id="108" Count="0" />
+      <LineId Id="107" Count="0" />
+      <LineId Id="85" Count="21" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
     <LineIds Name="FB_DebugStationSeq.M_RemoteSecondary24VPowerOnOff">
       <LineId Id="6" Count="14" />
       <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_DebugStationSeq.M_RemoteSolenoidValves">
+      <LineId Id="21" Count="3" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="46" Count="1" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="48" Count="0" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="50" Count="6" />
+      <LineId Id="95" Count="0" />
+      <LineId Id="58" Count="0" />
+      <LineId Id="104" Count="0" />
+      <LineId Id="116" Count="0" />
+      <LineId Id="118" Count="0" />
+      <LineId Id="120" Count="0" />
+      <LineId Id="119" Count="0" />
+      <LineId Id="99" Count="0" />
+      <LineId Id="117" Count="0" />
+      <LineId Id="107" Count="0" />
+      <LineId Id="62" Count="16" />
+      <LineId Id="80" Count="1" />
+      <LineId Id="49" Count="0" />
+      <LineId Id="122" Count="0" />
+      <LineId Id="121" Count="0" />
+      <LineId Id="108" Count="0" />
     </LineIds>
     <LineIds Name="FB_DebugStationSeq.M_Secondary24VPower">
       <LineId Id="9" Count="35" />

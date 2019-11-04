@@ -61,6 +61,7 @@ STRUCT
 	bAP240ACPowerOnOff					: BOOL	:= TRUE;
 	bChkAP240On							: BOOL;
 	bSecondary24VPowerOnOff				: BOOL	:= TRUE;
+	bSolenoidValvesOnOff				: BOOL	:= TRUE;
 	bTstDelInt							: BOOL;
 	bTIIAP240OnError					: BOOL;
 	bTIIAPPrstError						: BOOL;

@@ -58,7 +58,9 @@ bExecute :=
 			stDebugStation.stGblDBStnParam.bAP240ACPowerOn 			OR      //AP240AC
 			stDebugStation.stGblDBStnParam.bAP240ACPowerAuto		OR  	//AP240AC
 			stDebugStation.stGblDBStnParam.bSecondary24VPowerOff	OR
-			stDebugStation.stGblDBStnParam.bSecondary24VPowerOn;    
+			stDebugStation.stGblDBStnParam.bSecondary24VPowerOn		OR
+			stDebugStation.stGblDBStnParam.bSolenoidValvesOff		OR
+			stDebugStation.stGblDBStnParam.bSolenoidValvesOn		;
 			
 rtTCShuttleStart(CLK:=bExecute , Q=> );
 IF rtTCShuttleStart.Q THEN
@@ -92,6 +94,8 @@ ELSIF stDebugStation.stGblDBStnParam.bAP240ACPowerOn  		THEN	sDebugSource := 'AP
 ELSIF stDebugStation.stGblDBStnParam.bAP240ACPowerAuto		THEN	sDebugSource := 'AP240ACPowerAuto';
 ELSIF stDebugStation.stGblDBStnParam.bSecondary24VPowerOff 	THEN	sDebugSource := 'Secondary24VPowerOff';
 ELSIF stDebugStation.stGblDBStnParam.bSecondary24VPowerOn 	THEN	sDebugSource := 'Secondary24VPowerOn';
+ELSIF stDebugStation.stGblDBStnParam.bSolenoidValvesOff		THEN	sDebugSource := 'SolenoidValvesOff';
+ELSIF stDebugStation.stGblDBStnParam.bSolenoidValvesOn		THEN	sDebugSource := 'SolenoidValvesOn';
 END_IF
 
 sMessage := CONCAT(sDebugSource,stDebugStation.fbDBStnSeq.P_sMessage);
@@ -129,6 +133,10 @@ CASE iSeqCase OF
 		ELSIF stDebugStation.stGblDBStnParam.bSecondary24VPowerOff OR stDebugStation.stGblDBStnParam.bSecondary24VPowerOn THEN
 			stDebugStation.stGblDBStnParam.iProcessState 						:= E_ProcessState.eLOADG;
 			iSeqStatus 															:= stDebugStation.fbDBStnSeq.M_RemoteSecondary24VPowerOnOff();
+		
+		ELSIF stDebugStation.stGblDBStnParam.bSolenoidValvesOff OR stDebugStation.stGblDBStnParam.bSolenoidValvesOn THEN
+			stDebugStation.stGblDBStnParam.iProcessState 						:= E_ProcessState.eLOADG;
+			iSeqStatus 															:= stDebugStation.fbDBStnSeq.M_RemoteSolenoidValves();
 		END_IF
 		
 		IF iSeqStatus=10 THEN
@@ -155,7 +163,6 @@ CASE iSeqCase OF
 			JMP iSendEvent;
 		
 		ELSIF iSeqStatus=20 THEN
-			
 			//***GetAlarmBitForFBError***//
 			stDebugStation.stGblDBStnParam.iAlarmID 								:= stGblDbStnVIO.iAlarmCode; //P_nErrorID => Motor Error
 			//***TriggerAlarmBitForFBError***//
@@ -235,6 +242,8 @@ CASE iSeqCase OF
 		IF stDebugStation.stGblDBStnParam.bAP240ACPowerAuto 	THEN stDebugStation.stGblDBStnParam.bAP240ACPowerAuto 			:= FALSE; END_IF
 		IF stDebugStation.stGblDBStnParam.bSecondary24VPowerOff THEN stDebugStation.stGblDBStnParam.bSecondary24VPowerOff		:= FALSE; END_IF
 		IF stDebugStation.stGblDBStnParam.bSecondary24VPowerOn 	THEN stDebugStation.stGblDBStnParam.bSecondary24VPowerOn		:= FALSE; END_IF
+		IF stDebugStation.stGblDBStnParam.bSolenoidValvesOn 	THEN stDebugStation.stGblDBStnParam.bSolenoidValvesOn			:= FALSE; END_IF
+		IF stDebugStation.stGblDBStnParam.bSolenoidValvesOff 	THEN stDebugStation.stGblDBStnParam.bSolenoidValvesOff			:= FALSE; END_IF
 END_CASE
 
 //Send event to TA
@@ -273,8 +282,10 @@ iSendEvent :
 			stDebugStation.stGblDBStnParam.bAP240ACPowerOn 			:=			//AP240AC
 			stDebugStation.stGblDBStnParam.bAP240ACPowerAuto 		:=			//AP240AC
 			stDebugStation.stGblDBStnParam.bSecondary24VPowerOn		:=
-			stDebugStation.stGblDBStnParam.bSecondary24VPowerOff	:= FALSE;
-	
+			stDebugStation.stGblDBStnParam.bSecondary24VPowerOff	:= 
+			stDebugStation.stGblDBStnParam.bSolenoidValvesOn		:= 
+			stDebugStation.stGblDBStnParam.bSolenoidValvesOff		:= FALSE;
+			
 			stDebugStation.stGblDBStnParam.iProcessState			:= E_ProcessState.eAWAITGCMD;
 		END_IF
 	END_IF
@@ -287,6 +298,8 @@ iSendEvent :
       <LineId Id="45" Count="4" />
       <LineId Id="51" Count="2" />
       <LineId Id="588" Count="1" />
+      <LineId Id="655" Count="0" />
+      <LineId Id="657" Count="0" />
       <LineId Id="587" Count="0" />
       <LineId Id="58" Count="2" />
       <LineId Id="67" Count="3" />
@@ -302,6 +315,8 @@ iSendEvent :
       <LineId Id="107" Count="0" />
       <LineId Id="590" Count="0" />
       <LineId Id="593" Count="0" />
+      <LineId Id="658" Count="0" />
+      <LineId Id="660" Count="0" />
       <LineId Id="118" Count="11" />
       <LineId Id="132" Count="0" />
       <LineId Id="608" Count="0" />
@@ -310,19 +325,25 @@ iSendEvent :
       <LineId Id="156" Count="1" />
       <LineId Id="164" Count="1" />
       <LineId Id="596" Count="3" />
+      <LineId Id="653" Count="0" />
+      <LineId Id="661" Count="0" />
+      <LineId Id="663" Count="1" />
       <LineId Id="178" Count="1" />
       <LineId Id="182" Count="1" />
       <LineId Id="607" Count="0" />
       <LineId Id="186" Count="12" />
       <LineId Id="200" Count="1" />
       <LineId Id="480" Count="0" />
-      <LineId Id="213" Count="13" />
+      <LineId Id="213" Count="4" />
+      <LineId Id="219" Count="7" />
       <LineId Id="606" Count="0" />
       <LineId Id="227" Count="8" />
       <LineId Id="605" Count="0" />
       <LineId Id="236" Count="12" />
       <LineId Id="250" Count="0" />
-      <LineId Id="261" Count="2" />
+      <LineId Id="261" Count="0" />
+      <LineId Id="674" Count="0" />
+      <LineId Id="263" Count="0" />
       <LineId Id="291" Count="11" />
       <LineId Id="314" Count="7" />
       <LineId Id="326" Count="0" />
@@ -332,6 +353,7 @@ iSendEvent :
       <LineId Id="347" Count="4" />
       <LineId Id="372" Count="0" />
       <LineId Id="600" Count="0" />
+      <LineId Id="665" Count="1" />
       <LineId Id="373" Count="4" />
       <LineId Id="379" Count="1" />
       <LineId Id="538" Count="4" />
@@ -346,7 +368,9 @@ iSendEvent :
       <LineId Id="410" Count="0" />
       <LineId Id="604" Count="0" />
       <LineId Id="602" Count="0" />
-      <LineId Id="411" Count="3" />
+      <LineId Id="668" Count="1" />
+      <LineId Id="667" Count="0" />
+      <LineId Id="412" Count="2" />
       <LineId Id="527" Count="0" />
       <LineId Id="17" Count="0" />
     </LineIds>

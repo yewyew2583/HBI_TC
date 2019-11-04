@@ -2725,6 +2725,11 @@ Dew point – PCW temperature above critical control limit, condensation alarm
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
+              <v n="TextID">"1228"</v>
+              <v n="TextDefault">"opD"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
               <v n="TextID">"1255"</v>
               <v n="TextDefault">"opDBColumnAPAirSol"</v>
               <l n="LanguageTexts" t="ArrayList" />
@@ -2812,6 +2817,11 @@ Dew point – PCW temperature above critical control limit, condensation alarm
             <o>
               <v n="TextID">"2023"</v>
               <v n="TextDefault">"opDBStnMainPCWSupply"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"1327"</v>
+              <v n="TextDefault">"opDBStnMainPCWValve"</v>
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>

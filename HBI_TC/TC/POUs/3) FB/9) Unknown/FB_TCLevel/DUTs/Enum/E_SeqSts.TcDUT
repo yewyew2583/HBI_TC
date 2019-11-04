@@ -41,6 +41,7 @@
 	eDoorLock,
 	eCheckDoorLock,
 	eAP240ACPwrOnOff,
+	eSolenoidValvesOnOff,
 	
 	eDone :=100
 	
