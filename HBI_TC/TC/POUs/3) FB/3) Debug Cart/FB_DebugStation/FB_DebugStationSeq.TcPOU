@@ -448,10 +448,6 @@ stDebugStationVIO.opDBStnAPSafeToEngage 	:= 	stDebugStationVIO.ipDBStnAPPresentS
 //////////////////////////	IO Mapping Outputs //////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////											
 IF NOT stDebugStationVIO.bDiagnosticMode	THEN	
-	stDebugStationDIO.ipDBStnTstAirLeakFlowSensor 		:= 												stDebugStationVIO.ipDBStnTstAirLeakFlowSensor;
-	stDebugStationDIO.ipDBStnAPAirLeakFlowSensor 		:= 												stDebugStationVIO.ipDBStnAPAirLeakFlowSensor;
-	stDebugStationDIO.ipDBStnPCWLeakFlowSensor 			:= 												stDebugStationVIO.ipDBStnPCWLeakFlowSensor;
-	stDebugStationDIO.ipDBStnPCWLowFlowSensor 			:= 												stDebugStationVIO.ipDBStnPCWLowFlowSensor;
 	stDebugStationDIO.opDBStnAP240ACPwrEnable			:= NOT itl_opDBStnAP240ACPwrEnable		AND		stDebugStationVIO.opDBStnAP240ACPwrEnable;			
 	stDebugStationDIO.opAP_DIO_1						:= 												stDebugStationVIO.opAP_DIO_1;
 	stDebugStationDIO.opAP_DIO_2						:= 												stDebugStationVIO.opAP_DIO_2;
@@ -1116,7 +1112,6 @@ FC_BitToWord(
       <LineId Id="1523" Count="2" />
       <LineId Id="1466" Count="0" />
       <LineId Id="1392" Count="0" />
-      <LineId Id="1241" Count="3" />
       <LineId Id="1246" Count="3" />
       <LineId Id="1251" Count="0" />
       <LineId Id="1254" Count="0" />
