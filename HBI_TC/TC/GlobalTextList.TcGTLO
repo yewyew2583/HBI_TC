@@ -2675,6 +2675,11 @@ Dew point – PCW temperature above critical control limit, condensation alarm
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
+              <v n="TextID">"4015"</v>
+              <v n="TextDefault">"opCellDoorLock"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
               <v n="TextID">"1225"</v>
               <v n="TextDefault">"opCellDrawerCylDown"</v>
               <l n="LanguageTexts" t="ArrayList" />
