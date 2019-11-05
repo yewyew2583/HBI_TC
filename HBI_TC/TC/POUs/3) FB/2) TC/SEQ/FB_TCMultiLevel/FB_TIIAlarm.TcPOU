@@ -156,6 +156,10 @@ IF ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCCellDoorClosed] AND vIO.ipTCCellDo
 	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCCellDoorClosed]			:= FALSE;
 END_IF
 
+IF ALMTC.Level[iLevel].AlarmID[E_AlarmID.DoorCloseSignalNotDetected] AND vIO.ipTCCellDoorOpenCloseStatus THEN
+	ALMTC.Level[iLevel].AlarmID[E_AlarmID.DoorCloseSignalNotDetected]			:= FALSE;
+END_IF
+
 //Auto reset Door lock alarm (Debugcart only)
 IF bDebugCart THEN
 	//auto clear alarm if door is closed 
@@ -547,6 +551,8 @@ END_VAR
       <LineId Id="676" Count="1" />
       <LineId Id="675" Count="0" />
       <LineId Id="679" Count="2" />
+      <LineId Id="1612" Count="2" />
+      <LineId Id="1611" Count="0" />
       <LineId Id="678" Count="0" />
       <LineId Id="1100" Count="0" />
       <LineId Id="1110" Count="2" />

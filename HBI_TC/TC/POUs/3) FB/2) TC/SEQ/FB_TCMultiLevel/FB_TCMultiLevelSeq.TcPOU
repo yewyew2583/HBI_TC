@@ -1040,7 +1040,7 @@ VAR_OUTPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF (NOT stMultiLevelVIO.ipTCCellDoorOpenCloseStatus) THEN
+        <ST><![CDATA[(*IF (NOT stMultiLevelVIO.ipTCCellDoorOpenCloseStatus) THEN
 	sMsg:='Door Closed Signal not Detected Error';
 	M_IsSanityCheckFailed									:= E_AlarmID.DoorCloseSignalNotDetected;//31;
 ELSIF (NOT stMultiLevelVIO.ipTCCellDoorClosed) THEN
@@ -1062,7 +1062,7 @@ IF bDebugCart THEN
 		sMsg:='Front Door Lock_2 Signal not Detected Error';
 		M_IsSanityCheckFailed									:= E_TIIAlarm.FrontDoorLockSignalNotDetected;//34;
 	END_IF
-END_IF
+END_IF *)
 
 //Check AP Up
 IF stMultiLevelVIO.ipAPPresentSensor THEN
@@ -1820,8 +1820,33 @@ E_SeqSts.eSanityCheck: //Sanity sheck
 																					stMultiLevelVIO:= stMLVIO, 
 																					stColVIO:= stColVIO,
 																					sMsg=> sMessage));
+																					
+	IF (NOT stMLVIO.ipTCCellDoorOpenCloseStatus) THEN
+		sMessage									:= 'Door Closed Signal not Detected Error';
+		_nErrorID									:= E_AlarmID.DoorCloseSignalNotDetected;//31;
+	ELSIF (NOT stMLVIO.ipTCCellDoorClosed) THEN
+		sMessage									:= 'Door Locked Signal not Detected Error';
+		_nErrorID									:= E_TIIAlarm.ipTCCellDoorClosed;//12;
+	END_IF
+	
+	IF bDebugCart THEN 
+		IF (NOT stMLVIO.ipTCCellTbotSideDoorOpenCloseStatus01) THEN
+			sMessage										:= 'Front Door Closed_1 Signal not Detected Error';
+			_nErrorID									:= E_AlarmID.TBotSideDoorCloseSignalNotDetected;//33;
+		ELSIF (NOT stMLVIO.ipTCCellTbotSideDoorOpenCloseStatus02) THEN
+			sMessage										:= 'Front Door Closed_2 Signal not Detected Error';
+			_nErrorID									:= E_AlarmID.TBotSideDoorCloseSignalNotDetected;//33;
+		ELSIF (NOT stMLVIO.ipTCCellTbotSideDoorLocked01) THEN
+			sMessage										:= 'Front Door Lock_1 Signal not Detected Error';
+			_nErrorID									:= E_TIIAlarm.FrontDoorLockSignalNotDetected;//34;
+		ELSIF (NOT stMLVIO.ipTCCellTbotSideDoorLocked02) THEN
+			sMessage										:= 'Front Door Lock_2 Signal not Detected Error';
+			_nErrorID									:= E_TIIAlarm.FrontDoorLockSignalNotDetected;//34;
+		END_IF
+	END_IF 																				
+																					
 	IF _nErrorID=0 THEN
-		bStepDone:=TRUE;
+		bStepDone										:= TRUE;
 	END_IF
 	
 //25	TBot EAP NOT SofeToMove Error
@@ -3135,6 +3160,9 @@ END_CASE]]></ST>
       <LineId Id="1114" Count="0" />
       <LineId Id="1124" Count="0" />
       <LineId Id="1113" Count="0" />
+      <LineId Id="1134" Count="0" />
+      <LineId Id="1137" Count="21" />
+      <LineId Id="1135" Count="1" />
       <LineId Id="892" Count="1" />
       <LineId Id="877" Count="0" />
       <LineId Id="933" Count="0" />
