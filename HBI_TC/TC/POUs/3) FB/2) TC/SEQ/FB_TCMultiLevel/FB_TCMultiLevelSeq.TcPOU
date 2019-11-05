@@ -1040,15 +1040,15 @@ VAR_OUTPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[(*IF (NOT stMultiLevelVIO.ipTCCellDoorOpenCloseStatus) THEN
+        <ST><![CDATA[IF (NOT stMultiLevelVIO.ipTCCellDoorOpenCloseStatus) THEN
 	sMsg:='Door Closed Signal not Detected Error';
 	M_IsSanityCheckFailed									:= E_AlarmID.DoorCloseSignalNotDetected;//31;
 ELSIF (NOT stMultiLevelVIO.ipTCCellDoorClosed) THEN
 	sMsg:='Door Locked Signal not Detected Error';
 	M_IsSanityCheckFailed									:= E_TIIAlarm.ipTCCellDoorClosed;//12;
-END_IF*)
+END_IF
 
-(*IF bDebugCart THEN 
+IF bDebugCart THEN 
 	IF (NOT stMultiLevelVIO.ipTCCellTbotSideDoorOpenCloseStatus01) THEN
 		sMsg:='Front Door Closed_1 Signal not Detected Error';
 		M_IsSanityCheckFailed									:= E_AlarmID.TBotSideDoorCloseSignalNotDetected;//33;
@@ -1057,12 +1057,12 @@ END_IF*)
 		M_IsSanityCheckFailed									:= E_AlarmID.TBotSideDoorCloseSignalNotDetected;//33;
 	ELSIF (NOT stMultiLevelVIO.ipTCCellTbotSideDoorLocked01) THEN
 		sMsg:='Front Door Lock_1 Signal not Detected Error';
-		M_IsSanityCheckFailed									:=E_TIIAlarm.TBotSideDoorLockSignalNotDetected;//34;
+		M_IsSanityCheckFailed									:= E_TIIAlarm.FrontDoorLockSignalNotDetected;//34;
 	ELSIF (NOT stMultiLevelVIO.ipTCCellTbotSideDoorLocked02) THEN
 		sMsg:='Front Door Lock_2 Signal not Detected Error';
-		M_IsSanityCheckFailed									:=E_TIIAlarm.TBotSideDoorLockSignalNotDetected;//34;
+		M_IsSanityCheckFailed									:= E_TIIAlarm.FrontDoorLockSignalNotDetected;//34;
 	END_IF
-END_IF*)
+END_IF
 
 //Check AP Up
 IF stMultiLevelVIO.ipAPPresentSensor THEN
