@@ -1831,16 +1831,16 @@ E_SeqSts.eSanityCheck: //Sanity sheck
 	
 	IF bDebugCart THEN 
 		IF (NOT stMLVIO.ipTCCellTbotSideDoorOpenCloseStatus01) THEN
-			sMessage										:= 'Front Door Closed_1 Signal not Detected Error';
+			sMessage									:= 'Front Door Closed_1 Signal not Detected Error';
 			_nErrorID									:= E_AlarmID.TBotSideDoorCloseSignalNotDetected;//33;
 		ELSIF (NOT stMLVIO.ipTCCellTbotSideDoorOpenCloseStatus02) THEN
-			sMessage										:= 'Front Door Closed_2 Signal not Detected Error';
+			sMessage									:= 'Front Door Closed_2 Signal not Detected Error';
 			_nErrorID									:= E_AlarmID.TBotSideDoorCloseSignalNotDetected;//33;
 		ELSIF (NOT stMLVIO.ipTCCellTbotSideDoorLocked01) THEN
-			sMessage										:= 'Front Door Lock_1 Signal not Detected Error';
+			sMessage									:= 'Front Door Lock_1 Signal not Detected Error';
 			_nErrorID									:= E_TIIAlarm.FrontDoorLockSignalNotDetected;//34;
 		ELSIF (NOT stMLVIO.ipTCCellTbotSideDoorLocked02) THEN
-			sMessage										:= 'Front Door Lock_2 Signal not Detected Error';
+			sMessage									:= 'Front Door Lock_2 Signal not Detected Error';
 			_nErrorID									:= E_TIIAlarm.FrontDoorLockSignalNotDetected;//34;
 		END_IF
 	END_IF 																				
