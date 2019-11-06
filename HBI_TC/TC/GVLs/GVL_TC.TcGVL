@@ -8,7 +8,7 @@
 	LevelModuleID							: ARRAY [1..NO_OF_LEVEL] OF E_ModuleID;
 	
 //<Optional Flag>
-	bDebugStation							: BOOL := TRUE; // T : Do Debug Station Action
+	bDebugStation							: BOOL := FALSE; // T : Do Debug Station Action
 	bDebugCart								: BOOL := FALSE;	// T : Do Debug Cart Action
 	bAnalogIOSim 							: BOOL := FALSE;
 	bAlwaysOnAPPwrOnInit  					: BOOL; // F : if(!present)skip pwrOnStep, T : Doesn't depends on present signal. 

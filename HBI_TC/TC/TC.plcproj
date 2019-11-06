@@ -347,70 +347,70 @@
     <Compile Include="POUs\3%29 FB\1%29 Common\FB_RemoteCmdAndEvent\FUN_CmdToEvent.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\3%29 FB\2%29 TC\SEQ\ASSIGN_COLUMN.TcPOU">
+    <Compile Include="POUs\3%29 FB\2%29 TC\ASSIGN_COLUMN.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\3%29 FB\2%29 TC\SEQ\FB_TCColumn\FB_ColAlarm.TcPOU">
+    <Compile Include="POUs\3%29 FB\2%29 TC\FB_TCColumn\FB_ColAlarm.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\3%29 FB\2%29 TC\SEQ\FB_TCColumn\FB_TCColumn.TcPOU">
+    <Compile Include="POUs\3%29 FB\2%29 TC\FB_TCColumn\FB_TCColumn.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\3%29 FB\2%29 TC\SEQ\FB_TCColumn\ST_TCColumn_BIO.TcDUT">
+    <Compile Include="POUs\3%29 FB\2%29 TC\FB_TCColumn\ST_TCColumn_BIO.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\3%29 FB\2%29 TC\SEQ\FB_TCColumn\ST_TCColumn_DIO.TcDUT">
+    <Compile Include="POUs\3%29 FB\2%29 TC\FB_TCColumn\ST_TCColumn_DIO.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\3%29 FB\2%29 TC\SEQ\FB_TCColumn\ST_TCColumn_VIO.TcDUT">
+    <Compile Include="POUs\3%29 FB\2%29 TC\FB_TCColumn\ST_TCColumn_VIO.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\3%29 FB\2%29 TC\SEQ\FB_TCMultiLevel\FB_TCMLTesterPower_Process.TcPOU">
+    <Compile Include="POUs\3%29 FB\2%29 TC\FB_TCMultiLevel\FB_TCMLTesterPower_Process.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\3%29 FB\2%29 TC\SEQ\FB_TCMultiLevel\FB_TCMultiLevelSeq.TcPOU">
+    <Compile Include="POUs\3%29 FB\2%29 TC\FB_TCMultiLevel\FB_TCMultiLevelSeq.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\3%29 FB\2%29 TC\SEQ\FB_TCMultiLevel\FB_TCMultiLevel_Process.TcPOU">
+    <Compile Include="POUs\3%29 FB\2%29 TC\FB_TCMultiLevel\FB_TCMultiLevel_Process.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\3%29 FB\2%29 TC\SEQ\FB_TCMultiLevel\FB_TIIAlarm.TcPOU">
+    <Compile Include="POUs\3%29 FB\2%29 TC\FB_TCMultiLevel\FB_TIIAlarm.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\3%29 FB\2%29 TC\SEQ\FB_TCMultiLevel\ST_TCMultiLevelSeqParam.TcDUT">
+    <Compile Include="POUs\3%29 FB\2%29 TC\FB_TCMultiLevel\ST_TCMultiLevelSeqParam.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\3%29 FB\2%29 TC\SEQ\FB_TCMultiLevel\ST_TCMultiLevel_BIO.TcDUT">
+    <Compile Include="POUs\3%29 FB\2%29 TC\FB_TCMultiLevel\ST_TCMultiLevel_BIO.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\3%29 FB\2%29 TC\SEQ\FB_TCMultiLevel\ST_TCMultiLevel_DIO.TcDUT">
+    <Compile Include="POUs\3%29 FB\2%29 TC\FB_TCMultiLevel\ST_TCMultiLevel_DIO.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\3%29 FB\2%29 TC\SEQ\FB_TCMultiLevel\ST_TCMultiLevel_VIO.TcDUT">
+    <Compile Include="POUs\3%29 FB\2%29 TC\FB_TCMultiLevel\ST_TCMultiLevel_VIO.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\3%29 FB\2%29 TC\SEQ\FB_TCShuttlePOC\FB_TCShuttlePOCSeq.TcPOU">
+    <Compile Include="POUs\3%29 FB\2%29 TC\FB_TCShuttlePOC\FB_TCShuttlePOCSeq.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\3%29 FB\2%29 TC\SEQ\FB_TCShuttlePOC\FB_TCShuttlePOC_Process.TcPOU">
+    <Compile Include="POUs\3%29 FB\2%29 TC\FB_TCShuttlePOC\FB_TCShuttlePOC_Process.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\3%29 FB\2%29 TC\SEQ\FB_TCShuttlePOC\ST_TCSeqParam.TcDUT">
+    <Compile Include="POUs\3%29 FB\2%29 TC\FB_TCShuttlePOC\ST_TCSeqParam.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\3%29 FB\2%29 TC\SEQ\FB_TCShuttlePOC\ST_TCShuttlePOC_BIO.TcDUT">
+    <Compile Include="POUs\3%29 FB\2%29 TC\FB_TCShuttlePOC\ST_TCShuttlePOC_BIO.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\3%29 FB\2%29 TC\SEQ\FB_TCShuttlePOC\ST_TCShuttlePOC_DIO.TcDUT">
+    <Compile Include="POUs\3%29 FB\2%29 TC\FB_TCShuttlePOC\ST_TCShuttlePOC_DIO.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\3%29 FB\2%29 TC\SEQ\FB_TCShuttlePOC\ST_TCShuttlePOC_VIO.TcDUT">
+    <Compile Include="POUs\3%29 FB\2%29 TC\FB_TCShuttlePOC\ST_TCShuttlePOC_VIO.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\3%29 FB\2%29 TC\SEQ\FB_UpdateStatus.TcPOU">
+    <Compile Include="POUs\3%29 FB\2%29 TC\FB_UpdateStatus.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\3%29 FB\2%29 TC\SEQ\PreInitialise.TcPOU">
+    <Compile Include="POUs\3%29 FB\2%29 TC\PreInitialise.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\3%29 FB\3%29 Debug Cart\FB_DebugStation\FB_DBStnUpdateStatus.TcPOU">
@@ -628,10 +628,9 @@
     <Folder Include="POUs\3%29 FB\1%29 Common\FB_EPT" />
     <Folder Include="POUs\3%29 FB\1%29 Common\FB_Logging" />
     <Folder Include="POUs\3%29 FB\1%29 Common\FB_RemoteCmdAndEvent" />
-    <Folder Include="POUs\3%29 FB\2%29 TC\SEQ" />
-    <Folder Include="POUs\3%29 FB\2%29 TC\SEQ\FB_TCColumn" />
-    <Folder Include="POUs\3%29 FB\2%29 TC\SEQ\FB_TCMultiLevel" />
-    <Folder Include="POUs\3%29 FB\2%29 TC\SEQ\FB_TCShuttlePOC" />
+    <Folder Include="POUs\3%29 FB\2%29 TC\FB_TCColumn" />
+    <Folder Include="POUs\3%29 FB\2%29 TC\FB_TCMultiLevel" />
+    <Folder Include="POUs\3%29 FB\2%29 TC\FB_TCShuttlePOC" />
     <Folder Include="POUs\3%29 FB\2%29 TC\Testing" />
     <Folder Include="POUs\3%29 FB\3%29 Debug Cart\Facility" />
     <Folder Include="POUs\3%29 FB\3%29 Debug Cart\FB_DebugColumn" />

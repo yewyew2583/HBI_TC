@@ -159,15 +159,15 @@ CASE iSeqCase OF
 		
 		ELSIF arrTCMultiLevel[iLevel].stGblParam.bInitialise THEN //System Reset
 			arrTCMultiLevel[iLevel].stGblParam.iProcessState 				:= E_ProcessState.eINIT;
-			iSeqStatus 														:= arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.M_nSystemReset();
+			iSeqStatus 														:= arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.M_InitializeCommand();
 			
 		ELSIF arrTCMultiLevel[iLevel].stGblParam.bDoorRecovery THEN //Door Recovery
 			arrTCMultiLevel[iLevel].stGblParam.iProcessState 				:= E_ProcessState.eLOADG;
-			iSeqStatus 														:= arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.M_nShuttleMoveInOut();	
+			iSeqStatus 														:= arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.M_SequenceCommand(iLevel:= iLevel);	
 			
 		ELSIF arrTCMultiLevel[iLevel].stGblParam.bCancel THEN //TIU Cancel and Cancel recovery
 			arrTCMultiLevel[iLevel].stGblParam.iProcessState 				:= E_ProcessState.eLOADG;
-			iSeqStatus 														:= arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.M_nShuttleMoveInOut();	
+			iSeqStatus 														:= arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.M_SequenceCommand(iLevel:= iLevel);	
 			
 		ELSIF arrTCMultiLevel[iLevel].stGblParam.bSecondary24VPowerOff OR arrTCMultiLevel[iLevel].stGblParam.bSecondary24VPowerOn THEN
 			arrTCMultiLevel[iLevel].stGblParam.iProcessState 				:= E_ProcessState.eLOADG;
@@ -182,7 +182,7 @@ CASE iSeqCase OF
 			  	arrTCMultiLevel[iLevel].stGblParam.bTBotbShuttleMoveInReq 	OR arrTCMultiLevel[iLevel].stGblParam.bDrawerUp					OR arrTCMultiLevel[iLevel].stGblParam.bDrawerDown				OR
 			  	arrTCMultiLevel[iLevel].stGblParam.bDrawerUpBefFrtDoorOpen	THEN
 					arrTCMultiLevel[iLevel].stGblParam.iProcessState 		:= E_ProcessState.eLOADG;
-					iSeqStatus 												:= arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.M_nShuttleMoveInOut();
+					iSeqStatus 												:= arrTCMultiLevel[iLevel].fbTCMultiLevelSeq.M_SequenceCommand(iLevel:= iLevel);
 		END_IF
 	
 		IF iSeqStatus = 10 THEN

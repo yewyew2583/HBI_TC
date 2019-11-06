@@ -6,6 +6,8 @@
 	eNull := -1,
 	eInit := 0,
 	eSanityCheck,
+	eDrawerUpDownSanityCheck,
+	eDrawerUpDownInOutSanityCheck,
 	eTBotEAPSanityCheck,
 	eFrontDoorOpenConditionCheck,
 	

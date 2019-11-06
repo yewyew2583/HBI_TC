@@ -14,7 +14,6 @@ VAR_OUTPUT
 	TIIAlarmLED					: BOOL;
 	TIIAlarmEPT					: BOOL;
 	iUnBlock					: DINT;
-	bAlarmBlockDrawerExtRtt		: BOOL;
 	isAboveCellLeakage			: BOOL;
 END_VAR
 
@@ -288,119 +287,32 @@ FOR i := 1 TO NoOfTIIAlm DO
 			
 	END_CASE
 
-	//Delay Library Alm Bit
+	//Delay Library for all alarm bits
 	ArrDelayAlarm[i](
 		alarmState															:= ArrAlmBitBefDelay[i],
 		alarmResetTimer														:= alarmReset,
 		triggerAlarmState													=> ArrAlmBitAftDelay[i],
-		msec																:= Arr_ms[i]);	//DelayAlmBit
+		msec																:= Arr_ms[i]);
 
-	IF ArrAlmBitAftDelay[i] THEN //realtime IO update array
-		//stAlmMod.Level[iLevel].AlarmID[i]:=TRUE;
+	 //Trigger alarm if alarm state delay time expired.
+	IF ArrAlmBitAftDelay[i] THEN
 		ALMTC.Level[iLevel].AlarmID[i]									:= TRUE;
-		
-		CASE i OF
-			1 : 
-				iUnBlock.1 												:= ALMTC.Level[iLevel].AlarmID[i];
-		    2 : 
-				iUnBlock.2 												:= ALMTC.Level[iLevel].AlarmID[i]; 
-		    3 : 
-				iUnBlock.3 												:= ALMTC.Level[iLevel].AlarmID[i];
-			4 : 
-				iUnBlock.4 												:= ALMTC.Level[iLevel].AlarmID[i];
-			5 : 
-				iUnBlock.5  											:= ALMTC.Level[iLevel].AlarmID[i];
-			6 : 
-				iUnBlock.6 												:= ALMTC.Level[iLevel].AlarmID[i];
-			7 : 
-				iUnBlock.7 												:= ALMTC.Level[iLevel].AlarmID[i];
-			8 : 
-				iUnBlock.8												:= ALMTC.Level[iLevel].AlarmID[i];
-			9 : 
-				iUnBlock.9												:= ALMTC.Level[iLevel].AlarmID[i];
-			10: 
-				iUnBlock.10												:= ALMTC.Level[iLevel].AlarmID[i];
-			11: 
-				iUnBlock.11												:= ALMTC.Level[iLevel].AlarmID[i];
-			12: 
-				iUnBlock.12												:= ALMTC.Level[iLevel].AlarmID[i];
-			13: 
-				iUnBlock.13												:= ALMTC.Level[iLevel].AlarmID[i];
-			14: 
-				iUnBlock.14												:= ALMTC.Level[iLevel].AlarmID[i];
-			15: 
-				iUnBlock.15												:= ALMTC.Level[iLevel].AlarmID[i];
-			16: 
-				iUnBlock.16												:= ALMTC.Level[iLevel].AlarmID[i];
-			17: 
-				iUnBlock.17												:= ALMTC.Level[iLevel].AlarmID[i];
-		END_CASE
-	ELSE
-		CASE i OF
-			1 : 
-				iUnBlock.1 												:= ALMTC.Level[iLevel].AlarmID[i];
-		    2 : 
-				iUnBlock.2 												:= ALMTC.Level[iLevel].AlarmID[i]; 
-		    3 :
-				iUnBlock.3  											:= ALMTC.Level[iLevel].AlarmID[i];
-			4 : 
-				iUnBlock.4 												:= ALMTC.Level[iLevel].AlarmID[i];
-			5 : 
-				iUnBlock.5 												:= ALMTC.Level[iLevel].AlarmID[i];
-			6 : 
-				iUnBlock.6 												:= ALMTC.Level[iLevel].AlarmID[i];
-			7 : 
-				iUnBlock.7 												:= ALMTC.Level[iLevel].AlarmID[i];
-			8 : 
-				iUnBlock.8 												:= ALMTC.Level[iLevel].AlarmID[i];
-			9 : 
-				iUnBlock.9 												:= ALMTC.Level[iLevel].AlarmID[i];
-			10: 
-				iUnBlock.10 											:= ALMTC.Level[iLevel].AlarmID[i];
-			11: 
-				iUnBlock.11 											:= ALMTC.Level[iLevel].AlarmID[i];
-			12: 
-				iUnBlock.12 											:= ALMTC.Level[iLevel].AlarmID[i];
-			13: 
-				iUnBlock.13 											:= ALMTC.Level[iLevel].AlarmID[i];
-			14: 
-				iUnBlock.14 											:= ALMTC.Level[iLevel].AlarmID[i];
-			15: 
-				iUnBlock.15 											:= ALMTC.Level[iLevel].AlarmID[i];
-			16: 
-				iUnBlock.16 											:= ALMTC.Level[iLevel].AlarmID[i];
-			17: 
-				iUnBlock.17 											:= ALMTC.Level[iLevel].AlarmID[i];
-		END_CASE
-		//TIIAlmText[i]:='';  
 	END_IF
 		
-	//_bError := _bError OR stAlmMod.Level[iLevel].AlarmID[i];
 	isTIIError															:= ALMTC.Level[iLevel].AlarmID[i];
-	
-	(*
-	IF NOT (ALMTC.Level[iLevel].AlarmID[i] = ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellFluidLeakage1] OR 
-	   ALMTC.Level[iLevel].AlarmID[i] = ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipCellFluidLeakage2])
-	THEN
-	   IS_CELL_TII_LEAK := _bError OR (ALMTC.Level[iLevel].AlarmID[i] ;
-	END_IF
-	*) 
 END_FOR
+
 alarmReset			:= FALSE;	//false back and wait for next alarm reset to reset alarm timer.
 
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////// TIIAlarmLED : Trigger EPT state alarms ////////////////////////
+//////////////////////// TIIAlarmEPT : Trigger AlarmLED alarms	////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//Check Above cell whether has leakage alarm
 isAboveCellLeakage		:= M_AboveLeakageChecking(currentLevel	:= iLevel);
-
-bAlarmBlockDrawerExtRtt														:=	(NOT bDebugCart)															AND
-																			(
-																				ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTesterLatchesClosed    	]	OR //not need in DC
-																				ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCDrawerExtendSignal	   	]	OR //not need in DC
-																				ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCDrawerRetractSignal	   	]	OR //not need in DC
-																				ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCCellDoorClosed	   		]   OR //not need in DC
-																				ALMTC.Common.AlarmID[E_ColAlarm.ipTbotDoorClosedSignal				]	OR //not need in DC
-																				ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTCDrawerUpSignal		   	] 	   //not need in DC
-																			);
 																			
-
 TIIAlarmLED																:=	ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipAPPowerOn 		   	   			]   OR 
 		    																ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipAPReady		       	   		]   OR
 																			ALMTC.Level[iLevel].AlarmID[E_TIIAlarm.ipTesterLatchesClosed    		]	OR
@@ -613,105 +525,23 @@ END_VAR
       <LineId Id="800" Count="0" />
       <LineId Id="1242" Count="0" />
       <LineId Id="801" Count="1" />
+      <LineId Id="1643" Count="0" />
       <LineId Id="182" Count="1" />
-      <LineId Id="232" Count="0" />
       <LineId Id="390" Count="0" />
-      <LineId Id="1182" Count="0" />
-      <LineId Id="572" Count="1" />
-      <LineId Id="899" Count="0" />
-      <LineId Id="575" Count="0" />
-      <LineId Id="900" Count="0" />
-      <LineId Id="589" Count="0" />
-      <LineId Id="901" Count="0" />
-      <LineId Id="590" Count="0" />
-      <LineId Id="902" Count="0" />
-      <LineId Id="591" Count="0" />
-      <LineId Id="903" Count="0" />
-      <LineId Id="592" Count="0" />
-      <LineId Id="915" Count="0" />
-      <LineId Id="593" Count="0" />
-      <LineId Id="914" Count="0" />
-      <LineId Id="594" Count="0" />
-      <LineId Id="913" Count="0" />
-      <LineId Id="595" Count="0" />
-      <LineId Id="912" Count="0" />
-      <LineId Id="596" Count="0" />
-      <LineId Id="911" Count="0" />
-      <LineId Id="597" Count="0" />
-      <LineId Id="910" Count="0" />
-      <LineId Id="598" Count="0" />
-      <LineId Id="909" Count="0" />
-      <LineId Id="599" Count="0" />
-      <LineId Id="908" Count="0" />
-      <LineId Id="600" Count="0" />
-      <LineId Id="907" Count="0" />
-      <LineId Id="601" Count="0" />
-      <LineId Id="906" Count="0" />
-      <LineId Id="602" Count="0" />
-      <LineId Id="905" Count="0" />
-      <LineId Id="603" Count="0" />
-      <LineId Id="904" Count="0" />
-      <LineId Id="574" Count="0" />
-      <LineId Id="282" Count="0" />
-      <LineId Id="631" Count="1" />
-      <LineId Id="959" Count="0" />
-      <LineId Id="633" Count="0" />
-      <LineId Id="958" Count="0" />
-      <LineId Id="634" Count="0" />
-      <LineId Id="957" Count="0" />
-      <LineId Id="635" Count="0" />
-      <LineId Id="956" Count="0" />
-      <LineId Id="636" Count="0" />
-      <LineId Id="955" Count="0" />
-      <LineId Id="637" Count="0" />
-      <LineId Id="954" Count="0" />
-      <LineId Id="638" Count="0" />
-      <LineId Id="953" Count="0" />
-      <LineId Id="639" Count="0" />
-      <LineId Id="952" Count="0" />
-      <LineId Id="640" Count="0" />
-      <LineId Id="951" Count="0" />
-      <LineId Id="641" Count="0" />
-      <LineId Id="950" Count="0" />
-      <LineId Id="642" Count="0" />
-      <LineId Id="949" Count="0" />
-      <LineId Id="643" Count="0" />
-      <LineId Id="948" Count="0" />
-      <LineId Id="644" Count="0" />
-      <LineId Id="947" Count="0" />
-      <LineId Id="645" Count="0" />
-      <LineId Id="946" Count="0" />
-      <LineId Id="646" Count="0" />
-      <LineId Id="945" Count="0" />
-      <LineId Id="647" Count="0" />
-      <LineId Id="944" Count="0" />
-      <LineId Id="648" Count="0" />
-      <LineId Id="943" Count="0" />
-      <LineId Id="630" Count="0" />
-      <LineId Id="283" Count="0" />
       <LineId Id="187" Count="0" />
       <LineId Id="960" Count="0" />
-      <LineId Id="241" Count="0" />
-      <LineId Id="1020" Count="1" />
-      <LineId Id="568" Count="0" />
-      <LineId Id="563" Count="0" />
-      <LineId Id="567" Count="0" />
-      <LineId Id="566" Count="0" />
-      <LineId Id="564" Count="1" />
-      <LineId Id="562" Count="0" />
+      <LineId Id="1020" Count="0" />
       <LineId Id="202" Count="0" />
+      <LineId Id="1644" Count="0" />
       <LineId Id="1243" Count="0" />
+      <LineId Id="1645" Count="1" />
       <LineId Id="1441" Count="0" />
+      <LineId Id="1648" Count="1" />
+      <LineId Id="1647" Count="0" />
+      <LineId Id="1652" Count="0" />
+      <LineId Id="1651" Count="0" />
       <LineId Id="1440" Count="0" />
-      <LineId Id="738" Count="0" />
-      <LineId Id="745" Count="0" />
-      <LineId Id="1580" Count="1" />
-      <LineId Id="1508" Count="2" />
-      <LineId Id="1550" Count="0" />
-      <LineId Id="1513" Count="0" />
-      <LineId Id="1582" Count="0" />
       <LineId Id="1579" Count="0" />
-      <LineId Id="203" Count="0" />
       <LineId Id="1023" Count="0" />
       <LineId Id="1027" Count="0" />
       <LineId Id="1039" Count="1" />
